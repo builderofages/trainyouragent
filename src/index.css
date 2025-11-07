@@ -168,11 +168,6 @@ All colors MUST be HSL.
     border-radius: var(--radius);
   }
 
-  /* Custom Cursor Body */
-  body.custom-cursor * {
-    cursor: none !important;
-  }
-
   /* Dramatic Shadows */
   .shadow-dramatic {
     box-shadow: var(--shadow-dramatic);
