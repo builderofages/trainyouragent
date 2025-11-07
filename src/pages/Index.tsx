@@ -6,14 +6,18 @@ import SocialProof from "@/components/SocialProofEnhanced";
 import NewsletterSection from "@/components/NewsletterSectionEnhanced";
 import Footer from "@/components/FooterEnhanced";
 import ROICalculator from "@/components/ROICalculatorEnhanced";
+import { ScrollGradient } from "@/components/effects/ScrollGradient";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      {/* Scroll-Based Gradient Shifts */}
+      <ScrollGradient />
+      
       <Header />
       <HeroSection />
       <StatsSection />
-      <section className="py-20 bg-muted/30">
+      <section className="py-20 bg-muted/30 relative z-10">
         <div className="container mx-auto px-4">
           <ROICalculator />
         </div>

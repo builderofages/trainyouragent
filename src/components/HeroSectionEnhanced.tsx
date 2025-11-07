@@ -3,13 +3,16 @@ import { Sparkles, Play, TrendingUp, Users, Zap } from "lucide-react";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import InteractiveDemo from "./InteractiveDemo";
+import { ParticleField } from "./effects/ParticleField";
 
 const HeroSection = () => {
   const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 500], [0, 150]);
-  const y2 = useTransform(scrollY, [0, 500], [0, -150]);
+  const y1 = useTransform(scrollY, [0, 500], [0, 250]);
+  const y2 = useTransform(scrollY, [0, 500], [0, -200]);
+  const y3 = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   const scale = useTransform(scrollY, [0, 300], [1, 0.95]);
+  const blur = useTransform(scrollY, [0, 300], [0, 10]);
 
   const stats = [
     { icon: TrendingUp, value: "3x", label: "More Leads" },
@@ -19,31 +22,37 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Vibrant Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50" />
+      {/* Vibrant Animated Background with Parallax */}
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50"
+        style={{ scale: useTransform(scrollY, [0, 500], [1, 1.2]) }}
+      />
       
-      {/* Large Animated Orbs */}
+      {/* Floating Particles */}
+      <ParticleField />
+      
+      {/* Large Animated Orbs with Parallax */}
       <motion.div
+        style={{ y: y1, opacity }}
         animate={{
           scale: [1, 1.2, 1],
           x: [0, 100, 0],
-          y: [0, -50, 0],
         }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-primary/30 to-accent/30 rounded-full blur-3xl"
       />
       <motion.div
+        style={{ y: y2, opacity }}
         animate={{
           scale: [1, 1.3, 1],
           x: [0, -100, 0],
-          y: [0, 100, 0],
         }}
         transition={{ duration: 25, repeat: Infinity, ease: "linear", delay: 5 }}
         className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-accent/40 to-primary/40 rounded-full blur-3xl"
       />
       <motion.div
+        style={{ y: y3, scale: useTransform(scrollY, [0, 500], [1, 1.5]) }}
         animate={{
-          scale: [1, 1.1, 1],
           rotate: [0, 180, 360],
         }}
         transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
@@ -74,7 +83,10 @@ const HeroSection = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            style={{ scale }}
+            style={{ 
+              scale,
+              filter: useTransform(blur, (v) => `blur(${v}px)`)
+            }}
             className="text-left"
           >
             <motion.div

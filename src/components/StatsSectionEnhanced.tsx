@@ -3,6 +3,7 @@ import { TrendingUp, Users, Zap, DollarSign, Clock, CheckCircle } from "lucide-r
 import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { use3DCard } from "@/hooks/use3DCard";
+import { ParallaxSection } from "@/components/effects/ParallaxSection";
 
 const stats = [
   {
@@ -90,16 +91,18 @@ const StatCard = ({ stat, index }: { stat: any; index: number }) => {
 const StatsSection = () => {
   return (
     <section className="relative py-24 overflow-hidden bg-gradient-to-b from-background via-muted/30 to-background">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-[0.02]">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--primary)) 1px, transparent 0)`,
-            backgroundSize: "40px 40px",
-          }}
-        />
-      </div>
+      {/* Background Pattern with Parallax */}
+      <ParallaxSection speed={0.3}>
+        <div className="absolute inset-0 opacity-[0.02]">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--primary)) 1px, transparent 0)`,
+              backgroundSize: "40px 40px",
+            }}
+          />
+        </div>
+      </ParallaxSection>
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
