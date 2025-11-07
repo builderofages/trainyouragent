@@ -4,6 +4,7 @@ import { Search, Wrench, Calculator, Home, ArrowRight, Star, Users } from "lucid
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
 
 const niches = [
   {
@@ -15,6 +16,7 @@ const niches = [
     stats: { users: "2.5K", rating: 4.9 },
     tags: ["Lead Gen", "Scheduling", "Analytics"],
     available: true,
+    link: "/niche/hvac",
   },
   {
     id: 2,
@@ -41,6 +43,7 @@ const niches = [
 const categories = ["All Industries", "HVAC", "Accounting", "Roofing", "Custom"];
 
 const NicheDirectory = () => {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState("All Industries");
   const [searchQuery, setSearchQuery] = useState("");
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
@@ -204,6 +207,7 @@ const NicheDirectory = () => {
                           : "bg-secondary text-foreground hover:bg-secondary/80"
                       }`}
                       disabled={!niche.available}
+                      onClick={() => niche.link && navigate(niche.link)}
                     >
                       {niche.available ? "Enter Realm" : "Notify Me"}
                       <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />

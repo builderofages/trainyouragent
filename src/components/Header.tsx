@@ -20,10 +20,10 @@ const Header = () => {
   }, []);
 
   const navLinks = [
-    { name: "Home", href: "#" },
-    { name: "Solutions", href: "#solutions", hasDropdown: true },
+    { name: "Solutions", href: "/", hasDropdown: true },
+    { name: "Pricing", href: "/pricing" },
+    { name: "Dashboard", href: "/dashboard" },
     { name: "Resources", href: "#resources" },
-    { name: "Pricing", href: "#pricing" },
   ];
 
   return (
@@ -39,14 +39,16 @@ const Header = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <motion.a
-            href="#"
+            href="/"
             className="flex items-center gap-3 group"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center shadow-blue">
-              <span className="text-white font-black text-xl">T</span>
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="TrainYourAgent" 
+              className="h-10 w-auto"
+            />
             <span className="text-xl font-black text-foreground group-hover:text-primary transition-colors">
               TrainYourAgent
             </span>

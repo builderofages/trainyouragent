@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Sparkles, Play, TrendingUp } from "lucide-react";
+import { Sparkles, Play, TrendingUp, Users, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import InteractiveDemo from "./InteractiveDemo";
 
 const FloatingShape = ({ delay = 0, duration = 20 }: { delay?: number; duration?: number }) => (
   <motion.div
@@ -24,6 +25,12 @@ const HeroSection = () => {
   const y1 = useTransform(scrollY, [0, 500], [0, 150]);
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
+  const stats = [
+    { icon: TrendingUp, value: "3x", label: "More Leads" },
+    { icon: Users, value: "60%", label: "Lower CAC" },
+    { icon: Zap, value: "24/7", label: "Coverage" },
+  ];
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero">
@@ -51,128 +58,79 @@ const HeroSection = () => {
         }}
       />
 
-      <motion.div
-        style={{ opacity }}
-        className="container mx-auto px-6 relative z-10 pt-32 pb-20"
-      >
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex justify-center mb-8"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-primary/20 rounded-full shadow-card">
-            <Sparkles className="w-4 h-4 text-primary animate-pulse-slow" />
-            <span className="text-sm font-medium text-foreground">
-              The Future of Business Automation is Here
-            </span>
-          </div>
-        </motion.div>
-
-        {/* Main Headline */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-center max-w-5xl mx-auto space-y-6 mb-12"
-        >
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-tight">
-            <span className="bg-clip-text text-transparent bg-gradient-primary">
-              AI Agents
-            </span>
-            <br />
-            <span className="text-foreground">That Think Like</span>
-            <br />
-            <span className="text-foreground">Your Business</span>
-          </h1>
-          
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
-          >
-            Deploy custom AI agents in days, not months. Automate 80% of operations, 
-            amplify your genius, and scale without limits.
-          </motion.p>
-        </motion.div>
-
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
-        >
-          <Button 
-            size="lg" 
-            className="text-lg px-8 py-6 rounded-full bg-gradient-primary hover:shadow-blue transition-all duration-300 group"
-          >
-            Discover Your AI Edge
-            <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-          </Button>
-          
-          <Button 
-            size="lg" 
-            variant="outline"
-            className="text-lg px-8 py-6 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white border-2 border-primary/20 hover:border-primary hover:shadow-card transition-all duration-300 group"
-          >
-            <Play className="w-5 h-5 mr-2" />
-            See Agents in Action
-          </Button>
-        </motion.div>
-
-        {/* Floating Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
-        >
-          {[
-            { icon: TrendingUp, stat: "80%", label: "Operations Automated" },
-            { icon: Sparkles, stat: "10X", label: "Faster Lead Response" },
-            { icon: ArrowRight, stat: "24/7", label: "AI-Powered Support" },
-          ].map((item, index) => (
-            <motion.div
-              key={index}
-              whileHover={{ scale: 1.05, y: -5 }}
-              className="bg-white/80 backdrop-blur-sm border border-border rounded-2xl p-6 shadow-card hover:shadow-blue transition-all duration-300"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center">
-                  <item.icon className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <div className="text-3xl font-black text-foreground">{item.stat}</div>
-                  <div className="text-sm text-muted-foreground">{item.label}</div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
-        >
+      {/* Main Content */}
+      <div className="container mx-auto px-4 pt-32 pb-20 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left: Hero Text */}
           <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-6 h-10 border-2 border-primary rounded-full flex items-start justify-center p-2"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-left"
           >
             <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-1.5 h-1.5 bg-primary rounded-full"
-            />
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8"
+            >
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium">AI-Powered Business Automation</span>
+            </motion.div>
+
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+              Custom AI Agents for{" "}
+              <span className="bg-gradient-to-r from-primary via-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                Every Industry
+              </span>
+            </h1>
+
+            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl">
+              Train specialized AI agents to capture leads, qualify customers, and automate 
+              operations 24/7 — no coding required.
+            </p>
+
+            <div className="flex flex-wrap gap-4 mb-12">
+              <Button size="lg" className="text-lg px-8 h-14 gap-2">
+                <Play className="w-5 h-5" />
+                See Demo
+              </Button>
+              <Button size="lg" variant="outline" className="text-lg px-8 h-14">
+                Explore Solutions
+              </Button>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="grid grid-cols-3 gap-6 pt-8 border-t border-border/50">
+              {stats.map((stat) => {
+                const Icon = stat.icon;
+                return (
+                  <motion.div
+                    key={stat.label}
+                    whileHover={{ scale: 1.05 }}
+                    className="text-left"
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <Icon className="w-5 h-5 text-primary" />
+                      <div className="text-3xl font-bold text-primary">{stat.value}</div>
+                    </div>
+                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  </motion.div>
+                );
+              })}
+            </div>
           </motion.div>
-        </motion.div>
-      </motion.div>
+
+          {/* Right: Interactive Demo */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <InteractiveDemo />
+          </motion.div>
+        </div>
+      </div>
     </section>
   );
 };
