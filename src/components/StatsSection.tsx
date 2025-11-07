@@ -164,7 +164,7 @@ const StatsSection = () => {
                 className="text-lg font-bold text-muted-foreground"
               >
                 {company}
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.div>
