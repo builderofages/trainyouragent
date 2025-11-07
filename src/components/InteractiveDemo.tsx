@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { GlassCard } from "@/components/enhanced/GlassCard";
+import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bot, User, Sparkles } from "lucide-react";
@@ -60,11 +60,15 @@ const InteractiveDemo = () => {
   const isUserTurn = currentMessage.role === "user";
 
   return (
-    <Card className="p-6 max-w-2xl mx-auto bg-background/95 backdrop-blur">
+    <GlassCard className="p-6 max-w-2xl mx-auto shadow-dramatic hover:shadow-glow transition-all duration-500">
       <div className="flex items-center gap-2 mb-6">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center">
+        <motion.div 
+          className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-glow-sm"
+          animate={{ rotate: [0, 360] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        >
           <Sparkles className="w-5 h-5 text-white" />
-        </div>
+        </motion.div>
         <div>
           <h3 className="font-bold">Live Demo</h3>
           <p className="text-sm text-muted-foreground">
@@ -124,22 +128,22 @@ const InteractiveDemo = () => {
             onKeyDown={(e) => {
               if (e.key === "Enter") handleNext();
             }}
-            className="h-12"
+            className="h-12 glass-card border-glass-border"
           />
-          <Button onClick={handleNext} className="w-full" size="lg">
+          <MagneticButton onClick={handleNext} className="w-full shadow-blue hover:shadow-glow" size="lg">
             Send Message
-          </Button>
+          </MagneticButton>
         </div>
       ) : (
-        <Button onClick={handleNext} className="w-full" size="lg">
+        <MagneticButton onClick={handleNext} className="w-full shadow-blue hover:shadow-glow" size="lg">
           {step === conversation.length - 1 ? "Restart Demo" : "Continue Demo"}
-        </Button>
+        </MagneticButton>
       )}
 
       <div className="text-center mt-4 text-sm text-muted-foreground">
         Step {step + 1} of {conversation.length}
       </div>
-    </Card>
+    </GlassCard>
   );
 };
 

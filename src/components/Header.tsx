@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Menu, X, Search, ChevronDown } from "lucide-react";
+import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { Button } from "@/components/ui/button";
 
 const Header = () => {
@@ -31,7 +32,7 @@ const Header = () => {
       style={{ opacity: headerOpacity }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? "bg-white/80 backdrop-blur-glass border-b border-border shadow-md"
+          ? "glass-card border-b border-glass-border shadow-dramatic"
           : "bg-transparent"
       }`}
     >
@@ -77,15 +78,15 @@ const Header = () => {
 
           {/* Right Side Actions */}
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="rounded-full">
+            <MagneticButton variant="ghost" size="icon" className="rounded-full" strength={10}>
               <Search className="w-5 h-5" />
-            </Button>
-            <Button variant="outline" className="rounded-full">
+            </MagneticButton>
+            <MagneticButton variant="outline" className="rounded-full">
               Sign In
-            </Button>
-            <Button className="rounded-full bg-gradient-primary hover:shadow-blue transition-all duration-300">
+            </MagneticButton>
+            <MagneticButton className="rounded-full bg-gradient-primary hover:shadow-glow transition-all duration-300">
               Get Started
-            </Button>
+            </MagneticButton>
           </div>
 
           {/* Mobile Menu Button */}

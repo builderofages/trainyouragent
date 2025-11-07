@@ -70,11 +70,17 @@ export default {
         'md': 'var(--shadow-md)',
         'lg': 'var(--shadow-lg)',
         'xl': 'var(--shadow-xl)',
+        '2xl': 'var(--shadow-2xl)',
         'blue': 'var(--shadow-blue)',
         'card': 'var(--shadow-card)',
+        'dramatic': 'var(--shadow-dramatic)',
+        'glow': 'var(--shadow-glow)',
+        'inner': 'var(--shadow-inner)',
       },
       backdropBlur: {
         'glass': '20px',
+        'xl': '24px',
+        '2xl': '32px',
       },
       borderRadius: {
         lg: "var(--radius)",

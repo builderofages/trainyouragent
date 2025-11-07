@@ -55,22 +55,35 @@ All colors MUST be HSL.
                      radial-gradient(at 80% 0%, hsla(217, 91%, 60%, 0.1) 0px, transparent 50%),
                      radial-gradient(at 0% 50%, hsla(211, 100%, 66%, 0.1) 0px, transparent 50%);
     
-    /* Shadows */
+    /* Shadows - Dramatic Apple-style */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    --shadow-blue: 0 10px 40px -10px hsla(211, 100%, 66%, 0.4);
-    --shadow-card: 0 4px 20px -2px hsla(211, 100%, 66%, 0.1);
+    --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.15), 0 6px 12px -2px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 50px -8px rgba(0, 0, 0, 0.2), 0 12px 24px -4px rgba(0, 0, 0, 0.12);
+    --shadow-2xl: 0 30px 70px -12px rgba(0, 0, 0, 0.25), 0 16px 32px -6px rgba(0, 0, 0, 0.15);
+    --shadow-dramatic: 0 20px 60px -10px rgba(0, 0, 0, 0.18), 0 8px 24px -4px rgba(0, 0, 0, 0.12);
+    --shadow-blue: 0 16px 48px -8px hsla(211, 100%, 66%, 0.5);
+    --shadow-card: 0 8px 32px -4px hsla(211, 100%, 66%, 0.15);
+    --shadow-glow: 0 0 60px hsla(211, 100%, 66%, 0.4);
+    --shadow-inner: inset 0 2px 8px rgba(0, 0, 0, 0.06);
     
-    /* Glass Morphism */
-    --glass-bg: hsla(0, 0%, 100%, 0.7);
-    --glass-border: hsla(211, 100%, 66%, 0.2);
+    /* Glass Morphism - Enhanced */
+    --glass-bg: hsla(0, 0%, 100%, 0.75);
+    --glass-border: hsla(211, 100%, 66%, 0.25);
+    --glass-hover: hsla(0, 0%, 100%, 0.85);
+    --glass-blur: blur(24px);
     
-    /* Animations */
+    /* Animations - Apple-style Easing */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-spring: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     --transition-slow: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-snappy: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    
+    /* Magnetic & 3D Effects */
+    --magnetic-strength: 20px;
+    --tilt-max: 12deg;
+    --lift-distance: -12px;
   }
 
   .dark {
@@ -99,8 +112,10 @@ All colors MUST be HSL.
     --input: 217 33% 18%;
     --ring: 211 100% 66%;
     
-    --glass-bg: hsla(217, 33%, 17%, 0.7);
-    --glass-border: hsla(211, 100%, 66%, 0.3);
+    --glass-bg: hsla(217, 33%, 17%, 0.75);
+    --glass-border: hsla(211, 100%, 66%, 0.35);
+    --glass-hover: hsla(217, 33%, 17%, 0.85);
+    --glass-blur: blur(24px);
   }
 }
 
@@ -111,5 +126,134 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/20 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/40;
+  }
+}
+
+@layer utilities {
+  /* Glass Card */
+  .glass-card {
+    @apply backdrop-blur-xl bg-glass-bg border border-glass-border;
+  }
+
+  .glass-card-hover {
+    @apply backdrop-blur-xl bg-glass-hover border border-glass-border;
+  }
+
+  /* Dramatic Shadows */
+  .shadow-dramatic {
+    box-shadow: var(--shadow-dramatic);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Hover Lift */
+  .hover-lift {
+    @apply transition-all duration-300;
+    will-change: transform;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: var(--shadow-dramatic);
+  }
+
+  /* Text Gradient Shimmer */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent;
+    background-size: 200% auto;
+    animation: shimmer 4s linear infinite;
+  }
+
+  @keyframes shimmer {
+    to {
+      background-position: 200% center;
+    }
+  }
+
+  /* Magnetic Effect Base */
+  .magnetic {
+    @apply transition-transform duration-200;
+    will-change: transform;
+  }
+
+  /* 3D Tilt Effect */
+  .tilt-3d {
+    transform-style: preserve-3d;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Glow Effects */
+  .glow-blue {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .glow-blue-sm {
+    box-shadow: 0 0 30px hsla(211, 100%, 66%, 0.3);
+  }
+
+  /* Fade In Up Animation */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Stagger Animation Classes */
+  .stagger-1 {
+    animation-delay: 0.1s;
+  }
+
+  .stagger-2 {
+    animation-delay: 0.2s;
+  }
+
+  .stagger-3 {
+    animation-delay: 0.3s;
+  }
+
+  .stagger-4 {
+    animation-delay: 0.4s;
+  }
+
+  /* Perspective for 3D */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .perspective-2000 {
+    perspective: 2000px;
   }
 }
