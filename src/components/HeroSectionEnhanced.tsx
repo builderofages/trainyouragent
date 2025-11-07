@@ -3,7 +3,6 @@ import { Sparkles, Play, TrendingUp, Users, Zap } from "lucide-react";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import InteractiveDemo from "./InteractiveDemo";
-import { FloatingShapes } from "./3d/FloatingShapes";
 
 const HeroSection = () => {
   const { scrollY } = useScroll();
@@ -19,9 +18,37 @@ const HeroSection = () => {
   ];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero">
-      {/* 3D Floating Shapes Background */}
-      <FloatingShapes />
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Vibrant Animated Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50" />
+      
+      {/* Large Animated Orbs */}
+      <motion.div
+        animate={{
+          scale: [1, 1.2, 1],
+          x: [0, 100, 0],
+          y: [0, -50, 0],
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-primary/30 to-accent/30 rounded-full blur-3xl"
+      />
+      <motion.div
+        animate={{
+          scale: [1, 1.3, 1],
+          x: [0, -100, 0],
+          y: [0, 100, 0],
+        }}
+        transition={{ duration: 25, repeat: Infinity, ease: "linear", delay: 5 }}
+        className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-accent/40 to-primary/40 rounded-full blur-3xl"
+      />
+      <motion.div
+        animate={{
+          scale: [1, 1.1, 1],
+          rotate: [0, 180, 360],
+        }}
+        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-2xl"
+      />
 
       {/* Animated Mesh Background */}
       <motion.div 
