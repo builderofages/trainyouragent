@@ -2,10 +2,10 @@ import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSectionEnhanced";
 import StatsSection from "@/components/StatsSectionEnhanced";
 import NicheDirectory from "@/components/NicheDirectoryEnhanced";
-import SocialProof from "@/components/SocialProof";
-import NewsletterSection from "@/components/NewsletterSection";
-import Footer from "@/components/Footer";
-import ROICalculator from "@/components/ROICalculator";
+import SocialProof from "@/components/SocialProofEnhanced";
+import NewsletterSection from "@/components/NewsletterSectionEnhanced";
+import Footer from "@/components/FooterEnhanced";
+import ROICalculator from "@/components/ROICalculatorEnhanced";
 
 const Index = () => {
   return (
