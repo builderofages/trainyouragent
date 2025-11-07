@@ -154,11 +154,17 @@ All colors MUST be HSL.
 @layer utilities {
   /* Glass Card */
   .glass-card {
-    @apply backdrop-blur-xl bg-glass-bg border border-glass-border;
+    backdrop-filter: blur(24px);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
   }
 
   .glass-card-hover {
-    @apply backdrop-blur-xl bg-glass-hover border border-glass-border;
+    backdrop-filter: blur(24px);
+    background: var(--glass-hover);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
   }
 
   /* Dramatic Shadows */
