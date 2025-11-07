@@ -8,90 +8,99 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Cosmic Theme - Deep Space Blues & Neon Emerald */
+    /* TrainYourAgent Brand - Bright Blue & White */
     --background: 0 0% 100%;
-    --foreground: 210 100% 12%;
+    --foreground: 222 47% 11%;
     
-    --void: 210 65% 12%;
-    --void-foreground: 0 0% 100%;
+    --bright-blue: 211 100% 66%;
+    --bright-blue-foreground: 0 0% 100%;
     
-    --neon-growth: 150 100% 50%;
-    --neon-growth-foreground: 210 65% 12%;
+    --deep-blue: 217 91% 60%;
+    --deep-blue-foreground: 0 0% 100%;
     
-    --cosmic-blue: 210 100% 25%;
-    --cosmic-blue-light: 210 100% 35%;
-    --cosmic-blue-dark: 210 100% 15%;
+    --ultra-blue: 221 83% 53%;
+    --ultra-blue-foreground: 0 0% 100%;
     
     --card: 0 0% 100%;
-    --card-foreground: 210 100% 12%;
+    --card-foreground: 222 47% 11%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 210 100% 12%;
+    --popover-foreground: 222 47% 11%;
     
-    --primary: 210 100% 25%;
+    --primary: 211 100% 66%;
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 150 100% 50%;
-    --secondary-foreground: 210 65% 12%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
     
-    --muted: 210 40% 96%;
-    --muted-foreground: 210 20% 50%;
+    --muted: 210 40% 97%;
+    --muted-foreground: 215 16% 47%;
     
-    --accent: 150 100% 50%;
-    --accent-foreground: 210 65% 12%;
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
     
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 210 30% 90%;
-    --input: 210 30% 95%;
-    --ring: 150 100% 50%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 211 100% 66%;
     
-    --radius: 1rem;
+    --radius: 0.75rem;
     
     /* Gradients */
-    --gradient-cosmic: linear-gradient(135deg, hsl(210, 100%, 25%) 0%, hsl(210, 100%, 15%) 100%);
-    --gradient-neon: linear-gradient(135deg, hsl(150, 100%, 50%) 0%, hsl(170, 100%, 45%) 100%);
-    --gradient-hero: linear-gradient(180deg, hsl(210, 100%, 12%) 0%, hsl(210, 100%, 20%) 50%, hsl(210, 100%, 12%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(211, 100%, 66%) 0%, hsl(217, 91%, 60%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(210, 40%, 98%) 100%);
+    --gradient-mesh: radial-gradient(at 40% 20%, hsla(211, 100%, 66%, 0.15) 0px, transparent 50%),
+                     radial-gradient(at 80% 0%, hsla(217, 91%, 60%, 0.1) 0px, transparent 50%),
+                     radial-gradient(at 0% 50%, hsla(211, 100%, 66%, 0.1) 0px, transparent 50%);
     
     /* Shadows */
-    --shadow-glow: 0 0 40px hsla(150, 100%, 50%, 0.3);
-    --shadow-cosmic: 0 20px 60px -10px hsla(210, 100%, 15%, 0.5);
-    --shadow-card: 0 10px 30px -5px hsla(210, 50%, 20%, 0.2);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-blue: 0 10px 40px -10px hsla(211, 100%, 66%, 0.4);
+    --shadow-card: 0 4px 20px -2px hsla(211, 100%, 66%, 0.1);
+    
+    /* Glass Morphism */
+    --glass-bg: hsla(0, 0%, 100%, 0.7);
+    --glass-border: hsla(211, 100%, 66%, 0.2);
     
     /* Animations */
-    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-slow: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .dark {
-    --background: 210 65% 8%;
+    --background: 222 47% 11%;
     --foreground: 0 0% 98%;
     
-    --void: 210 65% 12%;
-    --void-foreground: 0 0% 100%;
-    
-    --card: 210 50% 12%;
+    --card: 217 33% 17%;
     --card-foreground: 0 0% 98%;
     
-    --popover: 210 50% 12%;
+    --popover: 217 33% 17%;
     --popover-foreground: 0 0% 98%;
     
-    --primary: 150 100% 50%;
-    --primary-foreground: 210 65% 12%;
+    --primary: 211 100% 66%;
+    --primary-foreground: 222 47% 11%;
     
-    --secondary: 210 50% 20%;
+    --secondary: 217 33% 17%;
     --secondary-foreground: 0 0% 98%;
     
-    --muted: 210 50% 15%;
-    --muted-foreground: 210 20% 65%;
+    --muted: 223 47% 11%;
+    --muted-foreground: 215 20% 65%;
     
-    --accent: 150 100% 50%;
-    --accent-foreground: 210 65% 12%;
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 98%;
     
-    --border: 210 40% 20%;
-    --input: 210 40% 18%;
-    --ring: 150 100% 50%;
+    --border: 217 33% 20%;
+    --input: 217 33% 18%;
+    --ring: 211 100% 66%;
+    
+    --glass-bg: hsla(217, 33%, 17%, 0.7);
+    --glass-border: hsla(211, 100%, 66%, 0.3);
   }
 }
 

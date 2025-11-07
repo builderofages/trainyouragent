@@ -1,159 +1,178 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, Sparkles, Play, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Zap, ArrowRight } from "lucide-react";
 
-const ParticleBackground = () => {
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-neon rounded-full"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            y: [0, -30, 0],
-            x: [0, Math.random() * 20 - 10, 0],
-            opacity: [0.2, 0.8, 0.2],
-            scale: [1, 1.5, 1],
-          }}
-          transition={{
-            duration: 3 + Math.random() * 3,
-            repeat: Infinity,
-            delay: Math.random() * 2,
-          }}
-        />
-      ))}
-    </div>
-  );
-};
+const FloatingShape = ({ delay = 0, duration = 20 }: { delay?: number; duration?: number }) => (
+  <motion.div
+    className="absolute w-32 h-32 bg-gradient-primary opacity-20 rounded-3xl blur-2xl"
+    animate={{
+      x: [0, 100, 0],
+      y: [0, -100, 0],
+      rotate: [0, 180, 360],
+    }}
+    transition={{
+      duration,
+      repeat: Infinity,
+      ease: "linear",
+      delay,
+    }}
+  />
+);
 
 const HeroSection = () => {
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 500], [0, 150]);
+  const y2 = useTransform(scrollY, [0, 500], [0, -150]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero">
-      <ParticleBackground />
+      {/* Animated Mesh Background */}
+      <div className="absolute inset-0 bg-gradient-mesh" />
       
-      <div className="container relative z-10 px-4 py-20 md:py-32">
+      {/* Floating Geometric Shapes */}
+      <div className="absolute inset-0 overflow-hidden">
+        <FloatingShape delay={0} duration={20} />
+        <motion.div style={{ y: y1 }} className="absolute top-20 right-20">
+          <FloatingShape delay={2} duration={25} />
+        </motion.div>
+        <motion.div style={{ y: y2 }} className="absolute bottom-40 left-20">
+          <FloatingShape delay={4} duration={30} />
+        </motion.div>
+      </div>
+
+      {/* Grid Pattern */}
+      <div 
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `linear-gradient(to right, hsl(var(--primary)) 1px, transparent 1px),
+                           linear-gradient(to bottom, hsl(var(--primary)) 1px, transparent 1px)`,
+          backgroundSize: '80px 80px'
+        }}
+      />
+
+      <motion.div
+        style={{ opacity }}
+        className="container mx-auto px-6 relative z-10 pt-32 pb-20"
+      >
+        {/* Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex justify-center mb-8"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-primary/20 rounded-full shadow-card">
+            <Sparkles className="w-4 h-4 text-primary animate-pulse-slow" />
+            <span className="text-sm font-medium text-foreground">
+              The Future of Business Automation is Here
+            </span>
+          </div>
+        </motion.div>
+
+        {/* Main Headline */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center max-w-5xl mx-auto"
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-center max-w-5xl mx-auto space-y-6 mb-12"
         >
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-neon/10 border border-neon/30 mb-8 backdrop-blur-sm"
-          >
-            <Sparkles className="w-4 h-4 text-neon" />
-            <span className="text-sm font-medium text-foreground">AI That Thinks Like Your Business</span>
-          </motion.div>
-
-          {/* Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 text-foreground leading-tight"
-          >
-            Unleash AI Agents That{" "}
-            <span className="relative inline-block">
-              <span className="text-transparent bg-clip-text bg-gradient-neon">
-                Revolutionize
-              </span>
-              <motion.span
-                className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-neon"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
-              />
-            </span>{" "}
-            Your Business
-          </motion.h1>
-
-          {/* Subheadline */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-tight">
+            <span className="bg-clip-text text-transparent bg-gradient-primary">
+              AI Agents
+            </span>
+            <br />
+            <span className="text-foreground">That Think Like</span>
+            <br />
+            <span className="text-foreground">Your Business</span>
+          </h1>
+          
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto font-medium"
+            className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed"
           >
-            Automate the mundane, amplify your genius. Deploy in days, dominate your niche.
+            Deploy custom AI agents in days, not months. Automate 80% of operations, 
+            amplify your genius, and scale without limits.
           </motion.p>
+        </motion.div>
 
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+        {/* CTA Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+        >
+          <Button 
+            size="lg" 
+            className="text-lg px-8 py-6 rounded-full bg-gradient-primary hover:shadow-blue transition-all duration-300 group"
           >
-            <Button 
-              size="lg" 
-              className="group relative overflow-hidden bg-primary text-primary-foreground hover:bg-primary/90 shadow-glow text-lg px-8 py-6 rounded-2xl font-bold"
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                Discover Your AI Edge
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </span>
-              <motion.div
-                className="absolute inset-0 bg-gradient-neon opacity-0 group-hover:opacity-20"
-                whileHover={{ scale: 1.05 }}
-              />
-            </Button>
-
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="group border-2 border-neon text-foreground hover:bg-neon/10 text-lg px-8 py-6 rounded-2xl font-bold backdrop-blur-sm"
-            >
-              <span className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-neon group-hover:animate-glow-pulse" />
-                See Agents in Action
-              </span>
-            </Button>
-          </motion.div>
-
-          {/* Floating metrics */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
+            Discover Your AI Edge
+            <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+          </Button>
+          
+          <Button 
+            size="lg" 
+            variant="outline"
+            className="text-lg px-8 py-6 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white border-2 border-primary/20 hover:border-primary hover:shadow-card transition-all duration-300 group"
           >
-            {[
-              { label: "Ops Automated", value: "80%" },
-              { label: "Faster Leads", value: "10X" },
-              { label: "Client Success", value: "95%" },
-              { label: "Deploy Time", value: "3 Days" },
-            ].map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1 + i * 0.1 }}
-                className="relative group"
-              >
-                <div className="bg-card/50 backdrop-blur-md rounded-2xl p-6 border border-border/50 hover:border-neon/50 transition-all hover:shadow-glow">
-                  <div className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-neon mb-2">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm text-muted-foreground font-medium">
-                    {stat.label}
-                  </div>
+            <Play className="w-5 h-5 mr-2" />
+            See Agents in Action
+          </Button>
+        </motion.div>
+
+        {/* Floating Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.9 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto"
+        >
+          {[
+            { icon: TrendingUp, stat: "80%", label: "Operations Automated" },
+            { icon: Sparkles, stat: "10X", label: "Faster Lead Response" },
+            { icon: ArrowRight, stat: "24/7", label: "AI-Powered Support" },
+          ].map((item, index) => (
+            <motion.div
+              key={index}
+              whileHover={{ scale: 1.05, y: -5 }}
+              className="bg-white/80 backdrop-blur-sm border border-border rounded-2xl p-6 shadow-card hover:shadow-blue transition-all duration-300"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center">
+                  <item.icon className="w-6 h-6 text-white" />
                 </div>
-              </motion.div>
-            ))}
+                <div>
+                  <div className="text-3xl font-black text-foreground">{item.stat}</div>
+                  <div className="text-sm text-muted-foreground">{item.label}</div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="w-6 h-10 border-2 border-primary rounded-full flex items-start justify-center p-2"
+          >
+            <motion.div
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="w-1.5 h-1.5 bg-primary rounded-full"
+            />
           </motion.div>
         </motion.div>
-      </div>
-
-      {/* Gradient overlay */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      </motion.div>
     </section>
   );
 };

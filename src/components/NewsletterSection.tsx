@@ -1,122 +1,185 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
+import { Mail, CheckCircle, TrendingUp, Zap, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { Mail, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const NewsletterSection = () => {
   const [email, setEmail] = useState("");
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+    
+    if (!email) {
       toast({
-        title: "Welcome to the AI Vanguard! 🚀",
-        description: "You'll receive exclusive insights and updates.",
+        title: "Email required",
+        description: "Please enter your email address",
+        variant: "destructive",
       });
-      setEmail("");
+      return;
     }
+
+    setIsSubscribed(true);
+    toast({
+      title: "Welcome to the AI Revolution! 🚀",
+      description: "Check your inbox for exclusive AI insights",
+    });
+    
+    setTimeout(() => {
+      setEmail("");
+      setIsSubscribed(false);
+    }, 3000);
   };
 
+  const benefits = [
+    { icon: TrendingUp, text: "Weekly AI strategy insights" },
+    { icon: Zap, text: "Early access to new features" },
+    { icon: Shield, text: "No spam, unsubscribe anytime" },
+  ];
+
   return (
-    <section className="py-24 px-4 bg-void relative overflow-hidden">
-      {/* Animated background */}
-      <div className="absolute inset-0">
-        {[...Array(10)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-64 h-64 rounded-full bg-neon/5 blur-3xl"
-            animate={{
-              x: [0, Math.random() * 100 - 50, 0],
-              y: [0, Math.random() * 100 - 50, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 10 + Math.random() * 10,
-              repeat: Infinity,
-              delay: i * 0.5,
-            }}
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-          />
-        ))}
-      </div>
+    <section className="py-24 bg-white relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-mesh opacity-20" />
+      <motion.div
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{ duration: 8, repeat: Infinity }}
+        className="absolute top-20 -right-40 w-96 h-96 bg-gradient-primary rounded-full blur-3xl"
+      />
+      <motion.div
+        animate={{
+          scale: [1, 1.3, 1],
+          opacity: [0.2, 0.4, 0.2],
+        }}
+        transition={{ duration: 10, repeat: Infinity, delay: 2 }}
+        className="absolute -bottom-40 -left-40 w-96 h-96 bg-accent rounded-full blur-3xl"
+      />
 
-      <div className="container mx-auto relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto"
-        >
-          <div className="bg-card/10 backdrop-blur-xl border-2 border-neon/30 rounded-3xl p-12 md:p-16 shadow-glow">
-            {/* Icon */}
-            <motion.div
-              animate={{ rotate: [0, 5, -5, 0] }}
-              transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-              className="mb-6 flex justify-center"
-            >
-              <div className="w-16 h-16 rounded-2xl bg-gradient-neon flex items-center justify-center shadow-glow">
-                <Sparkles className="w-8 h-8 text-void" />
-              </div>
-            </motion.div>
-
-            {/* Heading */}
-            <h2 className="text-4xl md:text-5xl font-black mb-4 text-white text-center">
-              Join the{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-neon">
-                AI Vanguard
-              </span>
-            </h2>
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white/90 backdrop-blur-sm border-2 border-primary/20 shadow-blue p-8 md:p-12 relative overflow-hidden rounded-3xl">
+            {/* Decorative Corner */}
+            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-primary opacity-10 rounded-bl-full" />
             
-            <p className="text-xl text-gray-300 mb-8 text-center max-w-2xl mx-auto">
-              Get exclusive insights, early access to new features, and AI strategies that drive real growth
-            </p>
-
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
-              <div className="relative flex-1">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="pl-12 h-14 bg-background/50 border-2 border-border focus:border-neon text-foreground rounded-2xl text-lg"
-                />
-              </div>
-              <Button 
-                type="submit"
-                size="lg"
-                className="bg-gradient-neon hover:opacity-90 text-void font-bold h-14 px-8 rounded-2xl shadow-glow"
+            <div className="relative z-10">
+              {/* Icon */}
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                whileInView={{ scale: 1, rotate: 0 }}
+                viewport={{ once: true }}
+                transition={{ type: "spring", duration: 0.8 }}
+                className="inline-flex items-center justify-center w-20 h-20 bg-gradient-primary rounded-2xl mb-6 shadow-blue"
               >
-                Get Started
-              </Button>
-            </form>
+                <Mail className="w-10 h-10 text-white" />
+              </motion.div>
 
-            {/* Trust indicators */}
-            <div className="mt-8 flex flex-wrap justify-center items-center gap-6 text-sm text-gray-400">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-neon animate-glow-pulse" />
-                <span>No spam, ever</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-neon animate-glow-pulse" />
-                <span>Unsubscribe anytime</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-neon animate-glow-pulse" />
-                <span>Join 10,000+ subscribers</span>
-              </div>
+              {/* Heading */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="mb-8"
+              >
+                <h2 className="text-3xl md:text-5xl font-black text-foreground mb-4">
+                  Join the{" "}
+                  <span className="bg-clip-text text-transparent bg-gradient-primary">
+                    AI Vanguard
+                  </span>
+                </h2>
+                <p className="text-lg md:text-xl text-muted-foreground">
+                  Get exclusive insights, case studies, and early access to revolutionary AI features
+                </p>
+              </motion.div>
+
+              {/* Form */}
+              <motion.form
+                onSubmit={handleSubmit}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="mb-8"
+              >
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Input
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="flex-1 px-6 py-6 text-lg rounded-full border-2 border-border focus:border-primary transition-all duration-300"
+                    disabled={isSubscribed}
+                  />
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={isSubscribed}
+                    className="px-8 py-6 text-lg rounded-full bg-gradient-primary hover:shadow-blue transition-all duration-300 whitespace-nowrap"
+                  >
+                    {isSubscribed ? (
+                      <>
+                        <CheckCircle className="w-5 h-5 mr-2" />
+                        Subscribed!
+                      </>
+                    ) : (
+                      "Get Started"
+                    )}
+                  </Button>
+                </div>
+              </motion.form>
+
+              {/* Benefits */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4 }}
+                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+              >
+                {benefits.map((benefit, index) => (
+                  <motion.div
+                    key={index}
+                    whileHover={{ scale: 1.05 }}
+                    className="flex items-center gap-3"
+                  >
+                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                      <benefit.icon className="w-5 h-5 text-primary" />
+                    </div>
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {benefit.text}
+                    </span>
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              {/* Social Proof */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.6 }}
+                className="mt-8 pt-8 border-t border-border flex items-center justify-center gap-2 text-sm text-muted-foreground"
+              >
+                <div className="flex -space-x-2">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div
+                      key={i}
+                      className="w-8 h-8 bg-gradient-primary rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold"
+                    >
+                      {i}
+                    </div>
+                  ))}
+                </div>
+                <span>Join 10,000+ AI innovators already subscribed</span>
+              </motion.div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
