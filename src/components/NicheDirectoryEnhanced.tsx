@@ -7,6 +7,7 @@ import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { use3DCard } from "@/hooks/use3DCard";
 import { useNavigate } from "react-router-dom";
+import { nicheConfig } from "@/config/niches";
 
 const niches = [
   {
@@ -17,8 +18,6 @@ const niches = [
     color: "from-blue-500 to-cyan-500",
     stats: { users: "2.5K+", satisfaction: "98%" },
     tags: ["Lead Gen", "Scheduling", "24/7"],
-    available: true,
-    link: "/niche/hvac",
   },
   {
     id: "accounting",
@@ -28,7 +27,6 @@ const niches = [
     color: "from-green-500 to-emerald-500",
     stats: { users: "1.8K+", satisfaction: "97%" },
     tags: ["Onboarding", "Documents", "Scheduling"],
-    available: false,
   },
   {
     id: "roofing",
@@ -38,7 +36,6 @@ const niches = [
     color: "from-orange-500 to-red-500",
     stats: { users: "Coming Soon", satisfaction: "—" },
     tags: ["Estimates", "Inspections", "Lead Qual"],
-    available: false,
   },
   {
     id: "legal",
@@ -48,7 +45,6 @@ const niches = [
     color: "from-purple-500 to-indigo-500",
     stats: { users: "Coming Soon", satisfaction: "—" },
     tags: ["Screening", "Intake", "Booking"],
-    available: false,
   },
   {
     id: "healthcare",
@@ -58,7 +54,6 @@ const niches = [
     color: "from-pink-500 to-rose-500",
     stats: { users: "Coming Soon", satisfaction: "—" },
     tags: ["Intake", "Scheduling", "Follow-ups"],
-    available: false,
   },
   {
     id: "logistics",
@@ -68,7 +63,6 @@ const niches = [
     color: "from-yellow-500 to-amber-500",
     stats: { users: "Coming Soon", satisfaction: "—" },
     tags: ["Quotes", "Tracking", "Support"],
-    available: false,
   },
   {
     id: "restaurants",
@@ -78,9 +72,12 @@ const niches = [
     color: "from-red-500 to-pink-500",
     stats: { users: "Coming Soon", satisfaction: "—" },
     tags: ["Reservations", "Catering", "Menu"],
-    available: false,
   },
-];
+].map(niche => ({
+  ...niche,
+  available: nicheConfig[niche.id]?.enabled || false,
+  link: `/niche/${niche.id}`,
+}));
 
 const categories = ["All", "Home Services", "Professional Services", "Healthcare", "Logistics", "Food Service"];
 

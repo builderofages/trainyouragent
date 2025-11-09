@@ -12,15 +12,13 @@ import { ScrollGradient } from "@/components/effects/ScrollGradient";
 import { HorizontalGallery } from "@/components/scroll/HorizontalGallery";
 import { ScrollRevealSection } from "@/components/scroll/ScrollRevealSection";
 import { StickyReveal } from "@/components/scroll/StickyReveal";
-import { CursorProvider } from "@/components/cursor/CursorProvider";
 import { useGSAP } from "@/hooks/useGSAP";
 
 const Index = () => {
   useGSAP();
 
   return (
-    <CursorProvider>
-      <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen bg-background relative">
         <ParticleField count={60} />
         <ScrollGradient />
         
@@ -56,7 +54,6 @@ const Index = () => {
         <NewsletterSection />
         <Footer />
       </div>
-    </CursorProvider>
   );
 };
 
