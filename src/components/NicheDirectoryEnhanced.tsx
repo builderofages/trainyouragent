@@ -18,6 +18,7 @@ const niches = [
     color: "from-blue-500 to-cyan-500",
     stats: { users: "2.5K+", satisfaction: "98%" },
     tags: ["Lead Gen", "Scheduling", "24/7"],
+    customLink: "/niche/hvac",
   },
   {
     id: "accounting",
@@ -27,6 +28,7 @@ const niches = [
     color: "from-green-500 to-emerald-500",
     stats: { users: "1.8K+", satisfaction: "97%" },
     tags: ["Onboarding", "Documents", "Scheduling"],
+    customLink: "/accounting",
   },
   {
     id: "roofing",
@@ -34,8 +36,9 @@ const niches = [
     title: "Roofing Contractors",
     description: "Qualify leads, schedule inspections, and provide instant estimates",
     color: "from-orange-500 to-red-500",
-    stats: { users: "Coming Soon", satisfaction: "—" },
+    stats: { users: "1.2K+", satisfaction: "96%" },
     tags: ["Estimates", "Inspections", "Lead Qual"],
+    customLink: "/roofing",
   },
   {
     id: "legal",
@@ -76,7 +79,7 @@ const niches = [
 ].map(niche => ({
   ...niche,
   available: nicheConfig[niche.id]?.enabled || false,
-  link: `/niche/${niche.id}`,
+  link: niche.customLink || `/niche/${niche.id}`,
 }));
 
 const categories = ["All", "Home Services", "Professional Services", "Healthcare", "Logistics", "Food Service"];
