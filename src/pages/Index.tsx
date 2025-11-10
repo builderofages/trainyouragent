@@ -20,6 +20,9 @@ import IndustryResearchSection from "@/components/IndustryResearchSection";
 import BeforeAfter from "@/components/BeforeAfter";
 import FAQ from "@/components/FAQ";
 import StickyCTA from "@/components/StickyCTA";
+import { ExitPopup } from "@/components/conversion/ExitPopup";
+import { LiveChat } from "@/components/conversion/LiveChat";
+import { SocialProofNotifications } from "@/components/conversion/SocialProof";
 
 const Index = () => {
   useGSAP();
@@ -75,6 +78,9 @@ const Index = () => {
         <Footer />
         
         <StickyCTA />
+        <ExitPopup />
+        <LiveChat />
+        <SocialProofNotifications />
       </div>
   );
 };

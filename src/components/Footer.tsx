@@ -1,23 +1,45 @@
 import { motion } from "framer-motion";
-import { ArrowUp, Twitter, Linkedin, Github } from "lucide-react";
+import { ArrowUp, Twitter, Linkedin, Instagram } from "lucide-react";
+import { siteConfig } from "@/config/site";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const footerSections = [
     {
       title: "Solutions",
-      links: ["HVAC AI", "Accounting AI", "Roofing AI", "Custom Solutions"],
+      links: [
+        { name: "Accounting AI", href: "/accounting" },
+        { name: "Roofing AI", href: "/roofing" },
+        { name: "Legal AI", href: "/legal" },
+        { name: "Healthcare AI", href: "/healthcare" },
+      ],
     },
     {
       title: "Resources",
-      links: ["Blog", "Case Studies", "Documentation", "API Reference"],
+      links: [
+        { name: "Blog", href: "/resources" },
+        { name: "Case Studies", href: "/case-studies" },
+        { name: "Demos", href: "/demos" },
+        { name: "Calculators", href: "/calculators" },
+      ],
     },
     {
       title: "Company",
-      links: ["About", "Careers", "Contact", "Partners"],
+      links: [
+        { name: "About", href: "/about" },
+        { name: "Technology", href: "/technology" },
+        { name: "Contact", href: `mailto:${siteConfig.email}` },
+        { name: "Research", href: "/research" },
+      ],
     },
     {
       title: "Legal",
-      links: ["Privacy", "Terms", "Security", "Compliance"],
+      links: [
+        { name: "Privacy", href: "/privacy" },
+        { name: "Terms", href: "/terms" },
+        { name: "Security", href: "/security" },
+        { name: "Cookies", href: "/cookie-policy" },
+      ],
     },
   ];
 
@@ -54,10 +76,16 @@ const Footer = () => {
                 amplify productivity, and unlock exponential growth.
               </p>
               <div className="flex gap-4">
-                {[Twitter, Linkedin, Github].map((Icon, index) => (
+                {[
+                  { Icon: Twitter, href: siteConfig.socialMedia.twitter },
+                  { Icon: Linkedin, href: siteConfig.socialMedia.linkedin },
+                  { Icon: Instagram, href: siteConfig.socialMedia.instagram },
+                ].map(({ Icon, href }, index) => (
                   <motion.a
                     key={index}
-                    href="#"
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-all duration-300 shadow-sm hover:shadow-blue"
@@ -81,14 +109,24 @@ const Footer = () => {
               <h3 className="font-bold text-foreground mb-4">{section.title}</h3>
               <ul className="space-y-3">
                 {section.links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block relative group"
-                    >
-                      {link}
-                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
-                    </a>
+                  <li key={link.name}>
+                    {link.href.startsWith('mailto:') ? (
+                      <a
+                        href={link.href}
+                        className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block relative group"
+                      >
+                        {link.name}
+                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
+                      </a>
+                    ) : (
+                      <Link
+                        to={link.href}
+                        className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block relative group"
+                      >
+                        {link.name}
+                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

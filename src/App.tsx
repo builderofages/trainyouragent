@@ -27,8 +27,10 @@ import Solutions from "./pages/Solutions";
 import Integrations from "./pages/Integrations";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import CookiePolicy from "./pages/CookiePolicy";
 import Comparisons from "./pages/Comparisons";
 import CaseStudies from "./pages/CaseStudies";
+import DemoRequest from "./pages/DemoRequest";
 
 const queryClient = new QueryClient();
 
@@ -60,8 +62,10 @@ const App = () => (
           <Route path="/integrations" element={<Integrations />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/cookie-policy" element={<CookiePolicy />} />
           <Route path="/comparisons" element={<Comparisons />} />
           <Route path="/case-studies" element={<CaseStudies />} />
+          <Route path="/demo-request" element={<DemoRequest />} />
           <Route path="/niche/:nicheId" element={<NicheLanding />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/dashboard" element={<Dashboard />} />

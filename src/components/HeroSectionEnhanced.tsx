@@ -3,6 +3,7 @@ import { Sparkles, Play, TrendingUp, Users, Zap } from "lucide-react";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { VoiceAgentDemo } from "./VoiceAgentDemo";
+import { TrustBadges } from "./conversion/TrustBadges";
 
 const HeroSection = () => {
   const { scrollY } = useScroll();
@@ -126,6 +127,11 @@ const HeroSection = () => {
               >
                 Explore Solutions
               </MagneticButton>
+            </div>
+
+            {/* Trust Badges */}
+            <div className="mb-8">
+              <TrustBadges variant="compact" />
             </div>
 
             {/* Quick Stats */}
