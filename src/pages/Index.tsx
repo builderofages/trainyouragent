@@ -14,6 +14,11 @@ import { HorizontalGallery } from "@/components/scroll/HorizontalGallery";
 import { ScrollRevealSection } from "@/components/scroll/ScrollRevealSection";
 import { StickyReveal } from "@/components/scroll/StickyReveal";
 import { useGSAP } from "@/hooks/useGSAP";
+import HowItWorks from "@/components/HowItWorks";
+import VideoSection from "@/components/VideoSection";
+import BeforeAfter from "@/components/BeforeAfter";
+import FAQ from "@/components/FAQ";
+import StickyCTA from "@/components/StickyCTA";
 
 const Index = () => {
   useGSAP();
@@ -30,6 +35,10 @@ const Index = () => {
           <StatsSection />
         </ParallaxSection>
         
+        <VideoSection />
+        
+        <HowItWorks />
+        
         <ParallaxSection speed={-0.3}>
           <section className="py-20 bg-muted/30">
             <div className="container mx-auto px-4">
@@ -44,6 +53,8 @@ const Index = () => {
           <ServicesShowcase />
         </section>
         
+        <BeforeAfter />
+        
         <ScrollRevealSection />
         
         <ParallaxSection speed={0.4}>
@@ -56,8 +67,12 @@ const Index = () => {
 
         <StickyReveal />
         
+        <FAQ />
+        
         <NewsletterSection />
         <Footer />
+        
+        <StickyCTA />
       </div>
   );
 };
