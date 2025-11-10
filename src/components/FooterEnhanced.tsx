@@ -17,8 +17,8 @@ const Footer = () => {
       title: "Resources",
       links: [
         { name: "Book a Call", href: "https://calendly.com/trainyouragent" },
+        { name: "Settings", href: "/settings" },
         { name: "Case Studies", href: "#" },
-        { name: "Documentation", href: "#" },
       ],
     },
     {

@@ -1,17 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Mail, CheckCircle, TrendingUp, Zap, Shield } from "lucide-react";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { MondayWebhookSetup, getWebhookUrl, sendToMonday } from "@/components/MondayWebhookSetup";
 
 const NewsletterSection = () => {
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [showWebhookSetup, setShowWebhookSetup] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    // Check if webhook is configured, if not show setup
+    const webhookUrl = getWebhookUrl("monday_newsletter_webhook");
+    if (!webhookUrl) {
+      setShowWebhookSetup(true);
+    }
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email) {
@@ -23,10 +33,27 @@ const NewsletterSection = () => {
       return;
     }
 
+    const webhookUrl = getWebhookUrl("monday_newsletter_webhook");
+    
+    // Send to Monday.com if webhook is configured
+    if (webhookUrl) {
+      const sent = await sendToMonday(webhookUrl, {
+        type: "newsletter_signup",
+        email: email,
+        page: "homepage",
+      });
+      
+      if (sent) {
+        console.log("Newsletter signup sent to Monday.com");
+      }
+    }
+
     setIsSubscribed(true);
     toast({
       title: "Welcome to the AI Revolution! 🚀",
-      description: "Check your inbox for exclusive AI insights",
+      description: webhookUrl 
+        ? "Your info has been sent to our CRM. Check your inbox for exclusive AI insights!"
+        : "Check your inbox for exclusive AI insights",
     });
     
     setTimeout(() => {
@@ -64,6 +91,15 @@ const NewsletterSection = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl mx-auto">
+          {/* Webhook Setup - Only shown if needed */}
+          {showWebhookSetup && (
+            <MondayWebhookSetup
+              storageKey="monday_newsletter_webhook"
+              title="Configure Monday.com Integration"
+              description="Connect your Monday.com CRM to automatically receive newsletter signups"
+            />
+          )}
+
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

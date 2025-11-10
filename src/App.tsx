@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Pricing from "./pages/Pricing";
 import Dashboard from "./pages/Dashboard";
 import NicheLanding from "./pages/NicheLanding";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,6 +20,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/settings" element={<Settings />} />
           {/* <Route path="/pricing" element={<Pricing />} /> */}
           {/* <Route path="/dashboard" element={<Dashboard />} /> */}
           <Route path="/niche/:nicheId" element={<NicheLanding />} />

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Footer from "@/components/FooterEnhanced";
 import {
   Clock,
   DollarSign,
@@ -25,6 +25,7 @@ import {
 import { motion } from "framer-motion";
 import { nicheConfig } from "@/config/niches";
 import { toast } from "sonner";
+import { MondayWebhookSetup, getWebhookUrl, sendToMonday } from "@/components/MondayWebhookSetup";
 
 const nicheData: Record<string, any> = {
   hvac: {
@@ -287,10 +288,20 @@ const NicheLanding = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [countdown, setCountdown] = useState<number | null>(null);
+  const [showWebhookSetup, setShowWebhookSetup] = useState(false);
 
   const config = nicheId ? nicheConfig[nicheId] : null;
   const niche = nicheId ? nicheData[nicheId] : null;
   const Icon = niche?.icon;
+
+  useEffect(() => {
+    // Check if webhook is configured for this niche
+    const webhookKey = `monday_${nicheId}_webhook`;
+    const webhookUrl = getWebhookUrl(webhookKey);
+    if (!webhookUrl) {
+      setShowWebhookSetup(true);
+    }
+  }, [nicheId]);
 
   useEffect(() => {
     if (!nicheId || !config || !niche) {
@@ -320,15 +331,40 @@ const NicheLanding = () => {
     return () => clearInterval(countdownInterval);
   }, [nicheId, config, niche, navigate]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !name) {
       toast.error("Please fill in all fields");
       return;
     }
-    toast.success("Thanks! Redirecting now...");
+
+    // Send to Monday.com if webhook is configured
+    const webhookKey = `monday_${nicheId}_webhook`;
+    const webhookUrl = getWebhookUrl(webhookKey);
+    
+    if (webhookUrl) {
+      const sent = await sendToMonday(webhookUrl, {
+        type: "niche_lead",
+        niche: nicheId,
+        name: name,
+        email: email,
+        niche_title: niche?.title,
+      });
+      
+      if (sent) {
+        console.log(`Lead for ${nicheId} sent to Monday.com`);
+        toast.success("Thanks! Your info has been sent to our team. Redirecting now...");
+      } else {
+        toast.success("Thanks! Redirecting now...");
+      }
+    } else {
+      toast.success("Thanks! Redirecting now...");
+    }
+
     if (config) {
-      window.location.href = config.redirectUrl;
+      setTimeout(() => {
+        window.location.href = config.redirectUrl;
+      }, 1000);
     }
   };
 
@@ -340,6 +376,15 @@ const NicheLanding = () => {
 
       <main className="pt-24 pb-20">
         <div className="container mx-auto px-4">
+          {/* Webhook Setup - Only shown if needed */}
+          {showWebhookSetup && nicheId && (
+            <MondayWebhookSetup
+              storageKey={`monday_${nicheId}_webhook`}
+              title={`Configure ${niche?.title} Lead Capture`}
+              description="Connect your Monday.com CRM to automatically receive leads from this niche landing page"
+            />
+          )}
+
           {/* Redirect Notice */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
