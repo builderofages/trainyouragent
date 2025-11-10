@@ -43,14 +43,14 @@ export const PremiumIcon = ({
   );
 };
 
-// Industry-specific presets
+// Industry-specific presets - Professional Blue Palette
 export const industryIcons = {
-  hvac: { style: "hexagon" as IconStyle, gradient: "from-purple-500 via-violet-500 to-purple-600" },
+  hvac: { style: "hexagon" as IconStyle, gradient: "from-blue-500 via-cyan-500 to-blue-600" },
   accounting: { style: "blob" as IconStyle, gradient: "from-emerald-500 via-green-500 to-teal-500" },
   roofing: { style: "isometric" as IconStyle, gradient: "from-orange-500 via-red-500 to-amber-600" },
-  legal: { style: "hexagon" as IconStyle, gradient: "from-purple-600 via-indigo-500 to-blue-600" },
-  healthcare: { style: "blob" as IconStyle, gradient: "from-cyan-500 via-teal-500 to-pink-500" },
-  logistics: { style: "particle" as IconStyle, gradient: "from-blue-600 via-sky-500 to-indigo-600" },
+  legal: { style: "hexagon" as IconStyle, gradient: "from-blue-600 via-indigo-500 to-cyan-600" },
+  healthcare: { style: "blob" as IconStyle, gradient: "from-cyan-500 via-teal-500 to-blue-500" },
+  logistics: { style: "particle" as IconStyle, gradient: "from-blue-600 via-sky-500 to-cyan-600" },
   restaurants: { style: "blob" as IconStyle, gradient: "from-yellow-500 via-orange-500 to-red-500" },
   general: { style: "particle" as IconStyle, gradient: "from-primary via-accent to-primary" },
 };

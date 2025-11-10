@@ -2,7 +2,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Sparkles, Play, TrendingUp, Users, Zap } from "lucide-react";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { GlassCard } from "@/components/enhanced/GlassCard";
-import InteractiveDemo from "./InteractiveDemo";
+import { VoiceAgentDemo } from "./VoiceAgentDemo";
 
 const HeroSection = () => {
   const { scrollY } = useScroll();
@@ -158,7 +158,7 @@ const HeroSection = () => {
             </div>
           </motion.div>
 
-          {/* Right: Interactive Demo */}
+          {/* Right Column - Voice Agent Demo */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -170,7 +170,7 @@ const HeroSection = () => {
               transition={{ duration: 0.3 }}
               className="tilt-3d"
             >
-              <InteractiveDemo />
+              <VoiceAgentDemo />
             </motion.div>
           </motion.div>
         </div>

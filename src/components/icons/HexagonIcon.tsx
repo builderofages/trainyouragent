@@ -100,13 +100,14 @@ export const HexagonIcon = ({
         />
       </svg>
       
-      {/* Icon */}
-      <div className="absolute inset-0 flex items-center justify-center">
+      {/* Icon - Perfectly Centered */}
+      <div className="absolute inset-0 flex items-center justify-center" style={{ transform: 'translateY(0)' }}>
         <motion.div
           animate={animate ? {
             rotateZ: [0, 5, -5, 0],
           } : undefined}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="flex items-center justify-center"
         >
           <Icon 
             size={iconSize} 
