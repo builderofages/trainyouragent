@@ -27,6 +27,8 @@ import Solutions from "./pages/Solutions";
 import Integrations from "./pages/Integrations";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import Comparisons from "./pages/Comparisons";
+import CaseStudies from "./pages/CaseStudies";
 
 const queryClient = new QueryClient();
 
@@ -58,8 +60,11 @@ const App = () => (
           <Route path="/integrations" element={<Integrations />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/comparisons" element={<Comparisons />} />
+          <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/niche/:nicheId" element={<NicheLanding />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

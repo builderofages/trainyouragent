@@ -59,18 +59,49 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Industry-specific colors
+        hvac: {
+          primary: "hsl(var(--hvac-primary))",
+          secondary: "hsl(var(--hvac-secondary))",
+        },
+        accounting: {
+          primary: "hsl(var(--accounting-primary))",
+          secondary: "hsl(var(--accounting-secondary))",
+        },
+        legal: {
+          primary: "hsl(var(--legal-primary))",
+          secondary: "hsl(var(--legal-secondary))",
+        },
+        healthcare: {
+          primary: "hsl(var(--healthcare-primary))",
+          secondary: "hsl(var(--healthcare-secondary))",
+        },
+        roofing: {
+          primary: "hsl(var(--roofing-primary))",
+          secondary: "hsl(var(--roofing-secondary))",
+        },
+        logistics: {
+          primary: "hsl(var(--logistics-primary))",
+          secondary: "hsl(var(--logistics-secondary))",
+        },
+        restaurants: {
+          primary: "hsl(var(--restaurants-primary))",
+          secondary: "hsl(var(--restaurants-secondary))",
+        },
       },
       backgroundImage: {
         'gradient-primary': 'var(--gradient-primary)',
         'gradient-hero': 'var(--gradient-hero)',
         'gradient-mesh': 'var(--gradient-mesh)',
-        'gradient-hvac': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        'gradient-accounting': 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-        'gradient-legal': 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
-        'gradient-healthcare': 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
-        'gradient-roofing': 'linear-gradient(135deg, #f59e0b 0%, #dc2626 100%)',
-        'gradient-restaurants': 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
-        'gradient-logistics': 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
+        'gradient-premium': 'var(--gradient-premium)',
+        'gradient-shimmer': 'var(--gradient-shimmer)',
+        'gradient-hvac': 'linear-gradient(135deg, hsl(251, 91%, 71%) 0%, hsl(271, 91%, 65%) 100%)',
+        'gradient-accounting': 'linear-gradient(135deg, hsl(142, 71%, 45%) 0%, hsl(45, 93%, 47%) 100%)',
+        'gradient-legal': 'linear-gradient(135deg, hsl(271, 91%, 65%) 0%, hsl(45, 93%, 47%) 100%)',
+        'gradient-healthcare': 'linear-gradient(135deg, hsl(188, 94%, 43%) 0%, hsl(326, 78%, 65%) 100%)',
+        'gradient-roofing': 'linear-gradient(135deg, hsl(24, 95%, 53%) 0%, hsl(0, 72%, 51%) 100%)',
+        'gradient-restaurants': 'linear-gradient(135deg, hsl(38, 92%, 50%) 0%, hsl(24, 95%, 53%) 100%)',
+        'gradient-logistics': 'linear-gradient(135deg, hsl(217, 91%, 60%) 0%, hsl(220, 90%, 56%) 100%)',
       },
       boxShadow: {
         'sm': 'var(--shadow-sm)',
@@ -83,6 +114,8 @@ export default {
         'dramatic': 'var(--shadow-dramatic)',
         'glow': 'var(--shadow-glow)',
         'glow-sm': '0 0 20px hsl(var(--primary) / 0.3)',
+        'glow-intense': 'var(--shadow-glow-intense)',
+        'premium': 'var(--shadow-premium)',
         'inner': 'var(--shadow-inner)',
       },
       backdropBlur: {

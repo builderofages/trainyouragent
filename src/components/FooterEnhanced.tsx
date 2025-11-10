@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowUp, Twitter, Linkedin, Github } from "lucide-react";
+import { ArrowUp, Twitter, Linkedin, Instagram } from "lucide-react";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 
 const Footer = () => {
@@ -82,13 +82,16 @@ const Footer = () => {
               </p>
               <div className="flex gap-4">
                 {[
-                  { Icon: Twitter, href: "#" },
-                  { Icon: Linkedin, href: "#" },
-                  { Icon: Github, href: "#" }
-                ].map(({ Icon, href }, index) => (
+                  { Icon: Twitter, href: "https://x.com/trainyouragent", label: "Twitter" },
+                  { Icon: Instagram, href: "https://www.instagram.com/trainyouragent", label: "Instagram" },
+                  { Icon: Linkedin, href: "https://www.linkedin.com/company/train-your-agent/", label: "LinkedIn" }
+                ].map(({ Icon, href, label }, index) => (
                   <motion.a
                     key={index}
                     href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
                     whileHover={{ scale: 1.15, y: -3 }}
                     whileTap={{ scale: 0.95 }}
                     className="w-10 h-10 rounded-full glass-card border border-glass-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-all duration-300 shadow-sm hover:shadow-glow-sm"
