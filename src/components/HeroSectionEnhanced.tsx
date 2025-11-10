@@ -87,21 +87,11 @@ const HeroSection = () => {
               <span className="text-sm font-medium">AI-Powered Business Automation</span>
             </motion.div>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+            <h1 className="text-hero mb-6">
               Custom AI Agents for{" "}
-              <motion.span 
-                className="text-gradient"
-                animate={{
-                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-              >
+              <span className="text-gradient-premium">
                 Every Industry
-              </motion.span>
+              </span>
             </h1>
 
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl leading-relaxed">
@@ -112,18 +102,23 @@ const HeroSection = () => {
             <div className="flex flex-wrap gap-4 mb-12">
               <MagneticButton 
                 size="lg" 
-                className="text-lg px-8 h-14 gap-2 shadow-blue hover:shadow-glow" 
-                strength={20}
+                className="text-lg px-8 h-14 gap-2 shadow-premium hover:shadow-glow-intense bg-gradient-premium relative overflow-hidden group" 
+                strength={25}
                 onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}
               >
-                <Play className="w-5 h-5" />
-                Book a Demo
+                <motion.div
+                  className="absolute inset-0 bg-gradient-shimmer opacity-0 group-hover:opacity-100"
+                  animate={{ x: ['-100%', '100%'] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                />
+                <Play className="w-5 h-5 relative z-10" />
+                <span className="relative z-10">Book a Demo</span>
               </MagneticButton>
               <MagneticButton 
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-8 h-14 glass-card" 
-                strength={20}
+                className="text-lg px-8 h-14 glass-card-premium border-gradient" 
+                strength={25}
                 onClick={() => {
                   const element = document.querySelector('#solutions');
                   element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -143,14 +138,20 @@ const HeroSection = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 + index * 0.1 }}
-                    whileHover={{ scale: 1.05, y: -4 }}
-                    className="text-left perspective-1000"
+                    whileHover={{ scale: 1.08, y: -6 }}
+                    className="text-left perspective-1000 group cursor-pointer"
                   >
-                    <div className="flex items-center gap-2 mb-2">
-                      <Icon className="w-5 h-5 text-primary" />
-                      <div className="text-3xl font-bold text-gradient">{stat.value}</div>
+                    <div className="flex items-center gap-3 mb-2">
+                      <motion.div
+                        whileHover={{ rotate: 360, scale: 1.2 }}
+                        transition={{ duration: 0.6 }}
+                        className="w-10 h-10 rounded-xl bg-gradient-premium flex items-center justify-center shadow-glow-sm group-hover:shadow-glow"
+                      >
+                        <Icon className="w-5 h-5 text-white" />
+                      </motion.div>
+                      <div className="text-4xl font-black text-gradient-premium">{stat.value}</div>
                     </div>
-                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                    <div className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{stat.label}</div>
                   </motion.div>
                 );
               })}

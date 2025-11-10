@@ -8,8 +8,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
-import { IconWrapper } from "@/components/icons/IconWrapper";
+import { PremiumIcon, industryIcons } from "@/components/icons/PremiumIconSystem";
 import { nicheSolutions } from "@/data/solutions";
+import { FloatingIsland } from "@/components/effects/FloatingIsland";
 
 const nicheOptions = [
   { id: "hvac", name: "HVAC & Home Services", icon: Wrench, gradient: "gradient-hvac" },
@@ -40,9 +41,9 @@ const Solutions = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <h1 className="text-5xl md:text-7xl font-black mb-6">
+            <h1 className="text-hero mb-6">
               AI Solutions Built for{" "}
-              <span className="text-gradient">Your Industry</span>
+              <span className="text-gradient-premium">Your Industry</span>
             </h1>
             <p className="text-xl text-muted-foreground mb-12">
               Select your industry to see tailored AI solutions, ROI calculators, and integrations
@@ -62,24 +63,36 @@ const Solutions = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <GlassCard
-                  onClick={() => setSelectedNiche(niche.id)}
-                  className={`cursor-pointer transition-all duration-300 hover:scale-105 ${
-                    selectedNiche === niche.id
-                      ? "border-2 border-primary shadow-glow"
-                      : "border border-border hover:border-primary/50"
-                  }`}
-                >
-                  <div className="flex flex-col items-center text-center p-4">
-                    <IconWrapper
-                      icon={niche.icon}
-                      size="md"
-                      gradient={niche.gradient}
-                      animate={selectedNiche === niche.id}
-                    />
-                    <h3 className="font-semibold text-sm mt-3">{niche.name}</h3>
-                  </div>
-                </GlassCard>
+                <FloatingIsland delay={index * 0.05} intensity="low">
+                  <GlassCard
+                    onClick={() => setSelectedNiche(niche.id)}
+                    className={`cursor-pointer transition-all duration-300 hover-lift ${
+                      selectedNiche === niche.id
+                        ? "border-2 border-primary shadow-glow-intense border-gradient"
+                        : "border border-border hover:border-primary/50"
+                    }`}
+                  >
+                    <div className="flex flex-col items-center text-center p-6 relative">
+                      <motion.div
+                        animate={selectedNiche === niche.id ? {
+                          scale: [1, 1.05, 1],
+                        } : {}}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <PremiumIcon
+                          icon={niche.icon}
+                          style={industryIcons[niche.id as keyof typeof industryIcons]?.style || "hexagon"}
+                          gradient={industryIcons[niche.id as keyof typeof industryIcons]?.gradient}
+                          size="lg"
+                          animate={selectedNiche === niche.id}
+                        />
+                      </motion.div>
+                      <h3 className={`font-bold text-base mt-4 ${selectedNiche === niche.id ? "text-gradient-premium" : ""}`}>
+                        {niche.name}
+                      </h3>
+                    </div>
+                  </GlassCard>
+                </FloatingIsland>
               </motion.div>
             ))}
           </div>

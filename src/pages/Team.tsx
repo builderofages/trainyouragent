@@ -4,6 +4,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
+import { FloatingIsland } from "@/components/effects/FloatingIsland";
+import { use3DCard } from "@/hooks/use3DCard";
 
 const teamMembers = [
   {
@@ -86,8 +88,8 @@ const Team = () => {
               <Sparkles className="w-4 h-4 text-primary" />
               <span className="text-sm font-semibold text-primary">Meet the Team</span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gradient">
-              Building the Future of Business Automation
+            <h1 className="text-hero mb-6">
+              Building the Future of <span className="text-gradient-premium">Business Automation</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               We're a team of AI researchers, industry veterans, and automation experts on a mission to make enterprise-grade AI accessible to every business.
@@ -96,66 +98,87 @@ const Team = () => {
 
           {/* Team Members Grid */}
           <div className="grid md:grid-cols-2 gap-8 mb-20">
-            {teamMembers.map((member, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <GlassCard className="p-8 hover-lift h-full">
-                  <div className="flex items-start gap-6">
-                    {/* Avatar */}
-                    <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${member.gradient} flex items-center justify-center flex-shrink-0 shadow-glow-sm`}>
-                      <span className="text-2xl font-black text-white">{member.avatar}</span>
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-bold mb-1">{member.name}</h3>
-                      <p className="text-primary font-semibold mb-3">{member.role}</p>
+            {teamMembers.map((member, index) => {
+              const { ref, style, onMouseMove, onMouseLeave } = use3DCard(8);
+              
+              return (
+                <FloatingIsland key={index} delay={index * 0.1} intensity="low">
+                  <motion.div
+                    ref={ref as any}
+                    style={style}
+                    onMouseMove={onMouseMove}
+                    onMouseLeave={onMouseLeave}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="perspective-1000"
+                  >
+                    <GlassCard className="p-8 hover-lift-intense h-full border-gradient relative overflow-hidden group">
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-premium opacity-0 group-hover:opacity-5 transition-opacity duration-500"
+                      />
                       
-                      {/* Expertise Tags */}
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {member.expertise.map((skill, i) => (
-                          <span
-                            key={i}
-                            className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Bio */}
-                      <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-                        {member.bio}
-                      </p>
-
-                      {/* Contact */}
-                      <div className="flex gap-3">
-                        <MagneticButton
-                          variant="outline"
-                          size="sm"
-                          className="rounded-full"
-                          onClick={() => window.open(member.linkedin, '_blank')}
+                      <div className="flex items-start gap-6 relative z-10">
+                        {/* Avatar */}
+                        <motion.div 
+                          className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${member.gradient} flex items-center justify-center flex-shrink-0 shadow-glow-sm`}
+                          whileHover={{ scale: 1.1, rotate: 5 }}
+                          transition={{ type: "spring", stiffness: 300 }}
                         >
-                          <Linkedin className="w-4 h-4" />
-                        </MagneticButton>
-                        <MagneticButton
-                          variant="outline"
-                          size="sm"
-                          className="rounded-full"
-                          onClick={() => window.location.href = `mailto:${member.email}`}
-                        >
-                          <Mail className="w-4 h-4" />
-                        </MagneticButton>
+                          <span className="text-3xl font-black text-white">{member.avatar}</span>
+                        </motion.div>
+
+                        {/* Content */}
+                        <div className="flex-1">
+                          <h3 className="text-2xl font-black mb-1 text-gradient-premium">{member.name}</h3>
+                          <p className="text-primary font-bold mb-4">{member.role}</p>
+                          
+                          {/* Expertise Tags */}
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            {member.expertise.map((skill, i) => (
+                              <motion.span
+                                key={i}
+                                whileHover={{ scale: 1.1 }}
+                                className="px-3 py-1 text-xs font-bold rounded-full bg-primary/10 text-primary border border-primary/20 shadow-glow-sm"
+                              >
+                                {skill}
+                              </motion.span>
+                            ))}
+                          </div>
+
+                          {/* Bio */}
+                          <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+                            {member.bio}
+                          </p>
+
+                          {/* Contact */}
+                          <div className="flex gap-3">
+                            <MagneticButton
+                              variant="outline"
+                              size="sm"
+                              className="rounded-full border-gradient"
+                              onClick={() => window.open(member.linkedin, '_blank')}
+                              strength={20}
+                            >
+                              <Linkedin className="w-4 h-4" />
+                            </MagneticButton>
+                            <MagneticButton
+                              variant="outline"
+                              size="sm"
+                              className="rounded-full border-gradient"
+                              onClick={() => window.location.href = `mailto:${member.email}`}
+                              strength={20}
+                            >
+                              <Mail className="w-4 h-4" />
+                            </MagneticButton>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </GlassCard>
-              </motion.div>
-            ))}
+                    </GlassCard>
+                  </motion.div>
+                </FloatingIsland>
+              );
+            })}
           </div>
 
           {/* Advisors & Partners */}
@@ -165,18 +188,26 @@ const Team = () => {
             transition={{ delay: 0.5 }}
             className="mb-20"
           >
-            <h2 className="text-3xl font-bold mb-8 text-center">Advisors & Partners</h2>
+            <h2 className="text-4xl font-black mb-8 text-center">
+              Advisors & <span className="text-gradient-premium">Partners</span>
+            </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {advisors.map((advisor, index) => (
-                <GlassCard key={index} className="p-6 text-center hover-lift">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent mx-auto mb-4 flex items-center justify-center">
-                    <Award className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="font-bold text-lg mb-1">{advisor.name}</h3>
-                  <p className="text-sm text-primary font-semibold mb-2">{advisor.role}</p>
-                  <p className="text-xs text-muted-foreground mb-2">{advisor.org}</p>
-                  <p className="text-sm text-muted-foreground">{advisor.focus}</p>
-                </GlassCard>
+                <FloatingIsland key={index} delay={0.6 + index * 0.1} intensity="low">
+                  <GlassCard className="p-6 text-center hover-lift-intense border-gradient">
+                    <motion.div 
+                      className="w-20 h-20 rounded-full bg-gradient-premium mx-auto mb-4 flex items-center justify-center shadow-glow-sm"
+                      whileHover={{ scale: 1.2, rotate: 360 }}
+                      transition={{ duration: 0.6 }}
+                    >
+                      <Award className="w-10 h-10 text-white" />
+                    </motion.div>
+                    <h3 className="font-black text-xl mb-1 text-gradient-premium">{advisor.name}</h3>
+                    <p className="text-sm text-primary font-bold mb-2">{advisor.role}</p>
+                    <p className="text-xs text-muted-foreground mb-2 font-semibold">{advisor.org}</p>
+                    <p className="text-sm text-muted-foreground">{advisor.focus}</p>
+                  </GlassCard>
+                </FloatingIsland>
               ))}
             </div>
           </motion.div>
@@ -188,23 +219,27 @@ const Team = () => {
             transition={{ delay: 0.6 }}
             className="glass-card p-12 rounded-3xl text-center"
           >
-            <Briefcase className="w-16 h-16 text-primary mx-auto mb-6" />
-            <h2 className="text-3xl font-bold mb-4">Join Our Growing Team</h2>
+            <Briefcase className="w-20 h-20 text-primary mx-auto mb-6" />
+            <h2 className="text-4xl font-black mb-4">
+              Join Our <span className="text-gradient-premium">Growing Team</span>
+            </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               We're always looking for talented people who are passionate about AI and helping small businesses succeed. If you're interested in joining our mission, we'd love to hear from you.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <MagneticButton
                 variant="outline"
-                className="rounded-full"
+                className="rounded-full border-gradient"
                 onClick={() => window.location.href = 'mailto:careers@trainyouragent.com'}
+                strength={25}
               >
                 <Mail className="w-5 h-5 mr-2" />
                 careers@trainyouragent.com
               </MagneticButton>
               <MagneticButton
-                className="rounded-full bg-gradient-primary"
+                className="rounded-full bg-gradient-premium shadow-premium hover:shadow-glow-intense"
                 onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}
+                strength={25}
               >
                 <Briefcase className="w-5 h-5 mr-2" />
                 View Open Positions

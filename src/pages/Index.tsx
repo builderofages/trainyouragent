@@ -8,8 +8,10 @@ import NewsletterSection from "@/components/NewsletterSectionEnhanced";
 import Footer from "@/components/FooterEnhanced";
 import ROICalculator from "@/components/ROICalculatorEnhanced";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
-import { ParticleField } from "@/components/effects/ParticleField";
+import { ParticleFieldEnhanced } from "@/components/effects/ParticleFieldEnhanced";
 import { ScrollGradient } from "@/components/effects/ScrollGradient";
+import { LiquidCursor } from "@/components/effects/LiquidCursor";
+import { AnimatedBackground } from "@/components/effects/AnimatedBackground";
 import { HorizontalGallery } from "@/components/scroll/HorizontalGallery";
 import { ScrollRevealSection } from "@/components/scroll/ScrollRevealSection";
 import { StickyReveal } from "@/components/scroll/StickyReveal";
@@ -25,7 +27,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background relative">
-        <ParticleField count={60} />
+        <LiquidCursor />
+        <ParticleFieldEnhanced count={80} interactive connected />
+        <AnimatedBackground variant="mesh" />
         <ScrollGradient />
         
         <Header />

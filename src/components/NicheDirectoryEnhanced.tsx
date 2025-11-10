@@ -8,6 +8,8 @@ import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { use3DCard } from "@/hooks/use3DCard";
 import { useNavigate } from "react-router-dom";
 import { nicheConfig } from "@/config/niches";
+import { PremiumIcon, industryIcons } from "@/components/icons/PremiumIconSystem";
+import { FloatingIsland } from "@/components/effects/FloatingIsland";
 
 const niches = [
   {
@@ -90,8 +92,9 @@ const categories = ["All", "Home Services", "Professional Services", "Healthcare
 
 const NicheCard = ({ niche, index }: { niche: any; index: number }) => {
   const navigate = useNavigate();
-  const { ref, style, onMouseMove, onMouseLeave } = use3DCard(6);
+  const { ref, style, onMouseMove, onMouseLeave } = use3DCard(10);
   const Icon = niche.icon;
+  const iconConfig = industryIcons[niche.id as keyof typeof industryIcons] || industryIcons.general;
 
   const handleClick = () => {
     if (niche.available && niche.link) {
@@ -100,78 +103,100 @@ const NicheCard = ({ niche, index }: { niche: any; index: number }) => {
   };
 
   return (
-    <motion.div
-      ref={ref as any}
-      style={style}
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ delay: index * 0.05, duration: 0.5 }}
-      onClick={handleClick}
-      className={`perspective-1000 ${niche.available ? "cursor-pointer" : "cursor-not-allowed"}`}
-    >
-      <GlassCard hover={niche.available} className="relative h-full overflow-hidden group">
-        {/* Gradient Background on Hover */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${niche.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
+    <FloatingIsland delay={index * 0.05} intensity="low">
+      <motion.div
+        ref={ref as any}
+        style={style}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ delay: index * 0.05, duration: 0.5 }}
+        onClick={handleClick}
+        className={`perspective-1000 ${niche.available ? "cursor-pointer" : "cursor-not-allowed"}`}
+      >
+        <GlassCard hover={niche.available} className="relative h-full overflow-hidden group border-gradient hover-lift-intense">
+          {/* Gradient Background on Hover */}
+          <motion.div 
+            className="absolute inset-0 bg-gradient-premium opacity-0 group-hover:opacity-10"
+            transition={{ duration: 0.5 }}
+          />
 
-        {/* Coming Soon Badge */}
-        {!niche.available && (
-          <div className="absolute top-4 right-4 z-10">
-            <Badge variant="secondary" className="glass-card">
-              Coming Soon
-            </Badge>
+          {/* Coming Soon Badge */}
+          {!niche.available && (
+            <div className="absolute top-4 right-4 z-10">
+              <Badge variant="secondary" className="glass-card-premium shadow-glow-sm">
+                Coming Soon
+              </Badge>
+            </div>
+          )}
+
+          {/* Premium Icon */}
+          <div className="relative z-10 mb-4">
+            <PremiumIcon
+              icon={Icon}
+              style={iconConfig.style}
+              gradient={iconConfig.gradient}
+              size="lg"
+              animate={niche.available}
+            />
           </div>
-        )}
-
-        {/* Icon */}
-        <motion.div
-          whileHover={niche.available ? { scale: 1.1, rotate: 5 } : {}}
-          transition={{ type: "spring", stiffness: 300 }}
-          className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${niche.color} mb-4 shadow-lg`}
-        >
-          <Icon className="w-7 h-7 text-white" />
-        </motion.div>
 
         {/* Content */}
-        <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
+        <h3 className="text-2xl font-black mb-3 group-hover:text-gradient-premium transition-all duration-300 relative z-10">
           {niche.title}
         </h3>
-        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+        <p className="text-sm text-muted-foreground mb-4 line-clamp-2 relative z-10 group-hover:text-foreground transition-colors">
           {niche.description}
         </p>
 
         {/* Tags */}
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-2 mb-4 relative z-10">
           {niche.tags.map((tag) => (
-            <Badge key={tag} variant="outline" className="text-xs">
+            <motion.div
+              key={tag}
+              whileHover={{ scale: 1.1 }}
+              className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20 shadow-glow-sm"
+            >
               {tag}
-            </Badge>
+            </motion.div>
           ))}
         </div>
 
         {/* Stats */}
-        <div className="flex justify-between items-center pt-4 border-t border-border/50">
-          <div className="text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground">{niche.stats.users}</span> users
-          </div>
-          <div className="text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground">{niche.stats.satisfaction}</span> satisfaction
-          </div>
+        <div className="flex justify-between items-center pt-4 border-t border-border/50 relative z-10">
+          <motion.div 
+            className="text-xs text-muted-foreground"
+            whileHover={{ scale: 1.05 }}
+          >
+            <span className="font-bold text-lg text-gradient-premium">{niche.stats.users}</span>
+            <span className="block text-[10px]">users</span>
+          </motion.div>
+          <motion.div 
+            className="text-xs text-muted-foreground text-right"
+            whileHover={{ scale: 1.05 }}
+          >
+            <span className="font-bold text-lg text-gradient-premium">{niche.stats.satisfaction}</span>
+            <span className="block text-[10px]">satisfaction</span>
+          </motion.div>
         </div>
 
         {/* Arrow indicator for available */}
         {niche.available && (
           <motion.div
-            className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
-            whileHover={{ x: 5 }}
+            className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+            whileHover={{ x: 5, scale: 1.2 }}
+            transition={{ type: "spring", stiffness: 400 }}
           >
-            <ArrowRight className="w-5 h-5 text-primary" />
+            <div className="w-10 h-10 rounded-full bg-gradient-premium flex items-center justify-center shadow-glow">
+              <ArrowRight className="w-5 h-5 text-white" />
+            </div>
           </motion.div>
         )}
       </GlassCard>
-    </motion.div>
+      </motion.div>
+    </FloatingIsland>
   );
 };
 
@@ -207,9 +232,9 @@ const NicheDirectory = () => {
               AI Agent Marketplace
             </span>
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          <h2 className="text-5xl md:text-6xl font-black mb-4">
             Choose Your{" "}
-            <span className="text-gradient">AI Agent Realm</span>
+            <span className="text-gradient-premium">AI Agent Realm</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
             Specialized AI agents trained for your specific industry needs
@@ -275,13 +300,17 @@ const NicheDirectory = () => {
           className="text-center"
         >
           <GlassCard className="inline-block p-8 shadow-dramatic">
-            <h3 className="text-2xl font-bold mb-4">
-              Don't see your industry?
+            <h3 className="text-3xl font-black mb-4">
+              Don't see your <span className="text-gradient-premium">industry?</span>
             </h3>
-            <p className="text-muted-foreground mb-6 max-w-md">
+            <p className="text-lg text-muted-foreground mb-8 max-w-md">
               We're constantly expanding. Request a custom AI agent for your specific needs.
             </p>
-            <MagneticButton size="lg" className="shadow-blue hover:shadow-glow">
+            <MagneticButton 
+              size="lg" 
+              className="shadow-premium hover:shadow-glow-intense bg-gradient-premium text-lg px-10 h-16"
+              strength={30}
+            >
               Request Custom AI Realm
             </MagneticButton>
           </GlassCard>

@@ -3,6 +3,8 @@ import { TrendingUp, Users, Zap, DollarSign, Clock, CheckCircle } from "lucide-r
 import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { use3DCard } from "@/hooks/use3DCard";
+import { FloatingIsland } from "@/components/effects/FloatingIsland";
+import { PremiumIcon } from "@/components/icons/PremiumIconSystem";
 
 const stats = [
   {
@@ -56,41 +58,57 @@ const stats = [
 ];
 
 const StatCard = ({ stat, index }: { stat: any; index: number }) => {
-  const { ref, style, onMouseMove, onMouseLeave } = use3DCard(8);
+  const { ref, style, onMouseMove, onMouseLeave } = use3DCard(10);
   const Icon = stat.icon;
 
   return (
-    <motion.div
-      ref={ref as any}
-      style={style}
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ delay: index * 0.1, duration: 0.6 }}
-      className="perspective-1000"
-    >
-      <GlassCard hover className="text-center group cursor-pointer hover-lift h-full">
-        <motion.div
-          whileHover={{ scale: 1.1, rotate: 5 }}
-          transition={{ type: "spring", stiffness: 300 }}
-          className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4 group-hover:shadow-glow-sm"
-        >
-          <Icon className="w-8 h-8 text-primary" />
-        </motion.div>
-        <div className="text-4xl font-bold mb-2">
-                <AnimatedCounter
-            end={stat.value}
-            suffix={stat.suffix}
-            className="text-gradient"
+    <FloatingIsland delay={index * 0.1} intensity="medium">
+      <motion.div
+        ref={ref as any}
+        style={style}
+        onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ delay: index * 0.1, duration: 0.6 }}
+        className="perspective-1000"
+      >
+        <GlassCard hover className="text-center group cursor-pointer hover-lift-intense h-full relative overflow-hidden border-gradient">
+          <motion.div
+            className="absolute inset-0 bg-gradient-premium opacity-0 group-hover:opacity-10 transition-opacity duration-500"
           />
-        </div>
-        <h3 className="text-lg font-semibold mb-2">{stat.label}</h3>
-        <p className="text-sm text-muted-foreground mb-3">{stat.description}</p>
-        <p className="text-xs text-muted-foreground/70 italic">Source: {stat.source}</p>
-      </GlassCard>
-    </motion.div>
+          
+          <div className="relative z-10">
+            <PremiumIcon
+              icon={Icon}
+              style="hexagon"
+              size="lg"
+              animate
+              className="mx-auto mb-4 group-hover:scale-110 transition-transform duration-300"
+            />
+            
+            <div className="text-5xl font-black mb-3 glow-pulse">
+              <AnimatedCounter
+                end={stat.value}
+                suffix={stat.suffix}
+                className="text-gradient-premium"
+              />
+            </div>
+            
+            <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{stat.label}</h3>
+            <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{stat.description}</p>
+            
+            <motion.div
+              className="pt-3 border-t border-border/50"
+              whileHover={{ scale: 1.05 }}
+            >
+              <p className="text-xs text-muted-foreground/70 italic font-medium">Source: {stat.source}</p>
+            </motion.div>
+          </div>
+        </GlassCard>
+      </motion.div>
+    </FloatingIsland>
   );
 };
 
@@ -127,9 +145,9 @@ const StatsSection = () => {
               Proven Results
             </span>
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          <h2 className="text-5xl md:text-6xl font-black mb-4">
             The AI Automation{" "}
-            <span className="text-gradient">Opportunity</span>
+            <span className="text-gradient-premium">Opportunity</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Industry research reveals the massive potential of AI automation
