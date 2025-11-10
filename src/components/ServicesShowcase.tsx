@@ -13,7 +13,7 @@ const services = [
     name: "AI Voice Agents",
     description: "24/7 call handling, booking automation, and lead qualification with human-like conversations.",
     tags: ["HVAC", "Accounting", "Roofing", "All"],
-    highlight: "87 jobs booked in July—100% automated",
+    highlight: "24/7 availability, instant response",
     color: "from-blue-500 to-cyan-500",
   },
   {
@@ -22,7 +22,7 @@ const services = [
     name: "AI Staff Training",
     description: "Automated onboarding and compliance training that adapts to each employee's learning pace.",
     tags: ["All Industries"],
-    highlight: "80% faster onboarding",
+    highlight: "Adaptive learning technology",
     color: "from-purple-500 to-pink-500",
   },
   {
@@ -31,7 +31,7 @@ const services = [
     name: "Predictive Analytics Suite",
     description: "Demand forecasting, inventory optimization, and revenue prediction powered by AI.",
     tags: ["HVAC", "Roofing", "Logistics"],
-    highlight: "35% reduction in inventory costs",
+    highlight: "Data-driven forecasting",
     color: "from-green-500 to-emerald-500",
   },
   {
@@ -40,7 +40,7 @@ const services = [
     name: "Custom AI Training Academy",
     description: "Comprehensive staff education on AI workflows and best practices for your industry.",
     tags: ["All Industries"],
-    highlight: "90% adoption rate",
+    highlight: "Industry-specific training",
     color: "from-yellow-500 to-orange-500",
   },
   {
@@ -58,7 +58,7 @@ const services = [
     name: "Revenue Optimization",
     description: "Upsell frameworks, dynamic pricing, and conversion optimization strategies.",
     tags: ["All Industries"],
-    highlight: "$50K+ avg monthly increase",
+    highlight: "Maximize customer lifetime value",
     color: "from-indigo-500 to-violet-500",
   },
   {
@@ -76,7 +76,7 @@ const services = [
     name: "AI Search Optimization (AIO)",
     description: "Local SEO, Google AI summaries, and search visibility optimization for the AI era.",
     tags: ["All Industries"],
-    highlight: "3x organic traffic growth",
+    highlight: "AI-era search optimization",
     color: "from-lime-500 to-green-500",
   },
   {
@@ -94,7 +94,7 @@ const services = [
     name: "Concierge Management",
     description: "Ad optimization, campaign management, and performance tracking across all channels.",
     tags: ["All Industries"],
-    highlight: "60% lower CAC",
+    highlight: "Optimized campaign performance",
     color: "from-fuchsia-500 to-pink-500",
   },
   {
@@ -103,7 +103,7 @@ const services = [
     name: "AI Media & Ad Creation",
     description: "UGC content, automated creative generation, and full ad campaign production.",
     tags: ["All Industries"],
-    highlight: "10x faster content production",
+    highlight: "Automated creative generation",
     color: "from-amber-500 to-yellow-500",
   },
   {
@@ -112,7 +112,7 @@ const services = [
     name: "Global Market Expansion",
     description: "International compliance, multi-market scaling, and localized AI solutions.",
     tags: ["Enterprise"],
-    highlight: "Launch in new markets in 30 days",
+    highlight: "Localized AI solutions",
     color: "from-rose-500 to-red-500",
   },
 ];

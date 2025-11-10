@@ -64,6 +64,13 @@ export default {
         'gradient-primary': 'var(--gradient-primary)',
         'gradient-hero': 'var(--gradient-hero)',
         'gradient-mesh': 'var(--gradient-mesh)',
+        'gradient-hvac': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        'gradient-accounting': 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        'gradient-legal': 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
+        'gradient-healthcare': 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+        'gradient-roofing': 'linear-gradient(135deg, #f59e0b 0%, #dc2626 100%)',
+        'gradient-restaurants': 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+        'gradient-logistics': 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
       },
       boxShadow: {
         'sm': 'var(--shadow-sm)',
@@ -75,6 +82,7 @@ export default {
         'card': 'var(--shadow-card)',
         'dramatic': 'var(--shadow-dramatic)',
         'glow': 'var(--shadow-glow)',
+        'glow-sm': '0 0 20px hsl(var(--primary) / 0.3)',
         'inner': 'var(--shadow-inner)',
       },
       backdropBlur: {

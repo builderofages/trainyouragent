@@ -7,17 +7,20 @@ const Footer = () => {
     {
       title: "Solutions",
       links: [
+        { name: "By Industry", href: "/solutions" },
         { name: "HVAC AI", href: "/niche/hvac" },
-        { name: "Accounting AI", href: "/niche/accounting" },
-        { name: "Roofing AI", href: "/niche/roofing" },
-        { name: "Custom Solutions", href: "https://calendly.com/trainyouragent" },
+        { name: "Accounting AI", href: "/accounting" },
+        { name: "Roofing AI", href: "/roofing" },
+        { name: "Legal AI", href: "/legal" },
+        { name: "Healthcare AI", href: "/healthcare" },
       ],
     },
     {
       title: "Resources",
       links: [
         { name: "Blog & Research", href: "/resources" },
-        { name: "Calculators", href: "/calculators" },
+        { name: "Demos & Calculators", href: "/demos" },
+        { name: "Research Partners", href: "/research" },
         { name: "Book a Call", href: "https://calendly.com/trainyouragent" },
       ],
     },
@@ -25,16 +28,18 @@ const Footer = () => {
       title: "Company",
       links: [
         { name: "About", href: "/about" },
-        { name: "Contact", href: "https://calendly.com/trainyouragent" },
-        { name: "Research Partners", href: "/resources" },
+        { name: "Our Team", href: "/team" },
+        { name: "Technology", href: "/technology" },
+        { name: "Security", href: "/security" },
+        { name: "Integrations", href: "/integrations" },
       ],
     },
     {
       title: "Legal",
       links: [
-        { name: "Privacy", href: "#" },
-        { name: "Terms", href: "#" },
-        { name: "Security", href: "#" },
+        { name: "Privacy Policy", href: "/privacy" },
+        { name: "Terms of Service", href: "/terms" },
+        { name: "Security & Compliance", href: "/security" },
       ],
     },
   ];

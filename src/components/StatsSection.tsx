@@ -5,35 +5,40 @@ import { TrendingUp, Users, Zap, Target } from "lucide-react";
 const stats = [
   {
     icon: TrendingUp,
-    value: 250,
-    suffix: "%",
-    label: "Revenue Growth",
-    description: "Average increase in first year",
+    value: 47,
+    prefix: "$",
+    suffix: "B",
+    label: "Lost to Missed Calls",
+    description: "Annual business opportunity lost",
+    source: "CallRail 2024 Report",
   },
   {
     icon: Users,
-    value: 10000,
-    suffix: "+",
-    label: "Active Agents",
-    description: "Deployed across industries",
+    value: 62,
+    suffix: "%",
+    label: "Calls Go to Voicemail",
+    description: "Never get called back",
+    source: "CallRail Lead Response Study",
   },
   {
     icon: Zap,
-    value: 80,
-    suffix: "%",
-    label: "Time Saved",
-    description: "On repetitive tasks",
+    value: 5,
+    suffix: " min",
+    label: "Critical Response Window",
+    description: "9x higher conversion rate",
+    source: "InsideSales.com Research",
   },
   {
     icon: Target,
-    value: 99,
+    value: 300,
     suffix: "%",
-    label: "Accuracy Rate",
-    description: "AI decision precision",
+    label: "Average AI ROI",
+    description: "Within 12 months",
+    source: "McKinsey Global Institute",
   },
 ];
 
-const CountUp = ({ end, duration = 2, suffix = "" }: { end: number; duration?: number; suffix?: string }) => {
+const CountUp = ({ end, duration = 2, prefix = "", suffix = "" }: { end: number; duration?: number; prefix?: string; suffix?: string }) => {
   const [count, setCount] = useState(0);
   const countRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(countRef, { once: true });
@@ -62,7 +67,7 @@ const CountUp = ({ end, duration = 2, suffix = "" }: { end: number; duration?: n
 
   return (
     <div ref={countRef} className="text-5xl md:text-6xl font-black text-foreground">
-      {count.toLocaleString()}{suffix}
+      {prefix}{count.toLocaleString()}{suffix}
     </div>
   );
 };
@@ -82,13 +87,14 @@ const StatsSection = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-black text-foreground mb-4">
-            Results That Speak{" "}
+            The{" "}
             <span className="bg-clip-text text-transparent bg-gradient-primary">
-              Louder
+              Research
             </span>
+            {" "}Behind the Problem
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Join thousands of businesses already experiencing exponential growth with AI agents
+            Industry data reveals the massive opportunity businesses are missing
           </p>
         </motion.div>
 
@@ -122,7 +128,7 @@ const StatsSection = () => {
                 </motion.div>
 
                 {/* Count */}
-                <CountUp end={stat.value} suffix={stat.suffix} />
+                <CountUp end={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
 
                 {/* Label */}
                 <div className="text-lg font-bold text-foreground mt-2 mb-1">
@@ -132,6 +138,11 @@ const StatsSection = () => {
                 {/* Description */}
                 <p className="text-sm text-muted-foreground">
                   {stat.description}
+                </p>
+                
+                {/* Source */}
+                <p className="text-xs text-muted-foreground/70 mt-2 italic">
+                  Source: {stat.source}
                 </p>
 
                 {/* Decorative Element */}
@@ -147,7 +158,7 @@ const StatsSection = () => {
           ))}
         </div>
 
-        {/* Trust Badge */}
+        {/* Research Partners Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -155,15 +166,15 @@ const StatsSection = () => {
           transition={{ delay: 0.6 }}
           className="text-center mt-16"
         >
-          <p className="text-sm text-muted-foreground mb-4">Trusted by industry leaders worldwide</p>
+          <p className="text-sm text-muted-foreground mb-4">Research backed by industry leaders</p>
           <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
-            {["Enterprise A", "Company B", "Brand C", "Business D"].map((company, i) => (
+            {["McKinsey", "Gartner", "Harvard Business Review", "Deloitte"].map((org, i) => (
               <motion.div
                 key={i}
                 whileHover={{ opacity: 1, scale: 1.1 }}
                 className="text-lg font-bold text-muted-foreground"
               >
-                {company}
+                {org}
               </motion.div>
             ))}
           </div>

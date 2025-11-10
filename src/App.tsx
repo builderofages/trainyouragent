@@ -23,6 +23,10 @@ import Team from "./pages/Team";
 import Security from "./pages/Security";
 import Technology from "./pages/Technology";
 import ResearchPartners from "./pages/ResearchPartners";
+import Solutions from "./pages/Solutions";
+import Integrations from "./pages/Integrations";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +54,10 @@ const App = () => (
           <Route path="/security" element={<Security />} />
           <Route path="/technology" element={<Technology />} />
           <Route path="/research" element={<ResearchPartners />} />
+          <Route path="/solutions" element={<Solutions />} />
+          <Route path="/integrations" element={<Integrations />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/niche/:nicheId" element={<NicheLanding />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

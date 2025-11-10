@@ -21,9 +21,19 @@ const Header = () => {
   }, []);
 
   const navLinks = [
-    { name: "Solutions", href: "/#services" },
+    { 
+      name: "Solutions", 
+      href: "/solutions",
+      submenu: [
+        { name: "By Industry", href: "/solutions" },
+        { name: "HVAC AI", href: "/niche/hvac" },
+        { name: "Accounting AI", href: "/accounting" },
+        { name: "Roofing AI", href: "/roofing" },
+      ]
+    },
     { name: "Demos", href: "/demos" },
     { name: "Resources", href: "/resources" },
+    { name: "Integrations", href: "/integrations" },
     { name: "Company", href: "#", 
       submenu: [
         { name: "About", href: "/about" },
