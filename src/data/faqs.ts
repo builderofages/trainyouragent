@@ -72,7 +72,7 @@ export const faqs: FAQ[] = [
   },
   {
     question: "Can I cancel anytime?",
-    answer: "Yes, with 30 days notice. We also offer a 30-day money-back guarantee if you're not satisfied. That said, 98% of customers stay beyond the first year because the ROI is so clear.",
+    answer: "Yes, flexible terms with advance notice. Contact us to discuss cancellation policies based on your plan.",
     category: "Pricing & ROI"
   },
 
@@ -127,7 +127,7 @@ export const faqs: FAQ[] = [
   // Industry-Specific: HVAC
   {
     question: "How does AI handle emergency HVAC calls?",
-    answer: "According to ACCA, 40% of HVAC calls are emergencies. Our AI is trained to identify urgent situations (no heat in winter, no AC in summer, gas leaks, etc.) and immediately escalate to your on-call technician via text, call, or both. It can also provide temporary guidance to callers while help is on the way. 91% of emergency callers choose the first contractor who responds—our AI ensures that's always you.",
+    answer: "According to ACCA, 40% of HVAC calls are emergencies. AI can be trained to identify urgent situations (no heat in winter, no AC in summer, gas leaks, etc.) and immediately escalate to your on-call technician via text, call, or both. It can also provide temporary guidance to callers while help is on the way. Industry research shows 91% of emergency callers choose the first contractor who responds—AI helps ensure fast response times.",
     category: "Industry-Specific",
     industries: ["HVAC"],
     sources: [

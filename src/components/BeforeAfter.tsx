@@ -60,7 +60,7 @@ const comparisons = [
     },
     after: {
       value: "24/7/365",
-      description: "Never miss a lead, capture opportunities around the clock",
+      description: "Maximize lead capture with 24/7 availability",
       metric: "Availability"
     },
     improvement: "3x coverage"
@@ -204,7 +204,7 @@ const BeforeAfter = () => {
               Book a Free Consultation
             </MagneticButton>
             <p className="text-xs text-muted-foreground mt-4">
-              30-day money-back guarantee • No credit card required
+              No credit card required for consultation
             </p>
           </div>
         </motion.div>

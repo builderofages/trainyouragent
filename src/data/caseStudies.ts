@@ -1,6 +1,7 @@
-// Publicly documented case studies from industry sources
-// All examples are based on publicly available information from press releases, 
-// industry publications, and vendor case studies
+// IMPORTANT: These are NOT TrainYourAgent customer case studies
+// These examples are compiled from publicly available industry research,
+// third-party vendor case studies, and professional association reports
+// They represent general AI automation outcomes, not TrainYourAgent-specific results
 
 export interface CaseStudy {
   id: string;

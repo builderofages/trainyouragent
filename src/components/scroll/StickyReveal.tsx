@@ -72,8 +72,8 @@ export const StickyReveal = () => {
             ref={subtitleRef}
             className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto"
           >
-            Join 10,000+ businesses already using AI agents to capture more leads 
-            and close more deals.
+            AI-powered automation helps businesses capture more leads 
+            and close more deals 24/7.
           </p>
 
           <div ref={buttonRef} className="flex flex-wrap gap-4 justify-center">

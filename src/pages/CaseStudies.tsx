@@ -56,10 +56,10 @@ const CaseStudies = () => {
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
               Publicly documented AI implementations across industries demonstrating measurable business impact.
             </p>
-            <div className="flex items-start gap-2 max-w-3xl mx-auto p-4 rounded-lg bg-accent/50 border border-border">
-              <AlertCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 max-w-3xl mx-auto p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+              <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-500 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-muted-foreground text-left">
-                <strong className="text-foreground">Research-Based Examples:</strong> These case studies represent publicly available data from industry research, vendor case studies, and association reports. Individual results may vary based on implementation, industry conditions, and business practices.
+                <strong className="text-foreground">Important Disclaimer:</strong> These are NOT TrainYourAgent customer case studies. These examples are compiled from publicly available industry research, third-party vendor case studies, and professional association reports. They demonstrate general AI automation outcomes across industries. TrainYourAgent is a new service and does not yet have its own customer success stories. Individual results will vary based on implementation, industry conditions, and business practices.
               </p>
             </div>
           </motion.div>
@@ -188,9 +188,9 @@ const CaseStudies = () => {
             className="glass-card p-12 rounded-3xl text-center"
           >
             <TrendingUp className="w-16 h-16 text-primary mx-auto mb-6" />
-            <h2 className="text-3xl font-bold mb-4">Ready to Write Your Success Story?</h2>
+            <h2 className="text-3xl font-bold mb-4">Let's Build Your AI Strategy</h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              These results are achievable. Let's discuss how AI automation can transform your business with measurable, research-backed outcomes.
+              While we're a new service, the research shows these outcomes are possible with proper AI implementation. Book a consultation to explore what's realistic for your specific business.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <MagneticButton

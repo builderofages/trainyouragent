@@ -175,7 +175,7 @@ const NewsletterSection = () => {
                     </div>
                   ))}
                 </div>
-                <span>Join 10,000+ AI innovators already subscribed</span>
+                <span>Join businesses transforming with AI insights</span>
               </motion.div>
             </div>
           </div>

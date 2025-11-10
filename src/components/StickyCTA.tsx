@@ -66,7 +66,7 @@ const StickyCTA = () => {
                       Ready to 10x Your Leads?
                     </h3>
                     <p className="text-sm text-muted-foreground hidden md:block">
-                      Join 10,000+ businesses using AI to automate lead generation
+                      AI-powered automation for serious businesses
                     </p>
                   </div>
                 </div>

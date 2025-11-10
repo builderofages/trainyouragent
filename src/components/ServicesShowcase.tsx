@@ -49,7 +49,7 @@ const services = [
     name: "Crisis Management AI",
     description: "Emergency triage and priority routing to handle urgent situations automatically.",
     tags: ["HVAC", "Healthcare", "Legal"],
-    highlight: "99.9% uptime guarantee",
+    highlight: "Enterprise-grade reliability",
     color: "from-red-500 to-rose-500",
   },
   {
