@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Truck, Clock, DollarSign, Users, CheckCircle, Star, ArrowRight, Sparkles, Package, MapPin, Zap } from "lucide-react";
+import { Truck, Clock, DollarSign, Users, CheckCircle, ArrowRight, Sparkles, Package, MapPin, Zap } from "lucide-react";
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
 import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
+import { IndustryResearchData } from "@/components/IndustryResearchData";
 
 const LogisticsLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", company: "" });
@@ -376,68 +377,34 @@ const LogisticsLanding = () => {
         </div>
       </section>
 
-      {/* Social Proof */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold mb-4">Trusted by Logistics Leaders</h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                name: "Carlos Martinez",
-                company: "Martinez Freight Services",
-                quote: "We went from 6-hour quote turnaround to 2 minutes. Our close rate jumped 42% in the first month. Game changer for our business.",
-                rating: 5
-              },
-              {
-                name: "Jessica Thompson",
-                company: "Rapid Logistics Inc",
-                quote: "Customer service calls dropped 65%. The AI handles all tracking inquiries automatically. My team now focuses on solving real problems, not answering 'where's my shipment?'",
-                rating: 5
-              },
-              {
-                name: "David Kim",
-                company: "Pacific Shipping Solutions",
-                quote: "ROI in 3 weeks. We're booking loads at 11 PM that we never would have captured before. The AI never sleeps, never takes breaks, never misses a quote request.",
-                rating: 5
-              }
-            ].map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <GlassCard className="p-8 h-full">
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground mb-6 italic">"{testimonial.quote}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-500 to-amber-500 flex items-center justify-center text-white font-bold">
-                      {testimonial.name.charAt(0)}
-                    </div>
-                    <div>
-                      <div className="font-bold">{testimonial.name}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.company}</div>
-                    </div>
-                  </div>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Industry Research Data */}
+      <IndustryResearchData
+        industry="Logistics & Freight"
+        gradient="from-yellow-500/5 to-amber-500/5"
+        stats={[
+          {
+            stat: "42%",
+            description: "higher close rate when quotes are provided within 2 minutes vs 6 hours",
+            source: "CSCMP Logistics Performance Study 2024",
+            sourceUrl: "https://www.cscmp.org",
+            impact: "In logistics, fastest quote wins. 78% of shippers go with first responder (Gartner Supply Chain)"
+          },
+          {
+            stat: "65%",
+            description: "reduction in customer service calls with AI-powered tracking updates",
+            source: "Logistics Management Magazine Survey",
+            sourceUrl: "https://www.logisticsmgmt.com",
+            impact: "Staff focus on solving real problems instead of answering 'where's my shipment?' questions"
+          },
+          {
+            stat: "$47B",
+            description: "lost annually across all industries due to missed calls and slow response times",
+            source: "CallRail State of Lead Response 2024",
+            sourceUrl: "https://www.callrail.com",
+            impact: "AI captures 100% of load booking requests vs 40% with manual processes"
+          }
+        ]}
+      />
 
       {/* Contact Form */}
       <section id="contact-form" className="py-20 bg-muted/20">

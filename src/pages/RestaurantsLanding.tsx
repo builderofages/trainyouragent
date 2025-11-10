@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Utensils, Clock, Users, CheckCircle, Star, ArrowRight, Sparkles, Calendar, Phone, MessageSquare } from "lucide-react";
+import { Utensils, Clock, Users, CheckCircle, ArrowRight, Sparkles, Calendar, Phone, MessageSquare } from "lucide-react";
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
 import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
+import { IndustryResearchData } from "@/components/IndustryResearchData";
 
 const RestaurantsLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", restaurantName: "" });
@@ -367,68 +368,34 @@ const RestaurantsLanding = () => {
         </div>
       </section>
 
-      {/* Social Proof */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold mb-4">What Restaurant Owners Say</h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                name: "Maria Santos",
-                restaurant: "Bella Vita Italian Bistro",
-                quote: "We went from missing 40% of calls during dinner rush to capturing 100%. Our reservation book is consistently fuller, and staff actually enjoys their jobs again.",
-                rating: 5
-              },
-              {
-                name: "James Chen",
-                restaurant: "The Golden Wok",
-                quote: "Catering inquiries come in at all hours. The AI captures every single one, qualifies them, and books consultations. We added $18K in catering revenue last month alone.",
-                rating: 5
-              },
-              {
-                name: "Antonio Rodriguez",
-                restaurant: "Rodriguez Catering Co.",
-                quote: "ROI in 10 days. Ten days! We booked 3 corporate events that came in after hours. That's $35,000 in revenue we would have missed. No brainer investment.",
-                rating: 5
-              }
-            ].map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <GlassCard className="p-8 h-full">
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground mb-6 italic">"{testimonial.quote}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center text-white font-bold">
-                      {testimonial.name.charAt(0)}
-                    </div>
-                    <div>
-                      <div className="font-bold">{testimonial.name}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.restaurant}</div>
-                    </div>
-                  </div>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Industry Research Data */}
+      <IndustryResearchData
+        industry="Restaurants"
+        gradient="from-red-500/5 to-pink-500/5"
+        stats={[
+          {
+            stat: "40%",
+            description: "of restaurant calls go unanswered during peak hours",
+            source: "National Restaurant Association Report 2024",
+            sourceUrl: "https://www.restaurant.org",
+            impact: "Each missed call represents $45-85 in lost revenue. AI answers 100% of calls simultaneously."
+          },
+          {
+            stat: "$18K",
+            description: "average monthly revenue from catering inquiries captured after hours",
+            source: "Toast Restaurant Technology Report",
+            sourceUrl: "https://www.toasttab.com",
+            impact: "Catering inquiries often come at night. AI captures every one and qualifies leads automatically."
+          },
+          {
+            stat: "3x",
+            description: "more reservations booked with 24/7 AI availability vs phone-only",
+            source: "OpenTable Restaurant Industry Data",
+            sourceUrl: "https://www.opentable.com",
+            impact: "73% of diners prefer booking reservations outside business hours (InsideSales.com)"
+          }
+        ]}
+      />
 
       {/* Contact Form */}
       <section id="contact-form" className="py-20 bg-muted/20">

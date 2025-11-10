@@ -21,9 +21,10 @@ const Header = () => {
   }, []);
 
   const navLinks = [
-    { name: "Solutions", href: "#solutions" },
-    { name: "Services", href: "#services" },
-    { name: "Resources", href: "#resources" },
+    { name: "Solutions", href: "/#services" },
+    { name: "Resources", href: "/resources" },
+    { name: "Calculators", href: "/calculators" },
+    { name: "About", href: "/about" },
   ];
 
   return (

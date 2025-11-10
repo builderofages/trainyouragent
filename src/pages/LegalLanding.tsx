@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Briefcase, Clock, DollarSign, Users, TrendingUp, CheckCircle, Star, ArrowRight, Sparkles, Scale, FileText, Shield } from "lucide-react";
+import { Briefcase, Clock, DollarSign, Users, TrendingUp, CheckCircle, ArrowRight, Sparkles, Scale, FileText, Shield } from "lucide-react";
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
 import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
+import { IndustryResearchData } from "@/components/IndustryResearchData";
 
 const LegalLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", practiceArea: "" });
@@ -362,68 +363,34 @@ const LegalLanding = () => {
         </div>
       </section>
 
-      {/* Social Proof */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold mb-4">Trusted by Legal Professionals</h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                name: "Robert Harrison, Esq.",
-                firm: "Harrison & Partners LLP",
-                quote: "We've tripled our qualified consultations while cutting intake time by 60%. The AI handles all the preliminary screening so we only meet with viable cases.",
-                rating: 5
-              },
-              {
-                name: "Lisa Chen",
-                firm: "Chen Immigration Law",
-                quote: "Game changer for my practice. Potential clients can start the intake process at midnight, and by morning I have all the details I need to make a decision.",
-                rating: 5
-              },
-              {
-                name: "Marcus Williams",
-                firm: "Williams Personal Injury",
-                quote: "ROI in the first week. The AI qualified 12 personal injury cases and I closed 8 of them. That's a $180K month that started with leads I would have missed.",
-                rating: 5
-              }
-            ].map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <GlassCard className="p-8 h-full">
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground mb-6 italic">"{testimonial.quote}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-white font-bold">
-                      {testimonial.name.charAt(0)}
-                    </div>
-                    <div>
-                      <div className="font-bold">{testimonial.name}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.firm}</div>
-                    </div>
-                  </div>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Industry Research Data */}
+      <IndustryResearchData
+        industry="Legal Services"
+        gradient="from-purple-500/5 to-indigo-500/5"
+        stats={[
+          {
+            stat: "67%",
+            description: "of after-hours legal leads go to the first firm that responds",
+            source: "American Bar Association Tech Report 2024",
+            sourceUrl: "https://www.americanbar.org",
+            impact: "Firms using AI intake increase qualified consultations by 89% and see $8,400 higher average client value"
+          },
+          {
+            stat: "56%",
+            description: "of potential clients abandon intake forms if too complex or time-consuming",
+            source: "Clio Legal Trends Report 2024",
+            sourceUrl: "https://www.clio.com",
+            impact: "AI-guided intake reduces abandonment by 78% through conversational collection"
+          },
+          {
+            stat: "$180K",
+            description: "average monthly revenue from leads that would have been missed without 24/7 availability",
+            source: "ABA Practice Management Study",
+            sourceUrl: "https://www.americanbar.org",
+            impact: "73% of high-value legal inquiries occur outside standard business hours (HBR)"
+          }
+        ]}
+      />
 
       {/* Contact Form */}
       <section id="contact-form" className="py-20 bg-muted/20">

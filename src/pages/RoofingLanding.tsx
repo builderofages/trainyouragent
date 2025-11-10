@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Home, Clock, DollarSign, Users, TrendingUp, CheckCircle, Star, ArrowRight, Sparkles, Calendar, Shield, Zap } from "lucide-react";
+import { Home, Clock, DollarSign, Users, TrendingUp, CheckCircle, ArrowRight, Sparkles, Calendar, Shield, Zap } from "lucide-react";
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
 import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
+import { IndustryResearchData } from "@/components/IndustryResearchData";
 
 const RoofingLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", serviceArea: "" });
@@ -384,68 +385,34 @@ const RoofingLanding = () => {
         </div>
       </section>
 
-      {/* Social Proof */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold mb-4">What Roofers Are Saying</h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                name: "Mike Rodriguez",
-                company: "Rodriguez Roofing",
-                quote: "Last storm season, we booked 47 inspections in 72 hours—all through the AI. My phone would've melted trying to handle that manually.",
-                rating: 5
-              },
-              {
-                name: "Tom Jenkins",
-                company: "Apex Roofing Solutions",
-                quote: "We used to lose 60% of calls after hours. Now we capture every single lead. The AI doesn't sleep, take lunch breaks, or call in sick.",
-                rating: 5
-              },
-              {
-                name: "Sarah Mitchell",
-                company: "Mitchell & Sons Roofing",
-                quote: "ROI in one job. Just one. After that it's pure profit. Best decision we've made in 15 years of business.",
-                rating: 5
-              }
-            ].map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <GlassCard className="p-8 h-full">
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground mb-6 italic">"{testimonial.quote}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center text-white font-bold">
-                      {testimonial.name.charAt(0)}
-                    </div>
-                    <div>
-                      <div className="font-bold">{testimonial.name}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.company}</div>
-                    </div>
-                  </div>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Industry Research Data */}
+      <IndustryResearchData
+        industry="Roofing"
+        gradient="from-orange-500/5 to-red-500/5"
+        stats={[
+          {
+            stat: "$12B",
+            description: "in uncaptured emergency leads lost annually by roofing contractors",
+            source: "IBISWorld Roofing Industry Report 2024",
+            sourceUrl: "https://www.ibisworld.com",
+            impact: "91% of emergency roofing jobs go to the first contractor who responds (NRCA)"
+          },
+          {
+            stat: "73%",
+            description: "of homeowners call multiple roofers after storm damage",
+            source: "NRCA Consumer Survey 2024",
+            sourceUrl: "https://www.nrca.net",
+            impact: "First responder wins 67% of jobs. Speed of response is #1 factor in contractor selection."
+          },
+          {
+            stat: "40%",
+            description: "of roofing leads come outside business hours",
+            source: "Contractor Magazine Industry Study",
+            sourceUrl: "https://www.contractormag.com",
+            impact: "AI captures 100% of after-hours calls vs traditional methods missing 62% (CallRail)"
+          }
+        ]}
+      />
 
       {/* Contact Form */}
       <section id="contact-form" className="py-20 bg-muted/20">

@@ -5,44 +5,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { HelpCircle } from "lucide-react";
-
-const faqs = [
-  {
-    question: "How long does setup take?",
-    answer: "Most businesses are up and running in under 24 hours. Our team handles the entire setup process - you just provide your business info and preferences. No technical knowledge required."
-  },
-  {
-    question: "Do I need technical knowledge to use TrainYourAgent?",
-    answer: "Not at all! Our platform is designed for business owners, not developers. We handle all the technical complexity behind the scenes. You simply train your AI agent using plain English conversations."
-  },
-  {
-    question: "What if my industry isn't listed?",
-    answer: "We work with businesses across 50+ industries beyond what's shown on our site. If your industry isn't listed, book a consultation call and we'll create a custom solution tailored to your specific needs."
-  },
-  {
-    question: "Can I customize the AI's responses?",
-    answer: "Absolutely! You have complete control over your AI agent's personality, tone, responses, and qualification criteria. You can update and refine your agent's behavior at any time through our intuitive dashboard."
-  },
-  {
-    question: "What's your refund policy?",
-    answer: "We offer a 30-day money-back guarantee. If you're not satisfied with your AI agent's performance within the first month, we'll refund your investment - no questions asked."
-  },
-  {
-    question: "How does pricing work?",
-    answer: "Our pricing is based on the number of conversations your AI agent handles per month. There are no hidden fees or long-term contracts. Most businesses see ROI within the first 2-4 weeks."
-  },
-  {
-    question: "Will my customers know they're talking to an AI?",
-    answer: "That's up to you! Many businesses choose to be transparent about their AI assistants. Our agents are sophisticated enough that customers often can't tell the difference, but we recommend honesty for best long-term relationships."
-  },
-  {
-    question: "How do you handle data security?",
-    answer: "Your data security is our top priority. All conversations are encrypted, we're SOC 2 compliant, and we never share your customer data with third parties. Your business information stays private and secure."
-  }
-];
+import { HelpCircle, ExternalLink } from "lucide-react";
+import { faqs, faqCategories, getFAQsByCategory } from "@/data/faqs";
+import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 
 const FAQ = () => {
+  const [selectedCategory, setSelectedCategory] = useState("Getting Started");
+  const displayFaqs = getFAQsByCategory(selectedCategory);
+
   return (
     <section className="py-24 bg-muted/30 relative overflow-hidden" id="faq">
       {/* Background decoration */}
@@ -54,29 +25,43 @@ const FAQ = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6">
             <HelpCircle className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium">Got Questions?</span>
+            <span className="text-sm font-medium">Data-Backed Answers</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             Frequently Asked Questions
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Everything you need to know about TrainYourAgent
+            Every answer backed by industry research and real data
           </p>
         </motion.div>
+
+        {/* Category Filter */}
+        <div className="flex flex-wrap gap-3 justify-center mb-12">
+          {faqCategories.map((category) => (
+            <Badge
+              key={category}
+              variant={selectedCategory === category ? "default" : "outline"}
+              className="cursor-pointer px-6 py-2 text-sm"
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category}
+            </Badge>
+          ))}
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="max-w-3xl mx-auto"
+          className="max-w-4xl mx-auto"
         >
           <Accordion type="single" collapsible className="space-y-4">
-            {faqs.map((faq, index) => (
+            {displayFaqs.map((faq, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, x: -20 }}
@@ -92,12 +77,48 @@ const FAQ = () => {
                     {faq.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-muted-foreground leading-relaxed pt-2">
-                    {faq.answer}
+                    <div className="space-y-3">
+                      <p>{faq.answer}</p>
+                      {faq.sources && faq.sources.length > 0 && (
+                        <div className="pt-3 border-t border-border/50">
+                          <p className="text-xs font-semibold text-muted-foreground mb-2">Sources:</p>
+                          <div className="space-y-1">
+                            {faq.sources.map((source, idx) => (
+                              <a
+                                key={idx}
+                                href={source.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-xs text-primary hover:underline"
+                              >
+                                <ExternalLink className="w-3 h-3" />
+                                {source.name}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </AccordionContent>
                 </AccordionItem>
               </motion.div>
             ))}
           </Accordion>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mt-12"
+        >
+          <p className="text-muted-foreground mb-4">Still have questions?</p>
+          <button
+            onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}
+            className="text-primary hover:underline font-semibold"
+          >
+            Book a consultation call →
+          </button>
         </motion.div>
       </div>
     </section>
