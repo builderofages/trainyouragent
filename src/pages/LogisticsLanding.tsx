@@ -1,0 +1,526 @@
+import { motion } from "framer-motion";
+import { Truck, Clock, DollarSign, Users, CheckCircle, Star, ArrowRight, Sparkles, Package, MapPin, Zap } from "lucide-react";
+import { useState } from "react";
+import Header from "@/components/Header";
+import Footer from "@/components/FooterEnhanced";
+import { GlassCard } from "@/components/enhanced/GlassCard";
+import { MagneticButton } from "@/components/enhanced/MagneticButton";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { siteConfig } from "@/config/site";
+import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
+
+const LogisticsLanding = () => {
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", company: "" });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast.success("Thanks! We'll be in touch within 24 hours.");
+    window.open(siteConfig.bookingUrl, '_blank');
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 via-background to-amber-500/5" />
+        <motion.div
+          animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
+          transition={{ duration: 20, repeat: Infinity }}
+          className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-yellow-500/10 to-amber-500/10 rounded-full blur-3xl"
+        />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left: Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6">
+                <Truck className="w-4 h-4 text-yellow-500" />
+                <span className="text-sm font-medium">For Logistics & Shipping</span>
+              </div>
+
+              <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                Stop Losing Deals to
+                <span className="block text-gradient bg-gradient-to-r from-yellow-500 to-amber-500 bg-clip-text text-transparent">
+                  Faster Quotes
+                </span>
+              </h1>
+
+              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+                Generate instant shipping quotes, automate tracking updates, and handle customer inquiries 24/7. 
+                Win more business by being the fastest to respond.
+              </p>
+
+              <div className="grid grid-cols-3 gap-6 mb-8">
+                <div>
+                  <div className="text-3xl font-bold text-gradient mb-1">
+                    <AnimatedCounter end={10} suffix="x" />
+                  </div>
+                  <div className="text-sm text-muted-foreground">Faster Quotes</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-gradient mb-1">
+                    <AnimatedCounter end={70} suffix="%" />
+                  </div>
+                  <div className="text-sm text-muted-foreground">Support Saved</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-gradient mb-1">24/7</div>
+                  <div className="text-sm text-muted-foreground">Service</div>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                <MagneticButton
+                  size="lg"
+                  className="text-lg px-8 h-14 gap-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600"
+                  onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  Get Your AI Dispatcher
+                  <ArrowRight className="w-5 h-5" />
+                </MagneticButton>
+                <MagneticButton
+                  size="lg"
+                  variant="outline"
+                  className="text-lg px-8 h-14 glass-card"
+                  onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  See Demo
+                </MagneticButton>
+              </div>
+            </motion.div>
+
+            {/* Right: Interactive Demo */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <GlassCard className="p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-500 to-amber-500 flex items-center justify-center">
+                    <Truck className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <div className="font-bold">AI Logistics Assistant</div>
+                    <div className="text-xs text-yellow-500">● Online</div>
+                  </div>
+                </div>
+
+                <div className="space-y-4 mb-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="flex gap-3"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                      <Package className="w-4 h-4 text-primary" />
+                    </div>
+                    <div className="glass-card p-3 rounded-lg flex-1">
+                      <p className="text-sm">I need to ship 5 pallets from Chicago to LA. What's the cost?</p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8 }}
+                    className="flex gap-3 flex-row-reverse"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-500 to-amber-500 flex items-center justify-center flex-shrink-0">
+                      <Sparkles className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="bg-gradient-to-r from-yellow-500/10 to-amber-500/10 p-3 rounded-lg flex-1 border border-yellow-500/20">
+                      <p className="text-sm mb-2">Let me get you an instant quote. A few quick details:</p>
+                      <ul className="text-xs space-y-1">
+                        <li>• Weight per pallet?</li>
+                        <li>• Standard or expedited?</li>
+                        <li>• Liftgate needed?</li>
+                      </ul>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.1 }}
+                    className="flex gap-3"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                      <Package className="w-4 h-4 text-primary" />
+                    </div>
+                    <div className="glass-card p-3 rounded-lg flex-1">
+                      <p className="text-sm">500 lbs each, standard shipping, no liftgate</p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.4 }}
+                    className="flex gap-3 flex-row-reverse"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-500 to-amber-500 flex items-center justify-center flex-shrink-0">
+                      <Sparkles className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="bg-gradient-to-r from-yellow-500/10 to-amber-500/10 p-3 rounded-lg flex-1 border border-yellow-500/20">
+                      <p className="text-sm font-bold mb-1">Quote: $2,450</p>
+                      <p className="text-xs text-muted-foreground">5-7 business days transit. Book now to lock in this rate!</p>
+                    </div>
+                  </motion.div>
+                </div>
+
+                <div className="text-center text-xs text-muted-foreground">
+                  <Sparkles className="w-3 h-3 inline mr-1" />
+                  AI generates quotes instantly, 24/7
+                </div>
+              </GlassCard>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pain Points */}
+      <section className="py-20 bg-muted/20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Speed Kills—Your Competitors, Not You
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              In logistics, the fastest quote wins the deal
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                icon: Clock,
+                title: "Quote Turnaround Time",
+                description: "Manual quotes take 4-6 hours. Customers move on to competitors who respond in minutes",
+                stat: "65%",
+                label: "Lost to faster quotes"
+              },
+              {
+                icon: Users,
+                title: "Where's My Shipment?",
+                description: "Customer service drowning in tracking inquiries instead of solving real problems",
+                stat: "40%",
+                label: "Of calls are tracking"
+              },
+              {
+                icon: DollarSign,
+                title: "Manual Quote Creation",
+                description: "Staff spending hours calculating routes, weights, and surcharges for every quote",
+                stat: "$12,000",
+                label: "Monthly labor cost"
+              }
+            ].map((pain, index) => {
+              const Icon = pain.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <GlassCard className="p-8 h-full border-destructive/20 bg-destructive/5 hover-lift">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center mb-6">
+                      <Icon className="w-7 h-7 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-3">{pain.title}</h3>
+                    <p className="text-muted-foreground mb-6">{pain.description}</p>
+                    <div className="pt-6 border-t border-border/50">
+                      <div className="text-3xl font-bold text-destructive mb-1">{pain.stat}</div>
+                      <div className="text-sm text-muted-foreground">{pain.label}</div>
+                    </div>
+                  </GlassCard>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Solutions */}
+      <section id="demo" className="py-20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6">
+              <Sparkles className="w-4 h-4 text-yellow-500" />
+              <span className="text-sm font-medium">AI-Powered Logistics</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Your 24/7 Logistics Command Center
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                icon: Zap,
+                title: "Instant Quote Generation",
+                description: "AI calculates accurate shipping quotes in seconds based on weight, distance, mode, and current rates. Be the fastest responder.",
+                features: ["Real-time rate calculation", "Multi-modal pricing", "Fuel surcharges", "Volume discounts"]
+              },
+              {
+                icon: MapPin,
+                title: "Automated Tracking Updates",
+                description: "Customers get real-time tracking updates via SMS and email. Your support team focuses on exceptions, not status checks.",
+                features: ["Real-time GPS tracking", "Automated notifications", "Delivery confirmations", "Exception alerts"]
+              },
+              {
+                icon: Package,
+                title: "Smart Load Optimization",
+                description: "AI suggests optimal routes, consolidation opportunities, and carrier selection to maximize margins.",
+                features: ["Route optimization", "Load consolidation", "Carrier selection", "Cost minimization"]
+              },
+              {
+                icon: Users,
+                title: "24/7 Customer Self-Service",
+                description: "Customers get instant answers to tracking, documentation, and billing questions without waiting for support.",
+                features: ["Tracking inquiries", "BOL requests", "Invoice questions", "Claims initiation"]
+              }
+            ].map((solution, index) => {
+              const Icon = solution.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <GlassCard className="p-8 h-full hover-lift">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-yellow-500 to-amber-500 flex items-center justify-center mb-6">
+                      <Icon className="w-7 h-7 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold mb-3">{solution.title}</h3>
+                    <p className="text-muted-foreground mb-6">{solution.description}</p>
+                    <ul className="space-y-2">
+                      {solution.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-center gap-2 text-sm">
+                          <CheckCircle className="w-4 h-4 text-yellow-500 flex-shrink-0" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </GlassCard>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ROI Calculator */}
+      <section className="py-20 bg-gradient-to-br from-yellow-500/5 to-amber-500/5">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto"
+          >
+            <GlassCard className="p-12">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-bold mb-4">Your Competitive Advantage in Numbers</h2>
+                <p className="text-muted-foreground">Real metrics from logistics companies using AI</p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-8 mb-12">
+                <div className="text-center">
+                  <div className="text-5xl font-bold text-gradient mb-2">10x</div>
+                  <div className="text-sm text-muted-foreground">Faster quote generation</div>
+                  <div className="text-xs text-muted-foreground mt-1">4 hours → 30 seconds</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-5xl font-bold text-gradient mb-2">$15K</div>
+                  <div className="text-sm text-muted-foreground">Monthly savings</div>
+                  <div className="text-xs text-muted-foreground mt-1">Support + admin costs</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-5xl font-bold text-gradient mb-2">70%</div>
+                  <div className="text-sm text-muted-foreground">Support time saved</div>
+                  <div className="text-xs text-muted-foreground mt-1">Automated tracking updates</div>
+                </div>
+              </div>
+
+              <div className="text-center pt-8 border-t border-border">
+                <div className="text-2xl font-bold mb-2">
+                  Win Rate Increase: <span className="text-gradient">35-50%</span>
+                </div>
+                <p className="text-muted-foreground">Fastest quote wins. Every time.</p>
+              </div>
+            </GlassCard>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Social Proof */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold mb-4">Trusted by Logistics Leaders</h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                name: "Carlos Martinez",
+                company: "Martinez Freight Services",
+                quote: "We went from 6-hour quote turnaround to 2 minutes. Our close rate jumped 42% in the first month. Game changer for our business.",
+                rating: 5
+              },
+              {
+                name: "Jessica Thompson",
+                company: "Rapid Logistics Inc",
+                quote: "Customer service calls dropped 65%. The AI handles all tracking inquiries automatically. My team now focuses on solving real problems, not answering 'where's my shipment?'",
+                rating: 5
+              },
+              {
+                name: "David Kim",
+                company: "Pacific Shipping Solutions",
+                quote: "ROI in 3 weeks. We're booking loads at 11 PM that we never would have captured before. The AI never sleeps, never takes breaks, never misses a quote request.",
+                rating: 5
+              }
+            ].map((testimonial, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <GlassCard className="p-8 h-full">
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+                    ))}
+                  </div>
+                  <p className="text-muted-foreground mb-6 italic">"{testimonial.quote}"</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-500 to-amber-500 flex items-center justify-center text-white font-bold">
+                      {testimonial.name.charAt(0)}
+                    </div>
+                    <div>
+                      <div className="font-bold">{testimonial.name}</div>
+                      <div className="text-sm text-muted-foreground">{testimonial.company}</div>
+                    </div>
+                  </div>
+                </GlassCard>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form */}
+      <section id="contact-form" className="py-20 bg-muted/20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-2xl mx-auto"
+          >
+            <GlassCard className="p-12">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold mb-4">Start Winning More Deals Today</h2>
+                <p className="text-muted-foreground">Free consultation. No commitments.</p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <Label htmlFor="name">Name *</Label>
+                    <Input
+                      id="name"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="Your name"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email">Email *</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="your@company.com"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <Label htmlFor="phone">Phone</Label>
+                    <Input
+                      id="phone"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="(555) 123-4567"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="company">Company</Label>
+                    <Input
+                      id="company"
+                      value={formData.company}
+                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                      placeholder="Your logistics company"
+                    />
+                  </div>
+                </div>
+
+                <MagneticButton
+                  type="submit"
+                  size="lg"
+                  className="w-full text-lg h-14 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600"
+                >
+                  Get Started
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </MagneticButton>
+
+                <p className="text-xs text-center text-muted-foreground">
+                  No credit card required. Setup in 48 hours.
+                </p>
+              </form>
+            </GlassCard>
+          </motion.div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default LogisticsLanding;

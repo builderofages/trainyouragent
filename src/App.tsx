@@ -9,6 +9,10 @@ import Dashboard from "./pages/Dashboard";
 import NicheLanding from "./pages/NicheLanding";
 import AccountingLanding from "./pages/AccountingLanding";
 import RoofingLanding from "./pages/RoofingLanding";
+import LegalLanding from "./pages/LegalLanding";
+import HealthcareLanding from "./pages/HealthcareLanding";
+import LogisticsLanding from "./pages/LogisticsLanding";
+import RestaurantsLanding from "./pages/RestaurantsLanding";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -25,6 +29,10 @@ const App = () => (
           <Route path="/settings" element={<Settings />} />
           <Route path="/accounting" element={<AccountingLanding />} />
           <Route path="/roofing" element={<RoofingLanding />} />
+          <Route path="/legal" element={<LegalLanding />} />
+          <Route path="/healthcare" element={<HealthcareLanding />} />
+          <Route path="/logistics" element={<LogisticsLanding />} />
+          <Route path="/restaurants" element={<RestaurantsLanding />} />
           {/* <Route path="/pricing" element={<Pricing />} /> */}
           {/* <Route path="/dashboard" element={<Dashboard />} /> */}
           <Route path="/niche/:nicheId" element={<NicheLanding />} />

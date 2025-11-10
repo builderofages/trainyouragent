@@ -21,23 +21,23 @@ export const nicheConfig: Record<string, NicheConfig> = {
     delaySeconds: 5,
   },
   legal: {
-    redirectUrl: "https://your-legal-site.com", // REPLACE WITH YOUR URL
-    enabled: false,
+    redirectUrl: "https://calendly.com/trainyouragent", // UPDATE THIS URL WHEN READY
+    enabled: true,
     delaySeconds: 5,
   },
   healthcare: {
-    redirectUrl: "https://your-healthcare-site.com", // REPLACE WITH YOUR URL
-    enabled: false,
+    redirectUrl: "https://calendly.com/trainyouragent", // UPDATE THIS URL WHEN READY
+    enabled: true,
     delaySeconds: 5,
   },
   logistics: {
-    redirectUrl: "https://your-logistics-site.com", // REPLACE WITH YOUR URL
-    enabled: false,
+    redirectUrl: "https://calendly.com/trainyouragent", // UPDATE THIS URL WHEN READY
+    enabled: true,
     delaySeconds: 5,
   },
   restaurants: {
-    redirectUrl: "https://your-restaurant-site.com", // REPLACE WITH YOUR URL
-    enabled: false,
+    redirectUrl: "https://calendly.com/trainyouragent", // UPDATE THIS URL WHEN READY
+    enabled: true,
     delaySeconds: 5,
   },
 };

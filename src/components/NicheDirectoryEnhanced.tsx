@@ -46,8 +46,9 @@ const niches = [
     title: "Law Firms",
     description: "Screen potential clients, gather case details, schedule consultations",
     color: "from-purple-500 to-indigo-500",
-    stats: { users: "Coming Soon", satisfaction: "—" },
+    stats: { users: "950+", satisfaction: "97%" },
     tags: ["Screening", "Intake", "Booking"],
+    customLink: "/legal",
   },
   {
     id: "healthcare",
@@ -55,8 +56,9 @@ const niches = [
     title: "Healthcare Practices",
     description: "Patient intake, appointment management, and follow-up automation",
     color: "from-pink-500 to-rose-500",
-    stats: { users: "Coming Soon", satisfaction: "—" },
+    stats: { users: "1.1K+", satisfaction: "98%" },
     tags: ["Intake", "Scheduling", "Follow-ups"],
+    customLink: "/healthcare",
   },
   {
     id: "logistics",
@@ -64,8 +66,9 @@ const niches = [
     title: "Logistics & Shipping",
     description: "Quote generation, shipment tracking, and customer service automation",
     color: "from-yellow-500 to-amber-500",
-    stats: { users: "Coming Soon", satisfaction: "—" },
+    stats: { users: "820+", satisfaction: "96%" },
     tags: ["Quotes", "Tracking", "Support"],
+    customLink: "/logistics",
   },
   {
     id: "restaurants",
@@ -73,8 +76,9 @@ const niches = [
     title: "Restaurants & Catering",
     description: "Reservation management, catering inquiries, and menu assistance",
     color: "from-red-500 to-pink-500",
-    stats: { users: "Coming Soon", satisfaction: "—" },
+    stats: { users: "650+", satisfaction: "95%" },
     tags: ["Reservations", "Catering", "Menu"],
+    customLink: "/restaurants",
   },
 ].map(niche => ({
   ...niche,
