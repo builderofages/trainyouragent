@@ -67,8 +67,8 @@ const HeroSection = () => {
       />
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 pt-32 pb-20 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="container mx-auto px-4 pt-24 md:pt-32 pb-12 md:pb-20 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Left: Hero Text */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -81,28 +81,28 @@ const HeroSection = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8 shadow-glow-sm"
+              className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full glass-card mb-6 md:mb-8 shadow-glow-sm"
             >
-              <Sparkles className="w-4 h-4 text-primary animate-pulse" />
-              <span className="text-sm font-medium">AI-Powered Business Automation</span>
+              <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-primary animate-pulse" />
+              <span className="text-xs md:text-sm font-medium">AI-Powered Business Automation</span>
             </motion.div>
 
-            <h1 className="text-hero mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight mb-4 md:mb-6">
               Custom AI Agents for{" "}
               <span className="text-gradient-premium">
                 Every Industry
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl leading-relaxed">
+            <p className="text-base md:text-xl lg:text-2xl text-muted-foreground mb-6 md:mb-8 max-w-2xl leading-relaxed">
               Industry research shows 300% average ROI for AI automation. Capture every lead, 
               qualify customers instantly, and automate operations 24/7.
             </p>
 
-            <div className="flex flex-wrap gap-4 mb-12">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4 mb-8 md:mb-12">
               <MagneticButton 
                 size="lg" 
-                className="text-lg px-8 h-14 gap-2 shadow-premium hover:shadow-glow-intense bg-gradient-premium relative overflow-hidden group" 
+                className="text-base md:text-lg px-6 md:px-8 h-12 md:h-14 gap-2 shadow-premium hover:shadow-glow-intense bg-gradient-premium relative overflow-hidden group w-full sm:w-auto" 
                 strength={25}
                 onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}
               >
@@ -111,13 +111,13 @@ const HeroSection = () => {
                   animate={{ x: ['-100%', '100%'] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
-                <Play className="w-5 h-5 relative z-10" />
+                <Play className="w-4 h-4 md:w-5 md:h-5 relative z-10" />
                 <span className="relative z-10">Book a Demo</span>
               </MagneticButton>
               <MagneticButton 
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-8 h-14 glass-card-premium border-gradient" 
+                className="text-base md:text-lg px-6 md:px-8 h-12 md:h-14 glass-card-premium border-gradient w-full sm:w-auto" 
                 strength={25}
                 onClick={() => {
                   const element = document.querySelector('#solutions');
@@ -129,7 +129,7 @@ const HeroSection = () => {
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-8 border-t border-border/50">
+            <div className="grid grid-cols-3 gap-3 md:gap-6 pt-6 md:pt-8 border-t border-border/50">
               {stats.map((stat, index) => {
                 const Icon = stat.icon;
                 return (
@@ -141,17 +141,17 @@ const HeroSection = () => {
                     whileHover={{ scale: 1.08, y: -6 }}
                     className="text-left perspective-1000 group cursor-pointer"
                   >
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
                       <motion.div
                         whileHover={{ rotate: 360, scale: 1.2 }}
                         transition={{ duration: 0.6 }}
-                        className="w-10 h-10 rounded-xl bg-gradient-premium flex items-center justify-center shadow-glow-sm group-hover:shadow-glow"
+                        className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-gradient-premium flex items-center justify-center shadow-glow-sm group-hover:shadow-glow"
                       >
-                        <Icon className="w-5 h-5 text-white" />
+                        <Icon className="w-4 h-4 md:w-5 md:h-5 text-white" />
                       </motion.div>
-                      <div className="text-4xl font-black text-gradient-premium">{stat.value}</div>
+                      <div className="text-2xl md:text-4xl font-black text-gradient-premium">{stat.value}</div>
                     </div>
-                    <div className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{stat.label}</div>
+                    <div className="text-xs md:text-sm text-muted-foreground group-hover:text-foreground transition-colors">{stat.label}</div>
                   </motion.div>
                 );
               })}

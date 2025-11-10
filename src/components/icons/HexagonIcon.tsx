@@ -11,10 +11,10 @@ interface HexagonIconProps {
 }
 
 const sizeMap = {
-  sm: { container: 48, icon: 20, path: "M12 2L22 8v8l-10 6L2 16V8z" },
-  md: { container: 64, icon: 28, path: "M16 3L28 10v12L16 29L4 22V10z" },
-  lg: { container: 80, icon: 36, path: "M20 3L36 12v16L20 37L4 28V12z" },
-  xl: { container: 96, icon: 44, path: "M24 4L44 15v18L24 44L4 33V15z" },
+  sm: { container: 48, icon: 20, viewBox: "0 0 48 48", path: "M24 6L40 15v18L24 42L8 33V15z" },
+  md: { container: 64, icon: 28, viewBox: "0 0 64 64", path: "M32 8L52 20v24L32 56L12 44V20z" },
+  lg: { container: 80, icon: 36, viewBox: "0 0 80 80", path: "M40 10L65 25v30L40 70L15 55V25z" },
+  xl: { container: 96, icon: 44, viewBox: "0 0 96 96", path: "M48 12L78 30v36L48 84L18 66V30z" },
 };
 
 export const HexagonIcon = ({ 
@@ -24,7 +24,7 @@ export const HexagonIcon = ({
   animate = true,
   className 
 }: HexagonIconProps) => {
-  const { container, icon: iconSize, path } = sizeMap[size];
+  const { container, icon: iconSize, viewBox, path } = sizeMap[size];
   
   return (
     <motion.div
@@ -45,7 +45,7 @@ export const HexagonIcon = ({
       <svg
         width={container}
         height={container}
-        viewBox="0 0 48 48"
+        viewBox={viewBox}
         className="absolute inset-0"
       >
         <defs>

@@ -10,7 +10,6 @@ import ROICalculator from "@/components/ROICalculatorEnhanced";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
 import { ParticleFieldEnhanced } from "@/components/effects/ParticleFieldEnhanced";
 import { ScrollGradient } from "@/components/effects/ScrollGradient";
-import { LiquidCursor } from "@/components/effects/LiquidCursor";
 import { AnimatedBackground } from "@/components/effects/AnimatedBackground";
 import { HorizontalGallery } from "@/components/scroll/HorizontalGallery";
 import { ScrollRevealSection } from "@/components/scroll/ScrollRevealSection";
@@ -27,8 +26,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background relative">
-        <LiquidCursor />
-        <ParticleFieldEnhanced count={80} interactive connected />
+        <ParticleFieldEnhanced count={30} interactive />
         <AnimatedBackground variant="mesh" />
         <ScrollGradient />
         

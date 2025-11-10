@@ -11,17 +11,17 @@ interface IconWrapperProps {
 }
 
 const sizeClasses = {
-  sm: "w-10 h-10",
-  md: "w-14 h-14",
-  lg: "w-16 h-16",
-  xl: "w-20 h-20",
+  sm: "w-8 h-8 md:w-10 md:h-10",
+  md: "w-10 h-10 md:w-14 md:h-14",
+  lg: "w-12 h-12 md:w-16 md:h-16",
+  xl: "w-14 h-14 md:w-20 md:h-20",
 };
 
 const iconSizes = {
-  sm: "w-5 h-5",
-  md: "w-7 h-7",
-  lg: "w-8 h-8",
-  xl: "w-10 h-10",
+  sm: "w-4 h-4 md:w-5 md:h-5",
+  md: "w-5 h-5 md:w-7 md:h-7",
+  lg: "w-6 h-6 md:w-8 md:h-8",
+  xl: "w-7 h-7 md:w-10 md:h-10",
 };
 
 export const IconWrapper = ({ 

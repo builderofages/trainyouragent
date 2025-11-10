@@ -84,21 +84,21 @@ export const VoiceAgentDemo = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <GlassCard className="p-8 shadow-dramatic hover:shadow-glow transition-all duration-500 border-gradient">
+    <div className="space-y-4 md:space-y-6">
+      <GlassCard className="p-4 md:p-8 shadow-dramatic hover:shadow-glow transition-all duration-500 border-gradient">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+          <div className="flex items-center gap-2 md:gap-3">
             <motion.div
-              className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow-sm"
+              className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow-sm"
               animate={{ rotate: isConnected ? 360 : 0 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             >
-              <Sparkles className="w-6 h-6 text-white" />
+              <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </motion.div>
             <div>
-              <h3 className="text-xl font-bold">Live AI Voice Agent</h3>
-              <p className={`text-sm ${getStatusColor()} font-medium`}>
+              <h3 className="text-lg md:text-xl font-bold">Live AI Voice Agent</h3>
+              <p className={`text-xs md:text-sm ${getStatusColor()} font-medium`}>
                 {getStatusText()}
               </p>
             </div>
@@ -120,18 +120,18 @@ export const VoiceAgentDemo = () => {
         {/* Main Content */}
         {!isConnected && messages.length === 0 ? (
           // Initial State
-          <div className="text-center py-12">
+          <div className="text-center py-8 md:py-12">
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="mb-8"
+              className="mb-6 md:mb-8"
             >
               <button
                 onClick={handleVoiceToggle}
-                className="relative w-32 h-32 rounded-full bg-gradient-to-br from-primary via-accent to-primary p-1 shadow-glow-intense hover:shadow-premium transition-all duration-300 group"
+                className="relative w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-primary via-accent to-primary p-1 shadow-glow-intense hover:shadow-premium transition-all duration-300 group"
               >
                 <div className="w-full h-full rounded-full bg-white dark:bg-background flex items-center justify-center">
-                  <Mic className="w-12 h-12 text-primary group-hover:scale-110 transition-transform" />
+                  <Mic className="w-10 h-10 md:w-12 md:h-12 text-primary group-hover:scale-110 transition-transform" />
                 </div>
                 <motion.div
                   className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/20 to-accent/20"
@@ -148,17 +148,17 @@ export const VoiceAgentDemo = () => {
               </button>
             </motion.div>
 
-            <h4 className="text-2xl font-bold mb-3 text-gradient-premium">
+            <h4 className="text-xl md:text-2xl font-bold mb-2 md:mb-3 text-gradient-premium">
               Talk to Our AI Agent Live
             </h4>
-            <p className="text-muted-foreground mb-8">
+            <p className="text-sm md:text-base text-muted-foreground mb-6 md:mb-8">
               Experience how our AI handles real business conversations
             </p>
 
             {/* Suggested Prompts */}
             <div className="space-y-3">
-              <p className="text-sm font-medium text-muted-foreground">Try asking:</p>
-              <div className="flex flex-wrap gap-2 justify-center">
+              <p className="text-xs md:text-sm font-medium text-muted-foreground">Try asking:</p>
+              <div className="flex flex-wrap gap-2 justify-center max-w-2xl mx-auto">
                 {currentPrompts.map((prompt, idx) => (
                   <motion.button
                     key={idx}
@@ -166,7 +166,7 @@ export const VoiceAgentDemo = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.1 }}
                     onClick={() => handlePromptClick(prompt)}
-                    className="px-4 py-2 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/20 hover:border-primary/40 text-sm transition-all hover-lift"
+                    className="px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-primary/10 hover:bg-primary/20 border border-primary/20 hover:border-primary/40 text-xs md:text-sm transition-all hover-lift"
                   >
                     {prompt}
                   </motion.button>
@@ -189,7 +189,7 @@ export const VoiceAgentDemo = () => {
             )}
 
             {/* Messages */}
-            <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+            <div className="space-y-3 md:space-y-4 max-h-[300px] md:max-h-[400px] overflow-y-auto pr-2">
               <AnimatePresence mode="popLayout">
                 {messages.map((msg, idx) => (
                   <motion.div
@@ -201,20 +201,20 @@ export const VoiceAgentDemo = () => {
                     className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
                   >
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+                      className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center shrink-0 ${
                         msg.role === "assistant"
                           ? "bg-gradient-to-br from-primary to-accent"
                           : "bg-muted"
                       }`}
                     >
                       {msg.role === "assistant" ? (
-                        <Bot className="w-5 h-5 text-white" />
+                        <Bot className="w-4 h-4 md:w-5 md:h-5 text-white" />
                       ) : (
-                        <User className="w-5 h-5" />
+                        <User className="w-4 h-4 md:w-5 md:h-5" />
                       )}
                     </div>
                     <div
-                      className={`p-4 rounded-2xl max-w-[80%] ${
+                      className={`p-3 md:p-4 rounded-2xl max-w-[85%] md:max-w-[80%] ${
                         msg.role === "assistant"
                           ? "bg-muted/50"
                           : "bg-gradient-to-br from-primary to-accent text-white"
@@ -249,7 +249,7 @@ export const VoiceAgentDemo = () => {
             )}
 
             {/* Controls */}
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
               {showTextMode ? (
                 <>
                   <Input
@@ -257,9 +257,9 @@ export const VoiceAgentDemo = () => {
                     onChange={(e) => setTextInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSendText()}
                     placeholder="Type your message..."
-                    className="flex-1"
+                    className="flex-1 text-sm md:text-base"
                   />
-                  <MagneticButton onClick={handleSendText} size="lg">
+                  <MagneticButton onClick={handleSendText} size="lg" className="w-full sm:w-auto">
                     Send
                   </MagneticButton>
                 </>
@@ -267,17 +267,17 @@ export const VoiceAgentDemo = () => {
                 <MagneticButton
                   onClick={handleVoiceToggle}
                   size="lg"
-                  className="w-full gap-2"
+                  className="w-full gap-2 text-sm md:text-base"
                   variant={isConnected ? "destructive" : "default"}
                 >
                   {isConnected ? (
                     <>
-                      <MicOff className="w-5 h-5" />
+                      <MicOff className="w-4 h-4 md:w-5 md:h-5" />
                       End Call
                     </>
                   ) : (
                     <>
-                      <Mic className="w-5 h-5" />
+                      <Mic className="w-4 h-4 md:w-5 md:h-5" />
                       Start Voice Demo
                     </>
                   )}

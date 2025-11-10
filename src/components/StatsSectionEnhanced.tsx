@@ -85,10 +85,10 @@ const StatCard = ({ stat, index }: { stat: any; index: number }) => {
               style="hexagon"
               size="lg"
               animate
-              className="mx-auto mb-4 group-hover:scale-110 transition-transform duration-300"
+              className="mx-auto mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-300"
             />
             
-            <div className="text-5xl font-black mb-3 glow-pulse">
+            <div className="text-4xl md:text-5xl font-black mb-2 md:mb-3 glow-pulse">
               <AnimatedCounter
                 end={stat.value}
                 suffix={stat.suffix}
@@ -96,8 +96,8 @@ const StatCard = ({ stat, index }: { stat: any; index: number }) => {
               />
             </div>
             
-            <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{stat.label}</h3>
-            <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{stat.description}</p>
+            <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3 group-hover:text-primary transition-colors">{stat.label}</h3>
+            <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4 leading-relaxed">{stat.description}</p>
             
             <motion.div
               className="pt-3 border-t border-border/50"
@@ -114,7 +114,7 @@ const StatCard = ({ stat, index }: { stat: any; index: number }) => {
 
 const StatsSection = () => {
   return (
-    <section className="relative py-24 overflow-hidden bg-gradient-to-b from-background via-muted/30 to-background">
+    <section className="relative py-16 md:py-24 overflow-hidden bg-gradient-to-b from-background via-muted/30 to-background">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div
@@ -145,17 +145,17 @@ const StatsSection = () => {
               Proven Results
             </span>
           </motion.div>
-          <h2 className="text-5xl md:text-6xl font-black mb-4">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-black mb-3 md:mb-4">
             The AI Automation{" "}
             <span className="text-gradient-premium">Opportunity</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto">
             Industry research reveals the massive potential of AI automation
           </p>
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
           {stats.map((stat, index) => (
             <StatCard key={stat.label} stat={stat} index={index} />
           ))}
@@ -170,12 +170,12 @@ const StatsSection = () => {
           className="text-center"
         >
           <p className="text-sm text-muted-foreground mb-6">Research sources we trust</p>
-          <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
+          <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8 opacity-60">
             {["McKinsey", "Gartner", "Harvard Business Review", "Forrester", "InsideSales"].map((source) => (
               <motion.span
                 key={source}
                 whileHover={{ scale: 1.1, opacity: 1 }}
-                className="text-lg font-semibold transition-opacity"
+                className="text-sm md:text-lg font-semibold transition-opacity"
               >
                 {source}
               </motion.span>
