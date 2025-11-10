@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSectionEnhanced";
 import StatsSection from "@/components/StatsSectionEnhanced";
+import ServicesShowcase from "@/components/ServicesShowcase";
 import NicheDirectory from "@/components/NicheDirectoryEnhanced";
 import SocialProof from "@/components/SocialProofEnhanced";
 import NewsletterSection from "@/components/NewsletterSectionEnhanced";
@@ -38,6 +39,10 @@ const Index = () => {
         </ParallaxSection>
 
         <HorizontalGallery />
+        
+        <section id="services">
+          <ServicesShowcase />
+        </section>
         
         <ScrollRevealSection />
         

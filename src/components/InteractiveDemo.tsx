@@ -12,37 +12,37 @@ const InteractiveDemo = () => {
   const conversation = [
     {
       role: "bot",
-      message: "Hi! I'm your HVAC AI assistant. How can I help you today?",
+      message: "Hi! I'm your AI assistant. How can I help you today?",
     },
     {
       role: "user",
-      message: "My AC isn't cooling properly",
-      prompt: "Type: My AC isn't cooling properly",
+      message: "I need help with my business",
+      prompt: "Type: I need help with my business",
     },
     {
       role: "bot",
       message:
-        "I can help with that! Can you tell me when you first noticed the issue?",
+        "I'd be happy to help! What kind of challenges are you facing?",
     },
     {
       role: "user",
-      message: "Started yesterday",
-      prompt: "Type: Started yesterday",
+      message: "We're missing too many customer calls",
+      prompt: "Type: We're missing too many customer calls",
     },
     {
       role: "bot",
       message:
-        "Got it! I'd like to schedule a technician to take a look. What's your address and preferred time?",
+        "I can help with that! Our AI voice agents handle calls 24/7 and never miss a lead. Would you like to schedule a demo?",
     },
     {
       role: "user",
-      message: "123 Main St, tomorrow morning works",
-      prompt: "Type: 123 Main St, tomorrow morning works",
+      message: "Yes, tomorrow morning works",
+      prompt: "Type: Yes, tomorrow morning works",
     },
     {
       role: "bot",
       message:
-        "Perfect! ✓ I've scheduled a technician for tomorrow at 9 AM. You'll receive a confirmation text shortly. Is there anything else I can help with?",
+        "Perfect! ✓ I've scheduled a demo for tomorrow at 9 AM. You'll receive a confirmation email shortly. Looking forward to showing you how we can help!",
     },
   ];
 
@@ -72,7 +72,7 @@ const InteractiveDemo = () => {
         <div>
           <h3 className="font-bold">Live Demo</h3>
           <p className="text-sm text-muted-foreground">
-            See AI in action (HVAC example)
+            See AI in action
           </p>
         </div>
       </div>

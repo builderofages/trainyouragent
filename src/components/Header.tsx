@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Menu, X, Search, ChevronDown } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { Button } from "@/components/ui/button";
 
@@ -21,9 +21,8 @@ const Header = () => {
   }, []);
 
   const navLinks = [
-    { name: "Solutions", href: "/", hasDropdown: true },
-    { name: "Pricing", href: "/pricing" },
-    { name: "Dashboard", href: "/dashboard" },
+    { name: "Solutions", href: "#solutions" },
+    { name: "Services", href: "#services" },
     { name: "Resources", href: "#resources" },
   ];
 
@@ -45,12 +44,14 @@ const Header = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <img 
-              src="/logo.png" 
-              alt="TrainYourAgent" 
-              className="h-10 w-auto"
-            />
-            <span className="text-xl font-black text-foreground group-hover:text-primary transition-colors">
+            <motion.div
+              className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center shadow-glow-sm"
+              whileHover={{ rotate: 360 }}
+              transition={{ duration: 0.5 }}
+            >
+              <span className="text-white font-black text-xl">T</span>
+            </motion.div>
+            <span className="text-xl font-black text-gradient group-hover:scale-105 transition-transform">
               TrainYourAgent
             </span>
           </motion.a>
@@ -61,10 +62,16 @@ const Header = () => {
               <div key={link.name} className="relative group">
                 <a
                   href={link.href}
+                  onClick={(e) => {
+                    if (link.href.startsWith('#')) {
+                      e.preventDefault();
+                      const element = document.querySelector(link.href);
+                      element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
                   className="text-foreground hover:text-primary font-medium transition-colors duration-300 flex items-center gap-1"
                 >
                   {link.name}
-                  {link.hasDropdown && <ChevronDown className="w-4 h-4" />}
                 </a>
                 <motion.div
                   className="absolute bottom-0 left-0 h-0.5 bg-primary"
@@ -81,11 +88,18 @@ const Header = () => {
             <MagneticButton variant="ghost" size="icon" className="rounded-full" strength={10}>
               <Search className="w-5 h-5" />
             </MagneticButton>
-            <MagneticButton variant="outline" className="rounded-full">
+            <MagneticButton 
+              variant="outline" 
+              className="rounded-full"
+              onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}
+            >
               Sign In
             </MagneticButton>
-            <MagneticButton className="rounded-full bg-gradient-primary hover:shadow-glow transition-all duration-300">
-              Get Started
+            <MagneticButton 
+              className="rounded-full bg-gradient-primary hover:shadow-glow transition-all duration-300"
+              onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}
+            >
+              Book a Call
             </MagneticButton>
           </div>
 
@@ -122,11 +136,18 @@ const Header = () => {
               </motion.a>
             ))}
             <div className="pt-4 space-y-2">
-              <Button variant="outline" className="w-full rounded-full">
+              <Button 
+                variant="outline" 
+                className="w-full rounded-full"
+                onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}
+              >
                 Sign In
               </Button>
-              <Button className="w-full rounded-full bg-gradient-primary">
-                Get Started
+              <Button 
+                className="w-full rounded-full bg-gradient-primary"
+                onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}
+              >
+                Book a Call
               </Button>
             </div>
           </div>

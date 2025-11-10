@@ -6,19 +6,36 @@ const Footer = () => {
   const footerSections = [
     {
       title: "Solutions",
-      links: ["HVAC AI", "Accounting AI", "Roofing AI", "Custom Solutions"],
+      links: [
+        { name: "HVAC AI", href: "/niche/hvac" },
+        { name: "Accounting AI", href: "/niche/accounting" },
+        { name: "Roofing AI", href: "/niche/roofing" },
+        { name: "Custom Solutions", href: "https://calendly.com/trainyouragent" },
+      ],
     },
     {
       title: "Resources",
-      links: ["Blog", "Case Studies", "Documentation", "API Reference"],
+      links: [
+        { name: "Book a Call", href: "https://calendly.com/trainyouragent" },
+        { name: "Case Studies", href: "#" },
+        { name: "Documentation", href: "#" },
+      ],
     },
     {
       title: "Company",
-      links: ["About", "Careers", "Contact", "Partners"],
+      links: [
+        { name: "About", href: "#" },
+        { name: "Contact", href: "https://calendly.com/trainyouragent" },
+        { name: "Partners", href: "#" },
+      ],
     },
     {
       title: "Legal",
-      links: ["Privacy", "Terms", "Security", "Compliance"],
+      links: [
+        { name: "Privacy", href: "#" },
+        { name: "Terms", href: "#" },
+        { name: "Security", href: "#" },
+      ],
     },
   ];
 
@@ -90,13 +107,15 @@ const Footer = () => {
               <h3 className="font-bold text-foreground mb-4">{section.title}</h3>
               <ul className="space-y-3">
                 {section.links.map((link) => (
-                  <li key={link}>
+                  <li key={link.name}>
                     <motion.a
-                      href="#"
+                      href={link.href}
+                      target={link.href.startsWith('http') ? '_blank' : undefined}
+                      rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       whileHover={{ x: 5 }}
                       className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block relative group"
                     >
-                      {link}
+                      {link.name}
                       <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300" />
                     </motion.a>
                   </li>

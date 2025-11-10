@@ -11,13 +11,13 @@ export const nicheConfig: Record<string, NicheConfig> = {
     delaySeconds: 5,
   },
   accounting: {
-    redirectUrl: "https://your-accounting-site.com", // REPLACE WITH YOUR URL
-    enabled: false, // Set to true when ready
+    redirectUrl: "https://calendly.com/trainyouragent", // PLACEHOLDER - Update when ready
+    enabled: false, // Set to true when ready to launch
     delaySeconds: 5,
   },
   roofing: {
-    redirectUrl: "https://your-roofing-site.com", // REPLACE WITH YOUR URL
-    enabled: false,
+    redirectUrl: "https://calendly.com/trainyouragent", // PLACEHOLDER - Update when ready
+    enabled: false, // Set to true when ready to launch
     delaySeconds: 5,
   },
   legal: {

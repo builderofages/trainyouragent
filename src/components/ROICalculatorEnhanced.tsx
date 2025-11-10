@@ -43,9 +43,24 @@ const ResultCard = ({ icon: Icon, label, value, color, delay }: any) => {
 };
 
 const ROICalculator = () => {
+  const [industry, setIndustry] = useState("hvac");
   const [monthlyLeads, setMonthlyLeads] = useState(100);
   const [conversionRate, setConversionRate] = useState(7);
   const [avgJobValue, setAvgJobValue] = useState(500);
+
+  const industries = [
+    { id: "hvac", name: "HVAC", defaultJobValue: 500 },
+    { id: "accounting", name: "Accounting", defaultJobValue: 2000 },
+    { id: "roofing", name: "Roofing", defaultJobValue: 8000 },
+  ];
+
+  const handleIndustryChange = (industryId: string) => {
+    setIndustry(industryId);
+    const selected = industries.find(i => i.id === industryId);
+    if (selected) {
+      setAvgJobValue(selected.defaultJobValue);
+    }
+  };
 
   // Calculations
   const missedLeadsPercentage = 60;
@@ -94,6 +109,31 @@ const ROICalculator = () => {
         >
           <GlassCard className="p-8 shadow-dramatic">
             <h4 className="text-xl font-bold mb-6">Your Business Metrics</h4>
+            
+            {/* Industry Selector */}
+            <div className="mb-8 p-4 glass-card rounded-xl">
+              <Label className="text-base mb-3 block font-semibold">
+                Select Your Industry
+              </Label>
+              <div className="grid grid-cols-3 gap-2">
+                {industries.map((ind) => (
+                  <motion.button
+                    key={ind.id}
+                    onClick={() => handleIndustryChange(ind.id)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
+                      industry === ind.id
+                        ? "bg-gradient-primary text-white shadow-glow"
+                        : "bg-muted text-foreground hover:bg-primary/10"
+                    }`}
+                  >
+                    {ind.name}
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+
             <div className="space-y-8">
               <div>
                 <Label className="text-base mb-3 block font-semibold">

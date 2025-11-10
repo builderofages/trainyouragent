@@ -110,11 +110,25 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-wrap gap-4 mb-12">
-              <MagneticButton size="lg" className="text-lg px-8 h-14 gap-2 shadow-blue hover:shadow-glow" strength={20}>
+              <MagneticButton 
+                size="lg" 
+                className="text-lg px-8 h-14 gap-2 shadow-blue hover:shadow-glow" 
+                strength={20}
+                onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}
+              >
                 <Play className="w-5 h-5" />
-                See Demo
+                Book a Demo
               </MagneticButton>
-              <MagneticButton size="lg" variant="outline" className="text-lg px-8 h-14 glass-card" strength={20}>
+              <MagneticButton 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 h-14 glass-card" 
+                strength={20}
+                onClick={() => {
+                  const element = document.querySelector('#solutions');
+                  element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+              >
                 Explore Solutions
               </MagneticButton>
             </div>
