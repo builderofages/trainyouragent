@@ -4,14 +4,14 @@ import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ResearchLibrary } from "@/components/ResearchLibrary";
-import { articles, additionalArticles } from "@/data/articles";
+import { articles } from "@/data/articles";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
 const Resources = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const allArticles = [...articles, ...additionalArticles];
+  const allArticles = articles;
   const categories = ["All", "AI Research", "Industry Research", "Sales Research", "Business Analysis"];
 
   const filteredArticles = selectedCategory === "All" 

@@ -738,9 +738,7 @@ Most businesses discover they're losing 6-7 figures annually to this single, sol
       { name: "AICPA - Accounting Firm Metrics", url: "https://www.aicpa.org", year: "2024" },
       { name: "ACCA - HVAC Industry Standards", url: "https://www.acca.org", year: "2024" }
     ]
-  }
-];
-
+  },
   {
     slug: "hvac-ai-industry-report-2024",
     title: "State of AI in HVAC: 2024 Industry Analysis",
