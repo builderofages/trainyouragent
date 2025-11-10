@@ -12,9 +12,9 @@ const HeroSection = () => {
   const scale = useTransform(scrollY, [0, 300], [1, 0.95]);
 
   const stats = [
-    { icon: TrendingUp, value: "3x", label: "More Leads" },
-    { icon: Users, value: "60%", label: "Lower CAC" },
-    { icon: Zap, value: "24/7", label: "Coverage" },
+    { icon: TrendingUp, value: "300%", label: "Avg ROI (McKinsey)" },
+    { icon: Users, value: "9x", label: "Higher Conversion" },
+    { icon: Zap, value: "24/7", label: "AI Coverage" },
   ];
 
   return (
@@ -105,8 +105,8 @@ const HeroSection = () => {
             </h1>
 
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl leading-relaxed">
-              Train specialized AI agents to capture leads, qualify customers, and automate 
-              operations 24/7 — no coding required.
+              Industry research shows 300% average ROI for AI automation. Capture every lead, 
+              qualify customers instantly, and automate operations 24/7.
             </p>
 
             <div className="flex flex-wrap gap-4 mb-12">

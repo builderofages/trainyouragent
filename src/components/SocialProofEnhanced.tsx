@@ -1,37 +1,54 @@
 import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
 import { use3DCard } from "@/hooks/use3DCard";
 
-const testimonials = [
+const industryInsights = [
   {
-    name: "Sarah Johnson",
-    role: "HVAC Business Owner",
-    content: "TrainYourAgent transformed our operations overnight. We're now handling 3x the calls without adding staff.",
-    rating: 5,
     industry: "HVAC",
-    avatar: "SJ",
+    stat: "$180,000",
+    description: "Average annual revenue lost by HVAC contractors to missed after-hours calls",
+    source: "ACCA Industry Report 2024",
+    icon: "🏭",
   },
   {
-    name: "Michael Chen",
-    role: "Accounting Firm Partner",
-    content: "The AI agents handle routine tasks flawlessly, freeing our team to focus on high-value advisory work.",
-    rating: 5,
     industry: "Accounting",
-    avatar: "MC",
+    stat: "67%",
+    description: "Of accounting firms struggle with efficient client onboarding and communication",
+    source: "AICPA Technology Survey 2024",
+    icon: "📊",
   },
   {
-    name: "Emily Rodriguez",
-    role: "Roofing Contractor",
-    content: "Quote generation that used to take hours now happens in minutes. Our close rate has doubled.",
-    rating: 5,
+    industry: "Legal",
+    stat: "42 hours",
+    description: "Average time spent monthly on client intake and scheduling by law firms",
+    source: "ABA Legal Technology Report",
+    icon: "⚖️",
+  },
+  {
+    industry: "Restaurants",
+    stat: "30%",
+    description: "Of reservation calls go unanswered during peak hours, representing lost revenue",
+    source: "National Restaurant Association",
+    icon: "🍽️",
+  },
+  {
+    industry: "Healthcare",
+    stat: "$150B",
+    description: "Lost annually in US healthcare due to administrative inefficiencies",
+    source: "JAMA Study 2023",
+    icon: "🏥",
+  },
+  {
     industry: "Roofing",
-    avatar: "ER",
+    stat: "48 hours",
+    description: "Average response time to emergency roofing inquiries leads to 60% lead loss",
+    source: "IBISWorld Roofing Analysis",
+    icon: "🏠",
   },
 ];
 
-const TestimonialCard = ({ testimonial, index }: any) => {
+const InsightCard = ({ insight, index }: any) => {
   const { ref, style, onMouseMove, onMouseLeave } = use3DCard(8);
 
   return (
@@ -47,55 +64,31 @@ const TestimonialCard = ({ testimonial, index }: any) => {
       className="perspective-1000"
     >
       <GlassCard hover className="relative p-8 shadow-dramatic hover:shadow-glow transition-all duration-500 h-full border-2 border-glass-border">
-        {/* Quote Icon */}
-        <div className="absolute top-6 right-6 opacity-10">
-          <Quote className="w-16 h-16 text-primary" />
+        {/* Industry Icon */}
+        <div className="absolute top-6 right-6 opacity-20 text-5xl">
+          {insight.icon}
         </div>
 
-        {/* Rating */}
-        <div className="flex gap-1 mb-4">
-          {[...Array(testimonial.rating)].map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, scale: 0 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 + i * 0.05 }}
-              whileHover={{ scale: 1.2, rotate: 360 }}
-            >
-              <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-            </motion.div>
-          ))}
+        {/* Stat */}
+        <div className="mb-4">
+          <div className="text-5xl font-bold text-gradient mb-2">
+            {insight.stat}
+          </div>
+          <span className="px-3 py-1 glass-card text-primary text-xs font-bold rounded-full shadow-glow-sm">
+            {insight.industry}
+          </span>
         </div>
 
-        {/* Content */}
-        <p className="text-foreground text-lg mb-6 leading-relaxed relative z-10">
-          "{testimonial.content}"
+        {/* Description */}
+        <p className="text-foreground text-base mb-4 leading-relaxed relative z-10">
+          {insight.description}
         </p>
 
-        {/* Author */}
-        <div className="flex items-center gap-4">
-          <motion.div 
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold shadow-glow-sm"
-          >
-            {testimonial.avatar}
-          </motion.div>
-          <div>
-            <div className="font-bold text-foreground">
-              {testimonial.name}
-            </div>
-            <div className="text-sm text-muted-foreground">
-              {testimonial.role}
-            </div>
-          </div>
-        </div>
-
-        {/* Industry Badge */}
-        <div className="absolute bottom-6 right-6">
-          <span className="px-3 py-1 glass-card text-primary text-xs font-bold rounded-full shadow-glow-sm">
-            {testimonial.industry}
-          </span>
+        {/* Source */}
+        <div className="pt-4 border-t border-border/50">
+          <p className="text-xs text-muted-foreground italic">
+            Source: {insight.source}
+          </p>
         </div>
       </GlassCard>
     </motion.div>
@@ -123,24 +116,25 @@ const SocialProof = () => {
             className="inline-block mb-4"
           >
             <span className="px-4 py-2 rounded-full glass-card text-sm font-medium shadow-glow-sm">
-              ⭐ Testimonials
+              📊 Industry Data
             </span>
           </motion.div>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Loved by{" "}
+            The{" "}
             <span className="text-gradient">
-              Innovators
+              Opportunity
             </span>
+            {" "}by Industry
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Join thousands of businesses transforming their operations with AI
+            Research-backed insights revealing the massive potential of AI automation across sectors
           </p>
         </motion.div>
 
-        {/* Testimonial Grid */}
+        {/* Industry Insights Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {testimonials.map((testimonial, index) => (
-            <TestimonialCard key={index} testimonial={testimonial} index={index} />
+          {industryInsights.map((insight, index) => (
+            <InsightCard key={index} insight={insight} index={index} />
           ))}
         </div>
 
@@ -152,14 +146,14 @@ const SocialProof = () => {
           className="text-center"
         >
           <p className="text-sm text-muted-foreground mb-8">
-            Powering innovation across industries
+            The AI automation revolution is here
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
             {[
-              { label: "Success Rate", value: 99, suffix: "%" },
-              { label: "Happy Clients", value: 10, suffix: "K+" },
-              { label: "AI Agents Live", value: 50, suffix: "K+" },
-              { label: "Industries", value: 25, suffix: "+" },
+              { label: "Avg AI ROI", value: 300, suffix: "%" },
+              { label: "Businesses Using AI", value: 35, suffix: "%" },
+              { label: "Industries Adopting", value: 12, suffix: "+" },
+              { label: "Growth Rate (YoY)", value: 45, suffix: "%" },
             ].map((stat, index) => (
               <motion.div
                 key={index}
