@@ -109,8 +109,8 @@ Your continued use of our services after changes constitutes acceptance.`,
       content: `For privacy-related questions or concerns:
       
 Email: privacy@trainyouragent.com
-Address: [Your Business Address]
-Phone: [Your Business Phone]
+Address: TrainYourAgent LLC, Florida, United States
+Phone: Contact via email for inquiries
       
 Data Protection Officer: [If applicable]`,
     },

@@ -124,16 +124,16 @@ See our Privacy Policy for detailed information.`,
 1. Contact us first at legal@trainyouragent.com
 2. We will attempt good faith negotiations
 3. If unresolved, disputes will be settled by binding arbitration
-4. Arbitration will be conducted by [Arbitration Organization]
+4. Arbitration will be conducted by the American Arbitration Association
 5. You waive the right to a jury trial or class action
       
 Some jurisdictions do not allow arbitration requirements.`,
     },
     {
       title: "Governing Law",
-      content: `These Terms are governed by the laws of [Your Jurisdiction], without regard to conflict of law principles.
+      content: `These Terms are governed by the laws of the State of Florida, without regard to conflict of law principles.
       
-Any legal action must be brought in the courts of [Your Jurisdiction].`,
+Any legal action must be brought in the courts of Florida.`,
     },
     {
       title: "Changes to Terms",
@@ -150,8 +150,8 @@ Last modified: {new Date().toLocaleDateString()}`,
       content: `For questions about these Terms:
       
 Email: legal@trainyouragent.com
-Address: [Your Business Address]
-Phone: [Your Business Phone]
+Address: TrainYourAgent LLC, Florida, United States
+Phone: Contact via email for inquiries
       
 Support: support@trainyouragent.com`,
     },
