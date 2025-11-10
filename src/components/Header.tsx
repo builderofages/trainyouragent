@@ -22,9 +22,17 @@ const Header = () => {
 
   const navLinks = [
     { name: "Solutions", href: "/#services" },
+    { name: "Demos", href: "/demos" },
     { name: "Resources", href: "/resources" },
-    { name: "Calculators", href: "/calculators" },
-    { name: "About", href: "/about" },
+    { name: "Company", href: "#", 
+      submenu: [
+        { name: "About", href: "/about" },
+        { name: "Team", href: "/team" },
+        { name: "Technology", href: "/technology" },
+        { name: "Security", href: "/security" },
+        { name: "Research", href: "/research" }
+      ]
+    }
   ];
 
   return (
