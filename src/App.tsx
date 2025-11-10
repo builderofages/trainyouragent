@@ -15,6 +15,10 @@ import LogisticsLanding from "./pages/LogisticsLanding";
 import RestaurantsLanding from "./pages/RestaurantsLanding";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import Resources from "./pages/Resources";
+import ResourceArticle from "./pages/ResourceArticle";
+import Calculators from "./pages/Calculators";
+import About from "./pages/About";
 
 const queryClient = new QueryClient();
 
@@ -33,8 +37,10 @@ const App = () => (
           <Route path="/healthcare" element={<HealthcareLanding />} />
           <Route path="/logistics" element={<LogisticsLanding />} />
           <Route path="/restaurants" element={<RestaurantsLanding />} />
-          {/* <Route path="/pricing" element={<Pricing />} /> */}
-          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+          <Route path="/resources" element={<Resources />} />
+          <Route path="/resources/:slug" element={<ResourceArticle />} />
+          <Route path="/calculators" element={<Calculators />} />
+          <Route path="/about" element={<About />} />
           <Route path="/niche/:nicheId" element={<NicheLanding />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

@@ -16,17 +16,17 @@ const Footer = () => {
     {
       title: "Resources",
       links: [
+        { name: "Blog & Research", href: "/resources" },
+        { name: "Calculators", href: "/calculators" },
         { name: "Book a Call", href: "https://calendly.com/trainyouragent" },
-        { name: "Settings", href: "/settings" },
-        { name: "Case Studies", href: "#" },
       ],
     },
     {
       title: "Company",
       links: [
-        { name: "About", href: "#" },
+        { name: "About", href: "/about" },
         { name: "Contact", href: "https://calendly.com/trainyouragent" },
-        { name: "Partners", href: "#" },
+        { name: "Research Partners", href: "/resources" },
       ],
     },
     {
