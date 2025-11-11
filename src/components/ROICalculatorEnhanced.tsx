@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
@@ -11,10 +11,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { use3DCard } from "@/hooks/use3DCard";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
-import { trackEvent } from "@/lib/tracking";
+import { trackEvent, conversions } from "@/lib/tracking";
 import { siteConfig } from "@/config/site";
 import { ResultsDisclaimer } from "@/components/ResultsDisclaimer";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
+import { getVariant, type VariantId, type ExperimentId } from "@/lib/ab-testing";
 
 const ResultCard = ({ icon: Icon, label, value, color, delay }: any) => {
   const { ref, style, onMouseMove, onMouseLeave } = use3DCard(8);
@@ -61,6 +62,44 @@ const ROICalculatorEnhanced = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  
+  // A/B Testing variants
+  const [headlineVariant, setHeadlineVariant] = useState<VariantId>('control');
+  const [ctaVariant, setCtaVariant] = useState<VariantId>('control');
+
+  // Assign A/B test variants on mount
+  useEffect(() => {
+    const headline = getVariant('roi_headline');
+    const cta = getVariant('roi_cta_copy');
+    setHeadlineVariant(headline);
+    setCtaVariant(cta);
+    
+    // Track variant views
+    trackEvent('ab_variant_viewed', { 
+      experiment_id: 'roi_headline',
+      variant_id: headline 
+    });
+    trackEvent('ab_variant_viewed', { 
+      experiment_id: 'roi_cta_copy',
+      variant_id: cta 
+    });
+  }, []);
+
+  // Headline variants
+  const headlineVariants: Record<VariantId, string> = {
+    control: "ROI Calculator",
+    variant_a: "Calculate Your Revenue Increase",
+    variant_b: "See What You're Losing to Missed Calls",
+    variant_c: "Your Monthly ROI in 60 Seconds",
+  };
+
+  // CTA copy variants
+  const ctaVariants: Record<VariantId, string> = {
+    control: "Calculate My ROI",
+    variant_a: "Show Me My Numbers",
+    variant_b: "Calculate Lost Revenue",
+    variant_c: "See My Potential",
+  };
 
   const industries = [
     { 
@@ -396,7 +435,11 @@ const ROICalculatorEnhanced = () => {
           </span>
         </motion.div>
         <h3 className="text-4xl md:text-5xl font-bold mb-4">
-          ROI <span className="text-gradient">Calculator</span>
+          {headlineVariants[headlineVariant].includes('ROI') ? (
+            <>ROI <span className="text-gradient">Calculator</span></>
+          ) : (
+            <span className="text-gradient">{headlineVariants[headlineVariant]}</span>
+          )}
         </h3>
         <p className="text-xl text-muted-foreground">
           See how much revenue you're leaving on the table
@@ -495,7 +538,7 @@ const ROICalculatorEnhanced = () => {
 
               <MagneticButton onClick={handleCalculate} size="lg" className="w-full gap-2">
                 <Sparkles className="w-5 h-5" />
-                Calculate My ROI
+                {ctaVariants[ctaVariant]}
               </MagneticButton>
             </div>
           </GlassCard>

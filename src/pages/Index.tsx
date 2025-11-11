@@ -7,6 +7,7 @@ import SocialProof from "@/components/SocialProofEnhanced";
 import NewsletterSection from "@/components/NewsletterSectionEnhanced";
 import Footer from "@/components/FooterEnhanced";
 import ROICalculator from "@/components/ROICalculatorEnhanced";
+import { ROIIndustryComparison } from "@/components/ROIIndustryComparison";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
 import { ParticleFieldEnhanced } from "@/components/effects/ParticleFieldEnhanced";
 import { ScrollGradient } from "@/components/effects/ScrollGradient";
@@ -61,6 +62,11 @@ const Index = () => {
             </div>
           </section>
         </ParallaxSection>
+        
+        {/* Industry ROI Comparison Tool */}
+        <section className="bg-background">
+          <ROIIndustryComparison />
+        </section>
 
         <HorizontalGallery />
         

@@ -137,6 +137,27 @@ export const conversions = {
       value: 500 
     });
   },
+
+  industryComparison: {
+    calculated: (data: {
+      top_industry: string;
+      top_roi: number;
+      monthly_leads: number;
+      conversion_rate: number;
+    }) => {
+      trackConversion('industry_comparison_calculated', data);
+    },
+    detailViewed: (data: {
+      industry: string;
+      rank: number;
+      monthly_roi: number;
+    }) => {
+      trackConversion('industry_comparison_detail_viewed', data);
+    },
+    fullAnalysisClicked: (data: { industry: string; rank: number }) => {
+      trackConversion('industry_comparison_full_analysis_clicked', data);
+    },
+  },
 };
 
 // Alias for trackConversion for consistency
