@@ -19,6 +19,7 @@ import HowItWorks from "@/components/HowItWorks";
 import IndustryResearchSection from "@/components/IndustryResearchSection";
 import BeforeAfter from "@/components/BeforeAfter";
 import FAQ from "@/components/FAQ";
+import ImplementationTimeline from "@/components/ImplementationTimeline";
 import StickyCTA from "@/components/StickyCTA";
 import { ExitPopup } from "@/components/conversion/ExitPopup";
 import { LiveChat } from "@/components/conversion/LiveChat";
@@ -46,6 +47,10 @@ const Index = () => {
         <IndustryResearchSection />
         
         <HowItWorks />
+        
+        <ParallaxSection speed={0.3}>
+          <ImplementationTimeline />
+        </ParallaxSection>
         
         <ParallaxSection speed={-0.3}>
           <section className="py-20 bg-muted/30">

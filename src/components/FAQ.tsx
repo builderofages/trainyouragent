@@ -5,10 +5,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { HelpCircle, ExternalLink } from "lucide-react";
+import { HelpCircle, ExternalLink, Calendar } from "lucide-react";
 import { faqs, faqCategories, getFAQsByCategory } from "@/data/faqs";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
+import { GlassCard } from "@/components/enhanced/GlassCard";
+import { MagneticButton } from "@/components/enhanced/MagneticButton";
+import { trackEvent } from "@/lib/tracking";
 
 const FAQ = () => {
   const [selectedCategory, setSelectedCategory] = useState("Getting Started");
@@ -106,19 +109,34 @@ const FAQ = () => {
           </Accordion>
         </motion.div>
 
+        {/* Premium CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mt-12"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-16 max-w-2xl mx-auto"
         >
-          <p className="text-muted-foreground mb-4">Still have questions?</p>
-          <button
-            onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}
-            className="text-primary hover:underline font-semibold"
-          >
-            Book a consultation call →
-          </button>
+          <GlassCard hover className="p-8 bg-gradient-to-br from-primary/5 to-accent/5 text-center">
+            <h3 className="text-2xl font-bold mb-2">Still have questions?</h3>
+            <p className="text-muted-foreground mb-6">
+              Book a discovery call to discuss your needs and get a custom timeline
+            </p>
+            <MagneticButton
+              size="lg"
+              className="gap-2"
+              onClick={() => {
+                trackEvent('faq_discovery_call_click', {
+                  source: 'faq_section',
+                  button_text: 'Book Discovery Call'
+                });
+                window.open('https://calendly.com/trainyouragent', '_blank');
+              }}
+            >
+              <Calendar className="w-5 h-5" />
+              Book Discovery Call
+            </MagneticButton>
+          </GlassCard>
         </motion.div>
       </div>
     </section>
