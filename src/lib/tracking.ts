@@ -129,6 +129,14 @@ export const conversions = {
   }) => {
     trackConversion('timeline_estimator_completed', data);
   },
+
+  strategySessionBooked: (industry?: string, budget?: string) => {
+    trackConversion('strategy_session_booked', { 
+      industry,
+      budget,
+      value: 500 
+    });
+  },
 };
 
 // Alias for trackConversion for consistency

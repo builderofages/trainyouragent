@@ -11,6 +11,7 @@ import { ArrowRight, ArrowLeft, CheckCircle, Loader2, Sparkles, TrendingUp, Data
 import { sendStrategySessionLead } from "@/lib/apollo-integration";
 import { siteConfig } from "@/config/site";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/tracking";
 
 interface StrategySessionLeadGateProps {
   open: boolean;
@@ -68,6 +69,16 @@ export const StrategySessionLeadGate = ({
 
   const totalSteps = 4;
 
+  // Track lead gate opened
+  useState(() => {
+    if (open) {
+      trackEvent('lead_gate_opened', {
+        has_industry_preselect: !!defaultIndustry,
+        industry: defaultIndustry || 'none'
+      });
+    }
+  });
+
   const validateStep = (currentStep: number): boolean => {
     const newErrors: Partial<FormData> = {};
 
@@ -110,15 +121,14 @@ export const StrategySessionLeadGate = ({
 
   const handleNext = () => {
     if (validateStep(step)) {
-      setStep(step + 1);
+      const nextStep = step + 1;
+      setStep(nextStep);
       
-      // Track analytics
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('event', 'strategy_session_lead_gate_step', {
-          step_number: step,
-          step_name: getStepName(step)
-        });
-      }
+      // Track step viewed
+      trackEvent('lead_gate_step_viewed', {
+        step: nextStep,
+        step_name: getStepName(nextStep)
+      });
     }
   };
 
@@ -164,16 +174,15 @@ export const StrategySessionLeadGate = ({
         // Store in sessionStorage to prevent duplicate forms
         sessionStorage.setItem('strategy_session_lead_submitted', 'true');
 
-        // Auto-open Calendly after 2 seconds
+        // Auto-open Cal.com after 2 seconds
         setTimeout(() => {
           window.open(siteConfig.bookingUrl, '_blank');
           
-          // Track booking intent
-          if (typeof window !== 'undefined' && (window as any).gtag) {
-            (window as any).gtag('event', 'calendly_opened_after_lead_gate', {
-              industry: formData.industry
-            });
-          }
+          // Track booking page opened
+          trackEvent('booking_page_opened', {
+            source: 'lead_gate_completion',
+            industry: formData.industry
+          });
         }, 2000);
 
         toast.success("Thank you! Opening booking calendar...");
@@ -200,12 +209,10 @@ export const StrategySessionLeadGate = ({
   const handleClose = () => {
     if (!isSuccess) {
       // Track abandonment
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('event', 'strategy_session_lead_gate_abandoned', {
-          step: step,
-          step_name: getStepName(step)
-        });
-      }
+      trackEvent('lead_gate_abandoned', {
+        step: step,
+        step_name: getStepName(step)
+      });
     }
     onOpenChange(false);
     
@@ -307,7 +314,7 @@ export const StrategySessionLeadGate = ({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto pb-safe">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             {isSuccess ? "You're All Set!" : "Book Your Free Strategy Session"}
