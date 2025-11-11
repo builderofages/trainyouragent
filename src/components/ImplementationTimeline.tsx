@@ -52,8 +52,8 @@ const timelineStages: TimelineStage[] = [
   {
     id: "agent-training",
     title: "Agent Training",
-    duration: "Week 1-2",
-    description: "Configure AI with your business specifics",
+    duration: "Day 3-5",
+    description: "Rapid configuration with your business specifics (1-3 days)",
     icon: Brain,
     details: [
       "Train on services, pricing, and terminology",
@@ -67,8 +67,8 @@ const timelineStages: TimelineStage[] = [
   {
     id: "testing-refinement",
     title: "Testing & Refinement",
-    duration: "Week 2-3",
-    description: "Ensure quality and accuracy before launch",
+    duration: "Day 4-6",
+    description: "Quality assurance before launch (1-2 days)",
     icon: TestTube,
     details: [
       "Conduct test calls with various scenarios",
@@ -82,8 +82,8 @@ const timelineStages: TimelineStage[] = [
   {
     id: "go-live",
     title: "Go Live",
-    duration: "Week 3+",
-    description: "Full deployment with ongoing support",
+    duration: "Day 5-7+",
+    description: "Full deployment (typically by day 7)",
     icon: Rocket,
     details: [
       "Full deployment with real-time monitoring",
@@ -174,7 +174,7 @@ const ImplementationTimeline = ({ industryId }: ImplementationTimelineProps = {}
             Your Implementation Journey
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            From discovery call to go-live. Timeline varies based on your needs.
+            From discovery call to go-live in 3-7 days. Timeline varies based on complexity.
           </p>
 
           {/* Complexity Factors */}
@@ -411,7 +411,7 @@ const ImplementationTimeline = ({ industryId }: ImplementationTimelineProps = {}
           <GlassCard hover className="max-w-2xl mx-auto p-8 bg-gradient-to-br from-primary/5 to-accent/5">
             <h3 className="text-2xl font-bold mb-2">Ready to Get Started?</h3>
             <p className="text-muted-foreground mb-6">
-              Book a discovery call to discuss your needs and get a custom implementation timeline
+              Book a discovery call to discuss your needs and get your personalized 3-7 day timeline
             </p>
             <MagneticButton
               size="lg"
