@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Clock, ArrowRight, ArrowLeft, CheckCircle2, Calendar, Zap, MessageSquare, DollarSign, Users } from "lucide-react";
+import { Clock, ArrowRight, ArrowLeft, CheckCircle2, Calendar, Zap, MessageSquare, DollarSign, Users, Building2, Flame, Martini, Calculator, UtensilsCrossed, Home, Scale, Heart, Truck, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { GlassCard } from "@/components/enhanced/GlassCard";
@@ -21,6 +21,7 @@ interface Question {
 }
 
 interface EstimatorAnswers {
+  industry?: string;
   services: number;
   integrations: number;
   terminology: number;
@@ -28,7 +29,139 @@ interface EstimatorAnswers {
   feedback: number;
 }
 
-const questions: Question[] = [
+interface IndustryTimelineConfig {
+  id: string;
+  name: string;
+  icon: any;
+  baselineDays: number;
+  considerations: string[];
+  commonComplexities: string;
+}
+
+const industryBaselines: IndustryTimelineConfig[] = [
+  {
+    id: "hvac",
+    name: "HVAC",
+    icon: Flame,
+    baselineDays: 3,
+    considerations: [
+      "Emergency service protocols",
+      "Seasonal pricing variations",
+      "Equipment brand familiarity"
+    ],
+    commonComplexities: "HVAC typically needs standard setup. Emergency dispatch training is straightforward."
+  },
+  {
+    id: "bars",
+    name: "Bars & Nightclubs",
+    icon: Martini,
+    baselineDays: 3.5,
+    considerations: [
+      "VIP/bottle service protocols",
+      "Event-specific pricing",
+      "Peak hours handling (Fri/Sat nights)"
+    ],
+    commonComplexities: "Nightlife requires training on premium service language and event booking complexity."
+  },
+  {
+    id: "accounting",
+    name: "Accounting",
+    icon: Calculator,
+    baselineDays: 4,
+    considerations: [
+      "Tax deadline awareness",
+      "Complex service qualification",
+      "Compliance terminology"
+    ],
+    commonComplexities: "Accounting requires extensive terminology training and service qualification logic."
+  },
+  {
+    id: "restaurants",
+    name: "Restaurants",
+    icon: UtensilsCrossed,
+    baselineDays: 3,
+    considerations: [
+      "Menu knowledge",
+      "Dietary restriction handling",
+      "Reservation system integration"
+    ],
+    commonComplexities: "Restaurants typically have straightforward reservation logic with standard pricing."
+  },
+  {
+    id: "roofing",
+    name: "Roofing",
+    icon: Home,
+    baselineDays: 3.5,
+    considerations: [
+      "Emergency leak detection",
+      "Insurance claim processes",
+      "Material type knowledge"
+    ],
+    commonComplexities: "Roofing needs training on emergency triage and insurance coordination."
+  },
+  {
+    id: "legal",
+    name: "Legal",
+    icon: Scale,
+    baselineDays: 4.5,
+    considerations: [
+      "Practice area routing",
+      "Confidentiality protocols",
+      "Case qualification criteria"
+    ],
+    commonComplexities: "Legal has the highest complexity due to specialized terminology and careful qualification needs."
+  },
+  {
+    id: "healthcare",
+    name: "Healthcare",
+    icon: Heart,
+    baselineDays: 4,
+    considerations: [
+      "HIPAA compliance requirements",
+      "Insurance verification protocols",
+      "Medical terminology"
+    ],
+    commonComplexities: "Healthcare requires HIPAA-compliant training and insurance verification logic."
+  },
+  {
+    id: "logistics",
+    name: "Logistics",
+    icon: Truck,
+    baselineDays: 3.5,
+    considerations: [
+      "Shipping calculation logic",
+      "Route optimization",
+      "Cargo handling specifications"
+    ],
+    commonComplexities: "Logistics needs training on dynamic pricing and capacity management."
+  },
+  {
+    id: "other",
+    name: "Other Industry",
+    icon: Building2,
+    baselineDays: 3.5,
+    considerations: [
+      "Custom business requirements",
+      "Unique terminology",
+      "Specialized workflows"
+    ],
+    commonComplexities: "Custom industries typically need moderate setup time depending on complexity."
+  }
+];
+
+const industryQuestion: Question = {
+  id: "industry",
+  question: "What industry is your business in?",
+  icon: Building2,
+  options: industryBaselines.map(industry => ({
+    label: industry.name,
+    description: industry.commonComplexities,
+    days: industry.baselineDays - 3,
+    icon: industry.icon
+  }))
+};
+
+const serviceQuestions: Question[] = [
   {
     id: "services",
     question: "How many different services do you offer?",
@@ -87,21 +220,38 @@ const questions: Question[] = [
   },
 ];
 
+const allQuestions: Question[] = [industryQuestion, ...serviceQuestions];
+
 interface TimelineEstimatorProps {
   onClose?: () => void;
 }
 
 export const TimelineEstimator = ({ onClose }: TimelineEstimatorProps) => {
   const [step, setStep] = useState<"welcome" | "questions" | "results">("welcome");
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<Partial<EstimatorAnswers>>({});
+  const [currentQuestion, setCurrentQuestion] = useState(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const industryParam = urlParams.get('industry');
+    return industryParam && industryBaselines.find(ind => ind.id === industryParam) ? 1 : 0;
+  });
+  const [answers, setAnswers] = useState<Partial<EstimatorAnswers>>(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const industryParam = urlParams.get('industry');
+    if (industryParam && industryBaselines.find(ind => ind.id === industryParam)) {
+      return { industry: industryParam };
+    }
+    return {};
+  });
   const [startTime] = useState(Date.now());
 
   const handleStart = () => {
     setStep("questions");
+    const urlParams = new URLSearchParams(window.location.search);
+    const industryParam = urlParams.get('industry');
     trackEvent("timeline_estimator_started", {
       source: "implementation_timeline",
       page: window.location.pathname,
+      has_industry_preselect: !!industryParam,
+      preselected_industry: industryParam || undefined
     });
   };
 
@@ -113,16 +263,20 @@ export const TimelineEstimator = ({ onClose }: TimelineEstimatorProps) => {
       question_number: currentQuestion + 1,
       question_id: questionId,
       added_days: days,
-      total_questions: questions.length,
+      total_questions: allQuestions.length,
+      industry: answers.industry || "not_selected_yet"
     });
 
-    if (currentQuestion < questions.length - 1) {
+    if (currentQuestion < allQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
       setStep("results");
       
       const timeline = calculateTimeline(newAnswers as EstimatorAnswers);
       trackEvent("timeline_estimator_completed", {
+        industry: timeline.industryName,
+        industry_id: newAnswers.industry,
+        industry_baseline_days: timeline.breakdown.industry,
         estimated_days_min: timeline.min,
         estimated_days_max: timeline.max,
         complexity: timeline.complexity,
@@ -154,21 +308,38 @@ export const TimelineEstimator = ({ onClose }: TimelineEstimatorProps) => {
       cta_type: "book_discovery_call",
       estimated_timeline: `${timeline.min}-${timeline.max} days`,
       complexity: timeline.complexity,
+      industry: timeline.industryName,
+      industry_id: answers.industry
     });
     window.open("https://calendly.com/trainyouragent/discovery", "_blank");
   };
 
   const calculateTimeline = (answers: EstimatorAnswers) => {
-    const base = 3;
-    const total = base + Object.values(answers).reduce((sum, val) => sum + val, 0);
+    const selectedIndustry = industryBaselines.find(
+      ind => ind.id === answers.industry
+    ) || industryBaselines.find(ind => ind.id === "other");
+    
+    const industryBase = selectedIndustry?.baselineDays || 3;
+    
+    const total = industryBase + 
+      (answers.services || 0) +
+      (answers.integrations || 0) +
+      (answers.terminology || 0) +
+      (answers.pricing || 0) +
+      (answers.feedback || 0);
+    
     const rounded = Math.ceil(total);
 
     return {
       min: Math.max(3, rounded - 1),
       max: Math.min(7, rounded + 1),
       exact: rounded,
+      industryName: selectedIndustry?.name || "General",
+      industryIcon: selectedIndustry?.icon || Building2,
+      industryConsiderations: selectedIndustry?.considerations || [],
       breakdown: {
-        base: 3,
+        industry: industryBase,
+        industryName: selectedIndustry?.name || "General",
         services: answers.services || 0,
         integrations: answers.integrations || 0,
         terminology: answers.terminology || 0,
@@ -179,7 +350,7 @@ export const TimelineEstimator = ({ onClose }: TimelineEstimatorProps) => {
     };
   };
 
-  const progress = ((currentQuestion + 1) / questions.length) * 100;
+  const progress = ((currentQuestion + 1) / allQuestions.length) * 100;
   const timeline = calculateTimeline(answers as EstimatorAnswers);
 
   return (
@@ -208,12 +379,12 @@ export const TimelineEstimator = ({ onClose }: TimelineEstimatorProps) => {
               Estimate Your Implementation Timeline
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-              Answer 5 quick questions to get your personalized timeline estimate. Takes about 60 seconds.
+              Answer 6 quick questions including your industry to get your personalized timeline estimate. Takes about 60 seconds.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 max-w-2xl mx-auto">
               <div className="p-4 rounded-lg bg-muted/50">
-                <div className="text-2xl font-bold text-primary mb-1">5</div>
+                <div className="text-2xl font-bold text-primary mb-1">6</div>
                 <div className="text-sm text-muted-foreground">Questions</div>
               </div>
               <div className="p-4 rounded-lg bg-muted/50">
@@ -244,7 +415,7 @@ export const TimelineEstimator = ({ onClose }: TimelineEstimatorProps) => {
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-muted-foreground">
-                  Question {currentQuestion + 1} of {questions.length}
+                  Question {currentQuestion + 1} of {allQuestions.length}
                 </span>
                 <span className="text-sm font-medium text-primary">
                   {Math.round(progress)}% Complete
@@ -262,14 +433,17 @@ export const TimelineEstimator = ({ onClose }: TimelineEstimatorProps) => {
             >
               <div className="flex items-center gap-3 mb-8">
                 {(() => {
-                  const Icon = questions[currentQuestion].icon;
+                  const Icon = allQuestions[currentQuestion].icon;
                   return <Icon className="w-8 h-8 text-primary" />;
                 })()}
-                <h3 className="text-2xl font-bold">{questions[currentQuestion].question}</h3>
+                <h3 className="text-2xl font-bold">{allQuestions[currentQuestion].question}</h3>
               </div>
 
-              <div className="grid grid-cols-1 gap-3">
-                {questions[currentQuestion].options.map((option, index) => {
+              <div className={cn(
+                "grid gap-3",
+                currentQuestion === 0 ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
+              )}>
+                {allQuestions[currentQuestion].options.map((option, index) => {
                   const OptionIcon = option.icon;
                   return (
                     <motion.button
@@ -277,12 +451,13 @@ export const TimelineEstimator = ({ onClose }: TimelineEstimatorProps) => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      onClick={() => handleAnswer(questions[currentQuestion].id, option.days)}
+                      onClick={() => handleAnswer(allQuestions[currentQuestion].id, option.days)}
                       className={cn(
                         "w-full p-6 rounded-xl border-2 text-left transition-all duration-200",
                         "hover:border-primary hover:bg-primary/5 hover:scale-[1.02]",
                         "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
-                        "bg-card border-border"
+                        "bg-card border-border",
+                        currentQuestion === 0 && "min-h-[160px]"
                       )}
                     >
                       <div className="flex items-start gap-4">
@@ -326,12 +501,15 @@ export const TimelineEstimator = ({ onClose }: TimelineEstimatorProps) => {
           >
             <div className="text-center mb-8">
               <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", delay: 0.2 }}
-                className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent mb-6"
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: "spring", delay: 0.1 }}
+                className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-4"
               >
-                <CheckCircle2 className="w-10 h-10 text-primary-foreground" />
+                {(() => {
+                  const IndustryIcon = timeline.industryIcon;
+                  return <IndustryIcon className="w-10 h-10 text-primary" />;
+                })()}
               </motion.div>
 
               <h2 className="text-3xl font-bold mb-3">Your Estimated Timeline</h2>
@@ -348,24 +526,52 @@ export const TimelineEstimator = ({ onClose }: TimelineEstimatorProps) => {
                 <span className="text-3xl font-semibold text-muted-foreground">days</span>
               </motion.div>
 
-              <div
-                className={cn(
-                  "inline-block px-4 py-2 rounded-full text-sm font-semibold mb-8",
-                  timeline.complexity === "Simple" && "bg-green-500/10 text-green-600 dark:text-green-400",
-                  timeline.complexity === "Standard" && "bg-blue-500/10 text-blue-600 dark:text-blue-400",
-                  timeline.complexity === "Complex" && "bg-orange-500/10 text-orange-600 dark:text-orange-400"
-                )}
-              >
-                {timeline.complexity} Complexity
+              <div className="flex items-center justify-center gap-3 mb-8">
+                <div className="inline-block px-4 py-2 rounded-full text-sm font-semibold bg-primary/10 text-primary">
+                  {timeline.industryName}
+                </div>
+                
+                <div
+                  className={cn(
+                    "inline-block px-4 py-2 rounded-full text-sm font-semibold",
+                    timeline.complexity === "Simple" && "bg-green-500/10 text-green-600 dark:text-green-400",
+                    timeline.complexity === "Standard" && "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+                    timeline.complexity === "Complex" && "bg-orange-500/10 text-orange-600 dark:text-orange-400"
+                  )}
+                >
+                  {timeline.complexity} Complexity
+                </div>
               </div>
             </div>
+
+            {timeline.industryConsiderations.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="mb-6 p-4 rounded-lg bg-blue-500/5 border border-blue-500/20"
+              >
+                <h4 className="text-sm font-semibold text-primary mb-2 flex items-center gap-2">
+                  <Info className="w-4 h-4" />
+                  {timeline.industryName}-Specific Considerations
+                </h4>
+                <ul className="space-y-1">
+                  {timeline.industryConsiderations.map((consideration, index) => (
+                    <li key={index} className="text-xs text-muted-foreground flex items-start gap-2">
+                      <span className="text-primary mt-0.5">•</span>
+                      <span>{consideration}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
 
             <GlassCard className="p-6 mb-8">
               <h3 className="text-lg font-semibold mb-4">Timeline Breakdown</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between py-2 border-b border-border/50">
-                  <span className="text-muted-foreground">Base Setup</span>
-                  <span className="font-semibold">{timeline.breakdown.base} days</span>
+                  <span className="text-muted-foreground">{timeline.breakdown.industryName} Industry Base</span>
+                  <span className="font-semibold">{timeline.breakdown.industry} days</span>
                 </div>
                 {timeline.breakdown.services > 0 && (
                   <div className="flex items-center justify-between py-2 border-b border-border/50">
@@ -405,7 +611,7 @@ export const TimelineEstimator = ({ onClose }: TimelineEstimatorProps) => {
 
               <div className="mt-6 p-4 rounded-lg bg-muted/50 border border-border">
                 <p className="text-sm text-muted-foreground">
-                  <strong>Note:</strong> This is an estimate based on your answers. Your actual timeline will be confirmed during your discovery call, where we'll discuss your specific needs in detail.
+                  <strong>Note:</strong> This {timeline.industryName.toLowerCase()} timeline estimate is based on your answers. Your actual timeline will be confirmed during your discovery call, where we'll discuss your specific needs in detail.
                 </p>
               </div>
             </GlassCard>
