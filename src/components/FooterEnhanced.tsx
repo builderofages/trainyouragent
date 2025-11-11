@@ -150,22 +150,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Back to Top Button */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="fixed bottom-8 right-8 z-50"
-        >
-          <MagneticButton
-            onClick={scrollToTop}
-            size="icon"
-            className="w-14 h-14 bg-gradient-to-br from-primary to-accent rounded-full text-white shadow-glow hover:shadow-glow transition-all duration-300"
-            strength={25}
-          >
-            <ArrowUp className="w-6 h-6" />
-          </MagneticButton>
-        </motion.div>
       </div>
     </footer>
   );

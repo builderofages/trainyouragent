@@ -2,7 +2,7 @@ import { Phone, MessageSquare, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { siteConfig } from "@/config/site";
-import { ChatModal } from "./ChatModal";
+import { ChatPanel } from "./ChatPanel";
 
 export const FloatingContactMenu = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -188,7 +188,7 @@ export const FloatingContactMenu = () => {
         )}
       </AnimatePresence>
 
-      <ChatModal isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+      <ChatPanel isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </>
   );
 };
