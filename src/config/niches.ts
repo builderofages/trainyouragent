@@ -40,4 +40,9 @@ export const nicheConfig: Record<string, NicheConfig> = {
     enabled: true,
     delaySeconds: 5,
   },
+  bars: {
+    redirectUrl: "https://calendly.com/trainyouragent", // UPDATE THIS URL WHEN READY
+    enabled: true,
+    delaySeconds: 5,
+  },
 };

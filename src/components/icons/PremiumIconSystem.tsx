@@ -52,5 +52,6 @@ export const industryIcons = {
   healthcare: { style: "blob" as IconStyle, gradient: "from-cyan-500 via-teal-500 to-blue-500" },
   logistics: { style: "particle" as IconStyle, gradient: "from-blue-600 via-sky-500 to-cyan-600" },
   restaurants: { style: "blob" as IconStyle, gradient: "from-yellow-500 via-orange-500 to-red-500" },
+  bars: { style: "particle" as IconStyle, gradient: "from-purple-500 via-pink-500 to-purple-600" },
   general: { style: "particle" as IconStyle, gradient: "from-primary via-accent to-primary" },
 };

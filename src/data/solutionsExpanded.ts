@@ -970,4 +970,28 @@ export const expandedSolutions: Record<string, ExpandedNicheSolution> = {
       },
     ],
   },
+  bars: {
+    id: "bars",
+    name: "Bars & Nightclubs",
+    icon: "Music",
+    painPoints: [
+      { category: "Lost Revenue", title: "Weekend Rush Phone Chaos", impact: "300+ calls Friday/Saturday nights overwhelm staff", cost: "$15K+ monthly" },
+      { category: "Service Quality", title: "VIP Inquiries During Service", impact: "Staff pulled away from guests to answer phones", cost: "$8K+ monthly" },
+      { category: "Missed Bookings", title: "After-Hours Event Requests", impact: "Event booking inquiries go to voicemail", cost: "$200K+ annually" },
+      { category: "Staff Efficiency", title: "Can't Hear Over Music", impact: "Staff can't hear phone calls during peak hours", cost: "$5K+ monthly" },
+    ],
+    transformation: {
+      before: ["Staff juggling phones during rush", "VIP reservations lost", "Event bookings missed"],
+      after: ["AI handles unlimited calls", "Automatic VIP booking", "24/7 event capture"],
+      timeframe: "Live in 2 weeks"
+    },
+    benefits: [
+      { title: "3x VIP Bookings", description: "Never miss a VIP reservation", metric: "$50K+ monthly", cta: { type: "primary", text: "Book Demo", link: "/demo-request" }},
+      { title: "70% Less Phone Time", description: "Staff focus on guests", metric: "15+ hours saved", cta: { type: "calculator", text: "Calculate ROI", link: "/calculators" }},
+    ],
+    socialProof: [
+      { stat: "75% of nightclub revenue from VIP/bottle service", source: "Nightclub & Bar Magazine", impact: "VIP bookings drive profitability" },
+      { stat: "62% of weekend calls unanswered", source: "Hospitality Tech Study", impact: "AI captures every opportunity" },
+    ],
+  },
 };

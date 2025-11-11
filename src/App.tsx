@@ -13,6 +13,9 @@ import LegalLanding from "./pages/LegalLanding";
 import HealthcareLanding from "./pages/HealthcareLanding";
 import LogisticsLanding from "./pages/LogisticsLanding";
 import RestaurantsLanding from "./pages/RestaurantsLanding";
+import BarsNightclubsLanding from "./pages/BarsNightclubsLanding";
+import HVACLanding from "./pages/HVACLanding";
+import SalesToolkit from "./pages/SalesToolkit";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Resources from "./pages/Resources";
@@ -49,6 +52,9 @@ const App = () => (
           <Route path="/healthcare" element={<HealthcareLanding />} />
           <Route path="/logistics" element={<LogisticsLanding />} />
           <Route path="/restaurants" element={<RestaurantsLanding />} />
+          <Route path="/bars-nightclubs" element={<BarsNightclubsLanding />} />
+          <Route path="/hvac" element={<HVACLanding />} />
+          <Route path="/sales-toolkit" element={<SalesToolkit />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/resources/:slug" element={<ResourceArticle />} />
           <Route path="/demos" element={<Demos />} />
