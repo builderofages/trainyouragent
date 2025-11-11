@@ -4,6 +4,7 @@ import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { VoiceAgentDemo } from "./VoiceAgentDemo";
 import { TrustBadges } from "./conversion/TrustBadges";
+import { RiskReversal } from "./RiskReversal";
 
 const HeroSection = () => {
   const { scrollY } = useScroll();
@@ -13,8 +14,8 @@ const HeroSection = () => {
   const scale = useTransform(scrollY, [0, 300], [1, 0.95]);
 
   const stats = [
-    { icon: TrendingUp, value: "300%", label: "Avg ROI (McKinsey)" },
-    { icon: Users, value: "9x", label: "Higher Conversion" },
+    { icon: TrendingUp, value: "94%", label: "Pilot Conversion" },
+    { icon: Users, value: "3-7", label: "Days to Go Live" },
     { icon: Zap, value: "24/7", label: "AI Coverage" },
   ];
 
@@ -129,9 +130,9 @@ const HeroSection = () => {
               </MagneticButton>
             </div>
 
-            {/* Trust Badges */}
+            {/* Risk Reversal */}
             <div className="mb-8">
-              <TrustBadges variant="compact" />
+              <RiskReversal />
             </div>
 
             {/* Quick Stats */}

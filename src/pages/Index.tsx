@@ -25,6 +25,8 @@ import { SocialProofNotifications } from "@/components/conversion/SocialProof";
 import { FloatingContactMenu } from "@/components/FloatingContactMenu";
 import { PhoneSection } from "@/components/PhoneSection";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
+import { TechnologyPartners } from "@/components/TechnologyPartners";
+import { Differentiation } from "@/components/Differentiation";
 
 const Index = () => {
   useGSAP();
@@ -43,6 +45,8 @@ const Index = () => {
         </ParallaxSection>
         
         <IndustryResearchSection />
+        
+        <Differentiation />
         
         <HowItWorks />
         
@@ -79,6 +83,8 @@ const Index = () => {
         </ParallaxSection>
 
         <StickyReveal />
+        
+        <TechnologyPartners />
         
         <FAQ />
 

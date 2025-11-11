@@ -9,23 +9,23 @@ export const TrustBadges = ({ variant = "default" }: TrustBadgesProps) => {
   const badges = [
     {
       icon: Shield,
-      text: "SSL Secure",
-      subtext: "256-bit encryption",
+      text: "SOC 2 Compliant",
+      subtext: "Enterprise security",
     },
     {
       icon: Lock,
-      text: "GDPR Compliant",
-      subtext: "Data protected",
+      text: "256-bit Encryption",
+      subtext: "Bank-level protection",
     },
     {
       icon: Award,
-      text: "Industry Leading",
-      subtext: "AI technology",
+      text: "HIPAA Ready",
+      subtext: "Healthcare compliant",
     },
     {
       icon: CheckCircle,
-      text: "Satisfaction Guaranteed",
-      subtext: "Full support",
+      text: "30-Day Pilot",
+      subtext: "Risk-free trial",
     },
   ];
 

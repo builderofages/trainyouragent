@@ -114,6 +114,47 @@ const About = () => {
             </div>
           </GlassCard>
 
+          {/* Team Section - Ready for Real Content */}
+          <GlassCard className="p-12 mb-12">
+            <h2 className="text-3xl font-bold mb-6">Meet the Team</h2>
+            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+              We're a team of AI engineers, business strategists, and automation experts who got tired of watching businesses lose revenue to missed calls. Our backgrounds span Fortune 500 enterprise technology, small business operations, and cutting-edge AI research.
+            </p>
+            
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Placeholder for team members - ready for real photos and details */}
+              <div className="flex items-start gap-4">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                  ?
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold mb-2">Founder / CEO</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    [Add your name, background, and expertise here. Include relevant experience, credentials, or LinkedIn profile link.]
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                  ?
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold mb-2">Technical Lead / CTO</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    [Add co-founder or key team member info here. Include technical credentials and relevant experience.]
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 p-6 bg-muted/30 rounded-lg border border-border">
+              <p className="text-sm text-muted-foreground italic">
+                💡 <strong>Note:</strong> Replace the placeholder content above with real team member photos, names, backgrounds, and LinkedIn profiles. Authenticity builds trust—prospects want to know who they're working with.
+              </p>
+            </div>
+          </GlassCard>
+
           {/* Proof Points */}
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
