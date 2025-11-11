@@ -11,6 +11,11 @@ import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
 import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
 import { IndustryResearchData } from "@/components/IndustryResearchData";
+import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
+import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
+import { ComparisonTable } from "@/components/conversion/ComparisonTable";
+import { UrgencySection } from "@/components/conversion/UrgencySection";
+import { expandedSolutions } from "@/data/solutionsExpanded";
 
 const HealthcareLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", practiceType: "" });
@@ -183,73 +188,8 @@ const HealthcareLanding = () => {
         </div>
       </section>
 
-      {/* Pain Points */}
-      <section className="py-20 bg-muted/20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Administrative Work is Drowning Your Practice
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Your staff spends more time on paperwork than patient care
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                icon: FileText,
-                title: "Intake Bottleneck",
-                description: "New patients spend 30+ minutes filling clipboards. Your staff spends hours entering data.",
-                stat: "20+ hours",
-                label: "Per week on data entry"
-              },
-              {
-                icon: Calendar,
-                title: "No-Show Epidemic",
-                description: "Without automated reminders, 15-25% of appointments are no-shows, costing thousands monthly",
-                stat: "$5,000+",
-                label: "Monthly revenue lost"
-              },
-              {
-                icon: Phone,
-                title: "Phone Line Jam",
-                description: "Staff overwhelmed with appointment calls, prescription refills, and basic questions",
-                stat: "30-50%",
-                label: "Of staff time on phone"
-              }
-            ].map((pain, index) => {
-              const Icon = pain.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <GlassCard className="p-8 h-full border-destructive/20 bg-destructive/5 hover-lift">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center mb-6">
-                      <Icon className="w-7 h-7 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-3">{pain.title}</h3>
-                    <p className="text-muted-foreground mb-6">{pain.description}</p>
-                    <div className="pt-6 border-t border-border/50">
-                      <div className="text-3xl font-bold text-destructive mb-1">{pain.stat}</div>
-                      <div className="text-sm text-muted-foreground">{pain.label}</div>
-                    </div>
-                  </GlassCard>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* Pain Points Journey */}
+      <PainPointsJourney solution={expandedSolutions.healthcare} />
 
       {/* Solutions */}
       <section id="demo" className="py-20">
@@ -327,6 +267,12 @@ const HealthcareLanding = () => {
         </div>
       </section>
 
+      {/* Industry Benefits */}
+      <IndustryBenefits solution={expandedSolutions.healthcare} />
+
+      {/* Comparison Table */}
+      <ComparisonTable industry="healthcare" />
+
       {/* ROI Calculator */}
       <section className="py-20 bg-gradient-to-br from-pink-500/5 to-rose-500/5">
         <div className="container mx-auto px-4">
@@ -370,6 +316,9 @@ const HealthcareLanding = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Urgency Section */}
+      <UrgencySection industry="healthcare" costPerHour={200} spotsRemaining={4} />
 
       {/* Industry Research Data */}
       <IndustryResearchData

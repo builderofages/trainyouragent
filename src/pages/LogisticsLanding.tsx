@@ -11,6 +11,11 @@ import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
 import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
 import { IndustryResearchData } from "@/components/IndustryResearchData";
+import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
+import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
+import { ComparisonTable } from "@/components/conversion/ComparisonTable";
+import { UrgencySection } from "@/components/conversion/UrgencySection";
+import { expandedSolutions } from "@/data/solutionsExpanded";
 
 const LogisticsLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", company: "" });
@@ -189,73 +194,8 @@ const LogisticsLanding = () => {
         </div>
       </section>
 
-      {/* Pain Points */}
-      <section className="py-20 bg-muted/20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Speed Kills—Your Competitors, Not You
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              In logistics, the fastest quote wins the deal
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                icon: Clock,
-                title: "Quote Turnaround Time",
-                description: "Manual quotes take 4-6 hours. Customers move on to competitors who respond in minutes",
-                stat: "65%",
-                label: "Lost to faster quotes"
-              },
-              {
-                icon: Users,
-                title: "Where's My Shipment?",
-                description: "Customer service drowning in tracking inquiries instead of solving real problems",
-                stat: "40%",
-                label: "Of calls are tracking"
-              },
-              {
-                icon: DollarSign,
-                title: "Manual Quote Creation",
-                description: "Staff spending hours calculating routes, weights, and surcharges for every quote",
-                stat: "$12,000",
-                label: "Monthly labor cost"
-              }
-            ].map((pain, index) => {
-              const Icon = pain.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <GlassCard className="p-8 h-full border-destructive/20 bg-destructive/5 hover-lift">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center mb-6">
-                      <Icon className="w-7 h-7 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-3">{pain.title}</h3>
-                    <p className="text-muted-foreground mb-6">{pain.description}</p>
-                    <div className="pt-6 border-t border-border/50">
-                      <div className="text-3xl font-bold text-destructive mb-1">{pain.stat}</div>
-                      <div className="text-sm text-muted-foreground">{pain.label}</div>
-                    </div>
-                  </GlassCard>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* Pain Points Journey */}
+      <PainPointsJourney solution={expandedSolutions.logistics} />
 
       {/* Solutions */}
       <section id="demo" className="py-20">
@@ -333,6 +273,12 @@ const LogisticsLanding = () => {
         </div>
       </section>
 
+      {/* Industry Benefits */}
+      <IndustryBenefits solution={expandedSolutions.logistics} />
+
+      {/* Comparison Table */}
+      <ComparisonTable industry="logistics" />
+
       {/* ROI Calculator */}
       <section className="py-20 bg-gradient-to-br from-yellow-500/5 to-amber-500/5">
         <div className="container mx-auto px-4">
@@ -376,6 +322,9 @@ const LogisticsLanding = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Urgency Section */}
+      <UrgencySection industry="logistics" costPerHour={180} spotsRemaining={6} />
 
       {/* Industry Research Data */}
       <IndustryResearchData

@@ -11,6 +11,11 @@ import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
 import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
 import { IndustryResearchData } from "@/components/IndustryResearchData";
+import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
+import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
+import { ComparisonTable } from "@/components/conversion/ComparisonTable";
+import { UrgencySection } from "@/components/conversion/UrgencySection";
+import { expandedSolutions } from "@/data/solutionsExpanded";
 
 const RestaurantsLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", restaurantName: "" });
@@ -180,73 +185,8 @@ const RestaurantsLanding = () => {
         </div>
       </section>
 
-      {/* Pain Points */}
-      <section className="py-20 bg-muted/20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              The Hidden Cost of Missed Calls
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Every unanswered call is a table you'll never fill
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                icon: Phone,
-                title: "Phone Line Chaos",
-                description: "Friday dinner rush: phones ringing off the hook while staff tries to serve tables. How many reservations did you miss?",
-                stat: "35-45%",
-                label: "Of calls go unanswered"
-              },
-              {
-                icon: MessageSquare,
-                title: "Catering Inquiries Lost",
-                description: "Corporate catering requests come in after hours. By the time you respond, they've booked someone else",
-                stat: "$18,000",
-                label: "Average monthly catering lost"
-              },
-              {
-                icon: Users,
-                title: "Staff Overwhelmed",
-                description: "Your host is taking reservations, seating guests, AND answering menu questions. Something's gotta give.",
-                stat: "60%",
-                label: "Of host time on phone"
-              }
-            ].map((pain, index) => {
-              const Icon = pain.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <GlassCard className="p-8 h-full border-destructive/20 bg-destructive/5 hover-lift">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center mb-6">
-                      <Icon className="w-7 h-7 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-3">{pain.title}</h3>
-                    <p className="text-muted-foreground mb-6">{pain.description}</p>
-                    <div className="pt-6 border-t border-border/50">
-                      <div className="text-3xl font-bold text-destructive mb-1">{pain.stat}</div>
-                      <div className="text-sm text-muted-foreground">{pain.label}</div>
-                    </div>
-                  </GlassCard>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* Pain Points Journey */}
+      <PainPointsJourney solution={expandedSolutions.restaurants} />
 
       {/* Solutions */}
       <section id="demo" className="py-20">
@@ -324,6 +264,12 @@ const RestaurantsLanding = () => {
         </div>
       </section>
 
+      {/* Industry Benefits */}
+      <IndustryBenefits solution={expandedSolutions.restaurants} />
+
+      {/* Comparison Table */}
+      <ComparisonTable industry="restaurants" />
+
       {/* ROI Calculator */}
       <section className="py-20 bg-gradient-to-br from-red-500/5 to-pink-500/5">
         <div className="container mx-auto px-4">
@@ -367,6 +313,9 @@ const RestaurantsLanding = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Urgency Section */}
+      <UrgencySection industry="restaurants" costPerHour={150} spotsRemaining={4} />
 
       {/* Industry Research Data */}
       <IndustryResearchData

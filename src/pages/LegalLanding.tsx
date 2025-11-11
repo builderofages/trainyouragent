@@ -11,6 +11,11 @@ import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
 import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
 import { IndustryResearchData } from "@/components/IndustryResearchData";
+import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
+import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
+import { ComparisonTable } from "@/components/conversion/ComparisonTable";
+import { UrgencySection } from "@/components/conversion/UrgencySection";
+import { expandedSolutions } from "@/data/solutionsExpanded";
 
 const LegalLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", practiceArea: "" });
@@ -175,73 +180,8 @@ const LegalLanding = () => {
         </div>
       </section>
 
-      {/* Pain Points */}
-      <section className="py-20 bg-muted/20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              The Hidden Cost of Manual Client Intake
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Every unqualified consultation is billable time you'll never recover
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                icon: Clock,
-                title: "5-10 Hours Per Week",
-                description: "Wasted on initial consultations with non-viable cases or tire-kickers",
-                stat: "$3,750/month",
-                label: "Lost billable hours"
-              },
-              {
-                icon: FileText,
-                title: "Information Chaos",
-                description: "Clients show up unprepared, missing documents, unclear on their own case details",
-                stat: "2-3x longer",
-                label: "Consultation time"
-              },
-              {
-                icon: Users,
-                title: "After-Hours Inquiries",
-                description: "Potential clients calling at night or weekends go to competitors who respond first",
-                stat: "45%",
-                label: "Lost to competitors"
-              }
-            ].map((pain, index) => {
-              const Icon = pain.icon;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <GlassCard className="p-8 h-full border-destructive/20 bg-destructive/5 hover-lift">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center mb-6">
-                      <Icon className="w-7 h-7 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-3">{pain.title}</h3>
-                    <p className="text-muted-foreground mb-6">{pain.description}</p>
-                    <div className="pt-6 border-t border-border/50">
-                      <div className="text-3xl font-bold text-destructive mb-1">{pain.stat}</div>
-                      <div className="text-sm text-muted-foreground">{pain.label}</div>
-                    </div>
-                  </GlassCard>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* Pain Points Journey */}
+      <PainPointsJourney solution={expandedSolutions.legal} />
 
       {/* Solutions */}
       <section id="demo" className="py-20">
@@ -319,6 +259,12 @@ const LegalLanding = () => {
         </div>
       </section>
 
+      {/* Industry Benefits */}
+      <IndustryBenefits solution={expandedSolutions.legal} />
+
+      {/* Comparison Table */}
+      <ComparisonTable industry="legal" />
+
       {/* ROI Calculator */}
       <section className="py-20 bg-gradient-to-br from-purple-500/5 to-indigo-500/5">
         <div className="container mx-auto px-4">
@@ -362,6 +308,9 @@ const LegalLanding = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Urgency Section */}
+      <UrgencySection industry="legal" costPerHour={375} spotsRemaining={2} />
 
       {/* Industry Research Data */}
       <IndustryResearchData
