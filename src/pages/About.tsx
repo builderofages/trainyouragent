@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Zap, Users, Target, TrendingUp, Shield, CheckCircle } from "lucide-react";
+import { Zap, Users, Target, TrendingUp, Shield, CheckCircle, Wrench, Scale, UtensilsCrossed, Heart, Briefcase, LineChart } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
 import { GlassCard } from "@/components/enhanced/GlassCard";
@@ -147,38 +147,42 @@ const About = () => {
               {[
                 {
                   title: "HVAC Company",
-                  icon: "🔧",
+                  icon: Wrench,
                   before: "Office manager spent 25 hours/week answering calls, scheduling, managing invoices",
                   after: ["Vendor relationship management (negotiated 12% better pricing)", "Customer retention campaigns (18% increase)", "Process optimization (23 min saved per job)", "Training new technicians"],
                   result: "15% raise + promotion. Company revenue up $180K annually."
                 },
                 {
                   title: "Law Firm",
-                  icon: "⚖️",
+                  icon: Scale,
                   before: "Paralegal spent 30 hours/week on intake calls, consultations, calendar coordination",
                   after: ["Complex case research and legal document prep", "Client relationship management for high-value cases", "Continuing legal education", "Process improvements (40% faster case prep)"],
                   result: "Paralegal expanded skillset. Firm took on 35% more cases without hiring."
                 },
                 {
                   title: "Restaurant",
-                  icon: "🍽️",
+                  icon: UtensilsCrossed,
                   before: "Host stressed juggling phones + walk-ins, frequent booking errors during rush",
                   after: ["Greeting and seating VIP/regular customers", "Upselling premium experiences (wine pairings, chef's table)", "Special events and private dining coordination", "Training front-of-house staff"],
                   result: "Host became FOH manager. Per-table revenue up 22%."
                 },
                 {
                   title: "Medical Practice",
-                  icon: "❤️",
+                  icon: Heart,
                   before: "Receptionist handled 40+ calls/day for appointments, insurance, refills",
                   after: ["Proactive preventive care outreach", "Complex care coordination for chronic disease patients", "Insurance pre-authorization and claims assistance", "Patient education and follow-up care"],
                   result: "Better patient outcomes. Practice added 200 patients without growing staff."
                 }
-              ].map((example, idx) => (
-                <div key={idx} className="p-6 bg-background/50 rounded-xl border border-border">
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="text-3xl">{example.icon}</span>
-                    <h4 className="text-lg font-bold">{example.title}</h4>
-                  </div>
+              ].map((example, idx) => {
+                const IconComponent = example.icon;
+                return (
+                  <div key={idx} className="p-6 bg-background/50 rounded-xl border border-border">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0">
+                        <IconComponent className="w-6 h-6 text-white" />
+                      </div>
+                      <h4 className="text-lg font-bold">{example.title}</h4>
+                    </div>
                   <div className="space-y-4">
                     <div>
                       <p className="text-sm font-semibold mb-2">Before AI:</p>
@@ -195,7 +199,8 @@ const About = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+            })}
             </div>
 
             <div className="p-6 bg-primary/5 rounded-xl border border-primary/20">
@@ -220,44 +225,88 @@ const About = () => {
             </div>
           </GlassCard>
 
-          {/* Team Section - Ready for Real Content */}
+          {/* Team Section */}
           <GlassCard className="p-12 mb-12">
             <h2 className="text-3xl font-bold mb-6">Meet the Team</h2>
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              We're a team of AI engineers, business strategists, and automation experts who got tired of watching businesses lose revenue to missed calls. Our backgrounds span Fortune 500 enterprise technology, small business operations, and cutting-edge AI research.
+              We're a team of business strategists, AI specialists, and automation experts united by one mission: helping businesses capture every opportunity without overwhelming their teams. Our diverse backgrounds span enterprise sales operations, business scaling, and cutting-edge AI implementation.
             </p>
             
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* Placeholder for team members - ready for real photos and details */}
-              <div className="flex items-start gap-4">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
-                  ?
+            <div className="space-y-8">
+              {/* Alexander - Founder */}
+              <div className="flex items-start gap-6">
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-3xl font-bold flex-shrink-0">
+                  A
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">Founder / CEO</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    [Add your name, background, and expertise here. Include relevant experience, credentials, or LinkedIn profile link.]
-                  </p>
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-3">
+                    <h3 className="text-2xl font-bold">Alexander</h3>
+                    <Briefcase className="w-5 h-5 text-primary" />
+                  </div>
+                  <p className="text-sm font-semibold text-primary mb-3">Founder & CEO</p>
+                  <div className="text-muted-foreground leading-relaxed space-y-2">
+                    <p>
+                      Former Head Executive at a major SMMA where he led 10+ departments and built high-performing teams of over 1,000 employees across multiple successful ventures. During his tenure, Alexander helped scale brands to achieve millions in sales and generate hundreds of millions of views across digital channels.
+                    </p>
+                    <p>
+                      As an early AI adopter and ChatGPT beta tester since initial release, Alexander has hands-on experience with every major LLM (OpenAI, Anthropic, Google, Meta) and has been deeply immersed in AI research and application since its commercial emergence. While scaling multiple companies, he identified a critical gap in business automation—businesses were losing massive revenue to missed opportunities while their teams were buried in repetitive tasks.
+                    </p>
+                    <p className="font-semibold text-foreground">
+                      His philosophy: AI should be a force multiplier for employee productivity and job satisfaction, not a replacement. TrainYourAgent was built to prove that businesses can scale revenue without scaling headcount proportionally—freeing teams to focus on high-value work that actually moves the needle.
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-start gap-4">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
-                  ?
+              {/* Jess - CRM & Operations Lead */}
+              <div className="flex items-start gap-6">
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-white text-3xl font-bold flex-shrink-0">
+                  J
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2">Technical Lead / CTO</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    [Add co-founder or key team member info here. Include technical credentials and relevant experience.]
-                  </p>
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-3">
+                    <h3 className="text-2xl font-bold">Jess</h3>
+                    <Users className="w-5 h-5 text-primary" />
+                  </div>
+                  <p className="text-sm font-semibold text-primary mb-3">CRM & Operations Lead</p>
+                  <div className="text-muted-foreground leading-relaxed space-y-2">
+                    <p>
+                      5+ years at a Fortune 500 communications company generating billions in annual revenue, where she specialized in sales operations, customer account management, and retention strategy. Jess brings enterprise-level sales methodology to small business automation, ensuring every lead is properly qualified, nurtured, and converted.
+                    </p>
+                    <p>
+                      Expert in CRM optimization, lead scoring systems, conversion funnel analysis, and customer lifecycle management. She architects the backend systems that ensure AI-captured leads seamlessly flow into sales pipelines with full context and proper prioritization.
+                    </p>
+                    <p>
+                      Beyond operations, Jess serves as Creative Director for brand assets, UI/UX design, and visual identity—ensuring TrainYourAgent's client-facing materials reflect the premium, professional experience our clients expect.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="mt-8 p-6 bg-muted/30 rounded-lg border border-border">
-              <p className="text-sm text-muted-foreground italic">
-                💡 <strong>Note:</strong> Replace the placeholder content above with real team member photos, names, backgrounds, and LinkedIn profiles. Authenticity builds trust—prospects want to know who they're working with.
-              </p>
+              {/* Sales & Growth Team */}
+              <div className="flex items-start gap-6">
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white flex-shrink-0">
+                  <LineChart className="w-12 h-12" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-3">
+                    <h3 className="text-2xl font-bold">Sales & Growth Team</h3>
+                    <TrendingUp className="w-5 h-5 text-primary" />
+                  </div>
+                  <p className="text-sm font-semibold text-primary mb-3">Revenue Architects & AI Evangelists</p>
+                  <div className="text-muted-foreground leading-relaxed space-y-2">
+                    <p>
+                      Our sales leadership has scaled their own companies from $0 to $50K+/month in recurring revenue, leading high-performing teams of 5+ members and systematically optimizing every stage of the sales funnel. They've generated tens of thousands in monthly sales and understand what it takes to build predictable, repeatable revenue systems.
+                    </p>
+                    <p>
+                      More than just salespeople, they're evangelists for AI-powered business transformation and employee elevation. Their approach is consultative, not transactional—showing businesses exactly how AI optimizes workflows without eliminating jobs, how it creates bandwidth for strategic work, and how it enables teams to deliver more value without burning out.
+                    </p>
+                    <p className="font-semibold text-foreground">
+                      Track record: Helping businesses 2-5x productivity through intelligent automation while empowering employees to transition from repetitive tasks to high-impact, creative, relationship-driven work that drives real business growth.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </GlassCard>
 
