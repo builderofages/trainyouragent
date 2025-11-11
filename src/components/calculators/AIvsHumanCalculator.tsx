@@ -6,6 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { Users, Bot, TrendingUp, DollarSign } from "lucide-react";
 import { motion } from "framer-motion";
 import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
+import { ResultsDisclaimer } from "@/components/ResultsDisclaimer";
 
 const AIvsHumanCalculator = () => {
   const [staffNeeded, setStaffNeeded] = useState(2);
@@ -295,10 +296,12 @@ const AIvsHumanCalculator = () => {
         </div>
       </div>
 
-      <div className="text-center text-sm text-muted-foreground space-y-1">
+      <div className="text-center text-sm text-muted-foreground space-y-1 mb-6">
         <p>Data sources: Bureau of Labor Statistics, SHRM Cost-per-Hire Report 2024, Work Institute Retention Report</p>
         <p>Benefits include healthcare, 401k, payroll taxes, workers comp, and paid time off</p>
       </div>
+
+      <ResultsDisclaimer variant="compact" context="roi" />
     </Card>
   );
 };

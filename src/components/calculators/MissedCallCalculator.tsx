@@ -6,6 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { PhoneOff, TrendingDown, AlertTriangle, DollarSign } from "lucide-react";
 import { motion } from "framer-motion";
 import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
+import { ResultsDisclaimer } from "@/components/ResultsDisclaimer";
 
 const MissedCallCalculator = () => {
   const [dailyCalls, setDailyCalls] = useState(25);
@@ -227,10 +228,12 @@ const MissedCallCalculator = () => {
         </div>
       </div>
 
-      <div className="text-center text-sm text-muted-foreground space-y-1">
+      <div className="text-center text-sm text-muted-foreground space-y-1 mb-6">
         <p>Based on industry research from CallRail 2024 State of Lead Response Report</p>
         <p>62% of calls go to voicemail • 72% of voicemails are never returned</p>
       </div>
+
+      <ResultsDisclaimer variant="compact" context="roi" />
     </Card>
   );
 };

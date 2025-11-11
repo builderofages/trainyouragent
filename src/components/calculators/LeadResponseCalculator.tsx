@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { ResultsDisclaimer } from "@/components/ResultsDisclaimer";
 
 const LeadResponseCalculator = () => {
   const [currentResponseTime, setCurrentResponseTime] = useState("1-5min");
@@ -267,10 +268,12 @@ const LeadResponseCalculator = () => {
         </div>
       </div>
 
-      <div className="text-center text-sm text-muted-foreground space-y-1">
+      <div className="text-center text-sm text-muted-foreground space-y-1 mb-6">
         <p>Based on InsideSales.com Lead Response Time Study & Drift 2024 Conversational Marketing Report</p>
         <p>"Companies that respond to leads within 5 minutes are 9x more likely to convert them"</p>
       </div>
+
+      <ResultsDisclaimer variant="compact" context="roi" />
     </Card>
   );
 };
