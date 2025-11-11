@@ -166,7 +166,7 @@ const FAQ = () => {
               }}
             >
               <Calendar className="w-5 h-5" />
-              Book Discovery Call
+              Get Your Free Strategy Session
             </MagneticButton>
           </GlassCard>
         </motion.div>
