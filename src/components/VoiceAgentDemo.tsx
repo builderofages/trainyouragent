@@ -23,6 +23,18 @@ export const VoiceAgentDemo = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const currentConfig = industryConfigs[selectedIndustry];
   
+  const {
+    isConnected,
+    isListening,
+    isSpeaking,
+    messages,
+    error,
+    volumeLevel,
+    startCall,
+    endCall,
+    sendMessage,
+  } = useVAPI(currentConfig);
+  
   // Get current prompts based on conversation stage
   const currentPrompts = messages.length >= 2 
     ? currentConfig.suggestedPrompts.followUp 

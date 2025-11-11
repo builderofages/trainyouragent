@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 import { Briefcase, Clock, DollarSign, Users, TrendingUp, CheckCircle, ArrowRight, Sparkles, Scale, FileText, Shield } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
+import { landingPageSEO } from "@/lib/seo-metadata";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { Input } from "@/components/ui/input";
@@ -94,8 +96,18 @@ const LegalLanding = () => {
     window.open(siteConfig.bookingUrl, '_blank');
   };
 
+  const seoData = landingPageSEO.legal;
+
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>{seoData.title}</title>
+        <meta name="description" content={seoData.description} />
+        <meta name="keywords" content={seoData.keywords.join(", ")} />
+        <meta property="og:title" content={seoData.title} />
+        <meta property="og:description" content={seoData.description} />
+        <meta property="og:type" content={seoData.ogType} />
+      </Helmet>
       <Header />
 
       {/* Hero Section */}
