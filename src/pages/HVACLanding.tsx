@@ -13,6 +13,8 @@ import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
 import { IndustryResearchData } from "@/components/IndustryResearchData";
 import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
 import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
+import { SolutionJourney } from "@/components/solutions/SolutionJourney";
+import { SmartUpsellCTA } from "@/components/conversion/SmartUpsellCTA";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { expandedSolutions } from "@/data/solutionsExpanded";
@@ -29,9 +31,21 @@ const HVACLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", company: "" });
   const solution = expandedSolutions.hvac;
   const isMobile = useIsMobile();
+  const [performanceTier, setPerformanceTier] = useState<'high' | 'medium' | 'low'>('high');
   const heroStatsRef = useRef<HTMLDivElement>(null);
   const demoMessagesRef = useRef<HTMLDivElement>(null);
   const roiStatsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Detect performance tier
+    if (typeof navigator !== 'undefined') {
+      if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
+        setPerformanceTier('low');
+      } else if ('connection' in navigator && (navigator as any).connection?.effectiveType === '3g') {
+        setPerformanceTier('medium');
+      }
+    }
+  }, []);
 
   useEffect(() => {
     // GSAP scroll animations
@@ -315,6 +329,14 @@ const HVACLanding = () => {
 
       {/* Pain Points Journey */}
       <PainPointsJourney solution={solution} />
+
+      {/* Solution Journey */}
+      <SolutionJourney industry="HVAC contractors" currentStage={1} />
+
+      {/* Smart Upsell CTA */}
+      <div className="container mx-auto px-4">
+        <SmartUpsellCTA currentStage={1} industry="HVAC" context="benefits" />
+      </div>
 
       {/* Industry Benefits */}
       <IndustryBenefits solution={solution} />

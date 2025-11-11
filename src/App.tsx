@@ -34,6 +34,7 @@ import CookiePolicy from "./pages/CookiePolicy";
 import Comparisons from "./pages/Comparisons";
 import CaseStudies from "./pages/CaseStudies";
 import DemoRequest from "./pages/DemoRequest";
+import SolutionConfigurator from "./pages/SolutionConfigurator";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +66,7 @@ const App = () => (
           <Route path="/technology" element={<Technology />} />
           <Route path="/research" element={<ResearchPartners />} />
           <Route path="/solutions" element={<Solutions />} />
+          <Route path="/solutions/configurator" element={<SolutionConfigurator />} />
           <Route path="/integrations" element={<Integrations />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />

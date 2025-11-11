@@ -107,6 +107,9 @@ export const conversions = {
   },
 };
 
+// Alias for trackConversion for consistency
+export const trackEvent = trackConversion;
+
 // Initialize tracking on page load
 export const initializeTracking = () => {
   captureUTMParams();

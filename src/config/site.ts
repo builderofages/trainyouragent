@@ -17,4 +17,12 @@ export const siteConfig = {
     linkedin: "https://www.linkedin.com/company/train-your-agent/",
     instagram: "https://www.instagram.com/trainyouragent",
   },
+  webhooks: {
+    demoRequest: "https://hooks.monday.com/hooks/demo",
+    newsletter: "https://hooks.monday.com/hooks/newsletter",
+    leadMagnet: "https://hooks.monday.com/hooks/lead_magnet",
+    contactForm: "https://hooks.monday.com/hooks/contact",
+    configurator: "https://hooks.monday.com/hooks/configurator",
+    chat: "https://hooks.monday.com/hooks/chat",
+  },
 };

@@ -13,6 +13,8 @@ import { AnimatedCounter } from "@/components/enhanced/AnimatedCounter";
 import { IndustryResearchData } from "@/components/IndustryResearchData";
 import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
 import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
+import { SolutionJourney } from "@/components/solutions/SolutionJourney";
+import { SmartUpsellCTA } from "@/components/conversion/SmartUpsellCTA";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { expandedSolutions } from "@/data/solutionsExpanded";
@@ -325,6 +327,12 @@ const BarsNightclubsLanding = () => {
 
       {/* Pain Points Journey */}
       <PainPointsJourney solution={solution} />
+
+      <SolutionJourney industry="bars and nightclubs" currentStage={1} />
+
+      <div className="container mx-auto px-4">
+        <SmartUpsellCTA currentStage={1} industry="bars-nightclubs" context="benefits" />
+      </div>
 
       {/* Industry Benefits */}
       <IndustryBenefits solution={solution} />
