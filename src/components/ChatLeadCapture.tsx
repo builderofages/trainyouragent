@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { getWebhookUrl, sendToMonday } from "@/components/MondayWebhookSetup";
+import { sendToApollo, getUTMParameters } from "@/lib/apollo-integration";
 
 interface ChatLeadCaptureProps {
   isOpen: boolean;
@@ -22,6 +22,7 @@ const industries = [
   "Healthcare & Medical",
   "Logistics & Transportation",
   "Restaurants & Hospitality",
+  "Bars & Nightclubs",
   "Other",
 ];
 
@@ -58,19 +59,32 @@ export const ChatLeadCapture = ({ isOpen, onClose, onSubmit }: ChatLeadCapturePr
 
     setIsSubmitting(true);
 
-    // Send to Monday.com
-    const webhookUrl = getWebhookUrl("chat_lead_webhook");
-    const leadData = {
+    // Get UTM parameters
+    const utmParams = getUTMParameters();
+
+    // Send to Apollo.io
+    const success = await sendToApollo({
       name: name.trim(),
       email: email.trim(),
-      phone: phone.trim() || "Not provided",
+      phone: phone.trim(),
       industry: industry || "Not selected",
-      type: "chat_lead",
-      timestamp: new Date().toISOString(),
-    };
+      source: "Chat Lead Capture",
+      tags: ["Chat Lead", "Website Lead"],
+      notes: `Chat lead captured from website. ${industry ? `Industry: ${industry}` : ""}`,
+      custom_fields: {
+        ...utmParams,
+        lead_type: "chat",
+      },
+    });
 
-    if (webhookUrl) {
-      await sendToMonday(webhookUrl, leadData);
+    if (!success) {
+      toast({
+        title: "Something went wrong",
+        description: "Please try again or contact support",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
     }
 
     // Track with analytics
@@ -93,6 +107,13 @@ export const ChatLeadCapture = ({ isOpen, onClose, onSubmit }: ChatLeadCapturePr
       title: "Welcome!",
       description: "Starting your chat session now...",
     });
+
+    const leadData = {
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim() || "Not provided",
+      industry: industry || "Not selected",
+    };
 
     onSubmit(leadData);
     setIsSubmitting(false);

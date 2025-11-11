@@ -73,18 +73,27 @@ export default function SolutionConfigurator() {
   };
 
   const handleSubmit = async () => {
-    // Send to Monday.com webhook
+    // Send to Apollo.io
     try {
-      await fetch(siteConfig.webhooks.configurator, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          timestamp: new Date().toISOString(),
-          utm_source: localStorage.getItem("utm_source"),
-          utm_medium: localStorage.getItem("utm_medium"),
-          utm_campaign: localStorage.getItem("utm_campaign"),
-        }),
+      const { sendToApollo, getUTMParameters } = await import('@/lib/apollo-integration');
+      const utmParams = getUTMParameters();
+      
+      await sendToApollo({
+        name: `${formData.name}`,
+        email: formData.email,
+        phone: formData.phone,
+        company: formData.company,
+        source: 'Solution Configurator',
+        tags: ['Solution Configurator', 'Website Lead'],
+        notes: `Challenge: ${formData.challenge}. Revenue: ${formData.revenue}. Staff Size: ${formData.staffSize}. Tech Stack: ${formData.techStack}. Goals: ${formData.goals}`,
+        custom_fields: {
+          ...utmParams,
+          challenge: formData.challenge,
+          revenue: formData.revenue,
+          staff_size: formData.staffSize,
+          tech_stack: formData.techStack,
+          goals: formData.goals,
+        },
       });
 
       trackEvent("configurator_completed", { challenge: formData.challenge });

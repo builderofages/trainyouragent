@@ -7,6 +7,7 @@ import { GlassCard } from "@/components/enhanced/GlassCard";
 import { Progress } from "@/components/ui/progress";
 import { trackEvent } from "@/lib/tracking";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/site";
 
 interface Question {
   id: string;
@@ -327,13 +328,13 @@ export const TimelineEstimator = ({ onClose, industryId }: TimelineEstimatorProp
   const handleBookCall = () => {
     const timeline = calculateTimeline(answers as EstimatorAnswers);
     trackEvent("timeline_estimator_cta_clicked", {
-      cta_type: "book_discovery_call",
+      cta_type: "book_strategy_session",
       estimated_timeline: `${timeline.min}-${timeline.max} days`,
       complexity: timeline.complexity,
       industry: timeline.industryName,
       industry_id: answers.industry
     });
-    window.open("https://calendly.com/trainyouragent/discovery", "_blank");
+    window.open(siteConfig.bookingUrl, "_blank");
   };
 
   const calculateTimeline = (answers: EstimatorAnswers) => {

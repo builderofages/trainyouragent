@@ -42,7 +42,7 @@ export const DemoCTA = ({
             Ready to Transform Your Business?
           </h3>
           <p className="text-muted-foreground">
-            Book a discovery call to discuss your specific needs and custom timeline
+            Get your free strategy session to discuss your specific needs and custom timeline
           </p>
         </div>
 
@@ -53,7 +53,7 @@ export const DemoCTA = ({
             className="gap-2 shadow-blue hover:shadow-glow group"
           >
             <Calendar className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-            Book Discovery Call
+            Get Your Free Strategy Session
           </MagneticButton>
 
           <MagneticButton

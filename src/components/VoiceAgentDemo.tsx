@@ -5,6 +5,7 @@ import { GlassCard } from "./enhanced/GlassCard";
 import { MagneticButton } from "./enhanced/MagneticButton";
 import { VoiceVisualizer } from "./VoiceVisualizer";
 import { DemoCTA } from "./DemoCTA";
+import { VoiceDemoLeadGate } from "./VoiceDemoLeadGate";
 import { useVAPI } from "@/hooks/useVAPI";
 import { industryConfigs } from "@/lib/vapi-industry-configs";
 import { Input } from "./ui/input";
@@ -15,23 +16,12 @@ import { trackEvent } from "@/lib/tracking";
 
 export const VoiceAgentDemo = () => {
   const [selectedIndustry, setSelectedIndustry] = useState<string>("hvac");
-  const currentConfig = industryConfigs[selectedIndustry];
-  
-  const {
-    isConnected,
-    isListening,
-    isSpeaking,
-    messages,
-    error,
-    volumeLevel,
-    startCall,
-    endCall,
-    sendMessage,
-  } = useVAPI(currentConfig);
-
   const [textInput, setTextInput] = useState("");
   const [showTextMode, setShowTextMode] = useState(false);
+  const [showLeadGate, setShowLeadGate] = useState(false);
+  const [hasSubmittedLead, setHasSubmittedLead] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const currentConfig = industryConfigs[selectedIndustry];
   
   // Get current prompts based on conversation stage
   const currentPrompts = messages.length >= 2 
@@ -57,12 +47,21 @@ export const VoiceAgentDemo = () => {
     trackEvent('voice_demo_industry_selected', { industry });
   };
 
+  useEffect(() => {
+    const submitted = sessionStorage.getItem('voice_demo_lead_submitted');
+    if (submitted) setHasSubmittedLead(true);
+  }, []);
+
   const handleVoiceToggle = async () => {
     if (isConnected) {
       endCall();
       sessionStorage.setItem('demo_completed', 'true');
       trackEvent('voice_demo_ended', { industry: selectedIndustry, message_count: messages.length });
     } else {
+      if (!hasSubmittedLead) {
+        setShowLeadGate(true);
+        return;
+      }
       await startCall();
       sessionStorage.setItem('demo_started', 'true');
       trackEvent('voice_demo_started', { industry: selectedIndustry });
@@ -98,7 +97,17 @@ export const VoiceAgentDemo = () => {
   };
 
   return (
-    <div id="voice-demo" className="space-y-4 md:space-y-6 scroll-mt-24">
+    <>
+      <VoiceDemoLeadGate
+        isOpen={showLeadGate}
+        onClose={() => setShowLeadGate(false)}
+        onSuccess={async () => {
+          setShowLeadGate(false);
+          setHasSubmittedLead(true);
+          await startCall();
+        }}
+      />
+      <div id="voice-demo" className="space-y-4 md:space-y-6 scroll-mt-24">
       {/* Industry Selector */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -340,5 +349,6 @@ export const VoiceAgentDemo = () => {
         onCallSales={() => window.location.href = "tel:+1234567890"}
       />
     </div>
+    </>
   );
 };
