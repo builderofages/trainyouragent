@@ -9,6 +9,7 @@ import Footer from "@/components/FooterEnhanced";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { siteConfig } from "@/config/site";
 
 const Comparisons = () => {
@@ -33,6 +34,34 @@ const Comparisons = () => {
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               We believe in transparency. Here's an honest comparison of AI automation versus traditional alternatives—including when each option makes sense for your business.
+            </p>
+          </motion.div>
+
+          {/* Industry Selector */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="max-w-md mx-auto mb-12"
+          >
+            <Select defaultValue="all">
+              <SelectTrigger className="w-full h-12 text-base bg-background/50 backdrop-blur-sm border-primary/20">
+                <SelectValue placeholder="See comparisons for your industry" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Industries</SelectItem>
+                <SelectItem value="hvac">HVAC & Home Services</SelectItem>
+                <SelectItem value="legal">Legal Services</SelectItem>
+                <SelectItem value="healthcare">Healthcare</SelectItem>
+                <SelectItem value="restaurants">Restaurants & Hospitality</SelectItem>
+                <SelectItem value="accounting">Accounting & Finance</SelectItem>
+                <SelectItem value="roofing">Roofing & Construction</SelectItem>
+                <SelectItem value="logistics">Logistics & Transportation</SelectItem>
+                <SelectItem value="bars">Bars & Nightclubs</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground text-center mt-2">
+              Get industry-specific cost breakdowns and ROI examples
             </p>
           </motion.div>
 
@@ -472,7 +501,7 @@ const Comparisons = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="glass-card p-12 rounded-3xl text-center"
+            className="glass-card p-12 rounded-3xl text-center mb-16"
           >
             <Shield className="w-16 h-16 text-primary mx-auto mb-6" />
             <h2 className="text-3xl font-bold mb-4">Still Not Sure Which Option Is Right?</h2>
@@ -499,6 +528,340 @@ const Comparisons = () => {
               </MagneticButton>
             </div>
           </motion.div>
+
+          {/* Real Business Scenarios */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-16"
+          >
+            <h2 className="text-4xl font-bold text-center mb-4">
+              Real Business Scenarios: Which Solution is Right?
+            </h2>
+            <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+              Compare actual costs across different business types and call volumes
+            </p>
+            
+            <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+              {/* HVAC Scenario */}
+              <GlassCard className="p-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                    <Zap className="w-6 h-6 text-blue-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold">HVAC Company</h3>
+                    <p className="text-sm text-muted-foreground">200 calls/week, 24/7 emergencies</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-3 mb-6">
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-green-500/5 border border-green-500/20">
+                    <span className="text-sm">AI Agent Cost:</span>
+                    <span className="font-bold text-green-600 dark:text-green-400">$2,997/mo</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
+                    <span className="text-sm">Human Receptionist:</span>
+                    <span className="font-bold">$4,500/mo</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
+                    <span className="text-sm">Call Center ($6/call):</span>
+                    <span className="font-bold">$5,200/mo</span>
+                  </div>
+                </div>
+                
+                <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+                  <p className="text-sm font-semibold text-green-700 dark:text-green-400 mb-1">
+                    ✓ Recommended: AI Agent
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Saves $1,500-2,200/mo, handles unlimited concurrent emergency calls, never misses after-hours revenue
+                  </p>
+                </div>
+              </GlassCard>
+
+              {/* Legal Scenario */}
+              <GlassCard className="p-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                    <Shield className="w-6 h-6 text-purple-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold">Law Firm</h3>
+                    <p className="text-sm text-muted-foreground">50 intake calls/week, high-value clients</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-3 mb-6">
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-green-500/5 border border-green-500/20">
+                    <span className="text-sm">AI Agent Cost:</span>
+                    <span className="font-bold text-green-600 dark:text-green-400">$1,997/mo</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
+                    <span className="text-sm">Paralegal Intake (20hr/wk):</span>
+                    <span className="font-bold">$3,200/mo</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
+                    <span className="text-sm">Legal Answering Service:</span>
+                    <span className="font-bold">$2,800/mo</span>
+                  </div>
+                </div>
+                
+                <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+                  <p className="text-sm font-semibold text-green-700 dark:text-green-400 mb-1">
+                    ✓ Recommended: AI Agent
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Saves $800-1,200/mo, pre-qualifies cases 24/7, gathers complete intake before consultation
+                  </p>
+                </div>
+              </GlassCard>
+
+              {/* Healthcare Scenario */}
+              <GlassCard className="p-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center">
+                    <Users className="w-6 h-6 text-pink-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold">Medical Practice</h3>
+                    <p className="text-sm text-muted-foreground">150 calls/week, appointment scheduling</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-3 mb-6">
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
+                    <span className="text-sm">AI Agent Cost:</span>
+                    <span className="font-bold">$1,497/mo</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-green-500/5 border border-green-500/20">
+                    <span className="text-sm">Receptionist (part-time):</span>
+                    <span className="font-bold text-green-600 dark:text-green-400">$2,400/mo</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
+                    <span className="text-sm">Medical Answering Service:</span>
+                    <span className="font-bold">$2,200/mo</span>
+                  </div>
+                </div>
+                
+                <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+                  <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-1">
+                    ⚠ Consider: Hybrid Approach
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    AI handles after-hours + overflow, human receptionist for complex patient needs during business hours
+                  </p>
+                </div>
+              </GlassCard>
+
+              {/* Restaurant Scenario */}
+              <GlassCard className="p-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center">
+                    <Phone className="w-6 h-6 text-orange-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold">Restaurant</h3>
+                    <p className="text-sm text-muted-foreground">80 reservation calls/week</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-3 mb-6">
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-green-500/5 border border-green-500/20">
+                    <span className="text-sm">AI Agent Cost:</span>
+                    <span className="font-bold text-green-600 dark:text-green-400">$997/mo</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
+                    <span className="text-sm">Host (dedicated phone duty):</span>
+                    <span className="font-bold">$3,200/mo</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
+                    <span className="text-sm">Reservation Service:</span>
+                    <span className="font-bold">$1,800/mo</span>
+                  </div>
+                </div>
+                
+                <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+                  <p className="text-sm font-semibold text-green-700 dark:text-green-400 mb-1">
+                    ✓ Recommended: AI Agent
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Saves $800-2,200/mo, frees host to focus on in-person guest experience, never misses off-hours bookings
+                  </p>
+                </div>
+              </GlassCard>
+            </div>
+          </motion.div>
+
+          {/* Cost Over Time Comparison */}
+          <GlassCard className="p-8 mb-16 max-w-5xl mx-auto">
+            <h3 className="text-3xl font-bold mb-6 text-center">
+              Total Cost Comparison Over Time
+            </h3>
+            <p className="text-center text-muted-foreground mb-8">
+              Based on average mid-sized business (30-50 calls/day)
+            </p>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                { 
+                  period: "3 Months", 
+                  ai: "$8,991", 
+                  human: "$16,250", 
+                  callCenter: "$19,500",
+                  saved: "$7,259-10,509" 
+                },
+                { 
+                  period: "1 Year", 
+                  ai: "$35,964", 
+                  human: "$65,000", 
+                  callCenter: "$78,000",
+                  saved: "$29,036-42,036" 
+                },
+                { 
+                  period: "3 Years", 
+                  ai: "$107,892", 
+                  human: "$195,000", 
+                  callCenter: "$234,000",
+                  saved: "$87,108-126,108" 
+                }
+              ].map((data, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="text-center p-6 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20"
+                >
+                  <div className="text-2xl font-bold mb-4 text-gradient">{data.period}</div>
+                  <div className="space-y-3 text-sm mb-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">AI Agent:</span>
+                      <span className="font-semibold text-primary">{data.ai}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Human Staff:</span>
+                      <span className="font-semibold">{data.human}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-muted-foreground">Call Center:</span>
+                      <span className="font-semibold">{data.callCenter}</span>
+                    </div>
+                  </div>
+                  <div className="pt-3 border-t border-border">
+                    <div className="text-xs text-muted-foreground mb-1">You Save</div>
+                    <div className="text-xl font-bold text-green-500">{data.saved}</div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            
+            <div className="mt-8 p-4 bg-muted/30 rounded-lg text-center">
+              <p className="text-sm text-muted-foreground">
+                💡 <strong>Pro Tip:</strong> Savings compound over time. Most businesses break even within the first month and save 60-70% annually vs human staff.
+              </p>
+            </div>
+          </GlassCard>
+
+          {/* Honesty Section - When AI ISN'T Right */}
+          <GlassCard className="p-12 mb-16 border-2 border-orange-500/20 bg-gradient-to-br from-orange-500/5 to-amber-500/5 max-w-6xl mx-auto">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-16 h-16 rounded-xl bg-orange-500/10 flex items-center justify-center flex-shrink-0">
+                <XCircle className="w-8 h-8 text-orange-500" />
+              </div>
+              <div>
+                <h3 className="text-3xl font-bold mb-3">When AI Might NOT Be Your Best Option</h3>
+                <p className="text-lg text-muted-foreground">
+                  We believe in honesty over sales tactics. AI automation isn't the right solution for every business. Here's when you should consider alternatives:
+                </p>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Left: When to Consider Humans */}
+              <div className="space-y-4">
+                <h4 className="font-bold text-xl flex items-center gap-2">
+                  <Users className="w-5 h-5 text-orange-500" />
+                  Consider Human Staff If:
+                </h4>
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-3 text-sm">
+                    <XCircle className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <strong>Very Low Call Volume:</strong> If you receive fewer than 5 calls per day, the cost may not justify automation. A part-time receptionist or answering service might be more economical.
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3 text-sm">
+                    <XCircle className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <strong>Complex Emotional Situations:</strong> Crisis counseling, sensitive legal matters, or highly emotional customer situations often benefit from human empathy and judgment that AI can't replicate.
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3 text-sm">
+                    <XCircle className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <strong>In-Person Reception Critical:</strong> If your brand depends on face-to-face greeting, physical security screening, or handling walk-ins, you need a human presence at the front desk.
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3 text-sm">
+                    <XCircle className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <strong>Physical Tasks Required:</strong> Mail sorting, package handling, office coordination, or physical security tasks can't be automated. AI handles phone calls, not physical work.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              
+              {/* Right: Hybrid Approach */}
+              <div className="space-y-4">
+                <h4 className="font-bold text-xl flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-primary" />
+                  Best of Both Worlds: Hybrid Approach
+                </h4>
+                
+                <div className="p-6 bg-primary/5 rounded-xl border border-primary/20">
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Many businesses get the best results by combining AI with human staff:
+                  </p>
+                  
+                  <ul className="space-y-3 text-sm mb-6">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                      <span><strong>AI handles:</strong> After-hours calls, overflow during busy times, routine inquiries, appointment scheduling</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                      <span><strong>Humans handle:</strong> Complex situations, VIP clients, in-person reception, physical tasks</span>
+                    </li>
+                  </ul>
+                  
+                  <div className="p-4 bg-background/50 rounded-lg mb-4">
+                    <p className="text-xs font-semibold mb-2">Real Example: Medical Practice</p>
+                    <p className="text-xs text-muted-foreground">
+                      Front desk receptionist works 9am-5pm for in-person patients. AI handles after-hours calls, appointment reminders, prescription refills, and overflow during lunch rush. Result: Better patient experience + lower costs.
+                    </p>
+                  </div>
+                  
+                  <MagneticButton 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full"
+                    onClick={() => window.open(siteConfig.bookingUrl, '_blank')}
+                  >
+                    Discuss Hybrid Solutions
+                  </MagneticButton>
+                </div>
+                
+                <div className="p-4 bg-muted/30 rounded-lg">
+                  <p className="text-xs text-muted-foreground">
+                    <strong>Our Promise:</strong> During your free strategy session, we'll honestly tell you if AI is right for your business—even if that means recommending a different solution. We're here to solve problems, not make unnecessary sales.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </GlassCard>
         </div>
       </section>
 
