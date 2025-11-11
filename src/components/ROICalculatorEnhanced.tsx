@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import jsPDF from "jspdf";
 import { trackEvent } from "@/lib/tracking";
 import { siteConfig } from "@/config/site";
+import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 
 const ResultCard = ({ icon: Icon, label, value, color, delay }: any) => {
   const { ref, style, onMouseMove, onMouseLeave } = use3DCard(8);
@@ -653,6 +654,23 @@ const ROICalculatorEnhanced = () => {
                             Copy Link
                           </MagneticButton>
                         </div>
+
+                        {/* Timeline Estimator CTA After Results */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.3 }}
+                          className="mt-6 pt-6 border-t border-border"
+                        >
+                          <TimelineEstimatorCTA 
+                            industryId={industry}
+                            variant="inline"
+                            location="roi_calculator_results"
+                          />
+                          <p className="text-xs text-muted-foreground text-center mt-3">
+                            Want to know how long implementation takes? Get your personalized timeline.
+                          </p>
+                        </motion.div>
                       </div>
                     ) : (
                       <div className="max-w-md mx-auto space-y-4">

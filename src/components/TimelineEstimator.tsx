@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Clock, ArrowRight, ArrowLeft, CheckCircle2, Calendar, Zap, MessageSquare, DollarSign, Users, Building2, Flame, Martini, Calculator, UtensilsCrossed, Home, Scale, Heart, Truck, Info } from "lucide-react";
+import { Clock, ArrowRight, ArrowLeft, CheckCircle2, Calendar, Zap, MessageSquare, DollarSign, Users, Building2, Flame, Martini, Calculator, UtensilsCrossed, Home, Scale, Heart, Truck, Info, TrendingUp, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { GlassCard } from "@/components/enhanced/GlassCard";
@@ -34,6 +34,7 @@ interface IndustryTimelineConfig {
   name: string;
   icon: any;
   baselineDays: number;
+  benchmarkRange: { min: number; max: number };
   considerations: string[];
   commonComplexities: string;
 }
@@ -44,6 +45,7 @@ const industryBaselines: IndustryTimelineConfig[] = [
     name: "HVAC",
     icon: Flame,
     baselineDays: 3,
+    benchmarkRange: { min: 3, max: 5 },
     considerations: [
       "Emergency service protocols",
       "Seasonal pricing variations",
@@ -56,6 +58,7 @@ const industryBaselines: IndustryTimelineConfig[] = [
     name: "Bars & Nightclubs",
     icon: Martini,
     baselineDays: 3.5,
+    benchmarkRange: { min: 3, max: 5 },
     considerations: [
       "VIP/bottle service protocols",
       "Event-specific pricing",
@@ -68,6 +71,7 @@ const industryBaselines: IndustryTimelineConfig[] = [
     name: "Accounting",
     icon: Calculator,
     baselineDays: 4,
+    benchmarkRange: { min: 4, max: 6 },
     considerations: [
       "Tax deadline awareness",
       "Complex service qualification",
@@ -80,6 +84,7 @@ const industryBaselines: IndustryTimelineConfig[] = [
     name: "Restaurants",
     icon: UtensilsCrossed,
     baselineDays: 3,
+    benchmarkRange: { min: 3, max: 4 },
     considerations: [
       "Menu knowledge",
       "Dietary restriction handling",
@@ -92,6 +97,7 @@ const industryBaselines: IndustryTimelineConfig[] = [
     name: "Roofing",
     icon: Home,
     baselineDays: 3.5,
+    benchmarkRange: { min: 3, max: 5 },
     considerations: [
       "Emergency leak detection",
       "Insurance claim processes",
@@ -104,6 +110,7 @@ const industryBaselines: IndustryTimelineConfig[] = [
     name: "Legal",
     icon: Scale,
     baselineDays: 4.5,
+    benchmarkRange: { min: 5, max: 7 },
     considerations: [
       "Practice area routing",
       "Confidentiality protocols",
@@ -116,6 +123,7 @@ const industryBaselines: IndustryTimelineConfig[] = [
     name: "Healthcare",
     icon: Heart,
     baselineDays: 4,
+    benchmarkRange: { min: 4, max: 6 },
     considerations: [
       "HIPAA compliance requirements",
       "Insurance verification protocols",
@@ -128,6 +136,7 @@ const industryBaselines: IndustryTimelineConfig[] = [
     name: "Logistics",
     icon: Truck,
     baselineDays: 3.5,
+    benchmarkRange: { min: 3, max: 5 },
     considerations: [
       "Shipping calculation logic",
       "Route optimization",
@@ -140,6 +149,7 @@ const industryBaselines: IndustryTimelineConfig[] = [
     name: "Other Industry",
     icon: Building2,
     baselineDays: 3.5,
+    benchmarkRange: { min: 3, max: 6 },
     considerations: [
       "Custom business requirements",
       "Unique terminology",

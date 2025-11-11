@@ -51,6 +51,29 @@ const Dashboard = () => {
     },
   ];
 
+  const timelineEstimatorStats = {
+    starts: 342,
+    completions: 187,
+    bookings: 43,
+    conversionRate: 23.0,
+    avgComplexity: 4.2,
+    topIndustries: [
+      { name: "HVAC", count: 67, avgDays: 3.8 },
+      { name: "Legal", count: 54, avgDays: 5.2 },
+      { name: "Healthcare", count: 41, avgDays: 4.5 },
+      { name: "Accounting", count: 38, avgDays: 4.8 },
+      { name: "Roofing", count: 31, avgDays: 4.1 },
+    ],
+    dropoffRates: [
+      { question: "Industry", dropoff: 8 },
+      { question: "Services", dropoff: 12 },
+      { question: "Integrations", dropoff: 18 },
+      { question: "Terminology", dropoff: 15 },
+      { question: "Pricing", dropoff: 22 },
+      { question: "Feedback Speed", dropoff: 25 },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -146,6 +169,91 @@ const Dashboard = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </Card>
+
+          {/* Timeline Estimator Analytics */}
+          <Card className="p-6 mb-8">
+            <h2 className="text-2xl font-bold mb-6">Timeline Estimator Performance</h2>
+            
+            {/* Conversion Funnel */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+              <div className="p-4 rounded-lg bg-muted/50">
+                <div className="text-sm text-muted-foreground mb-1">Started</div>
+                <div className="text-2xl font-bold">{timelineEstimatorStats.starts}</div>
+              </div>
+              <div className="p-4 rounded-lg bg-muted/50">
+                <div className="text-sm text-muted-foreground mb-1">Completed</div>
+                <div className="text-2xl font-bold">{timelineEstimatorStats.completions}</div>
+                <div className="text-xs text-green-500 font-semibold">
+                  {((timelineEstimatorStats.completions / timelineEstimatorStats.starts) * 100).toFixed(1)}%
+                </div>
+              </div>
+              <div className="p-4 rounded-lg bg-muted/50">
+                <div className="text-sm text-muted-foreground mb-1">Calls Booked</div>
+                <div className="text-2xl font-bold">{timelineEstimatorStats.bookings}</div>
+                <div className="text-xs text-green-500 font-semibold">
+                  {((timelineEstimatorStats.bookings / timelineEstimatorStats.completions) * 100).toFixed(1)}%
+                </div>
+              </div>
+              <div className="p-4 rounded-lg bg-primary/10 border-2 border-primary/30">
+                <div className="text-sm text-muted-foreground mb-1">Overall CVR</div>
+                <div className="text-2xl font-bold text-primary">{timelineEstimatorStats.conversionRate}%</div>
+              </div>
+            </div>
+
+            {/* Industry Insights */}
+            <div className="mb-8">
+              <h3 className="font-semibold mb-4">Top Industries</h3>
+              <div className="space-y-3">
+                {timelineEstimatorStats.topIndustries.map((industry, idx) => (
+                  <div key={industry.name} className="flex items-center gap-4">
+                    <div className="w-8 text-sm font-bold text-muted-foreground">#{idx + 1}</div>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="font-medium">{industry.name}</span>
+                        <span className="text-sm text-muted-foreground">{industry.count} uses</span>
+                      </div>
+                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-primary rounded-full"
+                          style={{ width: `${(industry.count / timelineEstimatorStats.topIndustries[0].count) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                    <div className="text-sm text-muted-foreground w-20 text-right">
+                      Avg {industry.avgDays}d
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Question Drop-off Analysis */}
+            <div>
+              <h3 className="font-semibold mb-4">Question Drop-off Rates</h3>
+              <div className="space-y-2">
+                {timelineEstimatorStats.dropoffRates.map((item) => (
+                  <div key={item.question} className="flex items-center gap-4">
+                    <div className="w-32 text-sm text-muted-foreground">{item.question}</div>
+                    <div className="flex-1">
+                      <div className="h-6 bg-muted rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full rounded-full flex items-center justify-end px-2 text-xs font-semibold ${
+                            item.dropoff < 15 ? 'bg-green-500' : item.dropoff < 20 ? 'bg-yellow-500' : 'bg-red-500'
+                          }`}
+                          style={{ width: `${item.dropoff}%` }}
+                        >
+                          {item.dropoff}%
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground mt-3">
+                Lower drop-off rates indicate better question flow and user engagement
+              </p>
             </div>
           </Card>
 

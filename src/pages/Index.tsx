@@ -27,6 +27,7 @@ import { SocialProofNotifications } from "@/components/conversion/SocialProof";
 import { SmartUpsellCTA } from "@/components/conversion/SmartUpsellCTA";
 import { FloatingContactMenu } from "@/components/FloatingContactMenu";
 import { PhoneSection } from "@/components/PhoneSection";
+import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 
 const Index = () => {
   useGSAP();
@@ -83,6 +84,13 @@ const Index = () => {
         <StickyReveal />
         
         <FAQ />
+
+        {/* Timeline Estimator CTA */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <TimelineEstimatorCTA variant="banner" location="homepage_pre_newsletter" />
+          </div>
+        </section>
         
         <NewsletterSection />
         <Footer />
