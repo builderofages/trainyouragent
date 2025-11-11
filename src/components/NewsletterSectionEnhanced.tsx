@@ -1,25 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, CheckCircle, TrendingUp, Zap, Shield } from "lucide-react";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { MondayWebhookSetup, getWebhookUrl, sendToMonday } from "@/components/MondayWebhookSetup";
 
 const NewsletterSection = () => {
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
-  const [showWebhookSetup, setShowWebhookSetup] = useState(false);
   const { toast } = useToast();
-
-  useEffect(() => {
-    // Check if webhook is configured, if not show setup
-    const webhookUrl = getWebhookUrl("monday_newsletter_webhook");
-    if (!webhookUrl) {
-      setShowWebhookSetup(true);
-    }
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,27 +23,10 @@ const NewsletterSection = () => {
       return;
     }
 
-    const webhookUrl = getWebhookUrl("monday_newsletter_webhook");
-    
-    // Send to Monday.com if webhook is configured
-    if (webhookUrl) {
-      const sent = await sendToMonday(webhookUrl, {
-        type: "newsletter_signup",
-        email: email,
-        page: "homepage",
-      });
-      
-      if (sent) {
-        console.log("Newsletter signup sent to Monday.com");
-      }
-    }
-
     setIsSubscribed(true);
     toast({
-      title: "Welcome to the AI Revolution! 🚀",
-      description: webhookUrl 
-        ? "Your info has been sent to our CRM. Check your inbox for exclusive AI insights!"
-        : "Check your inbox for exclusive AI insights",
+      title: "Welcome aboard! 🚀",
+      description: "You'll receive exclusive AI insights and industry updates in your inbox.",
     });
     
     setTimeout(() => {
@@ -91,15 +64,6 @@ const NewsletterSection = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl mx-auto">
-          {/* Webhook Setup - Only shown if needed */}
-          {showWebhookSetup && (
-            <MondayWebhookSetup
-              storageKey="monday_newsletter_webhook"
-              title="Configure Monday.com Integration"
-              description="Connect your Monday.com CRM to automatically receive newsletter signups"
-            />
-          )}
-
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -130,13 +94,13 @@ const NewsletterSection = () => {
                   className="mb-8"
                 >
                   <h2 className="text-3xl md:text-5xl font-black text-foreground mb-4">
-                    Join the{" "}
-                    <span className="text-gradient">
-                      AI Vanguard
+                    Stay Ahead of the{" "}
+                    <span className="text-gradient-premium">
+                      AI Revolution
                     </span>
                   </h2>
                   <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                    Get exclusive insights, case studies, and early access to revolutionary AI features
+                    Get exclusive industry insights, real-world case studies, and actionable AI strategies delivered to your inbox
                   </p>
                 </motion.div>
 
@@ -152,18 +116,18 @@ const NewsletterSection = () => {
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Input
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder="Enter your business email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="flex-1 px-6 py-6 text-lg rounded-full glass-card border-2 border-glass-border focus:border-primary transition-all duration-300 shadow-card"
+                      className="flex-1 px-6 py-7 text-lg rounded-2xl glass-card border-2 border-glass-border focus:border-primary focus:shadow-glow transition-all duration-500 shadow-card hover:shadow-glow-sm"
                       disabled={isSubscribed}
                     />
                     <MagneticButton
                       type="submit"
                       size="lg"
                       disabled={isSubscribed}
-                      className="px-8 py-6 text-lg rounded-full bg-gradient-primary hover:shadow-glow transition-all duration-300 whitespace-nowrap shadow-blue"
-                      strength={20}
+                      className="px-10 py-7 text-lg font-bold rounded-2xl bg-gradient-premium hover:shadow-glow-intense transition-all duration-500 whitespace-nowrap shadow-premium"
+                      strength={25}
                     >
                       {isSubscribed ? (
                         <>
@@ -171,7 +135,7 @@ const NewsletterSection = () => {
                           Subscribed!
                         </>
                       ) : (
-                        "Get Started"
+                        "Join the Community"
                       )}
                     </MagneticButton>
                   </div>
@@ -192,17 +156,17 @@ const NewsletterSection = () => {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: 0.5 + index * 0.1 }}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      className="flex items-center gap-3 glass-card p-3 rounded-xl"
+                      whileHover={{ scale: 1.08, y: -4 }}
+                      className="flex items-center gap-4 glass-card p-4 rounded-2xl border-2 border-glass-border hover:border-primary/40 transition-all duration-300 hover:shadow-glow-sm"
                     >
                       <motion.div 
-                        whileHover={{ rotate: 360 }}
-                        transition={{ duration: 0.5 }}
-                        className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 shadow-glow-sm"
+                        whileHover={{ rotate: 360, scale: 1.1 }}
+                        transition={{ duration: 0.6 }}
+                        className="w-12 h-12 bg-gradient-premium rounded-xl flex items-center justify-center flex-shrink-0 shadow-glow-sm"
                       >
-                        <benefit.icon className="w-5 h-5 text-primary" />
+                        <benefit.icon className="w-6 h-6 text-white" />
                       </motion.div>
-                      <span className="text-sm font-medium text-muted-foreground">
+                      <span className="text-sm font-semibold text-foreground">
                         {benefit.text}
                       </span>
                     </motion.div>

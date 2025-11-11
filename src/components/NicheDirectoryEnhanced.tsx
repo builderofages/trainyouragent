@@ -197,10 +197,21 @@ const NicheDirectory = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Category mapping for filtering
+  const categoryMap: Record<string, string[]> = {
+    "All": [],
+    "Home Services": ["hvac", "roofing"],
+    "Professional Services": ["accounting", "legal"],
+    "Healthcare": ["healthcare"],
+    "Logistics": ["logistics"],
+    "Food Service": ["restaurants"],
+  };
+
   const filteredNiches = niches.filter((niche) => {
     const matchesSearch = niche.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       niche.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = activeCategory === "All" || true; // Simplified for now
+    const matchesCategory = activeCategory === "All" || 
+      (categoryMap[activeCategory] || []).includes(niche.id);
     return matchesSearch && matchesCategory;
   });
 
