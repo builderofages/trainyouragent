@@ -256,16 +256,13 @@ const About = () => {
                   </div>
                   <div className="space-y-4 text-muted-foreground">
                     <p>
-                      With most of his adult life spent across diverse B2B and B2C markets, Alexander brings deep operational expertise from every angle of business. As Head Executive at a major SMMA, he led 10+ departments and scaled teams of 1,000+ employees, helping brands achieve millions in sales and generate hundreds of millions of views. This hands-on experience across startups, mid-market companies, and enterprise operations gave him intimate knowledge of the challenges businesses face at every stage of growth.
+                      With most of his adult life spent across diverse B2B and B2C markets, Alexander brings deep operational expertise from every angle of business. As Head Executive at a major SMMA, he led 10+ departments and scaled teams of 1,000+ employees, helping brands achieve millions in sales and generate hundreds of millions of views. Beyond business, he leads a non-profit organization dedicated to training service dogs—demonstrating his commitment to impact that extends far beyond profit margins.
                     </p>
                     <p>
-                      Beyond business, Alexander is driven by a mission to create meaningful change. He currently leads a non-profit organization dedicated to training service dogs—demonstrating his commitment to impact that extends far beyond profit margins. This passion for service inspired his vision to lead America's tech revolution, starting with small and medium-sized businesses who form the backbone of our economy, and eventually expanding this movement to globalized markets.
+                      As an early AI adopter and ChatGPT beta tester since its initial release, Alexander has deep expertise across all major LLMs (OpenAI, Anthropic, Google, Meta). He's passionate about American innovation in both AI and cryptocurrency, committed to empowering young entrepreneurs and democratizing opportunity. This passion for service inspired his vision to lead America's tech revolution—starting with small and medium-sized businesses who form the backbone of our economy, and eventually expanding this movement to globalized markets.
                     </p>
                     <p>
-                      As an early AI adopter and ChatGPT beta tester since its initial release, Alexander has deep expertise across all major LLMs (OpenAI, Anthropic, Google, Meta). He's passionate about American innovation in both AI and cryptocurrency, believing these technologies will define the next generation of business success. Committed to empowering young entrepreneurs, he sees technology as a tool for democratizing opportunity—giving businesses of all sizes the power to compete globally.
-                    </p>
-                    <p>
-                      Alexander founded TrainYourAgent with a clear mission: help American businesses harness AI for sustainable growth while proving that automation elevates employees rather than replacing them. Frustrated by businesses losing revenue to missed opportunities while being told AI would eliminate jobs, he set out to build a company that makes cutting-edge AI accessible to every business—regardless of size or technical expertise. Starting with the SMBs who need it most, TrainYourAgent is proof that innovation, ethics, and profitability can coexist.
+                      Alexander founded TrainYourAgent with a clear mission: help American businesses harness AI for sustainable growth while proving that automation elevates employees rather than replacing them. Frustrated by businesses losing revenue to missed opportunities while being told AI would eliminate jobs, he set out to make cutting-edge AI accessible to every business—regardless of size or technical expertise. Starting with the SMBs who need it most, TrainYourAgent is proof that innovation, ethics, and profitability can coexist.
                     </p>
                   </div>
                 </GlassCard>
@@ -286,13 +283,13 @@ const About = () => {
                   </div>
                   <div className="space-y-4 text-muted-foreground">
                     <p>
-                      5+ years at a Fortune 500 communications company generating billions in annual revenue. Specialized in sales operations, customer account management, and retention strategies.
+                      5+ years at a Fortune 500 communications company generating billions in annual revenue, where she led brand management strategies and high-level customer experience initiatives. Specialized in Salesforce CRM, sales operations, and account management—managing customer retention strategies and conversion optimization for enterprise clients.
                     </p>
                     <p>
-                      Expert in CRM optimization, lead scoring, and conversion funnel analysis. Also serves as Creative Director for brand assets, UI/UX design, and visual identity.
+                      Expert in Salesforce optimization, lead scoring, conversion funnel analysis, and customer journey mapping. Also serves as Creative Director for brand assets, UI/UX design, and visual identity—bridging technical CRM systems with creative brand execution.
                     </p>
                     <p>
-                      Brings enterprise-level sales methodology to small business automation, ensuring every client gets Fortune 500-caliber processes.
+                      Brings Fortune 500 methodology to SMB automation, ensuring clients get enterprise-caliber processes without enterprise complexity. Makes sophisticated customer experience strategies accessible to growing businesses.
                     </p>
                   </div>
                 </GlassCard>
