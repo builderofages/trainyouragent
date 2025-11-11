@@ -7,32 +7,38 @@ export const TechnologyPartners = () => {
     {
       name: "VAPI",
       description: "Voice AI Infrastructure",
-      logo: "🎙️",
+      brandColor: "text-blue-500",
+      logoStyle: "font-bold text-2xl tracking-tight",
     },
     {
       name: "ElevenLabs",
       description: "Neural Voice Synthesis",
-      logo: "🔊",
+      brandColor: "text-purple-600",
+      logoStyle: "font-bold text-2xl",
     },
     {
       name: "Apollo.io",
       description: "CRM Integration",
-      logo: "🚀",
+      brandColor: "text-indigo-600",
+      logoStyle: "font-bold text-2xl",
     },
     {
       name: "OpenAI",
       description: "Language Models",
-      logo: "🧠",
+      brandColor: "text-emerald-600",
+      logoStyle: "font-bold text-2xl",
     },
     {
       name: "Anthropic",
       description: "Advanced AI",
-      logo: "⚡",
+      brandColor: "text-orange-500",
+      logoStyle: "font-bold text-2xl italic",
     },
     {
       name: "Twilio",
       description: "Communication Platform",
-      logo: "📞",
+      brandColor: "text-red-500",
+      logoStyle: "font-bold text-2xl",
     },
   ];
 
@@ -67,10 +73,9 @@ export const TechnologyPartners = () => {
               transition={{ delay: index * 0.1 }}
             >
               <GlassCard hover className="p-6 text-center group cursor-default h-full flex flex-col items-center justify-center">
-                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">
-                  {partner.logo}
+                <div className={`${partner.brandColor} ${partner.logoStyle} mb-3 group-hover:scale-110 transition-transform`}>
+                  {partner.name}
                 </div>
-                <h3 className="font-bold text-foreground mb-1">{partner.name}</h3>
                 <p className="text-xs text-muted-foreground">{partner.description}</p>
               </GlassCard>
             </motion.div>

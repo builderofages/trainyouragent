@@ -24,17 +24,17 @@ These terms apply to all users, including visitors, registered users, and paid s
 We reserve the right to modify, suspend, or discontinue any aspect of the service at any time.`,
     },
     {
-      title: "30-Day Risk-Free Pilot Program",
+      title: "Flexible Pilot Program",
       content: `Pilot Program Terms:
 
-- Pilot allows you to test AI agents in your live business environment
-- No long-term commitment required during pilot period
+- Month-to-month billing with no long-term contracts
+- Paid pilot program allows you to test AI agents in your live environment
 - Access to full platform features and support
-- Pilot can be extended by mutual agreement
-- Conversion to paid plan optional after pilot completion
+- Flexibility to adjust or cancel after proving ROI
+- Scale up when you're ready based on your results
 - Pilot availability subject to capacity and qualification
 
-To qualify for pilot program, contact sales@trainyouragent.com`,
+To discuss pilot program terms, contact sales@trainyouragent.com`,
     },
     {
       title: "Implementation Timeline",
@@ -55,7 +55,7 @@ Timeline estimates provided by our calculator are approximations. Actual timelin
 - ROI projections are based on industry averages and pilot data
 - Actual results depend on call volume, agent training, and business factors
 - The 94% pilot conversion rate reflects historical data, not individual guarantees
-- 30-Day Pilot allows you to test results in your specific business context
+- Flexible Pilot Program allows you to test results in your specific business context
 
 No warranties are made regarding specific outcomes, revenue increases, or business results.`,
     },

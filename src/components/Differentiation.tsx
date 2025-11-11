@@ -26,8 +26,8 @@ export const Differentiation = () => {
     },
     {
       icon: Award,
-      title: "30-Day Risk-Free Pilot",
-      description: "Prove the ROI before committing. We're so confident you'll see results that we offer a full 30-day pilot to test it in your business.",
+      title: "Flexible Pilot Program",
+      description: "Start month-to-month with no long-term contracts. Prove ROI in your business first, then scale when ready. Pay as you grow.",
     },
     {
       icon: Zap,

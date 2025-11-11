@@ -5,8 +5,8 @@ export const RiskReversal = () => {
   const guarantees = [
     {
       icon: Shield,
-      title: "30-Day Risk-Free Pilot",
-      description: "Test it in your business. See real results. Zero commitment required.",
+      title: "Flexible Pilot Program",
+      description: "Month-to-month terms. Prove ROI first. Scale when you're ready.",
     },
     {
       icon: TrendingUp,
