@@ -5,6 +5,7 @@ import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { Button } from "@/components/ui/button";
 import { SearchModal } from "./SearchModal";
 import { ClickToCall } from "./ClickToCall";
+import { StrategySessionLeadGate } from "./conversion/StrategySessionLeadGate";
 import { siteConfig } from "@/config/site";
 import logo from "@/assets/logo.png";
 
@@ -12,6 +13,7 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
   const { scrollY } = useScroll();
   
   const headerOpacity = useTransform(scrollY, [0, 100], [0.8, 1]);
@@ -76,7 +78,14 @@ const Header = () => {
               <MagneticButton variant="ghost" size="icon" className="rounded-full" onClick={() => setSearchOpen(true)}>
                 <Search className="w-5 h-5" />
               </MagneticButton>
-              <MagneticButton className="rounded-full bg-gradient-primary" onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}>Get Your Free Strategy Session</MagneticButton>
+              <MagneticButton 
+                className="rounded-full bg-gradient-primary text-sm lg:text-base px-4 lg:px-6" 
+                onClick={() => setLeadGateOpen(true)}
+              >
+                <span className="hidden xl:inline">Get Your Free Strategy Session</span>
+                <span className="hidden lg:inline xl:hidden">Free Strategy Session</span>
+                <span className="lg:hidden">Book Now</span>
+              </MagneticButton>
             </div>
 
             <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-foreground">
@@ -96,13 +105,14 @@ const Header = () => {
                   className="w-full rounded-full"
                 />
               )}
-              <Button className="w-full rounded-full bg-gradient-primary" onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}>Get Your Free Strategy Session</Button>
+              <Button className="w-full rounded-full bg-gradient-primary" onClick={() => setLeadGateOpen(true)}>Get Your Free Strategy Session</Button>
             </div>
           </motion.div>
         </nav>
       </motion.header>
       
       <SearchModal open={searchOpen} onOpenChange={setSearchOpen} />
+      <StrategySessionLeadGate open={leadGateOpen} onOpenChange={setLeadGateOpen} />
     </>
   );
 };

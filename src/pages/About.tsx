@@ -114,6 +114,108 @@ const About = () => {
             </div>
           </GlassCard>
 
+          {/* Job Evolution Section */}
+          <GlassCard className="p-12 mb-12 bg-gradient-to-br from-blue-500/5 to-cyan-500/5 border-2 border-primary/20">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0">
+                <Users className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold mb-3">We Don't Replace People—We Elevate Them</h2>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  The goal isn't to eliminate jobs. It's to eliminate the repetitive tasks that prevent your team from doing what they do best: solving problems, building relationships, and growing your business.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-6 mb-8">
+              <p className="text-muted-foreground leading-relaxed">
+                Yes, workflows change when you implement AI. But the person who was spending 6 hours a day answering phones suddenly has bandwidth to focus on higher-value work that directly increases revenue and job satisfaction.
+              </p>
+              <p className="text-muted-foreground leading-relaxed">
+                AI handles the predictable, repetitive work. Humans focus on the complex, creative, relationship-driven work that moves the business forward.
+              </p>
+            </div>
+
+            <h3 className="text-2xl font-bold mb-6">Real Workflow Transformations:</h3>
+
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+              {[
+                {
+                  title: "HVAC Company",
+                  icon: "🔧",
+                  before: "Office manager spent 25 hours/week answering calls, scheduling, managing invoices",
+                  after: ["Vendor relationship management (negotiated 12% better pricing)", "Customer retention campaigns (18% increase)", "Process optimization (23 min saved per job)", "Training new technicians"],
+                  result: "15% raise + promotion. Company revenue up $180K annually."
+                },
+                {
+                  title: "Law Firm",
+                  icon: "⚖️",
+                  before: "Paralegal spent 30 hours/week on intake calls, consultations, calendar coordination",
+                  after: ["Complex case research and legal document prep", "Client relationship management for high-value cases", "Continuing legal education", "Process improvements (40% faster case prep)"],
+                  result: "Paralegal expanded skillset. Firm took on 35% more cases without hiring."
+                },
+                {
+                  title: "Restaurant",
+                  icon: "🍽️",
+                  before: "Host stressed juggling phones + walk-ins, frequent booking errors during rush",
+                  after: ["Greeting and seating VIP/regular customers", "Upselling premium experiences (wine pairings, chef's table)", "Special events and private dining coordination", "Training front-of-house staff"],
+                  result: "Host became FOH manager. Per-table revenue up 22%."
+                },
+                {
+                  title: "Medical Practice",
+                  icon: "❤️",
+                  before: "Receptionist handled 40+ calls/day for appointments, insurance, refills",
+                  after: ["Proactive preventive care outreach", "Complex care coordination for chronic disease patients", "Insurance pre-authorization and claims assistance", "Patient education and follow-up care"],
+                  result: "Better patient outcomes. Practice added 200 patients without growing staff."
+                }
+              ].map((example, idx) => (
+                <div key={idx} className="p-6 bg-background/50 rounded-xl border border-border">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-3xl">{example.icon}</span>
+                    <h4 className="text-lg font-bold">{example.title}</h4>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm font-semibold mb-2">Before AI:</p>
+                      <p className="text-sm text-muted-foreground pl-4">{example.before}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-primary mb-2">After AI:</p>
+                      <ul className="space-y-1 text-sm text-muted-foreground pl-4">
+                        {example.after.map((item, i) => <li key={i}>• {item}</li>)}
+                      </ul>
+                      <div className="mt-3 p-3 bg-green-500/10 rounded-lg">
+                        <p className="text-xs font-semibold text-green-700 dark:text-green-400">{example.result}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-6 bg-primary/5 rounded-xl border border-primary/20">
+              <h4 className="font-bold text-lg mb-3">The Pattern We See Consistently:</h4>
+              <div className="grid md:grid-cols-3 gap-6 text-sm">
+                <div>
+                  <CheckCircle className="w-5 h-5 text-primary mb-2" />
+                  <span className="font-semibold">Employees:</span>
+                  <p className="text-muted-foreground mt-1">More engaging work. Often leads to promotions and raises.</p>
+                </div>
+                <div>
+                  <CheckCircle className="w-5 h-5 text-primary mb-2" />
+                  <span className="font-semibold">Businesses:</span>
+                  <p className="text-muted-foreground mt-1">Same headcount handles more volume. Revenue increases without proportional costs.</p>
+                </div>
+                <div>
+                  <CheckCircle className="w-5 h-5 text-primary mb-2" />
+                  <span className="font-semibold">Customers:</span>
+                  <p className="text-muted-foreground mt-1">Faster 24/7 responses plus more personalized attention from staff.</p>
+                </div>
+              </div>
+            </div>
+          </GlassCard>
+
           {/* Team Section - Ready for Real Content */}
           <GlassCard className="p-12 mb-12">
             <h2 className="text-3xl font-bold mb-6">Meet the Team</h2>

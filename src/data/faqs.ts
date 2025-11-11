@@ -58,6 +58,11 @@ export const faqs: FAQ[] = [
     category: "Getting Started"
   },
   {
+    question: "What's included in the pilot program?",
+    answer: "The pilot program includes everything you need: 24/7 AI agent trained on your business, unlimited inbound call handling, CRM and calendar integration, call recording with searchable transcripts, real-time performance analytics, implementation support, and monthly optimization reviews. It's month-to-month with no long-term contracts—you can adjust or scale based on the ROI you see. During your free strategy session, we'll outline exactly how the pilot works for your specific business.",
+    category: "Getting Started"
+  },
+  {
     question: "What if my business is really complex?",
     answer: "We specialize in complex implementations. Businesses with multiple service lines, specialized terminology, intricate pricing, or unique workflows typically fall into the 5-7 day timeline. We'll map your entire process during the strategy and planning sessions, then build a custom solution that handles your specific complexity. Industries like healthcare (HIPAA), legal (confidentiality), and logistics (multi-stop routing) require extra care—we're equipped for it.",
     category: "Getting Started"
@@ -94,6 +99,14 @@ export const faqs: FAQ[] = [
     question: "Can I cancel if it doesn't work out?",
     answer: "Yes, we offer flexible terms with advance notice. Contact us to discuss cancellation policies based on your plan. That said, 94% of businesses that complete our pilot program choose to continue—the results speak for themselves.",
     category: "Pricing & ROI"
+  },
+  {
+    question: "What are the terms of your Flexible Pilot Program?",
+    answer: "Our pilot program operates on flexible month-to-month terms with no long-term contracts. You pay monthly for full access to the AI platform—this is not a free trial. The pilot allows you to prove ROI in your specific business environment before scaling up. You receive: 24/7 AI agent coverage, unlimited inbound calls, complete CRM/calendar integration, call recording and transcripts, real-time analytics dashboard, dedicated implementation support, and monthly optimization reviews. Most businesses see measurable results within the first 2-3 weeks. There's no commitment beyond the current month, giving you flexibility to adjust based on performance. 94% of pilot participants choose to continue after seeing the results.",
+    category: "Pricing & ROI",
+    sources: [
+      { name: "TrainYourAgent Pilot Program Data 2024", url: "/terms" }
+    ]
   },
 
   // Technical & Integration

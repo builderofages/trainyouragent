@@ -139,3 +139,87 @@ export const getUTMParameters = (): Record<string, string> => {
 
   return utmParams;
 };
+
+/**
+ * Send strategy session lead data to Apollo.io
+ * Specialized function for comprehensive lead qualification data
+ */
+export const sendStrategySessionLead = async (formData: {
+  fullName: string;
+  email: string;
+  phone: string;
+  company: string;
+  industry: string;
+  callVolume: string;
+  companySize: string;
+  currentSolution: string;
+  biggestChallenge: string;
+  goals: string[];
+  timeline: string;
+  budget: string;
+  foundUs: string;
+  additionalContext: string;
+}): Promise<boolean> => {
+  const apiKey = siteConfig.apollo.apiKey;
+
+  if (!apiKey) {
+    console.warn("Apollo.io API key not configured. Strategy session lead data:", formData);
+    return false;
+  }
+
+  // Split name into first and last
+  const nameParts = formData.fullName.trim().split(" ");
+  const firstName = nameParts[0] || "";
+  const lastName = nameParts.slice(1).join(" ") || "";
+
+  // Get UTM parameters for attribution
+  const utmParams = getUTMParameters();
+
+  // Build comprehensive Apollo contact data
+  const apolloData: ApolloContactData = {
+    first_name: firstName,
+    last_name: lastName,
+    email: formData.email,
+    phone: formData.phone,
+    organization_name: formData.company,
+    label_names: ["Strategy Session Request", formData.industry],
+    custom_fields: {
+      industry: formData.industry,
+      call_volume: formData.callVolume,
+      company_size: formData.companySize,
+      current_solution: formData.currentSolution,
+      biggest_challenge: formData.biggestChallenge,
+      goals: formData.goals.join(", "),
+      timeline: formData.timeline,
+      budget_range: formData.budget,
+      lead_source: formData.foundUs,
+      additional_context: formData.additionalContext || "None provided",
+      submitted_at: new Date().toISOString(),
+      ...utmParams,
+    },
+  };
+
+  try {
+    const response = await fetch("https://api.apollo.io/v1/contacts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Api-Key": apiKey,
+      },
+      body: JSON.stringify(apolloData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error("Apollo.io API error (strategy session):", response.status, errorData);
+      return false;
+    }
+
+    const result = await response.json();
+    console.log("Strategy session lead sent to Apollo.io successfully:", result.contact?.id);
+    return true;
+  } catch (error) {
+    console.error("Failed to send strategy session lead to Apollo.io:", error);
+    return false;
+  }
+};

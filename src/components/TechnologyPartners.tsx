@@ -7,36 +7,42 @@ export const TechnologyPartners = () => {
     {
       name: "VAPI",
       description: "Voice AI Infrastructure",
+      logoPath: "/logos/vapi-logo.svg",
       brandColor: "text-blue-500",
       logoStyle: "font-bold text-2xl tracking-tight",
     },
     {
       name: "ElevenLabs",
       description: "Neural Voice Synthesis",
+      logoPath: "/logos/elevenlabs-logo.svg",
       brandColor: "text-purple-600",
       logoStyle: "font-bold text-2xl",
     },
     {
       name: "Apollo.io",
       description: "CRM Integration",
+      logoPath: "/logos/apollo-logo.svg",
       brandColor: "text-indigo-600",
       logoStyle: "font-bold text-2xl",
     },
     {
       name: "OpenAI",
       description: "Language Models",
+      logoPath: "/logos/openai-logo.svg",
       brandColor: "text-emerald-600",
       logoStyle: "font-bold text-2xl",
     },
     {
       name: "Anthropic",
       description: "Advanced AI",
+      logoPath: "/logos/anthropic-logo.svg",
       brandColor: "text-orange-500",
       logoStyle: "font-bold text-2xl italic",
     },
     {
       name: "Twilio",
       description: "Communication Platform",
+      logoPath: "/logos/twilio-logo.svg",
       brandColor: "text-red-500",
       logoStyle: "font-bold text-2xl",
     },
@@ -73,8 +79,25 @@ export const TechnologyPartners = () => {
               transition={{ delay: index * 0.1 }}
             >
               <GlassCard hover className="p-6 text-center group cursor-default h-full flex flex-col items-center justify-center">
-                <div className={`${partner.brandColor} ${partner.logoStyle} mb-3 group-hover:scale-110 transition-transform`}>
-                  {partner.name}
+                <div className="w-20 h-20 mb-3 flex items-center justify-center relative">
+                  <img 
+                    src={partner.logoPath}
+                    alt={`${partner.name} logo`}
+                    className="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
+                    onError={(e) => {
+                      // Fallback to text logo if image doesn't exist
+                      const target = e.currentTarget;
+                      target.style.display = 'none';
+                      const fallback = target.nextElementSibling as HTMLDivElement;
+                      if (fallback) fallback.style.display = 'block';
+                    }}
+                  />
+                  <div 
+                    className={`${partner.brandColor} ${partner.logoStyle} transition-all duration-300 group-hover:scale-110`}
+                    style={{ display: 'none' }}
+                  >
+                    {partner.name}
+                  </div>
                 </div>
                 <p className="text-xs text-muted-foreground">{partner.description}</p>
               </GlassCard>
