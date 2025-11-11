@@ -12,7 +12,7 @@ export const ResultsDisclaimer = ({
   const getContextualText = () => {
     switch (context) {
       case "roi":
-        return "ROI projections are based on industry averages and pilot data. Actual results depend on your specific call volume, conversion rate, and business factors. The 30-Day Risk-Free Pilot allows you to test results in your own business context.";
+        return "ROI projections are based on industry averages and pilot data. Actual results depend on your specific call volume, conversion rate, and business factors. The Flexible Pilot Program allows you to test results in your own business context.";
       case "timeline":
         return "Timeline estimates are ranges based on typical implementations. Actual timeline depends on service complexity, integration needs, response time to training questions, and industry-specific requirements. Your custom timeline will be confirmed during your strategy session.";
       default:

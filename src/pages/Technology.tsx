@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Code, Cpu, Cloud, Zap, Database, Globe, Webhook, Lock, Sparkles, ChevronRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 
 const techStack = {
   ai: [
@@ -56,6 +58,8 @@ const capabilities = [
 ];
 
 const Technology = () => {
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -256,7 +260,7 @@ const Technology = () => {
               </MagneticButton>
               <MagneticButton
                 className="rounded-full bg-gradient-primary"
-                onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}
+                onClick={() => setLeadGateOpen(true)}
               >
                 Talk to Engineering
               </MagneticButton>
@@ -264,6 +268,8 @@ const Technology = () => {
           </motion.div>
         </div>
       </section>
+
+      <StrategySessionLeadGate open={leadGateOpen} onOpenChange={setLeadGateOpen} />
 
       <Footer />
     </div>

@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUp, Twitter, Linkedin, Instagram } from "lucide-react";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import logo from "@/assets/logo.png";
 
 const Footer = () => {
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
+
   const footerSections = [
     {
       title: "Solutions",
@@ -22,7 +26,6 @@ const Footer = () => {
         { name: "Blog & Research", href: "/resources" },
         { name: "Demos & Calculators", href: "/demos" },
         { name: "Research Partners", href: "/research" },
-        { name: "Get Your Strategy Session", href: "https://calendly.com/trainyouragent" },
       ],
     },
     {
@@ -129,6 +132,18 @@ const Footer = () => {
                     </motion.a>
                   </li>
                 ))}
+                {section.title === "Resources" && (
+                  <li>
+                    <motion.button
+                      onClick={() => setLeadGateOpen(true)}
+                      whileHover={{ x: 5 }}
+                      className="text-muted-foreground hover:text-primary transition-colors text-sm inline-block relative group text-left"
+                    >
+                      Get Your Strategy Session
+                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300" />
+                    </motion.button>
+                  </li>
+                )}
               </ul>
             </motion.div>
           ))}
@@ -165,6 +180,8 @@ const Footer = () => {
         </div>
 
       </div>
+
+      <StrategySessionLeadGate open={leadGateOpen} onOpenChange={setLeadGateOpen} />
     </footer>
   );
 };

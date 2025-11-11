@@ -358,10 +358,16 @@ export const VoiceAgentDemo = ({ defaultIndustry }: VoiceAgentDemoProps = {}) =>
         )}
       </GlassCard>
 
-      {/* CTA appears after conversation */}
+      {/* CTA appears after conversation - Note: DemoCTA handles its own lead gate internally */}
       <DemoCTA
         conversationCount={messages.length}
-        onBookDemo={() => window.open("https://calendly.com/your-link", "_blank")}
+        onBookDemo={() => {
+          // DemoCTA will handle lead gate internally if needed
+          const hasSubmittedSession = sessionStorage.getItem('strategy_session_lead_submitted');
+          if (hasSubmittedSession) {
+            window.open("https://cal.com/trainyouragent", "_blank");
+          }
+        }}
         onGetPricing={() => window.location.href = "/pricing"}
         onViewCaseStudies={() => window.location.href = "/case-studies"}
         onCallSales={() => window.location.href = "tel:+1234567890"}

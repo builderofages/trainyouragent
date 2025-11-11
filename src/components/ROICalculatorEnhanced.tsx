@@ -188,7 +188,7 @@ const ROICalculatorEnhanced = () => {
     doc.text('Next Steps', 20, 306);
     
     doc.setFontSize(11);
-    doc.text('1. Book a free discovery call: calendly.com/trainyouragent', 30, 316);
+    doc.text('1. Book a free strategy session: cal.com/trainyouragent', 30, 316);
     doc.text('2. Try our live voice demo: trainyouragentai.com', 30, 324);
     doc.text('3. Questions? Email: sales@trainyouragent.com', 30, 332);
     

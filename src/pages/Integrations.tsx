@@ -4,6 +4,8 @@ import { Search, ExternalLink, CheckCircle2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
 import { GlassCard } from "@/components/enhanced/GlassCard";
+import { MagneticButton } from "@/components/enhanced/MagneticButton";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { integrations, integrationCategories } from "@/data/integrations";
@@ -11,6 +13,7 @@ import { integrations, integrationCategories } from "@/data/integrations";
 const Integrations = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
 
   const filteredIntegrations = integrations.filter((integration) => {
     const matchesCategory =
@@ -154,24 +157,26 @@ const Integrations = () => {
               connect with any platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="https://calendly.com/trainyouragent"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-8 py-4 bg-gradient-primary text-white font-semibold rounded-full hover:shadow-glow transition-all duration-300"
+              <MagneticButton
+                onClick={() => setLeadGateOpen(true)}
+                className="bg-gradient-primary"
+                size="lg"
               >
                 Request Integration
-              </a>
-              <a
-                href="#"
-                className="inline-flex items-center justify-center px-8 py-4 border-2 border-primary text-primary font-semibold rounded-full hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+              </MagneticButton>
+              <MagneticButton
+                onClick={() => window.location.href = "#"}
+                variant="outline"
+                size="lg"
               >
                 View API Docs
-              </a>
+              </MagneticButton>
             </div>
           </GlassCard>
         </div>
       </section>
+
+      <StrategySessionLeadGate open={leadGateOpen} onOpenChange={setLeadGateOpen} />
 
       <Footer />
     </div>

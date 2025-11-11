@@ -9,6 +9,7 @@ import Footer from "@/components/FooterEnhanced";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { PremiumIcon, industryIcons } from "@/components/icons/PremiumIconSystem";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { nicheSolutions } from "@/data/solutions";
 import { expandedSolutions } from "@/data/solutionsExpanded";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
@@ -28,6 +29,7 @@ const nicheOptions = [
 
 const Solutions = () => {
   const [selectedNiche, setSelectedNiche] = useState("hvac");
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
   const solution = nicheSolutions[selectedNiche];
   const expandedSolution = expandedSolutions[selectedNiche];
   const selectedOption = nicheOptions.find(n => n.id === selectedNiche);
@@ -237,11 +239,11 @@ const Solutions = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <MagneticButton
-                onClick={() => window.location.href = "https://calendly.com/trainyouragent"}
+                onClick={() => setLeadGateOpen(true)}
                 className="bg-gradient-primary"
                 size="lg"
               >
-                Schedule Strategy Call
+                Get Your Free Strategy Session
               </MagneticButton>
               <MagneticButton
                 onClick={() => window.location.href = `/demos?niche=${selectedNiche}`}
@@ -254,6 +256,12 @@ const Solutions = () => {
           </div>
         </div>
       </section>
+
+      <StrategySessionLeadGate 
+        open={leadGateOpen} 
+        onOpenChange={setLeadGateOpen}
+        defaultIndustry={selectedNiche.toUpperCase()}
+      />
 
       <Footer />
     </div>

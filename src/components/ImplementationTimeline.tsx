@@ -4,6 +4,7 @@ import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { TimelineEstimator } from "@/components/TimelineEstimator";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { useState, useEffect } from "react";
 import { trackEvent } from "@/lib/tracking";
 
@@ -111,6 +112,7 @@ const ImplementationTimeline = ({ industryId }: ImplementationTimelineProps = {}
   const [expandedStage, setExpandedStage] = useState<string | null>(null);
   const [hasViewed, setHasViewed] = useState(false);
   const [estimatorOpen, setEstimatorOpen] = useState(false);
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
 
   useEffect(() => {
     if (!hasViewed) {
@@ -421,7 +423,7 @@ const ImplementationTimeline = ({ industryId }: ImplementationTimelineProps = {}
                   source: 'implementation_timeline',
                   button_text: 'Get Your Free Strategy Session'
                 });
-                window.open('https://calendly.com/trainyouragent', '_blank');
+                setLeadGateOpen(true);
               }}
             >
               <Calendar className="w-5 h-5" />
@@ -443,6 +445,12 @@ const ImplementationTimeline = ({ industryId }: ImplementationTimelineProps = {}
           <TimelineEstimator onClose={() => setEstimatorOpen(false)} industryId={industryId} />
         </DialogContent>
       </Dialog>
+
+      <StrategySessionLeadGate 
+        open={leadGateOpen} 
+        onOpenChange={setLeadGateOpen}
+        defaultIndustry={industryId}
+      />
     </section>
   );
 };
