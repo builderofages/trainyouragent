@@ -8,7 +8,7 @@ export interface Message {
   timestamp: Date;
 }
 
-export const useVAPI = () => {
+export const useVAPI = (industryConfig?: any) => {
   const [isConnected, setIsConnected] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -18,6 +18,7 @@ export const useVAPI = () => {
   
   const vapiRef = useRef<Vapi | null>(null);
   const hasStarted = useRef(false);
+  const currentConfig = industryConfig || vapiConfig;
 
   useEffect(() => {
     // Initialize VAPI client
@@ -117,7 +118,21 @@ export const useVAPI = () => {
       
       setError(null);
       // Start call with assistant config - VAPI expects an assistant ID or config object
-      await vapiRef.current.start(vapiConfig.assistant as any);
+      const assistantConfig = industryConfig ? {
+        ...currentConfig.assistant,
+        firstMessage: industryConfig.firstMessage,
+        model: {
+          ...currentConfig.assistant.model,
+          messages: [
+            {
+              role: "system",
+              content: industryConfig.systemPrompt
+            }
+          ]
+        }
+      } : currentConfig.assistant;
+      
+      await vapiRef.current.start(assistantConfig as any);
     } catch (err: any) {
       console.error("Failed to start call:", err);
       if (err.name === "NotAllowedError") {

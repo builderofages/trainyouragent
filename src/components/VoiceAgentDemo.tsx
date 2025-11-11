@@ -6,11 +6,17 @@ import { MagneticButton } from "./enhanced/MagneticButton";
 import { VoiceVisualizer } from "./VoiceVisualizer";
 import { DemoCTA } from "./DemoCTA";
 import { useVAPI } from "@/hooks/useVAPI";
-import { suggestedPrompts } from "@/lib/vapi-config";
+import { industryConfigs } from "@/lib/vapi-industry-configs";
 import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/tracking";
 
 export const VoiceAgentDemo = () => {
+  const [selectedIndustry, setSelectedIndustry] = useState<string>("hvac");
+  const currentConfig = industryConfigs[selectedIndustry];
+  
   const {
     isConnected,
     isListening,
@@ -21,12 +27,16 @@ export const VoiceAgentDemo = () => {
     startCall,
     endCall,
     sendMessage,
-  } = useVAPI();
+  } = useVAPI(currentConfig);
 
   const [textInput, setTextInput] = useState("");
   const [showTextMode, setShowTextMode] = useState(false);
-  const [currentPrompts, setCurrentPrompts] = useState(suggestedPrompts.initial);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Get current prompts based on conversation stage
+  const currentPrompts = messages.length >= 2 
+    ? currentConfig.suggestedPrompts.followUp 
+    : currentConfig.suggestedPrompts.initial;
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -38,20 +48,22 @@ export const VoiceAgentDemo = () => {
     }
   }, [error]);
 
-  // Update suggested prompts based on conversation
-  useEffect(() => {
-    if (messages.length >= 4) {
-      setCurrentPrompts(suggestedPrompts.decision);
-    } else if (messages.length >= 2) {
-      setCurrentPrompts(suggestedPrompts.interested);
+  const handleIndustryChange = (industry: string) => {
+    if (isConnected) {
+      toast.error("Please end the current call before changing industries");
+      return;
     }
-  }, [messages.length]);
+    setSelectedIndustry(industry);
+    trackEvent('voice_demo_industry_selected', { industry });
+  };
 
   const handleVoiceToggle = async () => {
     if (isConnected) {
       endCall();
+      trackEvent('voice_demo_ended', { industry: selectedIndustry, message_count: messages.length });
     } else {
       await startCall();
+      trackEvent('voice_demo_started', { industry: selectedIndustry });
     }
   };
 
@@ -85,6 +97,30 @@ export const VoiceAgentDemo = () => {
 
   return (
     <div className="space-y-4 md:space-y-6">
+      {/* Industry Selector */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-6"
+      >
+        <Label className="text-base mb-3 block font-semibold">
+          Select Industry Demo Mode
+        </Label>
+        <Select value={selectedIndustry} onValueChange={handleIndustryChange}>
+          <SelectTrigger className="w-full md:w-80 h-12 text-base">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-background/95 backdrop-blur-xl">
+            {Object.entries(industryConfigs).map(([key, config]) => (
+              <SelectItem key={key} value={key} className="text-base cursor-pointer">
+                <span className="mr-2">{config.icon}</span>
+                {config.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </motion.div>
+
       <GlassCard className="p-4 md:p-8 shadow-dramatic hover:shadow-glow transition-all duration-500 border-gradient">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
