@@ -19,6 +19,6 @@ export const siteConfig = {
   },
   // Apollo.io Integration
   apollo: {
-    apiKey: "", // TODO: Add your Apollo.io API key from Integration Setup Guide
+    apiKey: "nefi97FTOwzcMi5WsvjHHw",
   },
 };
