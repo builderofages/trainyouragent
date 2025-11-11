@@ -21,7 +21,6 @@ import BeforeAfter from "@/components/BeforeAfter";
 import FAQ from "@/components/FAQ";
 import ImplementationTimeline from "@/components/ImplementationTimeline";
 import StickyCTA from "@/components/StickyCTA";
-import { ExitPopup } from "@/components/conversion/ExitPopup";
 import { LiveChat } from "@/components/conversion/LiveChat";
 import { SocialProofNotifications } from "@/components/conversion/SocialProof";
 import { SmartUpsellCTA } from "@/components/conversion/SmartUpsellCTA";
@@ -96,7 +95,6 @@ const Index = () => {
         <Footer />
         
         <StickyCTA />
-        <ExitPopup />
         <LiveChat />
         <SmartUpsellCTA />
         <FloatingContactMenu />
