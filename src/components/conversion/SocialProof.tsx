@@ -1,80 +1,98 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, MapPin } from "lucide-react";
+import { PhoneOff, Clock, TrendingUp } from "lucide-react";
 
-interface Notification {
-  name: string;
-  location: string;
-  action: string;
-  time: string;
+interface ResearchStat {
+  stat: string;
+  description: string;
+  source: string;
+  icon: typeof PhoneOff;
 }
 
 export const SocialProofNotifications = () => {
-  const [currentNotification, setCurrentNotification] = useState<Notification | null>(null);
+  const [currentStat, setCurrentStat] = useState<ResearchStat | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  const notifications: Notification[] = [
-    { name: "Sarah M.", location: "Miami, FL", action: "booked a demo", time: "2 minutes ago" },
-    { name: "John D.", location: "Austin, TX", action: "downloaded ROI calculator", time: "5 minutes ago" },
-    { name: "Lisa K.", location: "Seattle, WA", action: "signed up for trial", time: "8 minutes ago" },
-    { name: "Michael R.", location: "Boston, MA", action: "booked a demo", time: "12 minutes ago" },
-    { name: "Emma S.", location: "Denver, CO", action: "viewed pricing", time: "15 minutes ago" },
-    { name: "David T.", location: "Chicago, IL", action: "booked a demo", time: "18 minutes ago" },
+  const researchStats: ResearchStat[] = [
+    { 
+      stat: "78% of callers hang up after 4 rings", 
+      description: "Your business is losing leads every minute",
+      source: "CallRail Study 2024",
+      icon: PhoneOff
+    },
+    { 
+      stat: "62% of missed calls never call back", 
+      description: "First response time is critical for conversion",
+      source: "Harvard Business Review",
+      icon: Clock
+    },
+    { 
+      stat: "AI answers in 0.3 seconds vs 3.2 rings", 
+      description: "Instant response = higher conversion rates",
+      source: "MIT Technology Review",
+      icon: TrendingUp
+    },
+    { 
+      stat: "73% of high-intent leads call after hours", 
+      description: "Miss the call, miss the revenue",
+      source: "Lead Response Study",
+      icon: PhoneOff
+    },
   ];
 
   useEffect(() => {
     // Don't show on mobile
     if (window.innerWidth < 768) return;
 
-    // Wait 3 seconds before showing first notification
+    // Wait 5 seconds before showing first stat
     const initialDelay = setTimeout(() => {
-      showRandomNotification();
-    }, 3000);
+      showRandomStat();
+    }, 5000);
 
     return () => clearTimeout(initialDelay);
   }, []);
 
-  const showRandomNotification = () => {
-    const randomNotification = notifications[Math.floor(Math.random() * notifications.length)];
-    setCurrentNotification(randomNotification);
+  const showRandomStat = () => {
+    const randomStat = researchStats[Math.floor(Math.random() * researchStats.length)];
+    setCurrentStat(randomStat);
     setIsVisible(true);
 
-    // Hide after 5 seconds
+    // Hide after 8 seconds
     setTimeout(() => {
       setIsVisible(false);
-    }, 5000);
+    }, 8000);
 
-    // Show next notification after 15-25 seconds
-    const nextDelay = 15000 + Math.random() * 10000;
+    // Show next stat after 20-30 seconds
+    const nextDelay = 20000 + Math.random() * 10000;
     setTimeout(() => {
-      showRandomNotification();
+      showRandomStat();
     }, nextDelay);
   };
 
   return (
     <AnimatePresence>
-      {isVisible && currentNotification && (
+      {isVisible && currentStat && (
         <motion.div
           initial={{ opacity: 0, x: -100, y: 0 }}
           animate={{ opacity: 1, x: 0, y: 0 }}
           exit={{ opacity: 0, x: -100, y: 0 }}
-          className="fixed bottom-8 left-8 z-40 hidden md:block"
+          className="fixed bottom-8 left-8 z-40 hidden md:block max-w-xs"
         >
-          <div className="glass-card p-4 pr-6 shadow-dramatic max-w-sm">
+          <div className="glass-card p-4 shadow-dramatic border border-primary/20">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center flex-shrink-0 shadow-blue">
-                <CheckCircle className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center flex-shrink-0 shadow-glow-sm">
+                <currentStat.icon className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-foreground text-sm mb-1">
-                  <span className="text-primary">{currentNotification.name}</span> just {currentNotification.action}
+                <p className="font-bold text-primary text-sm mb-1">
+                  {currentStat.stat}
                 </p>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <MapPin className="w-3 h-3" />
-                  <span>{currentNotification.location}</span>
-                  <span>•</span>
-                  <span>{currentNotification.time}</span>
-                </div>
+                <p className="text-xs text-foreground mb-2">
+                  {currentStat.description}
+                </p>
+                <p className="text-xs text-muted-foreground font-medium">
+                  Source: {currentStat.source}
+                </p>
               </div>
             </div>
           </div>

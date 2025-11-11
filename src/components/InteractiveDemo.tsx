@@ -61,18 +61,26 @@ const InteractiveDemo = () => {
 
   return (
     <GlassCard className="p-6 max-w-2xl mx-auto shadow-dramatic hover:shadow-glow transition-all duration-500">
-      <div className="flex items-center gap-2 mb-6">
-        <motion.div 
-          className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-glow-sm"
-          animate={{ rotate: [0, 360] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        >
-          <Sparkles className="w-5 h-5 text-white" />
-        </motion.div>
-        <div>
-          <h3 className="font-bold">Live Demo</h3>
-          <p className="text-sm text-muted-foreground">
-            See AI in action
+      <div className="space-y-3 mb-6">
+        <div className="flex items-center gap-2">
+          <motion.div 
+            className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow-sm"
+            animate={{ rotate: [0, 360] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          >
+            <Sparkles className="w-5 h-5 text-white" />
+          </motion.div>
+          <div>
+            <h3 className="font-bold">Example Conversation Flow</h3>
+            <p className="text-sm text-muted-foreground">
+              Educational walkthrough
+            </p>
+          </div>
+        </div>
+        <div className="bg-primary/5 border border-primary/20 rounded-lg p-3">
+          <p className="text-xs text-muted-foreground">
+            <span className="font-semibold text-foreground">Note:</span> This is a pre-scripted example showing a typical conversation. 
+            For a real AI experience, try the <span className="text-primary font-medium">Live Voice Demo</span> below.
           </p>
         </div>
       </div>
