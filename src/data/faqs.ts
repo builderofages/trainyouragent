@@ -17,16 +17,31 @@ export const faqCategories = [
 export const faqs: FAQ[] = [
   // Getting Started
   {
+    question: "What happens during the discovery call?",
+    answer: "The discovery call is a 30-45 minute conversation where we learn about your business. We'll discuss: your current pain points with missed calls or lead response, your services, pricing structure, and processes, your existing systems (CRM, phone, calendar), your team's workflow and capacity, and your specific goals and timeline. This isn't a sales pitch—it's a needs assessment to determine if we're a good fit and what your custom implementation would look like.",
+    category: "Getting Started"
+  },
+  {
     question: "How long does setup really take?",
-    answer: "Typically 24-72 hours from signup to go-live. According to McKinsey's AI Implementation Report, proper AI deployment averages 2-4 weeks industry-wide, but our streamlined process cuts this to under 3 days. This includes: AI training on your business specifics (day 1), CRM/phone system integration (day 2), testing and team onboarding (day 3).",
+    answer: "Setup typically takes 3-7 days, depending on complexity. Simple implementations (single service type, straightforward processes) take 3-4 days. Complex implementations (multiple service lines, custom integrations, specialized workflows) take 5-7 days. After your discovery call, we'll give you an exact timeline based on your specific needs. According to McKinsey's AI Implementation Report, proper AI deployment averages 2-4 weeks industry-wide, but our streamlined process completes in under a week.",
     category: "Getting Started",
     sources: [
       { name: "McKinsey - AI Implementation Report 2024", url: "https://www.mckinsey.com" }
     ]
   },
   {
-    question: "What happens during the first week?",
-    answer: "**Day 1-2:** Our team configures your AI agent with your business information, services, pricing, and availability. **Day 3:** Integration with your phone system, CRM, and calendar. **Day 4-5:** Test calls to refine responses and ensure quality. **Day 6-7:** Soft launch with your team monitoring. Most businesses are fully live within 5-7 days.",
+    question: "What factors affect the 3-7 day timeline?",
+    answer: "Several factors determine where you fall in the 3-7 day range: **Service complexity** (1 service vs. 20+ services with different pricing), **Integration requirements** (simple calendar booking vs. complex CRM with custom fields), **Customization needs** (standard scripts vs. highly specialized industry terminology), **Team availability** (immediate feedback vs. scheduling around your calendar), and **Data migration** (new setup vs. importing historical customer data). During your planning call, we'll identify these factors and provide an accurate timeline.",
+    category: "Getting Started"
+  },
+  {
+    question: "What's the difference between the discovery call and planning call?",
+    answer: "**Discovery Call (First Call):** We learn about your business, discuss your needs, and determine if we're a good fit. No commitment required. **Planning Call (Second Call):** We present your custom implementation timeline, review the training plan we've created for your specific business, walk through exactly what the AI will do, discuss pricing and next steps. Most businesses book their planning call 1-2 days after discovery.",
+    category: "Getting Started"
+  },
+  {
+    question: "What happens during implementation?",
+    answer: "**Discovery Call (Day 1):** Understanding your business and requirements. **Planning Call (Day 2-3):** Review custom timeline and training plan. **Agent Training (Week 1-2):** We configure your AI with your business specifics, services, pricing, and processes. **Integration Setup:** Connect to your phone system, CRM, and calendar. **Testing & Refinement (Week 2-3):** Test calls to ensure quality and accuracy. **Go Live (Week 3+):** Full deployment with your team monitoring. You'll be involved at key checkpoints but we handle the heavy lifting.",
     category: "Getting Started"
   },
   {
@@ -39,7 +54,12 @@ export const faqs: FAQ[] = [
   },
   {
     question: "Can I test it before committing?",
-    answer: "Yes! We offer a 30-day pilot program where you can run the AI alongside your existing system. This lets you compare performance, build confidence, and see real ROI before fully committing. 94% of our pilot customers convert to full implementation.",
+    answer: "Yes! During the testing phase (typically Day 4-6 of implementation), you'll make test calls, provide feedback, and we'll refine the responses. We also offer a 30-day pilot program where you can run the AI alongside your existing system to compare performance and see real ROI before fully committing.",
+    category: "Getting Started"
+  },
+  {
+    question: "What if my business is more complex than average?",
+    answer: "We specialize in complex implementations. Businesses with multiple service lines, specialized terminology, intricate pricing models, or unique workflows typically fall into the 5-7 day setup range. We'll map out your entire process during the discovery and planning calls, then build a custom solution that handles your specific complexity. Industries like healthcare (HIPAA), legal (confidentiality), and logistics (multi-stop routing) require extra care—and we're equipped for it.",
     category: "Getting Started"
   },
 
@@ -97,7 +117,7 @@ export const faqs: FAQ[] = [
   },
   {
     question: "What if we already use another AI solution?",
-    answer: "We can migrate you seamlessly. We'll import your existing conversation history, maintain your phone numbers, and ensure zero downtime during the transition. Most migrations complete in 24-48 hours.",
+    answer: "We can migrate you seamlessly. We'll import your existing conversation history, maintain your phone numbers, and ensure zero downtime during the transition. Most migrations complete in 3-5 days depending on the complexity of your existing setup and integrations.",
     category: "Technical & Integration"
   },
 
