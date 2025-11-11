@@ -23,7 +23,7 @@ const CookiePolicy = () => {
     {
       title: "Third-Party Cookies",
       content:
-        "We may use third-party services that set cookies on your device, including: Google Analytics for website analytics, Calendly for booking and scheduling, Social media platforms for content sharing. These third parties have their own privacy policies governing their use of cookies.",
+        "We may use third-party services that set cookies on your device, including: Apollo.io for CRM and lead management, VAPI for voice agent sessions, Google Analytics for website analytics (if enabled), Meta Pixel for Facebook/Instagram ads (if enabled), LinkedIn Insight Tag for LinkedIn ads (if enabled), Calendly for booking and scheduling, Tawk.to for live chat support, Social media platforms for content sharing. These third parties have their own privacy policies governing their use of cookies. You can opt out of tracking cookies through your browser settings or third-party opt-out tools.",
     },
     {
       title: "Managing Cookies",

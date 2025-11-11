@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { trackEvent } from "@/lib/tracking";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
+import { ResultsDisclaimer } from "@/components/ResultsDisclaimer";
 
 interface Question {
   id: string;
@@ -633,16 +634,14 @@ export const TimelineEstimator = ({ onClose, industryId }: TimelineEstimatorProp
               </div>
 
               <div className="mt-6 p-4 rounded-lg bg-muted/50 border border-border">
-                <p className="text-sm text-muted-foreground">
-                  <strong>Note:</strong> This {timeline.industryName.toLowerCase()} timeline estimate is based on your answers. Your actual timeline will be confirmed during your discovery call, where we'll discuss your specific needs in detail.
-                </p>
+                <ResultsDisclaimer context="timeline" variant="inline" />
               </div>
             </GlassCard>
 
             <div className="flex flex-col sm:flex-row gap-3">
               <MagneticButton size="lg" className="flex-1" onClick={handleBookCall}>
                 <Calendar className="mr-2" />
-                Book Discovery Call to Confirm
+                Get Your Free Strategy Session
               </MagneticButton>
               <Button size="lg" variant="outline" onClick={handleReset}>
                 Start Over

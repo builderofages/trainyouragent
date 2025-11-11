@@ -98,7 +98,7 @@ const NicheCard = ({ niche, index }: { niche: any; index: number }) => {
 
   const handleClick = () => {
     if (niche.available && niche.link) {
-      navigate(niche.link);
+      navigate(`${niche.link}?source=directory`);
     }
   };
 

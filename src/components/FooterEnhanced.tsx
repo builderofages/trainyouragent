@@ -135,19 +135,32 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-glass-border flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">
-            © 2024 TrainYourAgent. All rights reserved.
-          </p>
-          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <span className="flex items-center gap-2">
-              <motion.div 
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="w-2 h-2 bg-primary rounded-full shadow-glow-sm"
-              />
-              Part of the AI Agent Ecosystem
-            </span>
+        <div className="pt-8 border-t border-glass-border">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+            <p className="text-sm text-muted-foreground">
+              © 2024 TrainYourAgent. All rights reserved.
+            </p>
+            <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <span className="flex items-center gap-2">
+                <motion.div 
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="w-2 h-2 bg-primary rounded-full shadow-glow-sm"
+                />
+                Part of the AI Agent Ecosystem
+              </span>
+            </div>
+          </div>
+          
+          {/* Results Disclaimer */}
+          <div className="text-center">
+            <p className="text-xs text-muted-foreground leading-relaxed max-w-4xl mx-auto">
+              Results may vary based on implementation, industry, call volume, and business-specific factors. 
+              Past performance and pilot program statistics do not guarantee future results. The 94% pilot 
+              conversion rate reflects historical pilot participant conversion data and is not a guarantee 
+              of individual outcomes. Implementation timeline estimates are ranges that will be confirmed 
+              during your strategy session.
+            </p>
           </div>
         </div>
 

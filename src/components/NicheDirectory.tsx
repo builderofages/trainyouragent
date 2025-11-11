@@ -203,7 +203,7 @@ const NicheDirectory = () => {
                           : "bg-secondary text-foreground hover:bg-secondary/80"
                       }`}
                       disabled={!niche.available}
-                      onClick={() => niche.link && navigate(niche.link)}
+                      onClick={() => niche.link && navigate(`${niche.link}?source=directory`)}
                     >
                       {niche.available ? "Enter Realm" : "Notify Me"}
                       <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />

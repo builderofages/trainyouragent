@@ -14,8 +14,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/tracking";
 
-export const VoiceAgentDemo = () => {
-  const [selectedIndustry, setSelectedIndustry] = useState<string>("hvac");
+interface VoiceAgentDemoProps {
+  defaultIndustry?: string;
+}
+
+export const VoiceAgentDemo = ({ defaultIndustry }: VoiceAgentDemoProps = {}) => {
+  const [selectedIndustry, setSelectedIndustry] = useState<string>(defaultIndustry || "hvac");
   const [textInput, setTextInput] = useState("");
   const [showTextMode, setShowTextMode] = useState(false);
   const [showLeadGate, setShowLeadGate] = useState(false);
@@ -120,34 +124,36 @@ export const VoiceAgentDemo = () => {
         }}
       />
       <div id="voice-demo" className="space-y-4 md:space-y-6 scroll-mt-24">
-      {/* Industry Selector */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-6"
-      >
-        <Label className="text-base mb-3 block font-semibold">
-          Select Industry Demo Mode
-        </Label>
-        <Select value={selectedIndustry} onValueChange={handleIndustryChange}>
-          <SelectTrigger className="w-full md:w-80 h-12 text-base">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent className="bg-background/95 backdrop-blur-xl">
-            {Object.entries(industryConfigs).map(([key, config]) => {
-              const Icon = config.icon;
-              return (
-                <SelectItem key={key} value={key} className="text-base cursor-pointer">
-                  <div className="flex items-center gap-2">
-                    <Icon className="w-4 h-4 text-primary" />
-                    {config.name}
-                  </div>
-                </SelectItem>
-              );
-            })}
-          </SelectContent>
-        </Select>
-      </motion.div>
+      {/* Industry Selector - Only show if not pre-selected */}
+      {!defaultIndustry && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <Label className="text-base mb-3 block font-semibold">
+            Select Industry Demo Mode
+          </Label>
+          <Select value={selectedIndustry} onValueChange={handleIndustryChange}>
+            <SelectTrigger className="w-full md:w-80 h-12 text-base">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-background/95 backdrop-blur-xl">
+              {Object.entries(industryConfigs).map(([key, config]) => {
+                const Icon = config.icon;
+                return (
+                  <SelectItem key={key} value={key} className="text-base cursor-pointer">
+                    <div className="flex items-center gap-2">
+                      <Icon className="w-4 h-4 text-primary" />
+                      {config.name}
+                    </div>
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
+        </motion.div>
+      )}
 
       <GlassCard className="p-4 md:p-8 shadow-dramatic hover:shadow-glow transition-all duration-500 border-gradient">
         {/* Header */}

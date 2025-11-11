@@ -35,6 +35,27 @@ export const sendToApollo = async (leadData: ApolloLeadData): Promise<boolean> =
     return false;
   }
 
+  // Extract industry from URL if not provided
+  let industryTag = leadData.industry || '';
+  if (!industryTag && typeof window !== 'undefined') {
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    if (pathSegments.length > 0) {
+      const pathIndustry = pathSegments[0];
+      // Map URL paths to industry names
+      const industryMap: Record<string, string> = {
+        'hvac': 'HVAC',
+        'legal': 'Legal',
+        'healthcare': 'Healthcare',
+        'accounting': 'Accounting',
+        'restaurants': 'Restaurants',
+        'roofing': 'Roofing',
+        'logistics': 'Logistics',
+        'bars-nightclubs': 'Bars & Nightclubs'
+      };
+      industryTag = industryMap[pathIndustry] || pathIndustry;
+    }
+  }
+
   // Split name into first and last name
   const nameParts = leadData.name.trim().split(" ");
   const firstName = nameParts[0] || "";
@@ -49,7 +70,7 @@ export const sendToApollo = async (leadData: ApolloLeadData): Promise<boolean> =
     organization_name: leadData.company,
     label_names: leadData.tags || [],
     custom_fields: {
-      industry: leadData.industry,
+      industry: industryTag || leadData.industry,
       lead_source: leadData.source,
       notes: leadData.notes,
       submitted_at: new Date().toISOString(),

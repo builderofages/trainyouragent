@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import jsPDF from "jspdf";
 import { trackEvent } from "@/lib/tracking";
 import { siteConfig } from "@/config/site";
+import { ResultsDisclaimer } from "@/components/ResultsDisclaimer";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 
 const ResultCard = ({ icon: Icon, label, value, color, delay }: any) => {
@@ -719,15 +720,26 @@ const ROICalculatorEnhanced = () => {
       </div>
 
       {showResults && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 1.4 }}
-          className="text-center mt-8 text-sm text-muted-foreground glass-card p-4 rounded-xl inline-block mx-auto"
-        >
-          📊 Based on industry research: 60% of leads call after hours (CallRail), 62% never call back (HBR), AI captures 85% vs 40% voicemail
-        </motion.div>
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 1.2 }}
+            className="mt-8"
+          >
+            <ResultsDisclaimer context="roi" variant="compact" />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 1.4 }}
+            className="text-center mt-4 text-sm text-muted-foreground glass-card p-4 rounded-xl inline-block mx-auto"
+          >
+            📊 Based on industry research: 60% of leads call after hours (CallRail), 62% never call back (HBR), AI captures 85% vs 40% voicemail
+          </motion.div>
+        </>
       )}
     </div>
   );

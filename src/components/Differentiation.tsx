@@ -22,7 +22,7 @@ export const Differentiation = () => {
     {
       icon: Shield,
       title: "Enterprise Security, Small Business Pricing",
-      description: "SOC 2 compliance, HIPAA-ready for healthcare, 256-bit encryption. You get enterprise-grade protection without enterprise costs.",
+      description: "Enterprise-grade security on HIPAA-compliant infrastructure with end-to-end encryption. You get enterprise-level protection without enterprise costs.",
     },
     {
       icon: Award,

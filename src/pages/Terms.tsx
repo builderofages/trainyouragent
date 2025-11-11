@@ -24,6 +24,42 @@ These terms apply to all users, including visitors, registered users, and paid s
 We reserve the right to modify, suspend, or discontinue any aspect of the service at any time.`,
     },
     {
+      title: "30-Day Risk-Free Pilot Program",
+      content: `Pilot Program Terms:
+
+- Pilot allows you to test AI agents in your live business environment
+- No long-term commitment required during pilot period
+- Access to full platform features and support
+- Pilot can be extended by mutual agreement
+- Conversion to paid plan optional after pilot completion
+- Pilot availability subject to capacity and qualification
+
+To qualify for pilot program, contact sales@trainyouragent.com`,
+    },
+    {
+      title: "Implementation Timeline",
+      content: `Typical implementation ranges from 3-7 business days depending on:
+
+- Number of services/offerings to configure
+- Integration complexity (CRM, scheduling systems)
+- Industry-specific terminology and compliance requirements
+- Response time to training questions and feedback
+
+Timeline estimates provided by our calculator are approximations. Actual timeline confirmed during your strategy session based on your specific needs. Results may vary based on implementation factors, call volume, and business-specific requirements.`,
+    },
+    {
+      title: "Results and Outcomes Disclaimer",
+      content: `IMPORTANT: Results may vary based on implementation, industry, call volume, and business-specific factors. Past performance and pilot program statistics do not guarantee future results.
+
+- Implementation timeline estimates are ranges, not guarantees
+- ROI projections are based on industry averages and pilot data
+- Actual results depend on call volume, agent training, and business factors
+- The 94% pilot conversion rate reflects historical data, not individual guarantees
+- 30-Day Pilot allows you to test results in your specific business context
+
+No warranties are made regarding specific outcomes, revenue increases, or business results.`,
+    },
+    {
       title: "User Accounts",
       content: `To use our services, you must:
       
@@ -105,6 +141,18 @@ We disclaim all implied warranties including merchantability and fitness for a p
 - You agree to indemnify us against claims arising from your use
       
 Some jurisdictions do not allow these limitations.`,
+    },
+    {
+      title: "Data Security and Compliance",
+      content: `Platform Security:
+
+- Built on industry-leading infrastructure (VAPI, Apollo.io)
+- Enterprise-grade security practices
+- End-to-end encryption in transit (TLS 1.3)
+- Data storage on SOC 2 Type II certified infrastructure
+- HIPAA-compliant infrastructure for healthcare clients
+
+Individual compliance requirements may vary by industry. Healthcare organizations requiring Business Associate Agreements (BAA) should discuss specific needs during onboarding.`,
     },
     {
       title: "Data and Privacy",

@@ -90,10 +90,37 @@ const RoofingLanding = () => {
     };
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Thanks! We'll be in touch to schedule your free strategy session.");
-    window.open(siteConfig.bookingUrl, '_blank');
+    
+    try {
+      const { sendToApollo, getUTMParameters } = await import('@/lib/apollo-integration');
+      const utmParams = getUTMParameters();
+      
+      await sendToApollo({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        company: formData.serviceArea,
+        industry: 'Roofing',
+        source: 'Roofing Landing Page Form',
+        tags: ['Roofing Landing', 'Contact Form', 'Website Lead'],
+        notes: `Service Area: ${formData.serviceArea}`,
+        custom_fields: {
+          ...utmParams,
+          service_area: formData.serviceArea,
+          page_url: window.location.href,
+          form_type: 'contact'
+        },
+      });
+      
+      toast.success("Thanks! We'll be in touch to schedule your free strategy session.");
+      window.open(siteConfig.bookingUrl, '_blank');
+    } catch (error) {
+      console.error('Form submission error:', error);
+      toast.success("Thanks! We'll be in touch to schedule your free strategy session.");
+      window.open(siteConfig.bookingUrl, '_blank');
+    }
   };
 
   const seoData = landingPageSEO.roofing;

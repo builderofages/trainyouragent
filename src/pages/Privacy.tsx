@@ -38,16 +38,32 @@ const Privacy = () => {
 All third-party service providers are contractually obligated to protect your data.`,
     },
     {
+      title: "HIPAA Compliance for Healthcare Clients",
+      content: `Healthcare-Specific Requirements:
+
+Our platform infrastructure (VAPI.ai) is HIPAA-compliant and maintains appropriate safeguards for protected health information (PHI). Healthcare organizations requiring Business Associate Agreements (BAA) should contact legal@trainyouragent.com during onboarding.
+
+Key Points:
+- Not all features may be HIPAA-compliant by default
+- Healthcare clients must follow configuration guidelines provided during implementation
+- Specific HIPAA controls can be enabled upon request
+- Regular security audits ensure ongoing compliance
+- Staff training provided for PHI handling procedures
+
+Contact privacy@trainyouragent.com for detailed HIPAA compliance documentation.`,
+    },
+    {
       title: "Data Security",
       content: `We implement industry-standard security measures including:
       
-- Encryption of data in transit and at rest
-- Regular security audits and penetration testing
-- Access controls and authentication requirements
+- End-to-end encryption in transit (TLS 1.3)
+- Data storage on SOC 2 Type II certified infrastructure  
+- Regular security audits by third-party partners
+- Role-based access controls
 - Secure data centers with 24/7 monitoring
 - Employee training on data protection
       
-While we strive to protect your data, no method of transmission over the Internet is 100% secure.`,
+While we implement enterprise-grade security practices, no method of transmission over the Internet is 100% secure. Individual compliance requirements may vary by industry.`,
     },
     {
       title: "Your Rights (GDPR & CCPA)",
