@@ -101,7 +101,7 @@ const HealthcareLanding = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Thanks! We'll schedule a discovery call to discuss your needs and timeline.");
+    toast.success("Thanks! We'll be in touch to schedule your free strategy session.");
     window.open(siteConfig.bookingUrl, '_blank');
   };
 
@@ -171,7 +171,7 @@ const HealthcareLanding = () => {
                     window.open(siteConfig.bookingUrl, '_blank');
                   }}
                 >
-                  Book Discovery Call
+                  Get Your Free Strategy Session
                   <ArrowRight className="w-5 h-5" />
                 </MagneticButton>
                 <MagneticButton

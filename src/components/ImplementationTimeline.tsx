@@ -20,31 +20,31 @@ interface TimelineStage {
 
 const timelineStages: TimelineStage[] = [
   {
-    id: "discovery-call",
-    title: "Discovery Call",
+    id: "strategy-session",
+    title: "Free Strategy Session",
     duration: "Day 1",
-    description: "Understand your business needs and requirements",
+    description: "Understand your business goals and challenges",
     icon: Phone,
     details: [
-      "Discuss your services, pricing, and processes",
-      "Review existing systems (CRM, phone, calendar)",
-      "Understand your customer communication patterns",
-      "Determine fit and provide timeline estimate"
+      "Explore your unique business needs and pain points",
+      "Review your current systems (CRM, phone, calendar)",
+      "Discuss your customer communication patterns",
+      "Outline potential solutions and timeline"
     ],
     color: "from-blue-500 to-cyan-500",
     stageNumber: 1
   },
   {
-    id: "planning-call",
-    title: "Planning Call",
+    id: "custom-demo",
+    title: "Custom Demo & Walkthrough",
     duration: "Day 2-3",
-    description: "Create your custom implementation roadmap",
+    description: "See exactly how AI works for your business",
     icon: Calendar,
     details: [
-      "Present custom implementation timeline",
-      "Review training plan specific to your business",
-      "Walk through what the AI will do",
-      "Answer questions and finalize approach"
+      "Present personalized implementation timeline",
+      "Review custom training plan built for you",
+      "Live walkthrough of what your AI will do",
+      "Answer all questions about the process"
     ],
     color: "from-cyan-500 to-teal-500",
     stageNumber: 2
@@ -174,7 +174,7 @@ const ImplementationTimeline = ({ industryId }: ImplementationTimelineProps = {}
             Your Implementation Journey
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            From discovery call to go-live in 3-7 days. Timeline varies based on complexity.
+            From free strategy session to go-live in 3-7 days. Timeline varies based on complexity.
           </p>
 
           {/* Complexity Factors */}
@@ -409,9 +409,9 @@ const ImplementationTimeline = ({ industryId }: ImplementationTimelineProps = {}
           className="text-center mt-16"
         >
           <GlassCard hover className="max-w-2xl mx-auto p-8 bg-gradient-to-br from-primary/5 to-accent/5">
-            <h3 className="text-2xl font-bold mb-2">Ready to Get Started?</h3>
+            <h3 className="text-2xl font-bold mb-2">Ready to See How It Works for You?</h3>
             <p className="text-muted-foreground mb-6">
-              Book a discovery call to discuss your needs and get your personalized 3-7 day timeline
+              Get your free strategy session and personalized 3-7 day timeline
             </p>
             <MagneticButton
               size="lg"
@@ -419,13 +419,13 @@ const ImplementationTimeline = ({ industryId }: ImplementationTimelineProps = {}
               onClick={() => {
                 trackEvent('timeline_cta_click', {
                   source: 'implementation_timeline',
-                  button_text: 'Book Discovery Call'
+                  button_text: 'Get Your Free Strategy Session'
                 });
                 window.open('https://calendly.com/trainyouragent', '_blank');
               }}
             >
               <Calendar className="w-5 h-5" />
-              Book Discovery Call
+              Get Your Free Strategy Session
             </MagneticButton>
           </GlassCard>
         </motion.div>

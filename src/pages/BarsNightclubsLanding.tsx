@@ -97,7 +97,7 @@ const BarsNightclubsLanding = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     conversions.formSubmitted("bars_contact", "bars");
-    toast.success("Thanks! We'll schedule a discovery call to discuss your venue needs and timeline.");
+    toast.success("Thanks! We'll be in touch to schedule your free strategy session.");
     window.open(siteConfig.bookingUrl, '_blank');
   };
 
@@ -198,7 +198,7 @@ const BarsNightclubsLanding = () => {
                     window.open(siteConfig.bookingUrl, '_blank');
                   }}
                 >
-                  Book Discovery Call
+                  Get Your Free Strategy Session
                   <motion.div
                     animate={{ x: [0, 4, 0], scale: [1, 1.1, 1] }}
                     transition={{ duration: 1.2, repeat: Infinity }}

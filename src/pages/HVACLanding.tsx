@@ -108,7 +108,7 @@ const HVACLanding = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     conversions.formSubmitted("hvac_contact", "hvac");
-    toast.success("Thanks! We'll schedule a discovery call to discuss your HVAC business needs and timeline.");
+    toast.success("Thanks! We'll be in touch to schedule your free strategy session.");
     window.open(siteConfig.bookingUrl, '_blank');
   };
 
@@ -206,7 +206,7 @@ const HVACLanding = () => {
                     window.open(siteConfig.bookingUrl, '_blank');
                   }}
                 >
-                  Book Discovery Call
+                  Get Your Free Strategy Session
                   <motion.div
                     animate={{ x: [0, 3, 0] }}
                     transition={{ duration: 1.5, repeat: Infinity }}

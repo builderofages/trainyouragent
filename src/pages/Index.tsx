@@ -20,10 +20,8 @@ import IndustryResearchSection from "@/components/IndustryResearchSection";
 import BeforeAfter from "@/components/BeforeAfter";
 import FAQ from "@/components/FAQ";
 import ImplementationTimeline from "@/components/ImplementationTimeline";
-import StickyCTA from "@/components/StickyCTA";
 import { LiveChat } from "@/components/conversion/LiveChat";
 import { SocialProofNotifications } from "@/components/conversion/SocialProof";
-import { SmartUpsellCTA } from "@/components/conversion/SmartUpsellCTA";
 import { FloatingContactMenu } from "@/components/FloatingContactMenu";
 import { PhoneSection } from "@/components/PhoneSection";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
@@ -94,9 +92,7 @@ const Index = () => {
         <NewsletterSection />
         <Footer />
         
-        <StickyCTA />
         <LiveChat />
-        <SmartUpsellCTA />
         <FloatingContactMenu />
         <SocialProofNotifications />
       </div>

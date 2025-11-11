@@ -76,7 +76,7 @@ const Header = () => {
               <MagneticButton variant="ghost" size="icon" className="rounded-full" onClick={() => setSearchOpen(true)}>
                 <Search className="w-5 h-5" />
               </MagneticButton>
-              <MagneticButton className="rounded-full bg-gradient-primary" onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}>Book a Call</MagneticButton>
+              <MagneticButton className="rounded-full bg-gradient-primary" onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}>Get Your Free Strategy Session</MagneticButton>
             </div>
 
             <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-foreground">
@@ -96,7 +96,7 @@ const Header = () => {
                   className="w-full rounded-full"
                 />
               )}
-              <Button className="w-full rounded-full bg-gradient-primary" onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}>Book a Call</Button>
+              <Button className="w-full rounded-full bg-gradient-primary" onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}>Get Your Free Strategy Session</Button>
             </div>
           </motion.div>
         </nav>

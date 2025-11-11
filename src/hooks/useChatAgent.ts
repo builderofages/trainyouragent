@@ -22,7 +22,7 @@ export const useChatAgent = () => {
         setTimeout(() => {
           setMessages([{
             role: "assistant",
-            content: "Hi! I'm your AI assistant. I can help you learn about our voice AI services, answer questions about pricing, and even schedule a demo. What would you like to know?",
+            content: "Hi! I'm here to help you explore how AI can transform your business. I can answer questions about our solutions, show you pricing options, and help you schedule a free strategy session. What would you like to know?",
             timestamp: new Date(),
           }]);
         }, 500);
@@ -34,7 +34,7 @@ export const useChatAgent = () => {
       setTimeout(() => {
         setMessages([{
           role: "assistant",
-          content: "Hi! I'm your AI assistant. I can help you learn about our voice AI services, answer questions about pricing, and even schedule a demo. What would you like to know?",
+          content: "Hi! I'm here to help you explore how AI can transform your business. I can answer questions about our solutions, show you pricing options, and help you schedule a free strategy session. What would you like to know?",
           timestamp: new Date(),
         }]);
       }, 500);
@@ -138,9 +138,9 @@ async function generateIntelligentResponse(
     return "Our pricing starts at $99/month for basic plans. The exact cost depends on your call volume and feature requirements. Would you like to schedule a demo where we can discuss a custom quote for your needs?";
   }
 
-  // Demo requests
-  if (lowerMessage.includes("demo") || lowerMessage.includes("see it") || lowerMessage.includes("show me")) {
-    return "I'd be happy to arrange a demo! You can book a time directly through our Calendly link, or I can have our team reach out to you. What works best for you?";
+  // Demo/Strategy session requests
+  if (lowerMessage.includes("demo") || lowerMessage.includes("see it") || lowerMessage.includes("show me") || lowerMessage.includes("strategy") || lowerMessage.includes("consultation")) {
+    return "I'd love to help you schedule a free strategy session! We'll explore your specific business needs and show you exactly how AI can help. You can book a time directly through our Calendly link. What day works best for you?";
   }
 
   // Setup time
@@ -164,10 +164,10 @@ async function generateIntelligentResponse(
   }
 
   // Contact/sales
-  if (lowerMessage.includes("talk") || lowerMessage.includes("speak") || lowerMessage.includes("sales") || lowerMessage.includes("rep")) {
-    return "I can connect you with our team! You can either book a time on our calendar or call our AI agent directly to get transferred to a sales specialist. Which would you prefer?";
+  if (lowerMessage.includes("talk") || lowerMessage.includes("speak") || lowerMessage.includes("sales") || lowerMessage.includes("rep") || lowerMessage.includes("human")) {
+    return "I can connect you with our team! You can book a free strategy session on our calendar or call our AI agent directly to speak with a specialist. Which would you prefer?";
   }
 
   // Default response
-  return "That's a great question! To give you the most accurate answer, I'd recommend booking a quick demo where we can discuss your specific needs. Our team can walk you through exactly how our AI voice agents can help your business. Would you like me to share the booking link?";
+  return "That's a great question! To give you the most accurate answer, I'd recommend scheduling a free strategy session where we can dive into your specific needs. We'll show you exactly how AI can solve your challenges and give you a custom timeline. Would you like me to share the booking link?";
 }

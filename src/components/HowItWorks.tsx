@@ -16,8 +16,8 @@ const steps = [
   {
     number: "02",
     icon: Brain,
-    title: "Discovery & Planning Call",
-    description: "We schedule a discovery call to understand your business needs, then create a custom implementation timeline. Setup typically takes 3-7 days depending on complexity and customization requirements.",
+    title: "Strategy Session & Demo",
+    description: "We schedule a free strategy session to explore your business needs, then show you exactly how it works with a custom demo. Setup typically takes 3-7 days depending on complexity and customization requirements.",
     duration: "3-7 days",
     color: "from-purple-500 to-pink-500"
   },
@@ -146,7 +146,7 @@ const HowItWorks = () => {
               <ArrowRight className="w-5 h-5" />
             </MagneticButton>
             <p className="text-sm text-muted-foreground mt-4">
-              No credit card required • Setup in 5 minutes
+              Free strategy session • See results in 3-7 days
             </p>
           </motion.div>
         </div>

@@ -22,7 +22,7 @@ const Footer = () => {
         { name: "Blog & Research", href: "/resources" },
         { name: "Demos & Calculators", href: "/demos" },
         { name: "Research Partners", href: "/research" },
-        { name: "Book a Call", href: "https://calendly.com/trainyouragent" },
+        { name: "Get Your Strategy Session", href: "https://calendly.com/trainyouragent" },
       ],
     },
     {
