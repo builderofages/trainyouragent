@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Truck, Clock, DollarSign, Users, CheckCircle, ArrowRight, Sparkles, Package, MapPin, Zap } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
 import { GlassCard } from "@/components/enhanced/GlassCard";
@@ -16,9 +16,72 @@ import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { expandedSolutions } from "@/data/solutionsExpanded";
+import { FloatingIsland } from "@/components/effects/FloatingIsland";
+import { ParallaxSection } from "@/components/effects/ParallaxSection";
+import { useIsMobile } from "@/hooks/use-mobile";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const LogisticsLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", company: "" });
+  const isMobile = useIsMobile();
+  const heroStatsRef = useRef<HTMLDivElement>(null);
+  const demoMessagesRef = useRef<HTMLDivElement>(null);
+  const roiStatsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (heroStatsRef.current) {
+        gsap.from(heroStatsRef.current.children, {
+          scrollTrigger: {
+            trigger: heroStatsRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          },
+          opacity: 0,
+          scale: 0.8,
+          stagger: 0.2,
+          duration: 0.8,
+          ease: "back.out(1.7)"
+        });
+      }
+
+      if (demoMessagesRef.current) {
+        gsap.from(".demo-message", {
+          scrollTrigger: {
+            trigger: demoMessagesRef.current,
+            start: "top 80%"
+          },
+          opacity: 0,
+          y: 30,
+          stagger: 0.3,
+          duration: 0.6,
+          ease: "power3.out"
+        });
+      }
+
+      if (roiStatsRef.current) {
+        gsap.from(roiStatsRef.current.children, {
+          scrollTrigger: {
+            trigger: roiStatsRef.current,
+            start: "top 80%"
+          },
+          opacity: 0,
+          scale: 0.9,
+          stagger: 0.15,
+          duration: 0.8,
+          ease: "power2.out"
+        });
+      }
+    });
+
+    return () => {
+      ctx.revert();
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
