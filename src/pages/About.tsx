@@ -294,29 +294,29 @@ const About = () => {
                   </div>
                 </GlassCard>
 
-                {/* Dan - Sales Director */}
+                {/* Daniel - Head of Sales */}
                 <GlassCard hover className="p-8">
                   <div className="flex items-start gap-6 mb-6">
                     <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
                       D
                     </div>
                     <div>
-                      <h4 className="text-2xl font-bold text-foreground mb-1">Dan</h4>
+                      <h4 className="text-2xl font-bold text-foreground mb-1">Daniel</h4>
                       <div className="flex items-center gap-2 text-primary mb-4">
                         <Briefcase className="w-5 h-5" />
-                        <p className="font-semibold">Sales Director</p>
+                        <p className="font-semibold">Head of Sales</p>
                       </div>
                     </div>
                   </div>
                   <div className="space-y-4 text-muted-foreground">
                     <p>
-                      Built and scaled his own company from $0 to $50K+/month in recurring revenue. Proven track record in lead generation, conversion optimization, and sales team leadership.
+                      With over 5 years of experience across diverse markets, Daniel brings deep expertise in sales strategy, communications, and scalable business systems. He personally built and deployed an automated revenue system that now generates $60K+ per month—proving his commitment to practical, results-driven solutions.
                     </p>
                     <p>
-                      Expert in consultative selling methodology—helping clients see AI as a business enabler, not a job eliminator. Specializes in showing businesses how AI creates bandwidth for strategic work while maintaining the human touch.
+                      Daniel specializes in economic market analysis, strategic sales methodology, and client psychology—understanding not just what businesses need, but why they need it and how to deliver it effectively. Now focused on AI integration across all industries, he's dedicated to helping businesses adopt intelligent automation through turn-key systems that work from day one.
                     </p>
                     <p>
-                      Leads our sales organization with a focus on long-term client relationships and genuine business transformation.
+                      His approach is consultative and partnership-focused: helping clients see AI not as a threat to their workforce, but as a strategic advantage that creates bandwidth for growth, improves customer experience, and unlocks revenue opportunities that were previously out of reach.
                     </p>
                   </div>
                 </GlassCard>
