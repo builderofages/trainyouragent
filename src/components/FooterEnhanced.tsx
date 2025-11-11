@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowUp, Twitter, Linkedin, Instagram } from "lucide-react";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
+import logo from "@/assets/logo.png";
 
 const Footer = () => {
   const footerSections = [
@@ -68,9 +69,9 @@ const Footer = () => {
                 <motion.div 
                   whileHover={{ scale: 1.1, rotate: 360 }}
                   transition={{ duration: 0.5 }}
-                  className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center shadow-glow-sm"
+                  className="w-10 h-10 rounded-lg overflow-hidden shadow-glow-sm"
                 >
-                  <span className="text-white font-black text-xl">T</span>
+                  <img src={logo} alt="TrainYourAgent Logo" className="w-full h-full object-contain" />
                 </motion.div>
                 <span className="text-xl font-black text-foreground">
                   TrainYourAgent

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { SearchModal } from "./SearchModal";
 import { ClickToCall } from "./ClickToCall";
 import { siteConfig } from "@/config/site";
+import logo from "@/assets/logo.png";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,8 +53,8 @@ const Header = () => {
         <nav className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <motion.a href="/" className="flex items-center gap-3 group" whileHover={{ scale: 1.05 }}>
-              <motion.div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center shadow-glow-sm" whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }}>
-                <span className="text-white font-black text-xl">T</span>
+              <motion.div className="w-10 h-10 rounded-lg overflow-hidden shadow-glow-sm" whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }}>
+                <img src={logo} alt="TrainYourAgent Logo" className="w-full h-full object-contain" />
               </motion.div>
               <span className="text-xl font-black text-gradient">TrainYourAgent</span>
             </motion.a>
