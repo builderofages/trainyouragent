@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Utensils, Clock, Users, CheckCircle, ArrowRight, Sparkles, Calendar, Phone, MessageSquare } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -34,6 +35,7 @@ gsap.registerPlugin(ScrollTrigger);
 const RestaurantsLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", restaurantName: "" });
   const isMobile = useIsMobile();
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
   const heroStatsRef = useRef<HTMLDivElement>(null);
   const demoMessagesRef = useRef<HTMLDivElement>(null);
   const roiStatsRef = useRef<HTMLDivElement>(null);
@@ -195,8 +197,8 @@ const RestaurantsLanding = () => {
                   size="lg"
                   className="text-lg px-8 h-14 gap-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
                   onClick={() => {
-                    conversions.demoBooked("restaurants");
-                    window.open(siteConfig.bookingUrl, '_blank');
+                    conversions.ctaClicked("restaurants_hero_cta");
+                    setLeadGateOpen(true);
                   }}
                 >
                   Get Your Free Strategy Session

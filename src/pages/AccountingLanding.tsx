@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Calculator, Clock, FileText, Users, TrendingUp, CheckCircle, ArrowRight, Sparkles, DollarSign, Calendar, Shield } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -35,6 +36,7 @@ const AccountingLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", firmSize: "" });
   const isMobile = useIsMobile();
   const [performanceTier, setPerformanceTier] = useState<'high' | 'medium' | 'low'>('high');
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
   const heroStatsRef = useRef<HTMLDivElement>(null);
   const demoMessagesRef = useRef<HTMLDivElement>(null);
   const roiStatsRef = useRef<HTMLDivElement>(null);
@@ -206,8 +208,8 @@ const AccountingLanding = () => {
                   size="lg"
                   className="text-lg px-8 h-14 gap-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
                   onClick={() => {
-                    conversions.demoBooked("accounting");
-                    window.open(siteConfig.bookingUrl, '_blank');
+                    conversions.ctaClicked("accounting_hero_cta");
+                    setLeadGateOpen(true);
                   }}
                 >
                   Get Your Free Strategy Session

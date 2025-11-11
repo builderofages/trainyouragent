@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Truck, Clock, DollarSign, Users, CheckCircle, ArrowRight, Sparkles, Package, MapPin, Zap } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -35,6 +36,7 @@ const LogisticsLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", company: "" });
   const isMobile = useIsMobile();
   const [performanceTier, setPerformanceTier] = useState<'high' | 'medium' | 'low'>('high');
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
   const heroStatsRef = useRef<HTMLDivElement>(null);
   const demoMessagesRef = useRef<HTMLDivElement>(null);
   const roiStatsRef = useRef<HTMLDivElement>(null);
@@ -205,8 +207,8 @@ const LogisticsLanding = () => {
                   size="lg"
                   className="text-lg px-8 h-14 gap-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600"
                   onClick={() => {
-                    conversions.demoBooked("logistics");
-                    window.open(siteConfig.bookingUrl, '_blank');
+                    conversions.ctaClicked("logistics_hero_cta");
+                    setLeadGateOpen(true);
                   }}
                 >
                   Get Your Free Strategy Session

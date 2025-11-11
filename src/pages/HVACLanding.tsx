@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Thermometer, Clock, TrendingUp, Calendar, Phone, Shield, DollarSign, ArrowRight, Sparkles, Wrench, AlertCircle } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -36,6 +37,7 @@ const HVACLanding = () => {
   const solution = expandedSolutions.hvac;
   const isMobile = useIsMobile();
   const [performanceTier, setPerformanceTier] = useState<'high' | 'medium' | 'low'>('high');
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
   const heroStatsRef = useRef<HTMLDivElement>(null);
   const demoMessagesRef = useRef<HTMLDivElement>(null);
   const roiStatsRef = useRef<HTMLDivElement>(null);
@@ -240,8 +242,8 @@ const HVACLanding = () => {
                   size="lg"
                   className="text-lg px-8 h-14 gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] transition-shadow"
                   onClick={() => {
-                    conversions.demoBooked("hvac");
-                    window.open(siteConfig.bookingUrl, '_blank');
+                    conversions.ctaClicked("hvac_hero_cta");
+                    setLeadGateOpen(true);
                   }}
                 >
                   Get Your Free Strategy Session
@@ -267,8 +269,8 @@ const HVACLanding = () => {
                   variant="outline"
                   className="text-lg px-8 h-14 glass-card"
                   onClick={() => {
-                    conversions.calculatorCompleted("hvac_roi", 0);
-                    document.getElementById('roi')?.scrollIntoView({ behavior: 'smooth' });
+                    conversions.ctaClicked("hvac_calculator_cta");
+                    setLeadGateOpen(true);
                   }}
                 >
                   Calculate Savings

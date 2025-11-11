@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Briefcase, Clock, DollarSign, Users, TrendingUp, CheckCircle, ArrowRight, Sparkles, Scale, FileText, Shield } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -34,6 +35,7 @@ gsap.registerPlugin(ScrollTrigger);
 const LegalLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", practiceArea: "" });
   const isMobile = useIsMobile();
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
   const heroStatsRef = useRef<HTMLDivElement>(null);
   const demoMessagesRef = useRef<HTMLDivElement>(null);
   const roiStatsRef = useRef<HTMLDivElement>(null);
@@ -195,8 +197,8 @@ const LegalLanding = () => {
                   size="lg"
                   className="text-lg px-8 h-14 gap-2 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600"
                   onClick={() => {
-                    conversions.demoBooked("legal");
-                    window.open(siteConfig.bookingUrl, '_blank');
+                    conversions.ctaClicked("legal_hero_cta");
+                    setLeadGateOpen(true);
                   }}
                 >
                   Get Your Free Strategy Session

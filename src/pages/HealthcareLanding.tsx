@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Heart, Clock, Users, CheckCircle, ArrowRight, Sparkles, Calendar, Phone, FileText } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -35,6 +36,7 @@ const HealthcareLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", practiceType: "" });
   const isMobile = useIsMobile();
   const [performanceTier, setPerformanceTier] = useState<'high' | 'medium' | 'low'>('high');
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
   const heroStatsRef = useRef<HTMLDivElement>(null);
   const demoMessagesRef = useRef<HTMLDivElement>(null);
   const roiStatsRef = useRef<HTMLDivElement>(null);
@@ -206,8 +208,8 @@ const HealthcareLanding = () => {
                   size="lg"
                   className="text-lg px-8 h-14 gap-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600"
                   onClick={() => {
-                    conversions.demoBooked("healthcare");
-                    window.open(siteConfig.bookingUrl, '_blank');
+                    conversions.ctaClicked("healthcare_hero_cta");
+                    setLeadGateOpen(true);
                   }}
                 >
                   Get Your Free Strategy Session

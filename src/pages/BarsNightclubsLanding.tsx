@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Music, Users, DollarSign, Calendar, Clock, TrendingUp, ArrowRight, Sparkles, Phone, Star, Shield } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -35,6 +36,7 @@ const BarsNightclubsLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", venue: "" });
   const solution = expandedSolutions.bars;
   const isMobile = useIsMobile();
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
   const heroStatsRef = useRef<HTMLDivElement>(null);
   const demoMessagesRef = useRef<HTMLDivElement>(null);
   const roiStatsRef = useRef<HTMLDivElement>(null);
@@ -233,8 +235,8 @@ const BarsNightclubsLanding = () => {
                   size="lg"
                   className="text-lg px-8 h-14 gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] transition-shadow"
                   onClick={() => {
-                    conversions.demoBooked("bars");
-                    window.open(siteConfig.bookingUrl, '_blank');
+                    conversions.ctaClicked("bars_hero_cta");
+                    setLeadGateOpen(true);
                   }}
                 >
                   Get Your Free Strategy Session

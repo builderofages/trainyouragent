@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Home, Clock, DollarSign, Users, TrendingUp, CheckCircle, ArrowRight, Sparkles, Calendar, Shield, Zap } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -34,6 +35,7 @@ gsap.registerPlugin(ScrollTrigger);
 const RoofingLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", serviceArea: "" });
   const isMobile = useIsMobile();
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
   const heroStatsRef = useRef<HTMLDivElement>(null);
   const demoMessagesRef = useRef<HTMLDivElement>(null);
   const roiStatsRef = useRef<HTMLDivElement>(null);
@@ -195,8 +197,8 @@ const RoofingLanding = () => {
                   size="lg"
                   className="text-lg px-8 h-14 gap-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
                   onClick={() => {
-                    conversions.demoBooked("roofing");
-                    window.open(siteConfig.bookingUrl, '_blank');
+                    conversions.ctaClicked("roofing_hero_cta");
+                    setLeadGateOpen(true);
                   }}
                 >
                   Get Your Free Strategy Session
