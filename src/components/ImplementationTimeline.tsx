@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
-import { Phone, Calendar, Brain, TestTube, Rocket, Clock, AlertCircle } from "lucide-react";
+import { Phone, Calendar, Brain, TestTube, Rocket, Clock, AlertCircle, Calculator } from "lucide-react";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { TimelineEstimator } from "@/components/TimelineEstimator";
 import { useState, useEffect } from "react";
 import { trackEvent } from "@/lib/tracking";
 
@@ -104,6 +106,7 @@ const complexityFactors = [
 const ImplementationTimeline = () => {
   const [expandedStage, setExpandedStage] = useState<string | null>(null);
   const [hasViewed, setHasViewed] = useState(false);
+  const [estimatorOpen, setEstimatorOpen] = useState(false);
 
   useEffect(() => {
     if (!hasViewed) {
@@ -137,6 +140,14 @@ const ImplementationTimeline = () => {
     }
   };
 
+  const handleEstimatorOpen = () => {
+    setEstimatorOpen(true);
+    trackEvent("timeline_estimator_opened", {
+      source: "implementation_timeline",
+      page: window.location.pathname,
+    });
+  };
+
   return (
     <section id="implementation-timeline" className="py-24 bg-gradient-to-b from-background to-muted/30 relative overflow-hidden">
       {/* Background decoration */}
@@ -168,7 +179,7 @@ const ImplementationTimeline = () => {
               <AlertCircle className="w-4 h-4 text-primary" />
               <span className="text-sm font-semibold text-foreground">Timeline varies based on:</span>
             </div>
-            <div className="flex flex-wrap gap-3 justify-center">
+            <div className="flex flex-wrap gap-3 justify-center mb-8">
               {complexityFactors.map((factor, index) => (
                 <motion.div
                   key={factor.label}
@@ -183,6 +194,23 @@ const ImplementationTimeline = () => {
                 </motion.div>
               ))}
             </div>
+
+            {/* Estimator CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="text-center"
+            >
+              <MagneticButton size="lg" onClick={handleEstimatorOpen} className="gap-2">
+                <Calculator className="w-5 h-5" />
+                Estimate Your Timeline
+              </MagneticButton>
+              <p className="text-sm text-muted-foreground mt-3">
+                Get a personalized timeline estimate in 60 seconds
+              </p>
+            </motion.div>
           </div>
         </motion.div>
 
@@ -398,6 +426,19 @@ const ImplementationTimeline = () => {
           </GlassCard>
         </motion.div>
       </div>
+
+      {/* Timeline Estimator Modal */}
+      <Dialog open={estimatorOpen} onOpenChange={setEstimatorOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Timeline Estimator</DialogTitle>
+            <DialogDescription>
+              Answer a few questions to get your personalized implementation timeline estimate
+            </DialogDescription>
+          </DialogHeader>
+          <TimelineEstimator onClose={() => setEstimatorOpen(false)} />
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };

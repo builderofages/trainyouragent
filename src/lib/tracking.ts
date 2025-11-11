@@ -105,6 +105,26 @@ export const conversions = {
       percent_watched: percentWatched 
     });
   },
+  
+  timelineEstimatorStarted: (source: string) => {
+    trackConversion('timeline_estimator_started', { 
+      source,
+      page: window.location.pathname 
+    });
+  },
+  
+  timelineEstimatorCompleted: (data: {
+    estimated_days_min: number;
+    estimated_days_max: number;
+    complexity: string;
+    services_days: number;
+    integrations_days: number;
+    terminology_days: number;
+    pricing_days: number;
+    feedback_days: number;
+  }) => {
+    trackConversion('timeline_estimator_completed', data);
+  },
 };
 
 // Alias for trackConversion for consistency

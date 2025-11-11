@@ -8,17 +8,49 @@ import {
 import { HelpCircle, ExternalLink, Calendar } from "lucide-react";
 import { faqs, faqCategories, getFAQsByCategory } from "@/data/faqs";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { trackEvent } from "@/lib/tracking";
+
+const generateFAQSchema = (faqList: ReturnType<typeof getFAQsByCategory>) => {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqList.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer.replace(/<[^>]*>/g, '') // Strip HTML tags for schema
+      }
+    }))
+  };
+};
 
 const FAQ = () => {
   const [selectedCategory, setSelectedCategory] = useState("Getting Started");
   const displayFaqs = getFAQsByCategory(selectedCategory);
 
+  // Update schema whenever displayed FAQs change
+  useEffect(() => {
+    const schemaScript = document.getElementById('faq-schema');
+    if (schemaScript) {
+      schemaScript.textContent = JSON.stringify(generateFAQSchema(displayFaqs));
+    }
+  }, [displayFaqs]);
+
   return (
-    <section className="py-24 bg-muted/30 relative overflow-hidden" id="faq">
+    <section className="py-24 bg-muted/30 relative overflow-hidden" id="faq" itemScope itemType="https://schema.org/FAQPage">
+      {/* JSON-LD Schema for SEO */}
+      <script 
+        id="faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateFAQSchema(displayFaqs))
+        }}
+      />
+      
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-mesh opacity-50" />
       
