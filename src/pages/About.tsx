@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Zap, Users, Target, TrendingUp, Shield, CheckCircle, Wrench, Scale, UtensilsCrossed, Heart, Briefcase, LineChart } from "lucide-react";
+import { Zap, Users, Target, TrendingUp, Shield, CheckCircle, Wrench, Scale, UtensilsCrossed, Heart, Briefcase, LineChart, Code2, Headset } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
 import { GlassCard } from "@/components/enhanced/GlassCard";
@@ -225,90 +225,197 @@ const About = () => {
             </div>
           </GlassCard>
 
-          {/* Team Section */}
-          <GlassCard className="p-12 mb-12">
-            <h2 className="text-3xl font-bold mb-6">Meet the Team</h2>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              We're a team of business strategists, AI specialists, and automation experts united by one mission: helping businesses capture every opportunity without overwhelming their teams. Our diverse backgrounds span enterprise sales operations, business scaling, and cutting-edge AI implementation.
-            </p>
-            
-            <div className="space-y-8">
-              {/* Alexander - Founder */}
-              <div className="flex items-start gap-6">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-3xl font-bold flex-shrink-0">
-                  A
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <h3 className="text-2xl font-bold">Alexander</h3>
-                    <Briefcase className="w-5 h-5 text-primary" />
-                  </div>
-                  <p className="text-sm font-semibold text-primary mb-3">Founder & CEO</p>
-                  <div className="text-muted-foreground leading-relaxed space-y-2">
-                    <p>
-                      Former Head Executive at a major SMMA where he led 10+ departments and built high-performing teams of over 1,000 employees across multiple successful ventures. During his tenure, Alexander helped scale brands to achieve millions in sales and generate hundreds of millions of views across digital channels.
-                    </p>
-                    <p>
-                      As an early AI adopter and ChatGPT beta tester since initial release, Alexander has hands-on experience with every major LLM (OpenAI, Anthropic, Google, Meta) and has been deeply immersed in AI research and application since its commercial emergence. While scaling multiple companies, he identified a critical gap in business automation—businesses were losing massive revenue to missed opportunities while their teams were buried in repetitive tasks.
-                    </p>
-                    <p className="font-semibold text-foreground">
-                      His philosophy: AI should be a force multiplier for employee productivity and job satisfaction, not a replacement. TrainYourAgent was built to prove that businesses can scale revenue without scaling headcount proportionally—freeing teams to focus on high-value work that actually moves the needle.
-                    </p>
-                  </div>
-                </div>
-              </div>
+          {/* Meet the Team */}
+          <div className="mb-12">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+                Meet the Team
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                A collective of experienced professionals united by a mission: showing businesses how AI elevates employees instead of replacing them.
+              </p>
+            </div>
 
-              {/* Jess - CRM & Operations Lead */}
-              <div className="flex items-start gap-6">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-white text-3xl font-bold flex-shrink-0">
-                  J
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <h3 className="text-2xl font-bold">Jess</h3>
-                    <Users className="w-5 h-5 text-primary" />
+            {/* Leadership Team */}
+            <div className="mb-20">
+              <h3 className="text-3xl font-bold text-foreground mb-12 text-center">Leadership Team</h3>
+              <div className="grid md:grid-cols-2 gap-12">
+                {/* Alexander - Founder & CEO */}
+                <GlassCard hover className="p-8">
+                  <div className="flex items-start gap-6 mb-6">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                      A
+                    </div>
+                    <div>
+                      <h4 className="text-2xl font-bold text-foreground mb-1">Alexander</h4>
+                      <div className="flex items-center gap-2 text-primary mb-4">
+                        <Briefcase className="w-5 h-5" />
+                        <p className="font-semibold">Founder & CEO</p>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-sm font-semibold text-primary mb-3">CRM & Operations Lead</p>
-                  <div className="text-muted-foreground leading-relaxed space-y-2">
+                  <div className="space-y-4 text-muted-foreground">
                     <p>
-                      5+ years at a Fortune 500 communications company generating billions in annual revenue, where she specialized in sales operations, customer account management, and retention strategy. Jess brings enterprise-level sales methodology to small business automation, ensuring every lead is properly qualified, nurtured, and converted.
+                      Led 10+ departments as Head Executive at a major SMMA, building and scaling teams of 1,000+ employees across multiple successful ventures. Through this journey, helped lead brands to achieve millions in sales and generate hundreds of millions of views.
                     </p>
                     <p>
-                      Expert in CRM optimization, lead scoring systems, conversion funnel analysis, and customer lifecycle management. She architects the backend systems that ensure AI-captured leads seamlessly flow into sales pipelines with full context and proper prioritization.
+                      Early AI adopter and ChatGPT beta tester since initial release. Deep expertise across all major LLMs (OpenAI, Anthropic, Google, Meta). Identified critical gap in business automation while scaling multiple companies.
                     </p>
                     <p>
-                      Beyond operations, Jess serves as Creative Director for brand assets, UI/UX design, and visual identity—ensuring TrainYourAgent's client-facing materials reflect the premium, professional experience our clients expect.
+                      Recognized AI as a force multiplier for employee productivity, not a replacement—and built TrainYourAgent to prove it.
                     </p>
                   </div>
-                </div>
-              </div>
+                </GlassCard>
 
-              {/* Sales & Growth Team */}
-              <div className="flex items-start gap-6">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white flex-shrink-0">
-                  <LineChart className="w-12 h-12" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <h3 className="text-2xl font-bold">Sales & Growth Team</h3>
-                    <TrendingUp className="w-5 h-5 text-primary" />
+                {/* Jess - CRM & Operations Lead */}
+                <GlassCard hover className="p-8">
+                  <div className="flex items-start gap-6 mb-6">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                      J
+                    </div>
+                    <div>
+                      <h4 className="text-2xl font-bold text-foreground mb-1">Jess</h4>
+                      <div className="flex items-center gap-2 text-primary mb-4">
+                        <LineChart className="w-5 h-5" />
+                        <p className="font-semibold">CRM & Operations Lead</p>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-sm font-semibold text-primary mb-3">Revenue Architects & AI Evangelists</p>
-                  <div className="text-muted-foreground leading-relaxed space-y-2">
+                  <div className="space-y-4 text-muted-foreground">
                     <p>
-                      Our sales leadership has scaled their own companies from $0 to $50K+/month in recurring revenue, leading high-performing teams of 5+ members and systematically optimizing every stage of the sales funnel. They've generated tens of thousands in monthly sales and understand what it takes to build predictable, repeatable revenue systems.
+                      5+ years at a Fortune 500 communications company generating billions in annual revenue. Specialized in sales operations, customer account management, and retention strategies.
                     </p>
                     <p>
-                      More than just salespeople, they're evangelists for AI-powered business transformation and employee elevation. Their approach is consultative, not transactional—showing businesses exactly how AI optimizes workflows without eliminating jobs, how it creates bandwidth for strategic work, and how it enables teams to deliver more value without burning out.
+                      Expert in CRM optimization, lead scoring, and conversion funnel analysis. Also serves as Creative Director for brand assets, UI/UX design, and visual identity.
                     </p>
-                    <p className="font-semibold text-foreground">
-                      Track record: Helping businesses 2-5x productivity through intelligent automation while empowering employees to transition from repetitive tasks to high-impact, creative, relationship-driven work that drives real business growth.
+                    <p>
+                      Brings enterprise-level sales methodology to small business automation, ensuring every client gets Fortune 500-caliber processes.
                     </p>
                   </div>
-                </div>
+                </GlassCard>
+
+                {/* Dan - Sales Director */}
+                <GlassCard hover className="p-8">
+                  <div className="flex items-start gap-6 mb-6">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                      D
+                    </div>
+                    <div>
+                      <h4 className="text-2xl font-bold text-foreground mb-1">Dan</h4>
+                      <div className="flex items-center gap-2 text-primary mb-4">
+                        <Briefcase className="w-5 h-5" />
+                        <p className="font-semibold">Sales Director</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-4 text-muted-foreground">
+                    <p>
+                      Built and scaled his own company from $0 to $50K+/month in recurring revenue. Proven track record in lead generation, conversion optimization, and sales team leadership.
+                    </p>
+                    <p>
+                      Expert in consultative selling methodology—helping clients see AI as a business enabler, not a job eliminator. Specializes in showing businesses how AI creates bandwidth for strategic work while maintaining the human touch.
+                    </p>
+                    <p>
+                      Leads our sales organization with a focus on long-term client relationships and genuine business transformation.
+                    </p>
+                  </div>
+                </GlassCard>
+
+                {/* David - Head of Development */}
+                <GlassCard hover className="p-8">
+                  <div className="flex items-start gap-6 mb-6">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                      <Code2 className="w-10 h-10" />
+                    </div>
+                    <div>
+                      <h4 className="text-2xl font-bold text-foreground mb-1">David</h4>
+                      <div className="flex items-center gap-2 text-primary mb-4">
+                        <Code2 className="w-5 h-5" />
+                        <p className="font-semibold">Head of Development</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-4 text-muted-foreground">
+                    <p>
+                      10+ years of development experience across multiple programming languages, frameworks, and tech stacks. Built games, enterprise websites, SaaS platforms, and AI-powered applications from concept to deployment.
+                    </p>
+                    <p>
+                      Deep expertise in AI/ML integration, prompt engineering, and LLM orchestration systems. Shares Alexander's passion for using AI to elevate human capabilities rather than replace them.
+                    </p>
+                    <p>
+                      Leads a team of 5 talented developers who bring diverse technical backgrounds and share his vision for ethical AI implementation. Ensures every solution is built with security, scalability, and reliability at its core.
+                    </p>
+                  </div>
+                </GlassCard>
               </div>
             </div>
-          </GlassCard>
+
+            {/* Core Team */}
+            <div>
+              <div className="text-center mb-12">
+                <h3 className="text-3xl font-bold text-foreground mb-4">Our Core Team</h3>
+                <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                  Every team member brings specialized expertise and is hired for proven experience in their field. We believe in building a team of A-players who share our mission of elevating businesses through intelligent automation.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-8">
+                {/* Sales Team */}
+                <GlassCard hover className="p-8">
+                  <div className="flex justify-center mb-6">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                      <Users className="w-8 h-8 text-white" />
+                    </div>
+                  </div>
+                  <h4 className="text-xl font-bold text-foreground mb-4 text-center">Sales Team (5 Members)</h4>
+                  <div className="space-y-4 text-muted-foreground text-sm">
+                    <p>
+                      Our sales team brings extensive experience from various industries including SaaS, B2B services, and enterprise solutions. Each member has a proven track record in consultative selling, customer relationship management, and deal closure.
+                    </p>
+                    <p>
+                      Led by Dan, they focus on understanding each client's unique business challenges and crafting personalized AI solutions that drive measurable results. Their approach is educational and partnership-focused.
+                    </p>
+                  </div>
+                </GlassCard>
+
+                {/* Development Team */}
+                <GlassCard hover className="p-8">
+                  <div className="flex justify-center mb-6">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center">
+                      <Code2 className="w-8 h-8 text-white" />
+                    </div>
+                  </div>
+                  <h4 className="text-xl font-bold text-foreground mb-4 text-center">Development Team (5 Members)</h4>
+                  <div className="space-y-4 text-muted-foreground text-sm">
+                    <p>
+                      Under David's leadership, our development team brings diverse technical backgrounds spanning web development, mobile apps, game development, and AI/ML systems. Each developer has experience building production-grade applications.
+                    </p>
+                    <p>
+                      They handle everything from custom AI training and integration to platform optimization and feature development—ensuring TrainYourAgent stays at the cutting edge of conversational AI technology.
+                    </p>
+                  </div>
+                </GlassCard>
+
+                {/* Operations & Support */}
+                <GlassCard hover className="p-8">
+                  <div className="flex justify-center mb-6">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+                      <Headset className="w-8 h-8 text-white" />
+                    </div>
+                  </div>
+                  <h4 className="text-xl font-bold text-foreground mb-4 text-center">Operations & Support Staff</h4>
+                  <div className="space-y-4 text-muted-foreground text-sm">
+                    <p>
+                      Our operations and support team members are carefully selected for their experience in customer success, project management, technical support, and business operations. Each brings expertise from similar industries.
+                    </p>
+                    <p>
+                      They ensure seamless onboarding, responsive support, and ongoing optimization for every client. From implementation coordinators to customer success managers, every team member is empowered to deliver exceptional service.
+                    </p>
+                  </div>
+                </GlassCard>
+              </div>
+            </div>
+          </div>
 
           {/* Proof Points */}
           <div className="grid md:grid-cols-3 gap-8 mb-12">
