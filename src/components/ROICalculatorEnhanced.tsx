@@ -175,18 +175,20 @@ const ROICalculatorEnhanced = () => {
     doc.text('Implementation Timeline', 20, 244);
     
     doc.setFontSize(11);
-    doc.text('Week 1: Setup and configuration', 30, 254);
-    doc.text('Week 2: Training and testing', 30, 262);
-    doc.text('Week 3-4: Full deployment and optimization', 30, 270);
+    doc.text('Discovery Call: Day 1 - Understanding your business and requirements', 30, 254);
+    doc.text('Planning Call: Day 2-3 - Review custom timeline and training plan', 30, 262);
+    doc.text('Agent Training: Week 1-2 - Custom configuration for your services', 30, 270);
+    doc.text('Testing & Refinement: Week 2-3 - Quality assurance before launch', 30, 278);
+    doc.text('Go Live: Week 3+ - Full deployment with ongoing optimization', 30, 286);
     
     // Next steps
     doc.setFontSize(16);
-    doc.text('Next Steps', 20, 290);
+    doc.text('Next Steps', 20, 306);
     
     doc.setFontSize(11);
-    doc.text('1. Book a free strategy call: calendly.com/trainyouragent', 30, 300);
-    doc.text('2. Try our live voice demo: trainyouragentai.com', 30, 308);
-    doc.text('3. Questions? Email: sales@trainyouragent.com', 30, 316);
+    doc.text('1. Book a free discovery call: calendly.com/trainyouragent', 30, 316);
+    doc.text('2. Try our live voice demo: trainyouragentai.com', 30, 324);
+    doc.text('3. Questions? Email: sales@trainyouragent.com', 30, 332);
     
     // Save PDF
     doc.save(`ROI-Analysis-${industry}-${Date.now()}.pdf`);

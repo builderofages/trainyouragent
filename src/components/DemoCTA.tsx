@@ -39,10 +39,10 @@ export const DemoCTA = ({
             <CheckCircle className="w-8 h-8 text-white" />
           </motion.div>
           <h3 className="text-2xl font-bold mb-2 text-gradient-premium">
-            You've Experienced the Power of AI
+            Ready to Transform Your Business?
           </h3>
           <p className="text-muted-foreground">
-            Ready to see how this can transform your business?
+            Book a discovery call to discuss your specific needs and custom timeline
           </p>
         </div>
 
@@ -53,7 +53,7 @@ export const DemoCTA = ({
             className="gap-2 shadow-blue hover:shadow-glow group"
           >
             <Calendar className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-            Book Your Demo
+            Book Discovery Call
           </MagneticButton>
 
           <MagneticButton

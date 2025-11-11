@@ -1,6 +1,8 @@
+import { LucideIcon, Flame, Martini, Calculator, UtensilsCrossed, Home, Scale, Heart, Truck } from "lucide-react";
+
 export interface IndustryConfig {
   name: string;
-  icon: string;
+  icon: LucideIcon;
   firstMessage: string;
   systemPrompt: string;
   suggestedPrompts: {
@@ -12,7 +14,7 @@ export interface IndustryConfig {
 export const industryConfigs: Record<string, IndustryConfig> = {
   hvac: {
     name: "HVAC Emergency Mode",
-    icon: "🔥",
+    icon: Flame,
     firstMessage: "Hi! I'm your HVAC AI assistant. I can help with emergency repairs, maintenance scheduling, and service quotes. What can I help you with today?",
     systemPrompt: `You are an AI assistant for an HVAC company. You handle:
 - Emergency furnace/AC repairs (24/7)
@@ -46,7 +48,7 @@ Be empathetic with emergencies. Keep responses under 2 sentences.`,
   
   bars: {
     name: "Bar VIP Booking Mode",
-    icon: "🍸",
+    icon: Martini,
     firstMessage: "Hey! I'm your VIP booking assistant. I can reserve tables, handle bottle service, and get you on the guest list. What are you looking for tonight?",
     systemPrompt: `You are an AI assistant for an upscale bar/nightclub. You handle:
 - VIP table reservations
@@ -80,7 +82,7 @@ Be enthusiastic about making their night amazing. Keep it conversational.`,
 
   accounting: {
     name: "Accounting Consultation Mode",
-    icon: "💼",
+    icon: Calculator,
     firstMessage: "Hello! I'm your accounting AI assistant. I can help with tax questions, bookkeeping services, and financial planning. How can I assist your business today?",
     systemPrompt: `You are an AI assistant for an accounting firm. You handle:
 - Tax preparation inquiries
@@ -114,7 +116,7 @@ Demonstrate expertise without overwhelming. Keep responses clear and concise.`,
 
   restaurants: {
     name: "Restaurant Reservation Mode",
-    icon: "🍽️",
+    icon: UtensilsCrossed,
     firstMessage: "Welcome! I'm your reservation assistant. I can book tables, handle special requests, and answer menu questions. How can I help you today?",
     systemPrompt: `You are an AI assistant for a restaurant. You handle:
 - Table reservations
@@ -148,7 +150,7 @@ Be enthusiastic about their dining experience. Keep it friendly.`,
 
   roofing: {
     name: "Roofing Emergency Mode",
-    icon: "🏠",
+    icon: Home,
     firstMessage: "Hi! I'm your roofing AI assistant. I handle emergency repairs, inspections, and full roof replacements. What brings you here today?",
     systemPrompt: `You are an AI assistant for a roofing company. You handle:
 - Emergency leak repairs
@@ -182,7 +184,7 @@ Show urgency for emergencies. Be reassuring about insurance claims.`,
 
   legal: {
     name: "Legal Consultation Mode",
-    icon: "⚖️",
+    icon: Scale,
     firstMessage: "Hello, I'm your legal AI assistant. I can help schedule consultations, answer general questions, and route you to the right attorney. How can I assist you?",
     systemPrompt: `You are an AI assistant for a law firm. You handle:
 - Consultation scheduling
@@ -216,7 +218,7 @@ Be empathetic and professional. Keep responses measured.`,
 
   healthcare: {
     name: "Healthcare Appointment Mode",
-    icon: "🏥",
+    icon: Heart,
     firstMessage: "Hello! I'm your healthcare scheduling assistant. I can book appointments, answer insurance questions, and help with patient forms. How can I help you today?",
     systemPrompt: `You are an AI assistant for a healthcare practice. You handle:
 - Appointment scheduling
@@ -250,7 +252,7 @@ Be compassionate and efficient. Keep responses clear.`,
 
   logistics: {
     name: "Logistics Dispatch Mode",
-    icon: "🚚",
+    icon: Truck,
     firstMessage: "Hi! I'm your logistics AI assistant. I can help with shipping quotes, tracking, and dispatch scheduling. What do you need to ship today?",
     systemPrompt: `You are an AI assistant for a logistics company. You handle:
 - Shipping quotes

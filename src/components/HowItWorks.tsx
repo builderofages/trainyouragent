@@ -16,9 +16,9 @@ const steps = [
   {
     number: "02",
     icon: Brain,
-    title: "Train Your Agent",
-    description: "Our team works with you to train your AI agent on your services, pricing, and customer qualification criteria. We handle all the technical complexity.",
-    duration: "24-48 hours",
+    title: "Discovery & Planning Call",
+    description: "We schedule a discovery call to understand your business needs, then create a custom implementation timeline. Setup typically takes 3-7 days depending on complexity and customization requirements.",
+    duration: "3-7 days",
     color: "from-purple-500 to-pink-500"
   },
   {

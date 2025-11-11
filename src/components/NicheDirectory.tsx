@@ -13,7 +13,7 @@ const niches = [
     title: "HVAC AI Agents",
     description: "Transform HVAC operations with intelligent scheduling, customer communication, and predictive maintenance.",
     color: "from-blue-500 to-blue-600",
-    stats: { users: "2.5K", rating: 4.9 },
+    stats: { metric: "85% capture rate", source: "Industry Benchmark" },
     tags: ["Lead Gen", "Scheduling", "Analytics"],
     available: true,
     link: "/niche/hvac",
@@ -24,7 +24,7 @@ const niches = [
     title: "Accounting AI Agents",
     description: "Automate bookkeeping, expense tracking, and financial forecasting with precision AI assistance.",
     color: "from-emerald-500 to-emerald-600",
-    stats: { users: "1.8K", rating: 4.8 },
+    stats: { metric: "60% miss after-hours calls", source: "CallRail Study" },
     tags: ["Automation", "Reporting", "Compliance"],
     available: false,
   },
@@ -34,7 +34,7 @@ const niches = [
     title: "Roofing AI Agents",
     description: "Streamline project management, customer quotes, and crew coordination for roofing businesses.",
     color: "from-orange-500 to-orange-600",
-    stats: { users: "Coming Soon", rating: 0 },
+    stats: { metric: "62% never call back", source: "Harvard Business Review" },
     tags: ["Project Mgmt", "Quotes", "Crew Ops"],
     available: false,
   },
@@ -186,18 +186,14 @@ const NicheDirectory = () => {
                     </div>
 
                     {/* Stats */}
-                    {niche.available && (
-                      <div className="flex items-center gap-4 mb-6 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <Users className="w-4 h-4" />
-                          <span>{niche.stats.users}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                          <span>{niche.stats.rating}</span>
-                        </div>
-                      </div>
-                    )}
+                    <div className="mb-6">
+                      <p className="text-sm font-semibold text-foreground mb-1">
+                        {niche.stats.metric}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Source: {niche.stats.source}
+                      </p>
+                    </div>
 
                     {/* CTA Button */}
                     <Button

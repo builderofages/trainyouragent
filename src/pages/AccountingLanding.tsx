@@ -98,7 +98,7 @@ const AccountingLanding = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Thanks! We'll be in touch within 24 hours.");
+    toast.success("Thanks! We'll schedule a discovery call to discuss your needs and timeline.");
     window.open(siteConfig.bookingUrl, '_blank');
   };
 
@@ -448,8 +448,8 @@ const AccountingLanding = () => {
           >
             <GlassCard className="p-12">
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold mb-4">Get Your AI Assistant in 24 Hours</h2>
-                <p className="text-muted-foreground">No credit card required. 30-day money-back guarantee.</p>
+                <h2 className="text-3xl font-bold mb-4">Get Started with Your AI Assistant</h2>
+                <p className="text-muted-foreground">Book a discovery call. Custom implementation timeline: 3-7 days.</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">

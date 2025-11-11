@@ -113,12 +113,17 @@ export const VoiceAgentDemo = () => {
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="bg-background/95 backdrop-blur-xl">
-            {Object.entries(industryConfigs).map(([key, config]) => (
-              <SelectItem key={key} value={key} className="text-base cursor-pointer">
-                <span className="mr-2">{config.icon}</span>
-                {config.name}
-              </SelectItem>
-            ))}
+            {Object.entries(industryConfigs).map(([key, config]) => {
+              const Icon = config.icon;
+              return (
+                <SelectItem key={key} value={key} className="text-base cursor-pointer">
+                  <div className="flex items-center gap-2">
+                    <Icon className="w-4 h-4 text-primary" />
+                    {config.name}
+                  </div>
+                </SelectItem>
+              );
+            })}
           </SelectContent>
         </Select>
       </motion.div>

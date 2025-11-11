@@ -18,7 +18,7 @@ const niches = [
     title: "HVAC Specialists",
     description: "Automate appointments, quotes, and emergency service coordination",
     color: "from-blue-500 to-cyan-500",
-    stats: { users: "2.5K+", satisfaction: "98%" },
+    stats: { metric: "85% capture rate", source: "Industry Benchmark" },
     tags: ["Lead Gen", "Scheduling", "24/7"],
     customLink: "/niche/hvac",
   },
@@ -28,7 +28,7 @@ const niches = [
     title: "Accounting Firms",
     description: "Streamline client onboarding, document collection, and consultation booking",
     color: "from-green-500 to-emerald-500",
-    stats: { users: "1.8K+", satisfaction: "97%" },
+    stats: { metric: "60% miss after-hours calls", source: "CallRail Study" },
     tags: ["Onboarding", "Documents", "Scheduling"],
     customLink: "/accounting",
   },
@@ -38,7 +38,7 @@ const niches = [
     title: "Roofing Contractors",
     description: "Qualify leads, schedule inspections, and provide instant estimates",
     color: "from-orange-500 to-red-500",
-    stats: { users: "1.2K+", satisfaction: "96%" },
+    stats: { metric: "62% never call back", source: "Harvard Business Review" },
     tags: ["Estimates", "Inspections", "Lead Qual"],
     customLink: "/roofing",
   },
@@ -48,7 +48,7 @@ const niches = [
     title: "Law Firms",
     description: "Screen potential clients, gather case details, schedule consultations",
     color: "from-purple-500 to-indigo-500",
-    stats: { users: "950+", satisfaction: "97%" },
+    stats: { metric: "42% abandon phone queue", source: "Legal Industry Report" },
     tags: ["Screening", "Intake", "Booking"],
     customLink: "/legal",
   },
@@ -58,7 +58,7 @@ const niches = [
     title: "Healthcare Practices",
     description: "Patient intake, appointment management, and follow-up automation",
     color: "from-pink-500 to-rose-500",
-    stats: { users: "1.1K+", satisfaction: "98%" },
+    stats: { metric: "30% no-show appointments", source: "Healthcare Analytics" },
     tags: ["Intake", "Scheduling", "Follow-ups"],
     customLink: "/healthcare",
   },
@@ -68,7 +68,7 @@ const niches = [
     title: "Logistics & Shipping",
     description: "Quote generation, shipment tracking, and customer service automation",
     color: "from-yellow-500 to-amber-500",
-    stats: { users: "820+", satisfaction: "96%" },
+    stats: { metric: "48-hour quote delays", source: "Logistics Benchmark" },
     tags: ["Quotes", "Tracking", "Support"],
     customLink: "/logistics",
   },
@@ -78,7 +78,7 @@ const niches = [
     title: "Restaurants & Catering",
     description: "Reservation management, catering inquiries, and menu assistance",
     color: "from-red-500 to-pink-500",
-    stats: { users: "650+", satisfaction: "95%" },
+    stats: { metric: "75% prefer phone bookings", source: "Restaurant Industry Study" },
     tags: ["Reservations", "Catering", "Menu"],
     customLink: "/restaurants",
   },
@@ -165,20 +165,13 @@ const NicheCard = ({ niche, index }: { niche: any; index: number }) => {
         </div>
 
         {/* Stats */}
-        <div className="flex justify-between items-center pt-4 border-t border-border/50 relative z-10">
+        <div className="pt-4 border-t border-border/50 relative z-10">
           <motion.div 
-            className="text-xs text-muted-foreground"
-            whileHover={{ scale: 1.05 }}
+            className="text-xs"
+            whileHover={{ scale: 1.02 }}
           >
-            <span className="font-bold text-lg text-gradient-premium">{niche.stats.users}</span>
-            <span className="block text-[10px]">users</span>
-          </motion.div>
-          <motion.div 
-            className="text-xs text-muted-foreground text-right"
-            whileHover={{ scale: 1.05 }}
-          >
-            <span className="font-bold text-lg text-gradient-premium">{niche.stats.satisfaction}</span>
-            <span className="block text-[10px]">satisfaction</span>
+            <span className="font-bold text-sm text-foreground block mb-1">{niche.stats.metric}</span>
+            <span className="text-[10px] text-muted-foreground">Source: {niche.stats.source}</span>
           </motion.div>
         </div>
 

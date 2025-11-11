@@ -87,7 +87,7 @@ const LegalLanding = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Thanks! We'll be in touch within 24 hours.");
+    toast.success("Thanks! We'll schedule a discovery call to discuss your needs and timeline.");
     window.open(siteConfig.bookingUrl, '_blank');
   };
 

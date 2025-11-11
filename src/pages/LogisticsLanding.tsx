@@ -98,7 +98,7 @@ const LogisticsLanding = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Thanks! We'll be in touch within 24 hours.");
+    toast.success("Thanks! We'll schedule a discovery call to discuss your needs and timeline.");
     window.open(siteConfig.bookingUrl, '_blank');
   };
 
@@ -508,7 +508,7 @@ const LogisticsLanding = () => {
                 </MagneticButton>
 
                 <p className="text-xs text-center text-muted-foreground">
-                  No credit card required. Setup in 48 hours.
+                  Book a discovery call. Implementation timeline: 3-7 days based on complexity.
                 </p>
               </form>
             </GlassCard>

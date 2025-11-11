@@ -87,7 +87,7 @@ const RoofingLanding = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Thanks! We'll be in touch within 24 hours.");
+    toast.success("Thanks! We'll schedule a discovery call to discuss your needs and timeline.");
     window.open(siteConfig.bookingUrl, '_blank');
   };
 
@@ -446,7 +446,7 @@ const RoofingLanding = () => {
             <GlassCard className="p-12">
               <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold mb-4">Start Capturing More Leads Today</h2>
-                <p className="text-muted-foreground">Setup takes 24 hours. Cancel anytime. No contracts.</p>
+                <p className="text-muted-foreground">Book discovery call. Implementation: 3-7 days based on needs.</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">

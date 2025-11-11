@@ -106,7 +106,7 @@ const HVACLanding = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     conversions.formSubmitted("hvac_contact", "hvac");
-    toast.success("Thanks! We'll be in touch within 24 hours to discuss your HVAC business needs.");
+    toast.success("Thanks! We'll schedule a discovery call to discuss your HVAC business needs and timeline.");
     window.open(siteConfig.bookingUrl, '_blank');
   };
 
@@ -470,7 +470,7 @@ const HVACLanding = () => {
             <GlassCard className="p-12">
               <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold mb-4">Ready to Capture Every Lead?</h2>
-                <p className="text-muted-foreground">Get a custom quote for your HVAC business in 24 hours</p>
+                <p className="text-muted-foreground">Book discovery call - Implementation: 3-7 days for your business</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -536,7 +536,7 @@ const HVACLanding = () => {
                 </MagneticButton>
 
                 <p className="text-xs text-center text-muted-foreground">
-                  We'll contact you within 24 hours to discuss your business's specific needs
+                  We'll schedule a discovery call to discuss your business's specific needs and timeline
                 </p>
               </form>
             </GlassCard>
