@@ -20,6 +20,7 @@ import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { expandedSolutions } from "@/data/solutionsExpanded";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
+import ImplementationTimeline from "@/components/ImplementationTimeline";
 import { useIsMobile } from "@/hooks/use-mobile";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -384,6 +385,9 @@ const RestaurantsLanding = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Implementation Timeline */}
+      <ImplementationTimeline industryId="restaurants" />
 
       {/* Urgency Section */}
       <UrgencySection industry="restaurants" costPerHour={150} spotsRemaining={4} />

@@ -21,6 +21,7 @@ import { expandedSolutions } from "@/data/solutionsExpanded";
 import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
+import ImplementationTimeline from "@/components/ImplementationTimeline";
 import { useIsMobile } from "@/hooks/use-mobile";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -421,6 +422,9 @@ const BarsNightclubsLanding = () => {
           </FloatingIsland>
         </div>
       </section>
+
+      {/* Implementation Timeline */}
+      <ImplementationTimeline industryId="bars" />
 
       {/* Research Data */}
       <IndustryResearchData 

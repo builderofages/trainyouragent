@@ -103,7 +103,11 @@ const complexityFactors = [
   { label: "Team Availability", description: "Response time for feedback" }
 ];
 
-const ImplementationTimeline = () => {
+interface ImplementationTimelineProps {
+  industryId?: string;
+}
+
+const ImplementationTimeline = ({ industryId }: ImplementationTimelineProps = {}) => {
   const [expandedStage, setExpandedStage] = useState<string | null>(null);
   const [hasViewed, setHasViewed] = useState(false);
   const [estimatorOpen, setEstimatorOpen] = useState(false);
@@ -436,7 +440,7 @@ const ImplementationTimeline = () => {
               Answer a few questions to get your personalized implementation timeline estimate
             </DialogDescription>
           </DialogHeader>
-          <TimelineEstimator onClose={() => setEstimatorOpen(false)} />
+          <TimelineEstimator onClose={() => setEstimatorOpen(false)} industryId={industryId} />
         </DialogContent>
       </Dialog>
     </section>

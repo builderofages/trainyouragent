@@ -224,16 +224,29 @@ const allQuestions: Question[] = [industryQuestion, ...serviceQuestions];
 
 interface TimelineEstimatorProps {
   onClose?: () => void;
+  industryId?: string;
 }
 
-export const TimelineEstimator = ({ onClose }: TimelineEstimatorProps) => {
+export const TimelineEstimator = ({ onClose, industryId }: TimelineEstimatorProps) => {
   const [step, setStep] = useState<"welcome" | "questions" | "results">("welcome");
   const [currentQuestion, setCurrentQuestion] = useState(() => {
+    // Check if industryId prop was passed (from landing page)
+    if (industryId && industryBaselines.find(ind => ind.id === industryId)) {
+      return 1; // Skip industry question
+    }
+    
+    // Otherwise, check URL parameter
     const urlParams = new URLSearchParams(window.location.search);
     const industryParam = urlParams.get('industry');
     return industryParam && industryBaselines.find(ind => ind.id === industryParam) ? 1 : 0;
   });
   const [answers, setAnswers] = useState<Partial<EstimatorAnswers>>(() => {
+    // Check if industryId prop was passed (from landing page)
+    if (industryId && industryBaselines.find(ind => ind.id === industryId)) {
+      return { industry: industryId };
+    }
+    
+    // Otherwise, check URL parameter
     const urlParams = new URLSearchParams(window.location.search);
     const industryParam = urlParams.get('industry');
     if (industryParam && industryBaselines.find(ind => ind.id === industryParam)) {
@@ -245,13 +258,12 @@ export const TimelineEstimator = ({ onClose }: TimelineEstimatorProps) => {
 
   const handleStart = () => {
     setStep("questions");
-    const urlParams = new URLSearchParams(window.location.search);
-    const industryParam = urlParams.get('industry');
+    const preselectedIndustry = industryId || new URLSearchParams(window.location.search).get('industry');
     trackEvent("timeline_estimator_started", {
       source: "implementation_timeline",
       page: window.location.pathname,
-      has_industry_preselect: !!industryParam,
-      preselected_industry: industryParam || undefined
+      has_industry_preselect: !!preselectedIndustry,
+      preselected_industry: preselectedIndustry || undefined
     });
   };
 
