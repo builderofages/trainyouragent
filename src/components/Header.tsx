@@ -4,6 +4,8 @@ import { Menu, X, Search } from "lucide-react";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { Button } from "@/components/ui/button";
 import { SearchModal } from "./SearchModal";
+import { ClickToCall } from "./ClickToCall";
+import { siteConfig } from "@/config/site";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -63,6 +65,13 @@ const Header = () => {
             </div>
 
             <div className="hidden md:flex items-center gap-4">
+              {siteConfig.phoneNumber && (
+                <ClickToCall 
+                  variant="ghost" 
+                  trackingLocation="header"
+                  className="rounded-full"
+                />
+              )}
               <MagneticButton variant="ghost" size="icon" className="rounded-full" onClick={() => setSearchOpen(true)}>
                 <Search className="w-5 h-5" />
               </MagneticButton>
@@ -79,6 +88,13 @@ const Header = () => {
               {navLinks.map((link) => (
                 <a key={link.name} href={link.href} className="block text-foreground hover:text-primary font-medium">{link.name}</a>
               ))}
+              {siteConfig.phoneNumber && (
+                <ClickToCall 
+                  variant="outline"
+                  trackingLocation="header_mobile"
+                  className="w-full rounded-full"
+                />
+              )}
               <Button className="w-full rounded-full bg-gradient-primary" onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}>Book a Call</Button>
             </div>
           </motion.div>

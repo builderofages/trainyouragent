@@ -23,6 +23,8 @@ import StickyCTA from "@/components/StickyCTA";
 import { ExitPopup } from "@/components/conversion/ExitPopup";
 import { LiveChat } from "@/components/conversion/LiveChat";
 import { SocialProofNotifications } from "@/components/conversion/SocialProof";
+import { FloatingPhoneButton } from "@/components/FloatingPhoneButton";
+import { PhoneSection } from "@/components/PhoneSection";
 
 const Index = () => {
   useGSAP();
@@ -60,6 +62,8 @@ const Index = () => {
         
         <BeforeAfter />
         
+        <PhoneSection />
+        
         <ScrollRevealSection />
         
         <ParallaxSection speed={0.4}>
@@ -80,6 +84,7 @@ const Index = () => {
         <StickyCTA />
         <ExitPopup />
         <LiveChat />
+        <FloatingPhoneButton />
         <SocialProofNotifications />
       </div>
   );

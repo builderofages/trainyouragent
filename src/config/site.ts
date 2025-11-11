@@ -2,10 +2,16 @@ export const siteConfig = {
   companyName: "TrainYourAgent",
   tagline: "Custom AI Agents for Every Industry",
   bookingUrl: "https://calendly.com/trainyouragent",
-  phoneNumber: "", // Optional: Add your phone number
+  // TODO: Add your VAPI phone number after setup
+  phoneNumber: "", // Format: "+1-XXX-XXX-XXXX"
+  phoneNumberDisplay: "", // Format: "(XXX) XXX-XXXX" - for display
   email: "support@trainyouragent.com",
   showPricing: false,
   showDashboard: false,
+  businessHours: {
+    message: "AI Agent Available 24/7",
+    available: true, // Set to true since AI is always available
+  },
   socialMedia: {
     twitter: "https://x.com/trainyouragent",
     linkedin: "https://www.linkedin.com/company/train-your-agent/",
