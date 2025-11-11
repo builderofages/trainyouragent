@@ -10,7 +10,10 @@ import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { PremiumIcon, industryIcons } from "@/components/icons/PremiumIconSystem";
 import { nicheSolutions } from "@/data/solutions";
+import { expandedSolutions } from "@/data/solutionsExpanded";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
+import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
+import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
 
 const nicheOptions = [
   { id: "hvac", name: "HVAC & Home Services", icon: Wrench, gradient: "gradient-hvac" },
@@ -26,6 +29,7 @@ const nicheOptions = [
 const Solutions = () => {
   const [selectedNiche, setSelectedNiche] = useState("hvac");
   const solution = nicheSolutions[selectedNiche];
+  const expandedSolution = expandedSolutions[selectedNiche];
   const selectedOption = nicheOptions.find(n => n.id === selectedNiche);
 
   return (
@@ -215,30 +219,39 @@ const Solutions = () => {
               </div>
             </div>
 
-            {/* CTA */}
-            <div className="text-center py-12">
-              <h3 className="text-2xl font-bold mb-4">Ready to Transform Your {solution.name}?</h3>
-              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Schedule a strategy call to see how AI can solve your specific challenges
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <MagneticButton
-                  onClick={() => window.location.href = "https://calendly.com/trainyouragent"}
-                  className="bg-gradient-primary"
-                  size="lg"
-                >
-                  Schedule Strategy Call
-                </MagneticButton>
-                <MagneticButton
-                  onClick={() => window.location.href = `/demos?niche=${selectedNiche}`}
-                  variant="outline"
-                  size="lg"
-                >
-                  See Demos & Calculators
-                </MagneticButton>
-              </div>
-            </div>
           </motion.div>
+
+          {/* Expanded Pain Points Journey */}
+          {expandedSolution && (
+            <>
+              <PainPointsJourney solution={expandedSolution} />
+              <IndustryBenefits solution={expandedSolution} />
+            </>
+          )}
+
+          {/* Final CTA */}
+          <div className="text-center py-12">
+            <h3 className="text-2xl font-bold mb-4">Ready to Transform Your {solution.name}?</h3>
+            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+              Schedule a strategy call to see how AI can solve your specific challenges
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <MagneticButton
+                onClick={() => window.location.href = "https://calendly.com/trainyouragent"}
+                className="bg-gradient-primary"
+                size="lg"
+              >
+                Schedule Strategy Call
+              </MagneticButton>
+              <MagneticButton
+                onClick={() => window.location.href = `/demos?niche=${selectedNiche}`}
+                variant="outline"
+                size="lg"
+              >
+                See Demos & Calculators
+              </MagneticButton>
+            </div>
+          </div>
         </div>
       </section>
 

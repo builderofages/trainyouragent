@@ -3,12 +3,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { siteConfig } from "@/config/site";
 import { ChatPanel } from "./ChatPanel";
+import { ChatLeadCapture } from "./ChatLeadCapture";
 
 export const FloatingContactMenu = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPulse, setIsPulse] = useState(true);
+  const [isLeadCaptureOpen, setIsLeadCaptureOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [leadData, setLeadData] = useState<any>(null);
 
   useEffect(() => {
     // Show after 3 seconds
@@ -51,25 +54,42 @@ export const FloatingContactMenu = () => {
   };
 
   const handleChatClick = () => {
-    setIsChatOpen(true);
+    // Show lead capture first
+    setIsLeadCaptureOpen(true);
     setIsExpanded(false);
 
-    // Track chat open event
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'chat_opened', {
-        event_category: 'engagement',
-        event_label: 'floating_menu',
-        value: 1,
+    // Track analytics
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      (window as any).gtag("event", "chat_button_clicked", {
+        event_category: "Engagement",
+        event_label: "Floating Menu Chat",
+      });
+    }
+  };
+
+  const handleLeadCaptureSubmit = (data: any) => {
+    setLeadData(data);
+    setIsLeadCaptureOpen(false);
+    setIsChatOpen(true);
+
+    // Track chat opened after lead capture
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      (window as any).gtag("event", "chat_opened", {
+        event_category: "Engagement",
+        event_label: "After Lead Capture",
       });
     }
 
-    // Track Meta Pixel event
-    if (typeof window !== 'undefined' && (window as any).fbq) {
-      (window as any).fbq('track', 'Contact', {
-        content_name: 'Chat Opened',
-        content_category: 'floating_menu',
+    if (typeof window !== "undefined" && (window as any).fbq) {
+      (window as any).fbq("track", "Contact", {
+        content_name: "Chat Opened",
       });
     }
+  };
+
+  const handleLeadCaptureClose = () => {
+    setIsLeadCaptureOpen(false);
+    setIsExpanded(false);
   };
 
   return (
@@ -188,6 +208,11 @@ export const FloatingContactMenu = () => {
         )}
       </AnimatePresence>
 
+      <ChatLeadCapture
+        isOpen={isLeadCaptureOpen}
+        onClose={handleLeadCaptureClose}
+        onSubmit={handleLeadCaptureSubmit}
+      />
       <ChatPanel isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </>
   );
