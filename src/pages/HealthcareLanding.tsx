@@ -29,9 +29,20 @@ gsap.registerPlugin(ScrollTrigger);
 const HealthcareLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", practiceType: "" });
   const isMobile = useIsMobile();
+  const [performanceTier, setPerformanceTier] = useState<'high' | 'medium' | 'low'>('high');
   const heroStatsRef = useRef<HTMLDivElement>(null);
   const demoMessagesRef = useRef<HTMLDivElement>(null);
   const roiStatsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof navigator !== 'undefined') {
+      if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
+        setPerformanceTier('low');
+      } else if ('connection' in navigator && (navigator as any).connection?.effectiveType === '3g') {
+        setPerformanceTier('medium');
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
