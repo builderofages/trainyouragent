@@ -126,14 +126,14 @@ const StatsSection = () => {
         />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 relative z-10 max-w-screen-2xl">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-16 max-w-4xl mx-auto"
         >
           <motion.div
             initial={{ scale: 0.9 }}
@@ -155,7 +155,7 @@ const StatsSection = () => {
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 xl:gap-12 mb-12 md:mb-16 max-w-7xl mx-auto">
           {stats.map((stat, index) => (
             <StatCard key={stat.label} stat={stat} index={index} />
           ))}
