@@ -5,6 +5,10 @@ import {
 } from "lucide-react";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { use3DCard } from "@/hooks/use3DCard";
+import { MagneticButton } from "@/components/enhanced/MagneticButton";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
+import { useState } from "react";
+import { trackEvent } from "@/lib/tracking";
 
 const services = [
   {
@@ -175,6 +179,8 @@ const ServiceCard = ({ service, index }: { service: any; index: number }) => {
 };
 
 const ServicesShowcase = () => {
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
+
   return (
     <section className="py-24 bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
       {/* Background Pattern */}
@@ -233,16 +239,23 @@ const ServicesShowcase = () => {
           <p className="text-muted-foreground mb-6">
             Not sure which services you need? Let's talk.
           </p>
-          <a
-            href="https://calendly.com/trainyouragent"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-primary text-white font-semibold rounded-full hover:shadow-glow transition-all duration-300"
+          <MagneticButton
+            size="lg"
+            className="text-lg px-8 h-14 gap-2 shadow-glow"
+            onClick={() => {
+              trackEvent('cta_clicked', { location: 'services_showcase' });
+              setLeadGateOpen(true);
+            }}
           >
             Schedule a Strategy Call
-          </a>
+          </MagneticButton>
         </motion.div>
       </div>
+
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+      />
     </section>
   );
 };

@@ -2,7 +2,9 @@ import { motion } from "framer-motion";
 import { GlassCard } from "./enhanced/GlassCard";
 import { X, Check, TrendingDown, TrendingUp, Clock, DollarSign, Users, Zap } from "lucide-react";
 import { MagneticButton } from "./enhanced/MagneticButton";
-import { siteConfig } from "@/config/site";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
+import { useState } from "react";
+import { trackEvent } from "@/lib/tracking";
 
 const comparisons = [
   {
@@ -68,6 +70,8 @@ const comparisons = [
 ];
 
 const BeforeAfter = () => {
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
+
   return (
     <section className="py-24 bg-background relative overflow-hidden">
       {/* Background effects */}
@@ -199,7 +203,10 @@ const BeforeAfter = () => {
             <MagneticButton
               size="lg"
               className="text-lg px-8 h-14 gap-2 shadow-glow"
-              onClick={() => window.open(siteConfig.bookingUrl, '_blank')}
+              onClick={() => {
+                trackEvent('cta_clicked', { location: 'before_after' });
+                setLeadGateOpen(true);
+              }}
             >
               Book a Free Consultation
             </MagneticButton>
@@ -209,6 +216,11 @@ const BeforeAfter = () => {
           </div>
         </motion.div>
       </div>
+
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+      />
     </section>
   );
 };

@@ -2,6 +2,10 @@ import { motion } from "framer-motion";
 import { BookOpen, TrendingUp, FileText, BarChart3 } from "lucide-react";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { use3DCard } from "@/hooks/use3DCard";
+import { MagneticButton } from "@/components/enhanced/MagneticButton";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
+import { useState } from "react";
+import { trackEvent } from "@/lib/tracking";
 
 const researchPublications = [
   {
@@ -92,6 +96,8 @@ const ResearchCard = ({ research, index }: { research: any; index: number }) => 
 };
 
 const IndustryResearchSection = () => {
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
+
   return (
     <section className="py-24 bg-gradient-to-b from-muted/50 via-background to-muted/30 relative overflow-hidden">
       {/* Background Pattern */}
@@ -151,16 +157,22 @@ const IndustryResearchSection = () => {
           <p className="text-muted-foreground mb-4">
             Want to learn more about the AI automation opportunity?
           </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}
-            className="px-6 py-3 rounded-lg glass-card hover:shadow-glow transition-all font-medium"
+          <MagneticButton
+            size="lg"
+            onClick={() => {
+              trackEvent('cta_clicked', { location: 'industry_research' });
+              setLeadGateOpen(true);
+            }}
           >
             Explore How AI Can Transform Your Business
-          </motion.button>
+          </MagneticButton>
         </motion.div>
       </div>
+
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+      />
     </section>
   );
 };

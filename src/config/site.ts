@@ -1,7 +1,7 @@
 export const siteConfig = {
   companyName: "TrainYourAgent",
   tagline: "Custom AI Agents for Every Industry",
-  bookingUrl: "https://calendly.com/trainyouragent",
+  bookingUrl: "https://cal.com/trainyouragent",
   // TODO: Add your VAPI phone number after setup
   phoneNumber: "", // Format: "+1-XXX-XXX-XXXX"
   phoneNumberDisplay: "", // Format: "(XXX) XXX-XXXX" - for display

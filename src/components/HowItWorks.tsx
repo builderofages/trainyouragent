@@ -2,7 +2,9 @@ import { motion } from "framer-motion";
 import { GlassCard } from "./enhanced/GlassCard";
 import { Rocket, Brain, Zap, TrendingUp, ArrowRight } from "lucide-react";
 import { MagneticButton } from "./enhanced/MagneticButton";
-import { siteConfig } from "@/config/site";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
+import { useState } from "react";
+import { trackEvent } from "@/lib/tracking";
 
 const steps = [
   {
@@ -40,6 +42,8 @@ const steps = [
 ];
 
 const HowItWorks = () => {
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
+
   return (
     <section className="py-24 bg-background relative overflow-hidden" id="how-it-works">
       {/* Animated background gradients */}
@@ -140,7 +144,10 @@ const HowItWorks = () => {
             <MagneticButton
               size="lg"
               className="text-lg px-8 h-14 gap-2 shadow-glow"
-              onClick={() => window.open(siteConfig.bookingUrl, '_blank')}
+              onClick={() => {
+                trackEvent('cta_clicked', { location: 'how_it_works' });
+                setLeadGateOpen(true);
+              }}
             >
               Get Started Today
               <ArrowRight className="w-5 h-5" />
@@ -151,6 +158,11 @@ const HowItWorks = () => {
           </motion.div>
         </div>
       </div>
+
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+      />
     </section>
   );
 };

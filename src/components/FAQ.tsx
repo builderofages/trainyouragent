@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { trackEvent } from "@/lib/tracking";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 
 const generateFAQSchema = (faqList: ReturnType<typeof getFAQsByCategory>) => {
   return {
@@ -29,6 +30,7 @@ const generateFAQSchema = (faqList: ReturnType<typeof getFAQsByCategory>) => {
 };
 
 const FAQ = () => {
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Getting Started");
   const displayFaqs = getFAQsByCategory(selectedCategory);
 
@@ -160,9 +162,9 @@ const FAQ = () => {
               onClick={() => {
                 trackEvent('faq_discovery_call_click', {
                   source: 'faq_section',
-                  button_text: 'Book Discovery Call'
+                  button_text: 'Get Your Free Strategy Session'
                 });
-                window.open('https://calendly.com/trainyouragent', '_blank');
+                setLeadGateOpen(true);
               }}
             >
               <Calendar className="w-5 h-5" />
@@ -171,6 +173,11 @@ const FAQ = () => {
           </GlassCard>
         </motion.div>
       </div>
+
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+      />
     </section>
   );
 };

@@ -5,8 +5,12 @@ import { GlassCard } from "@/components/enhanced/GlassCard";
 import { VoiceAgentDemo } from "./VoiceAgentDemo";
 import { TrustBadges } from "./conversion/TrustBadges";
 import { RiskReversal } from "./RiskReversal";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
+import { useState } from "react";
+import { trackEvent } from "@/lib/tracking";
 
 const HeroSection = () => {
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 150]);
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
@@ -106,7 +110,10 @@ const HeroSection = () => {
                 size="lg" 
                 className="text-base md:text-lg px-6 md:px-8 h-12 md:h-14 gap-2 shadow-premium hover:shadow-glow-intense bg-gradient-premium relative overflow-hidden group w-full sm:w-auto" 
                 strength={25}
-                onClick={() => window.open('https://calendly.com/trainyouragent', '_blank')}
+                onClick={() => {
+                  trackEvent('cta_clicked', { location: 'hero_primary' });
+                  setLeadGateOpen(true);
+                }}
               >
                 <motion.div
                   className="absolute inset-0 bg-gradient-shimmer opacity-0 group-hover:opacity-100"
@@ -182,6 +189,11 @@ const HeroSection = () => {
           </motion.div>
         </div>
       </div>
+
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+      />
     </section>
   );
 };

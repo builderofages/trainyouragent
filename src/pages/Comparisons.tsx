@@ -10,9 +10,12 @@ import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { siteConfig } from "@/config/site";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
+import { trackEvent } from "@/lib/tracking";
 
 const Comparisons = () => {
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -512,7 +515,10 @@ const Comparisons = () => {
               <MagneticButton
                 size="lg"
                 className="rounded-full bg-gradient-primary"
-                onClick={() => window.open(siteConfig.bookingUrl, '_blank')}
+                onClick={() => {
+                  trackEvent('cta_clicked', { location: 'comparisons_main' });
+                  setLeadGateOpen(true);
+                }}
               >
                 <Clock className="w-5 h-5 mr-2" />
                 Schedule Honest Consultation
@@ -848,7 +854,10 @@ const Comparisons = () => {
                     variant="outline" 
                     size="sm" 
                     className="w-full"
-                    onClick={() => window.open(siteConfig.bookingUrl, '_blank')}
+                    onClick={() => {
+                      trackEvent('cta_clicked', { location: 'comparisons_hybrid' });
+                      setLeadGateOpen(true);
+                    }}
                   >
                     Discuss Hybrid Solutions
                   </MagneticButton>
@@ -864,6 +873,11 @@ const Comparisons = () => {
           </GlassCard>
         </div>
       </section>
+
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+      />
 
       <Footer />
     </div>

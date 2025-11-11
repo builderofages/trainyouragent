@@ -2,8 +2,9 @@ import { motion } from "framer-motion";
 import { Clock, TrendingDown, AlertCircle, ArrowRight } from "lucide-react";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
-import { siteConfig } from "@/config/site";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { useState, useEffect } from "react";
+import { trackEvent } from "@/lib/tracking";
 
 interface UrgencySectionProps {
   industry?: string;
@@ -17,6 +18,7 @@ export const UrgencySection = ({
   spotsRemaining = 3 
 }: UrgencySectionProps) => {
   const [timeElapsed, setTimeElapsed] = useState(0);
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -125,7 +127,10 @@ export const UrgencySection = ({
               <MagneticButton
                 size="lg"
                 className="text-lg px-12 h-16 gap-3 bg-gradient-to-r from-destructive to-orange-500 hover:from-destructive/90 hover:to-orange-500/90 shadow-glow"
-                onClick={() => window.open(siteConfig.bookingUrl, '_blank')}
+                onClick={() => {
+                  trackEvent('cta_clicked', { location: 'urgency_section' });
+                  setLeadGateOpen(true);
+                }}
               >
                 Secure Your Spot Now
                 <ArrowRight className="w-5 h-5" />
@@ -138,6 +143,12 @@ export const UrgencySection = ({
           </GlassCard>
         </motion.div>
       </div>
+
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+        defaultIndustry={industry}
+      />
     </section>
   );
 };

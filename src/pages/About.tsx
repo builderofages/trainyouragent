@@ -4,9 +4,13 @@ import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
-import { siteConfig } from "@/config/site";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
+import { useState } from "react";
+import { trackEvent } from "@/lib/tracking";
 
 const About = () => {
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -294,7 +298,10 @@ const About = () => {
               <MagneticButton
                 size="lg"
                 className="text-lg px-8 h-14 gap-2 shadow-glow"
-                onClick={() => window.open(siteConfig.bookingUrl, '_blank')}
+                onClick={() => {
+                  trackEvent('cta_clicked', { location: 'about_page' });
+                  setLeadGateOpen(true);
+                }}
               >
                 <TrendingUp className="w-5 h-5" />
                 Get Your Free Strategy Session
@@ -306,6 +313,11 @@ const About = () => {
           </motion.div>
         </div>
       </section>
+
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+      />
 
       <Footer />
     </div>

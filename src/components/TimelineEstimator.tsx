@@ -7,8 +7,8 @@ import { GlassCard } from "@/components/enhanced/GlassCard";
 import { Progress } from "@/components/ui/progress";
 import { trackEvent } from "@/lib/tracking";
 import { cn } from "@/lib/utils";
-import { siteConfig } from "@/config/site";
 import { ResultsDisclaimer } from "@/components/ResultsDisclaimer";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 
 interface Question {
   id: string;
@@ -267,6 +267,7 @@ export const TimelineEstimator = ({ onClose, industryId }: TimelineEstimatorProp
     return {};
   });
   const [startTime] = useState(Date.now());
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
 
   const handleStart = () => {
     setStep("questions");
@@ -335,7 +336,7 @@ export const TimelineEstimator = ({ onClose, industryId }: TimelineEstimatorProp
       industry: timeline.industryName,
       industry_id: answers.industry
     });
-    window.open(siteConfig.bookingUrl, "_blank");
+    setLeadGateOpen(true);
   };
 
   const calculateTimeline = (answers: EstimatorAnswers) => {
@@ -650,6 +651,12 @@ export const TimelineEstimator = ({ onClose, industryId }: TimelineEstimatorProp
           </motion.div>
         )}
       </AnimatePresence>
+
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+        defaultIndustry={answers.industry ? industryBaselines.find(ind => ind.id === answers.industry)?.name : undefined}
+      />
     </div>
   );
 };
