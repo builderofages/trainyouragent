@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Zap, Users, Target, TrendingUp, Shield, CheckCircle, Wrench, Scale, UtensilsCrossed, Heart, Briefcase, LineChart, Code2, Headset } from "lucide-react";
+import { Zap, Users, Target, TrendingUp, Shield, CheckCircle, Wrench, Scale, UtensilsCrossed, Heart, Briefcase, LineChart, Code2, Headset, Rocket } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
 import { GlassCard } from "@/components/enhanced/GlassCard";
@@ -414,11 +414,206 @@ const About = () => {
                   </div>
                 </GlassCard>
               </div>
+          </div>
+        </div>
+
+        {/* Mission & Values Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-20"
+        >
+          {/* Hero Introduction */}
+          <GlassCard className="p-8 lg:p-12 mb-12 bg-gradient-to-br from-primary/5 to-accent/5">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="p-3 rounded-xl bg-primary/10">
+                <Target className="w-8 h-8 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-3xl lg:text-4xl font-bold mb-3">Our Mission & Values</h2>
+                <p className="text-lg text-muted-foreground">
+                  Building America's leading AI automation company—one business transformation at a time.
+                </p>
+              </div>
             </div>
+            <p className="text-lg leading-relaxed mb-4">
+              We exist to help American businesses harness AI for sustainable growth—proving that intelligent automation elevates employees rather than replacing them.
+            </p>
+            <p className="text-lg leading-relaxed">
+              We're building a movement that makes cutting-edge AI accessible to every American business, regardless of size or technical expertise. Starting with small and medium-sized businesses who need it most, we're laying the foundation to expand this tech revolution globally.
+            </p>
+          </GlassCard>
+
+          {/* Core Values Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <GlassCard hover className="p-6">
+              <div className="p-3 rounded-xl bg-primary/10 w-fit mb-4">
+                <Users className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">AI That Elevates, Never Replaces</h3>
+              <p className="text-muted-foreground">
+                We design every solution to free employees from repetitive work so they can focus on high-value tasks that drive growth, job satisfaction, and career advancement.
+              </p>
+            </GlassCard>
+
+            <GlassCard hover className="p-6">
+              <div className="p-3 rounded-xl bg-accent/10 w-fit mb-4">
+                <Rocket className="w-6 h-6 text-accent" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">American Innovation Leadership</h3>
+              <p className="text-muted-foreground">
+                We're passionate about leading America's tech revolution—starting with SMBs who form our economy's backbone, then expanding to compete on the global stage.
+              </p>
+            </GlassCard>
+
+            <GlassCard hover className="p-6">
+              <div className="p-3 rounded-xl bg-primary/10 w-fit mb-4">
+                <Shield className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Ethical Technology Implementation</h3>
+              <p className="text-muted-foreground">
+                Innovation, ethics, and profitability can coexist. We maintain enterprise-grade security, transparent pricing, and honest communication—no hype, just results.
+              </p>
+            </GlassCard>
+
+            <GlassCard hover className="p-6">
+              <div className="p-3 rounded-xl bg-accent/10 w-fit mb-4">
+                <Zap className="w-6 h-6 text-accent" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Democratizing Opportunity</h3>
+              <p className="text-muted-foreground">
+                Young entrepreneurs, small businesses, and growing companies deserve access to the same AI tools as Fortune 500 firms. We make that possible.
+              </p>
+            </GlassCard>
           </div>
 
-          {/* Proof Points */}
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
+          {/* Growth Vision */}
+          <GlassCard className="p-8 lg:p-12 mb-12 border-2 border-primary/20">
+            <div className="flex items-start gap-4 mb-8">
+              <div className="p-3 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10">
+                <TrendingUp className="w-8 h-8 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-2xl lg:text-3xl font-bold mb-2">Built to Scale—From Day One</h3>
+                <p className="text-lg text-muted-foreground">
+                  Strategic growth backed by proven systems and experienced operators
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-6 mb-8">
+              <div>
+                <h4 className="text-xl font-bold mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-primary"></span>
+                  Quality Over Headcount
+                </h4>
+                <p className="text-muted-foreground leading-relaxed">
+                  We intentionally started lean with proven A-players who bring enterprise experience. Daniel scaled his own $60K+/month system. Jess led Fortune 500 operations. David leads a 5-person dev team with diverse expertise. We're not a startup figuring things out—we're experienced operators who know what works.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-xl font-bold mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-primary"></span>
+                  Proven Systems That Scale
+                </h4>
+                <p className="text-muted-foreground leading-relaxed">
+                  Our 3-7 day implementation process isn't fast by luck—it's fast by design. We've built repeatable systems, documented workflows, and automation-first infrastructure that allows us to onboard 10 clients or 100 clients without proportional staff increases. That's the power of practicing what we preach.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-xl font-bold mb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-primary"></span>
+                  Strategic Growth Roadmap
+                </h4>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-primary/5 to-transparent border border-primary/10">
+                    <div className="text-sm font-semibold text-primary mb-2">Q1 2025</div>
+                    <p className="text-sm text-muted-foreground">
+                      Core team of 15+ handling 50+ active implementations monthly
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-primary/5 to-transparent border border-primary/10">
+                    <div className="text-sm font-semibold text-primary mb-2">Q2-Q3 2025</div>
+                    <p className="text-sm text-muted-foreground">
+                      Expand to 30+ team members with specialized industry verticals
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-primary/5 to-transparent border border-primary/10">
+                    <div className="text-sm font-semibold text-primary mb-2">Q4 2025</div>
+                    <p className="text-sm text-muted-foreground">
+                      Regional implementation centers for enterprise on-site support
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-accent/5 to-transparent border border-accent/10">
+                    <div className="text-sm font-semibold text-accent mb-2">2026+</div>
+                    <p className="text-sm text-muted-foreground">
+                      Global expansion—American AI innovation to international markets
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-xl font-bold mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-primary"></span>
+                  Enterprise-Ready Infrastructure
+                </h4>
+                <p className="text-muted-foreground leading-relaxed">
+                  We're built on the same technology stack that powers enterprise solutions: VAPI for voice, ElevenLabs for synthesis, Apollo.io for CRM, OpenAI/Anthropic for intelligence. Our clients get Fortune 500 infrastructure at SMB pricing.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-xl font-bold mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-primary"></span>
+                  We Turn Down Work We Can't Handle
+                </h4>
+                <p className="text-muted-foreground leading-relaxed">
+                  We'd rather say "not yet" than overpromise and underdeliver. Our 94% pilot conversion rate comes from being selective about who we onboard and ensuring every client gets white-glove service. As we scale, that standard doesn't change.
+                </p>
+              </div>
+            </div>
+          </GlassCard>
+
+          {/* What This Means for You */}
+          <div className="grid md:grid-cols-3 gap-8">
+            <GlassCard hover className="p-6 text-center">
+              <div className="p-3 rounded-xl bg-primary/10 w-fit mx-auto mb-4">
+                <CheckCircle className="w-6 h-6 text-primary" />
+              </div>
+              <h4 className="text-xl font-bold mb-2">You Get Experienced Partners</h4>
+              <p className="text-muted-foreground">
+                Not junior staff learning on your business. Proven operators who've scaled companies and systems.
+              </p>
+            </GlassCard>
+
+            <GlassCard hover className="p-6 text-center">
+              <div className="p-3 rounded-xl bg-accent/10 w-fit mx-auto mb-4">
+                <Zap className="w-6 h-6 text-accent" />
+              </div>
+              <h4 className="text-xl font-bold mb-2">Your Project Starts Fast</h4>
+              <p className="text-muted-foreground">
+                3-7 day implementations backed by systems that work. No endless onboarding.
+              </p>
+            </GlassCard>
+
+            <GlassCard hover className="p-6 text-center">
+              <div className="p-3 rounded-xl bg-primary/10 w-fit mx-auto mb-4">
+                <TrendingUp className="w-6 h-6 text-primary" />
+              </div>
+              <h4 className="text-xl font-bold mb-2">We Grow With You</h4>
+              <p className="text-muted-foreground">
+                Monthly optimization reviews. Regular feature updates. Your AI gets smarter as our platform evolves.
+              </p>
+            </GlassCard>
+          </div>
+        </motion.div>
+
+        {/* Proof Points */}
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[
               { number: "94%", label: "Pilot → Full Conversion" },
               { number: "3-7", label: "Days to Go Live" },
