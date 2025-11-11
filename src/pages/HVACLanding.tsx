@@ -17,6 +17,7 @@ import { SolutionJourney } from "@/components/solutions/SolutionJourney";
 import { JourneyUpsellCTA as SmartUpsellCTA } from "@/components/conversion/JourneyUpsellCTA";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import { UrgencySection } from "@/components/conversion/UrgencySection";
+import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 import { expandedSolutions } from "@/data/solutionsExpanded";
 import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
@@ -205,7 +206,7 @@ const HVACLanding = () => {
                     window.open(siteConfig.bookingUrl, '_blank');
                   }}
                 >
-                  Get Your AI Dispatcher
+                  Book Discovery Call
                   <motion.div
                     animate={{ x: [0, 3, 0] }}
                     transition={{ duration: 1.5, repeat: Infinity }}
@@ -429,6 +430,17 @@ const HVACLanding = () => {
 
       {/* Implementation Timeline */}
       <ImplementationTimeline industryId="hvac" />
+
+      {/* Timeline Estimator CTA */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <TimelineEstimatorCTA 
+            industryId="hvac"
+            variant="banner"
+            location="hvac_landing_post_timeline"
+          />
+        </div>
+      </section>
 
       {/* Research Data */}
       <IndustryResearchData 

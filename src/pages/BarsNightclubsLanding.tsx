@@ -17,6 +17,7 @@ import { SolutionJourney } from "@/components/solutions/SolutionJourney";
 import { JourneyUpsellCTA as SmartUpsellCTA } from "@/components/conversion/JourneyUpsellCTA";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import { UrgencySection } from "@/components/conversion/UrgencySection";
+import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 import { expandedSolutions } from "@/data/solutionsExpanded";
 import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
@@ -197,7 +198,7 @@ const BarsNightclubsLanding = () => {
                     window.open(siteConfig.bookingUrl, '_blank');
                   }}
                 >
-                  Book Strategy Call
+                  Book Discovery Call
                   <motion.div
                     animate={{ x: [0, 4, 0], scale: [1, 1.1, 1] }}
                     transition={{ duration: 1.2, repeat: Infinity }}
@@ -425,6 +426,17 @@ const BarsNightclubsLanding = () => {
 
       {/* Implementation Timeline */}
       <ImplementationTimeline industryId="bars" />
+
+      {/* Timeline Estimator CTA */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <TimelineEstimatorCTA 
+            industryId="bars-nightclubs"
+            variant="banner"
+            location="bars_landing_post_timeline"
+          />
+        </div>
+      </section>
 
       {/* Research Data */}
       <IndustryResearchData 

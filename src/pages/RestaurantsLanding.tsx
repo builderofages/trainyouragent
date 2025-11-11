@@ -17,7 +17,9 @@ import { SolutionJourney } from "@/components/solutions/SolutionJourney";
 import { JourneyUpsellCTA as SmartUpsellCTA } from "@/components/conversion/JourneyUpsellCTA";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import { UrgencySection } from "@/components/conversion/UrgencySection";
+import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 import { expandedSolutions } from "@/data/solutionsExpanded";
+import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
 import ImplementationTimeline from "@/components/ImplementationTimeline";
@@ -153,9 +155,12 @@ const RestaurantsLanding = () => {
                 <MagneticButton
                   size="lg"
                   className="text-lg px-8 h-14 gap-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
-                  onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => {
+                    conversions.demoBooked("restaurants");
+                    window.open(siteConfig.bookingUrl, '_blank');
+                  }}
                 >
-                  Get Your AI Host
+                  Book Discovery Call
                   <ArrowRight className="w-5 h-5" />
                 </MagneticButton>
                 <MagneticButton
@@ -389,6 +394,17 @@ const RestaurantsLanding = () => {
       {/* Implementation Timeline */}
       <ImplementationTimeline industryId="restaurants" />
 
+      {/* Timeline Estimator CTA */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <TimelineEstimatorCTA 
+            industryId="restaurants"
+            variant="banner"
+            location="restaurants_landing_post_timeline"
+          />
+        </div>
+      </section>
+
       {/* Urgency Section */}
       <UrgencySection industry="restaurants" costPerHour={150} spotsRemaining={4} />
 
@@ -487,7 +503,7 @@ const RestaurantsLanding = () => {
                   size="lg"
                   className="w-full text-lg h-14 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
                 >
-                  Get Started
+                  Book Discovery Call
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </MagneticButton>
 

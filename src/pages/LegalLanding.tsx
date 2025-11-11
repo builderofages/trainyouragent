@@ -17,7 +17,9 @@ import { SolutionJourney } from "@/components/solutions/SolutionJourney";
 import { JourneyUpsellCTA as SmartUpsellCTA } from "@/components/conversion/JourneyUpsellCTA";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import { UrgencySection } from "@/components/conversion/UrgencySection";
+import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 import { expandedSolutions } from "@/data/solutionsExpanded";
+import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
 import ImplementationTimeline from "@/components/ImplementationTimeline";
@@ -153,9 +155,12 @@ const LegalLanding = () => {
                 <MagneticButton
                   size="lg"
                   className="text-lg px-8 h-14 gap-2 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600"
-                  onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => {
+                    conversions.demoBooked("legal");
+                    window.open(siteConfig.bookingUrl, '_blank');
+                  }}
                 >
-                  Get Your AI Legal Assistant
+                  Book Discovery Call
                   <ArrowRight className="w-5 h-5" />
                 </MagneticButton>
                 <MagneticButton
@@ -383,6 +388,17 @@ const LegalLanding = () => {
 
       {/* Implementation Timeline */}
       <ImplementationTimeline industryId="legal" />
+
+      {/* Timeline Estimator CTA */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <TimelineEstimatorCTA 
+            industryId="legal"
+            variant="banner"
+            location="legal_landing_post_timeline"
+          />
+        </div>
+      </section>
 
       {/* Urgency Section */}
       <UrgencySection industry="legal" costPerHour={375} spotsRemaining={2} />
