@@ -14,7 +14,7 @@ import { IndustryResearchData } from "@/components/IndustryResearchData";
 import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
 import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
 import { SolutionJourney } from "@/components/solutions/SolutionJourney";
-import { SmartUpsellCTA } from "@/components/conversion/SmartUpsellCTA";
+import { JourneyUpsellCTA as SmartUpsellCTA } from "@/components/conversion/JourneyUpsellCTA";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { expandedSolutions } from "@/data/solutionsExpanded";

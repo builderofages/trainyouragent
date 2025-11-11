@@ -81,12 +81,14 @@ const ROICalculatorEnhanced = () => {
   };
 
   const handleCalculate = async () => {
+    sessionStorage.setItem('calculator_opened', 'true');
     setIsCalculating(true);
     setShowResults(false);
     
     // Simulate calculation time for dramatic effect
     await new Promise(resolve => setTimeout(resolve, 2000));
     
+    sessionStorage.setItem('calculator_completed', 'true');
     setIsCalculating(false);
     setShowResults(true);
     

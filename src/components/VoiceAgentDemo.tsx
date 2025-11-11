@@ -60,9 +60,11 @@ export const VoiceAgentDemo = () => {
   const handleVoiceToggle = async () => {
     if (isConnected) {
       endCall();
+      sessionStorage.setItem('demo_completed', 'true');
       trackEvent('voice_demo_ended', { industry: selectedIndustry, message_count: messages.length });
     } else {
       await startCall();
+      sessionStorage.setItem('demo_started', 'true');
       trackEvent('voice_demo_started', { industry: selectedIndustry });
     }
   };
