@@ -256,13 +256,16 @@ const About = () => {
                   </div>
                   <div className="space-y-4 text-muted-foreground">
                     <p>
-                      Led 10+ departments as Head Executive at a major SMMA, building and scaling teams of 1,000+ employees across multiple successful ventures. Through this journey, helped lead brands to achieve millions in sales and generate hundreds of millions of views.
+                      With most of his adult life spent across diverse B2B and B2C markets, Alexander brings deep operational expertise from every angle of business. As Head Executive at a major SMMA, he led 10+ departments and scaled teams of 1,000+ employees, helping brands achieve millions in sales and generate hundreds of millions of views. This hands-on experience across startups, mid-market companies, and enterprise operations gave him intimate knowledge of the challenges businesses face at every stage of growth.
                     </p>
                     <p>
-                      Early AI adopter and ChatGPT beta tester since initial release. Deep expertise across all major LLMs (OpenAI, Anthropic, Google, Meta). Identified critical gap in business automation while scaling multiple companies.
+                      Beyond business, Alexander is driven by a mission to create meaningful change. He currently leads a non-profit organization dedicated to training service dogs—demonstrating his commitment to impact that extends far beyond profit margins. This passion for service inspired his vision to lead America's tech revolution, starting with small and medium-sized businesses who form the backbone of our economy, and eventually expanding this movement to globalized markets.
                     </p>
                     <p>
-                      Recognized AI as a force multiplier for employee productivity, not a replacement—and built TrainYourAgent to prove it.
+                      As an early AI adopter and ChatGPT beta tester since its initial release, Alexander has deep expertise across all major LLMs (OpenAI, Anthropic, Google, Meta). He's passionate about American innovation in both AI and cryptocurrency, believing these technologies will define the next generation of business success. Committed to empowering young entrepreneurs, he sees technology as a tool for democratizing opportunity—giving businesses of all sizes the power to compete globally.
+                    </p>
+                    <p>
+                      Alexander founded TrainYourAgent with a clear mission: help American businesses harness AI for sustainable growth while proving that automation elevates employees rather than replacing them. Frustrated by businesses losing revenue to missed opportunities while being told AI would eliminate jobs, he set out to build a company that makes cutting-edge AI accessible to every business—regardless of size or technical expertise. Starting with the SMBs who need it most, TrainYourAgent is proof that innovation, ethics, and profitability can coexist.
                     </p>
                   </div>
                 </GlassCard>
