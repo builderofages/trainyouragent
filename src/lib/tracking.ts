@@ -62,6 +62,10 @@ export const trackConversion = (eventName: string, data?: Record<string, any>) =
 
 // Specific conversion event helpers
 export const conversions = {
+  ctaClicked: (location: string, industry?: string) => {
+    trackConversion('cta_clicked', { location, industry });
+  },
+
   demoBooked: (industry?: string) => {
     trackConversion('demo_booking', { industry, value: 500 });
   },
