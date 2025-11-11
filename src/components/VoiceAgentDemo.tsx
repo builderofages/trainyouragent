@@ -98,7 +98,7 @@ export const VoiceAgentDemo = () => {
   };
 
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div id="voice-demo" className="space-y-4 md:space-y-6 scroll-mt-24">
       {/* Industry Selector */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
