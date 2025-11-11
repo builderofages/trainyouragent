@@ -23,7 +23,7 @@ import StickyCTA from "@/components/StickyCTA";
 import { ExitPopup } from "@/components/conversion/ExitPopup";
 import { LiveChat } from "@/components/conversion/LiveChat";
 import { SocialProofNotifications } from "@/components/conversion/SocialProof";
-import { FloatingPhoneButton } from "@/components/FloatingPhoneButton";
+import { FloatingContactMenu } from "@/components/FloatingContactMenu";
 import { PhoneSection } from "@/components/PhoneSection";
 
 const Index = () => {
@@ -84,7 +84,7 @@ const Index = () => {
         <StickyCTA />
         <ExitPopup />
         <LiveChat />
-        <FloatingPhoneButton />
+        <FloatingContactMenu />
         <SocialProofNotifications />
       </div>
   );
