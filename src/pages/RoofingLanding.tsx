@@ -572,6 +572,12 @@ const RoofingLanding = () => {
         </div>
       </section>
 
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+        defaultIndustry="Roofing"
+      />
+
       <Footer />
     </div>
   );

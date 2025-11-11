@@ -574,6 +574,12 @@ const AccountingLanding = () => {
         </div>
       </section>
 
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+        defaultIndustry="Accounting"
+      />
+
       <Footer />
     </div>
   );

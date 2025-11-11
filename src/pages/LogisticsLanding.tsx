@@ -573,6 +573,12 @@ const LogisticsLanding = () => {
         </div>
       </section>
 
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+        defaultIndustry="Logistics"
+      />
+
       <Footer />
     </div>
   );

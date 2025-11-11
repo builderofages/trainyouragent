@@ -596,6 +596,12 @@ const HVACLanding = () => {
         </div>
       </section>
 
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+        defaultIndustry="HVAC"
+      />
+
       <Footer />
     </div>
   );

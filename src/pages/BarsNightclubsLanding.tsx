@@ -594,6 +594,12 @@ const BarsNightclubsLanding = () => {
         </div>
       </section>
 
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+        defaultIndustry="Bars & Nightclubs"
+      />
+
       <Footer />
     </div>
   );

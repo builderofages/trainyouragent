@@ -568,6 +568,12 @@ const HealthcareLanding = () => {
         </div>
       </section>
 
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+        defaultIndustry="Healthcare"
+      />
+
       <Footer />
     </div>
   );

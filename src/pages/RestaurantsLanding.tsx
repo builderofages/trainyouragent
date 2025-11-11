@@ -554,6 +554,12 @@ const RestaurantsLanding = () => {
         </div>
       </section>
 
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+        defaultIndustry="Restaurants"
+      />
+
       <Footer />
     </div>
   );

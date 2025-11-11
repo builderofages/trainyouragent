@@ -549,6 +549,12 @@ const LegalLanding = () => {
         </div>
       </section>
 
+      <StrategySessionLeadGate 
+        open={leadGateOpen}
+        onOpenChange={setLeadGateOpen}
+        defaultIndustry="Legal"
+      />
+
       <Footer />
     </div>
   );
