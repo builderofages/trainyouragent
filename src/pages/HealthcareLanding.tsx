@@ -17,6 +17,8 @@ import { IndustryResearchData } from "@/components/IndustryResearchData";
 import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
 import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
 import { SolutionJourney } from "@/components/solutions/SolutionJourney";
+import { ComprehensiveSolutionsGrid } from "@/components/solutions/ComprehensiveSolutionsGrid";
+import { comprehensiveSolutions } from "@/data/comprehensiveBusinessFunctions";
 
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import { UrgencySection } from "@/components/conversion/UrgencySection";
@@ -311,6 +313,58 @@ const HealthcareLanding = () => {
               </GlassCard>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* Comprehensive AI Solutions Section */}
+      <section className="py-20 bg-gradient-to-br from-background to-muted/20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium">Complete AI Solutions</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              8 Ways AI Transforms Your Healthcare Practice
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
+              Voice agents are just the beginning. See how we automate your entire operation from A to Z.
+            </p>
+            <p className="text-sm text-muted-foreground italic">
+              Select the solutions you need → Get custom pricing → Deploy in 3-7 days
+            </p>
+          </motion.div>
+
+          <ComprehensiveSolutionsGrid 
+            businessFunctions={comprehensiveSolutions.healthcare.businessFunctions}
+          />
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <MagneticButton
+              size="lg"
+              onClick={() => {
+                conversions.ctaClicked("healthcare_solutions_cta");
+                setLeadGateOpen(true);
+              }}
+              className="text-lg px-8 h-14 gap-2"
+            >
+              Build My Custom AI Solution Package
+              <ArrowRight className="w-5 h-5" />
+            </MagneticButton>
+            <p className="text-sm text-muted-foreground mt-4">
+              Get personalized pricing and implementation timeline in your free strategy session
+            </p>
+          </motion.div>
         </div>
       </section>
 
