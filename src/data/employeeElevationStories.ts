@@ -579,5 +579,360 @@ export const employeeElevationStories: Record<string, EmployeeStory[]> = {
       satisfactionIncrease: "From bartending to beverage strategy leadership",
       companySize: "250 capacity, $3.2M annual revenue"
     }
+  ],
+  spas: [
+    {
+      name: "Elena S.",
+      beforeTitle: "Front Desk Coordinator",
+      afterTitle: "Client Experience Director",
+      beforeSalary: "$38,000/year",
+      afterSalary: "$62,000/year + performance bonus",
+      beforeResponsibilities: [
+        "Answered phone calls and booking inquiries",
+        "Managed walk-in clients and waitlist",
+        "Processed payments and rescheduling",
+        "Limited time for client relationship building"
+      ],
+      afterResponsibilities: [
+        "VIP client retention strategy and personalized outreach",
+        "Membership package design and upselling",
+        "Client journey optimization and experience audits",
+        "Staff training on luxury service standards",
+        "Partnership development with local hotels and businesses"
+      ],
+      revenueImpact: "$180,000 from membership growth and retail upsells",
+      satisfactionIncrease: "From reactive admin work to strategic experience design",
+      companySize: "8-therapist day spa, $1.8M annual revenue"
+    },
+    {
+      name: "Jasmine T.",
+      beforeTitle: "Spa Attendant",
+      afterTitle: "Membership Growth Manager",
+      beforeSalary: "$35,000/year",
+      afterSalary: "$58,000/year + commission",
+      beforeResponsibilities: [
+        "Prepared treatment rooms and linens",
+        "Assisted with client check-in process",
+        "Managed retail inventory restocking",
+        "No strategic involvement in growth"
+      ],
+      afterResponsibilities: [
+        "Membership conversion campaigns and follow-up",
+        "Client win-back and re-engagement initiatives",
+        "Referral program management",
+        "Package optimization based on booking patterns",
+        "Community outreach and local partnership building"
+      ],
+      revenueImpact: "$120,000 from new memberships and package upgrades",
+      satisfactionIncrease: "From behind-the-scenes work to visible revenue generation",
+      companySize: "12-room medical spa, $2.4M annual revenue"
+    },
+    {
+      name: "Maria C.",
+      beforeTitle: "Receptionist",
+      afterTitle: "Wellness Program Coordinator",
+      beforeSalary: "$36,000/year",
+      afterSalary: "$55,000/year + incentives",
+      beforeResponsibilities: [
+        "Scheduled appointments and managed cancellations",
+        "Handled client complaints and service recovery",
+        "Processed daily transactions",
+        "No time for program development"
+      ],
+      afterResponsibilities: [
+        "Corporate wellness program development and sales",
+        "Group event coordination (bridal, birthdays, corporate)",
+        "Wellness workshop planning and marketing",
+        "Seasonal promotion strategy",
+        "Therapist utilization optimization"
+      ],
+      revenueImpact: "$95,000 from corporate contracts and group bookings",
+      satisfactionIncrease: "From transaction processing to business development",
+      companySize: "6-therapist wellness center, $1.2M annual revenue"
+    }
+  ],
+  hotels: [
+    {
+      name: "David M.",
+      beforeTitle: "Front Desk Agent",
+      afterTitle: "Guest Relations Manager",
+      beforeSalary: "$42,000/year",
+      afterSalary: "$68,000/year + performance bonus",
+      beforeResponsibilities: [
+        "Checked guests in and out",
+        "Answered phone inquiries about availability",
+        "Processed reservations and cancellations",
+        "Limited guest interaction beyond check-in"
+      ],
+      afterResponsibilities: [
+        "VIP guest experience personalization and surprise-and-delight",
+        "Guest complaint resolution and service recovery leadership",
+        "Loyalty program engagement and upgrade conversions",
+        "Pre-arrival concierge planning for high-value guests",
+        "Staff training on hospitality excellence"
+      ],
+      revenueImpact: "$220,000 from upsells, repeat bookings, and positive reviews",
+      satisfactionIncrease: "From transactional role to relationship-building leadership",
+      companySize: "120-room boutique hotel, $5.5M annual revenue"
+    },
+    {
+      name: "Sophia L.",
+      beforeTitle: "Concierge",
+      afterTitle: "VIP Services Director",
+      beforeSalary: "$45,000/year",
+      afterSalary: "$75,000/year + commission",
+      beforeResponsibilities: [
+        "Provided local recommendations and directions",
+        "Booked restaurant reservations",
+        "Arranged transportation for guests",
+        "Minimal time for strategic guest engagement"
+      ],
+      afterResponsibilities: [
+        "Curated VIP experience packages (proposals, anniversaries, celebrations)",
+        "Local partnership development with restaurants, venues, and services",
+        "Personalized itinerary design for luxury travelers",
+        "Corporate group coordination and event planning",
+        "High-touch service for repeat guests and loyalty members"
+      ],
+      revenueImpact: "$185,000 from experience packages and partnership commissions",
+      satisfactionIncrease: "From basic concierge to luxury experience architect",
+      companySize: "85-room luxury hotel, $7.2M annual revenue"
+    },
+    {
+      name: "Andre P.",
+      beforeTitle: "Reservations Agent",
+      afterTitle: "Revenue Optimization Specialist",
+      beforeSalary: "$40,000/year",
+      afterSalary: "$65,000/year + incentives",
+      beforeResponsibilities: [
+        "Answered reservation calls and emails",
+        "Processed booking modifications",
+        "Managed group block inquiries",
+        "No involvement in pricing strategy"
+      ],
+      afterResponsibilities: [
+        "Dynamic pricing strategy and yield management",
+        "Group sales outreach and negotiation",
+        "OTA channel management and rate parity monitoring",
+        "Length-of-stay optimization and package bundling",
+        "Demand forecasting and inventory allocation"
+      ],
+      revenueImpact: "$310,000 from improved RevPAR and occupancy optimization",
+      satisfactionIncrease: "From order-taking to strategic revenue management",
+      companySize: "180-room full-service hotel, $12M annual revenue"
+    }
+  ],
+  automotive: [
+    {
+      name: "Carlos R.",
+      beforeTitle: "Service Advisor",
+      afterTitle: "Customer Retention Manager",
+      beforeSalary: "$48,000/year + commission",
+      afterSalary: "$72,000/year + performance bonus",
+      beforeResponsibilities: [
+        "Scheduled service appointments",
+        "Answered technical questions about repairs",
+        "Provided service estimates and upsells",
+        "Limited time for relationship building"
+      ],
+      afterResponsibilities: [
+        "Proactive maintenance reminder campaigns",
+        "Service contract renewal and upgrade outreach",
+        "Win-back campaigns for lapsed customers",
+        "Referral program management",
+        "Customer satisfaction follow-up and recovery"
+      ],
+      revenueImpact: "$240,000 from service retention and contract renewals",
+      satisfactionIncrease: "From reactive service to proactive relationship management",
+      companySize: "Single-location dealership, $18M annual revenue"
+    },
+    {
+      name: "Michelle K.",
+      beforeTitle: "Parts Counter Associate",
+      afterTitle: "Inventory & Procurement Specialist",
+      beforeSalary: "$42,000/year",
+      afterSalary: "$63,000/year + cost savings bonus",
+      beforeResponsibilities: [
+        "Answered parts availability inquiries",
+        "Processed walk-in and phone orders",
+        "Managed backorder tracking",
+        "No strategic procurement involvement"
+      ],
+      afterResponsibilities: [
+        "Vendor relationship management and price negotiation",
+        "Inventory turnover optimization",
+        "Special order coordination for wholesale customers",
+        "Seasonal demand forecasting",
+        "Obsolete inventory liquidation strategy"
+      ],
+      revenueImpact: "$95,000 from cost savings and wholesale relationship growth",
+      satisfactionIncrease: "From order-taking to strategic supply chain management",
+      companySize: "Mid-size auto repair shop, $3.2M annual revenue"
+    },
+    {
+      name: "James T.",
+      beforeTitle: "Receptionist",
+      afterTitle: "Service Operations Coordinator",
+      beforeSalary: "$38,000/year",
+      afterSalary: "$58,000/year + performance incentives",
+      beforeResponsibilities: [
+        "Greeted walk-in customers",
+        "Answered general service inquiries",
+        "Scheduled appointments in downtime",
+        "Limited operational visibility"
+      ],
+      afterResponsibilities: [
+        "Technician utilization and bay optimization",
+        "Shuttle and loaner vehicle coordination",
+        "Multi-location appointment balancing",
+        "Customer communication workflow management",
+        "Service department KPI tracking and reporting"
+      ],
+      revenueImpact: "$180,000 from improved technician efficiency and throughput",
+      satisfactionIncrease: "From front desk role to operational excellence leadership",
+      companySize: "3-location dealership group, $45M annual revenue"
+    }
+  ],
+  real_estate: [
+    {
+      name: "Rachel H.",
+      beforeTitle: "Office Manager",
+      afterTitle: "Transaction Coordinator & Compliance Specialist",
+      beforeSalary: "$44,000/year",
+      afterSalary: "$68,000/year + transaction fees",
+      beforeResponsibilities: [
+        "Answered general office inquiries",
+        "Scheduled showing appointments",
+        "Managed listing paperwork",
+        "Limited involvement in transaction management"
+      ],
+      afterResponsibilities: [
+        "Full transaction coordination from contract to close",
+        "Compliance and disclosure document management",
+        "Title company and lender coordination",
+        "Agent support on complex transactions",
+        "Process improvement and agent training"
+      ],
+      revenueImpact: "$125,000 from transaction fees and agent productivity gains",
+      satisfactionIncrease: "From admin work to mission-critical transaction expertise",
+      companySize: "15-agent brokerage, $28M annual sales volume"
+    },
+    {
+      name: "Brandon L.",
+      beforeTitle: "Receptionist",
+      afterTitle: "Lead Nurturing & Follow-up Manager",
+      beforeSalary: "$40,000/year",
+      afterSalary: "$65,000/year + commission",
+      beforeResponsibilities: [
+        "Answered inbound buyer/seller inquiries",
+        "Transferred calls to available agents",
+        "Managed walk-in visitors",
+        "No lead nurturing responsibilities"
+      ],
+      afterResponsibilities: [
+        "ISA (Inside Sales Agent) lead qualification and nurturing",
+        "Automated drip campaign management and personalization",
+        "Open house follow-up and conversion",
+        "Expired listing and FSBO outreach coordination",
+        "Lead scoring and agent assignment optimization"
+      ],
+      revenueImpact: "$310,000 from improved lead conversion and agent productivity",
+      satisfactionIncrease: "From call routing to revenue-generating lead conversion",
+      companySize: "25-agent team, $48M annual sales volume"
+    },
+    {
+      name: "Amanda S.",
+      beforeTitle: "Administrative Assistant",
+      afterTitle: "Marketing & Client Relations Director",
+      beforeSalary: "$42,000/year",
+      afterSalary: "$70,000/year + performance bonus",
+      beforeResponsibilities: [
+        "Scheduled listing appointments",
+        "Managed MLS listings and photos",
+        "Processed client correspondence",
+        "No strategic marketing involvement"
+      ],
+      afterResponsibilities: [
+        "Social media content strategy and community engagement",
+        "Past client nurturing and referral generation",
+        "Agent brand development and marketing support",
+        "Video marketing and virtual tour coordination",
+        "Local partnership and sponsorship management"
+      ],
+      revenueImpact: "$220,000 from referral business and brand visibility",
+      satisfactionIncrease: "From support role to strategic marketing leadership",
+      companySize: "Single mega-agent team, $35M annual sales volume"
+    }
+  ],
+  solar: [
+    {
+      name: "Tyler W.",
+      beforeTitle: "Sales Coordinator",
+      afterTitle: "Project Management & Installation Specialist",
+      beforeSalary: "$46,000/year",
+      afterSalary: "$72,000/year + project completion bonuses",
+      beforeResponsibilities: [
+        "Scheduled site assessment appointments",
+        "Answered general solar inquiry calls",
+        "Processed initial paperwork",
+        "No involvement in project execution"
+      ],
+      afterResponsibilities: [
+        "End-to-end project coordination from sale to activation",
+        "Permitting and utility interconnection management",
+        "Installation crew scheduling and quality oversight",
+        "Customer communication during installation process",
+        "Post-installation follow-up and referral generation"
+      ],
+      revenueImpact: "$195,000 from faster project completion and referral business",
+      satisfactionIncrease: "From appointment setter to project delivery leader",
+      companySize: "Regional solar installer, $8.5M annual revenue"
+    },
+    {
+      name: "Priya M.",
+      beforeTitle: "Customer Service Representative",
+      afterTitle: "Client Success & Retention Manager",
+      beforeSalary: "$42,000/year",
+      afterSalary: "$68,000/year + retention incentives",
+      beforeResponsibilities: [
+        "Answered billing and technical questions",
+        "Scheduled maintenance appointments",
+        "Processed warranty claims",
+        "Limited proactive customer engagement"
+      ],
+      afterResponsibilities: [
+        "Proactive system monitoring and performance outreach",
+        "Battery storage upsell and system expansion campaigns",
+        "Referral program management and testimonial gathering",
+        "Educational workshop coordination for existing customers",
+        "Long-term maintenance contract renewals"
+      ],
+      revenueImpact: "$155,000 from battery add-ons, referrals, and contract renewals",
+      satisfactionIncrease: "From support role to strategic account management",
+      companySize: "Mid-size solar company, $12M annual revenue"
+    },
+    {
+      name: "Derek H.",
+      beforeTitle: "Administrative Assistant",
+      afterTitle: "Permitting & Compliance Coordinator",
+      beforeSalary: "$40,000/year",
+      afterSalary: "$62,000/year + project completion bonuses",
+      beforeResponsibilities: [
+        "Filed initial permit applications",
+        "Tracked pending permits",
+        "Managed basic compliance documentation",
+        "Reactive to permit issues"
+      ],
+      afterResponsibilities: [
+        "Multi-jurisdiction permit expertise and relationship building",
+        "AHJ (Authority Having Jurisdiction) liaison and issue resolution",
+        "Incentive and rebate application management",
+        "Inspection scheduling and coordination",
+        "Permit process optimization and team training"
+      ],
+      revenueImpact: "$280,000 from faster permit approval and reduced project delays",
+      satisfactionIncrease: "From paperwork processing to critical-path project enabler",
+      companySize: "Large regional installer, $22M annual revenue"
+    }
   ]
 };

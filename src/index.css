@@ -63,6 +63,18 @@ All colors MUST be HSL.
     --logistics-secondary: 220 90% 56%;
     --restaurants-primary: 38 92% 50%;
     --restaurants-secondary: 24 95% 53%;
+    --bars-primary: 333 71% 51%;
+    --bars-secondary: 291 47% 51%;
+    --spas-primary: 326 78% 65%;
+    --spas-secondary: 291 47% 51%;
+    --hotels-primary: 280 67% 57%;
+    --hotels-secondary: 261 52% 59%;
+    --automotive-primary: 0 84% 60%;
+    --automotive-secondary: 25 95% 53%;
+    --real-estate-primary: 198 93% 60%;
+    --real-estate-secondary: 176 100% 41%;
+    --solar-primary: 48 96% 53%;
+    --solar-secondary: 45 93% 47%;
     
     /* Premium Gradients - Clean Blue Palette */
     --gradient-primary: linear-gradient(135deg, hsl(211, 100%, 66%) 0%, hsl(199, 89%, 48%) 100%);
@@ -351,6 +363,59 @@ All colors MUST be HSL.
 
   .perspective-2000 {
     perspective: 2000px;
+  }
+  
+  /* Industry-Specific Gradient Utilities */
+  .gradient-hvac {
+    @apply bg-gradient-to-r from-purple-500 to-indigo-500;
+  }
+  
+  .gradient-accounting {
+    @apply bg-gradient-to-r from-emerald-500 to-teal-500;
+  }
+  
+  .gradient-legal {
+    @apply bg-gradient-to-r from-purple-500 to-pink-500;
+  }
+  
+  .gradient-healthcare {
+    @apply bg-gradient-to-r from-cyan-500 to-blue-500;
+  }
+  
+  .gradient-roofing {
+    @apply bg-gradient-to-r from-orange-500 to-red-500;
+  }
+  
+  .gradient-logistics {
+    @apply bg-gradient-to-r from-blue-500 to-indigo-600;
+  }
+  
+  .gradient-restaurants {
+    @apply bg-gradient-to-r from-amber-500 to-orange-500;
+  }
+  
+  .gradient-bars {
+    @apply bg-gradient-to-r from-pink-500 to-purple-500;
+  }
+  
+  .gradient-spas {
+    @apply bg-gradient-to-r from-pink-400 to-purple-500;
+  }
+  
+  .gradient-hotels {
+    @apply bg-gradient-to-r from-purple-500 to-indigo-500;
+  }
+  
+  .gradient-automotive {
+    @apply bg-gradient-to-r from-red-500 to-orange-500;
+  }
+  
+  .gradient-real-estate {
+    @apply bg-gradient-to-r from-cyan-500 to-teal-500;
+  }
+  
+  .gradient-solar {
+    @apply bg-gradient-to-r from-yellow-400 to-amber-500;
   }
   
   /* Premium Typography */

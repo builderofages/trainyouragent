@@ -15,6 +15,11 @@ import LogisticsLanding from "./pages/LogisticsLanding";
 import RestaurantsLanding from "./pages/RestaurantsLanding";
 import BarsNightclubsLanding from "./pages/BarsNightclubsLanding";
 import HVACLanding from "./pages/HVACLanding";
+import SpasLanding from "./pages/SpasLanding";
+import HotelsLanding from "./pages/HotelsLanding";
+import AutomotiveLanding from "./pages/AutomotiveLanding";
+import RealEstateLanding from "./pages/RealEstateLanding";
+import SolarLanding from "./pages/SolarLanding";
 import SalesToolkit from "./pages/SalesToolkit";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
@@ -57,6 +62,11 @@ const App = () => (
           <Route path="/restaurants" element={<RestaurantsLanding />} />
           <Route path="/bars-nightclubs" element={<BarsNightclubsLanding />} />
           <Route path="/hvac" element={<HVACLanding />} />
+          <Route path="/spas" element={<SpasLanding />} />
+          <Route path="/hotels" element={<HotelsLanding />} />
+          <Route path="/automotive" element={<AutomotiveLanding />} />
+          <Route path="/real-estate" element={<RealEstateLanding />} />
+          <Route path="/solar" element={<SolarLanding />} />
           <Route path="/sales-toolkit" element={<SalesToolkit />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/resources/:slug" element={<ResourceArticle />} />
