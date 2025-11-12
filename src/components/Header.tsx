@@ -36,6 +36,17 @@ const Header = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   const navLinks = [
     { name: "Solutions", href: "/solutions" },
     { name: "Demos", href: "/demos" },
@@ -89,7 +100,7 @@ const Header = () => {
               </MagneticButton>
             </div>
 
-            <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-foreground">
+            <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-foreground relative z-[80]">
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
@@ -102,7 +113,7 @@ const Header = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setIsOpen(false)}
-                className="fixed inset-0 bg-background/95 backdrop-blur-xl z-40 md:hidden"
+                className="fixed inset-0 bg-background/95 backdrop-blur-xl z-[60] md:hidden"
               />
             )}
           </AnimatePresence>
@@ -111,7 +122,7 @@ const Header = () => {
           <motion.div 
             initial={false} 
             animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
-            className="md:hidden overflow-hidden relative z-50 bg-background/98 backdrop-blur-xl border-t border-glass-border shadow-2xl"
+            className="md:hidden overflow-hidden fixed left-0 right-0 z-[70] bg-background/98 backdrop-blur-xl border-t border-glass-border shadow-2xl top-[72px]"
           >
             <div className="py-8 px-2 space-y-5">
               {navLinks.map((link) => (
