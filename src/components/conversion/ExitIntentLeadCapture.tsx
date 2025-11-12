@@ -131,9 +131,9 @@ export const ExitIntentLeadCapture = ({ industry }: ExitIntentLeadCaptureProps) 
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-lg mx-4"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100%-2rem)] max-w-lg"
           >
-            <GlassCard className="p-8 relative shadow-glow-intense bg-gradient-to-br from-background via-background to-primary/5">
+            <GlassCard className="p-6 md:p-8 relative shadow-glow-intense bg-gradient-to-br from-background via-background to-primary/5">
               <button
                 onClick={handleDismiss}
                 className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
@@ -149,7 +149,7 @@ export const ExitIntentLeadCapture = ({ industry }: ExitIntentLeadCaptureProps) 
                 <h3 className="text-2xl font-bold">Wait! Before You Go...</h3>
               </div>
 
-              <p className="text-lg text-muted-foreground mb-6">
+              <p className="text-base md:text-lg text-muted-foreground mb-6">
                 See your potential ROI in 60 seconds. Get a free calculation guide showing exactly how much revenue you could recover.
               </p>
 
@@ -179,7 +179,7 @@ export const ExitIntentLeadCapture = ({ industry }: ExitIntentLeadCaptureProps) 
                 <MagneticButton
                   type="submit"
                   size="lg"
-                  className="w-full bg-gradient-premium h-14 text-lg"
+                  className="w-full bg-gradient-premium h-12 md:h-14 text-base md:text-lg"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
@@ -187,7 +187,7 @@ export const ExitIntentLeadCapture = ({ industry }: ExitIntentLeadCaptureProps) 
                   ) : (
                     <>
                       Get My Free ROI Guide
-                      <ArrowRight className="w-5 h-5 ml-2" />
+                      <ArrowRight className="w-4 h-4 md:w-5 md:h-5 ml-2" />
                     </>
                   )}
                 </MagneticButton>
