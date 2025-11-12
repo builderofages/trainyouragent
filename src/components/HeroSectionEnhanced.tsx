@@ -24,36 +24,36 @@ const HeroSection = () => {
   ];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative py-20 md:py-32 overflow-hidden">
       {/* Neutral Elegant Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-slate-100" />
       
-      {/* Subtle Animated Orbs */}
+      {/* Subtle Animated Orbs - Reduced Size */}
+      <motion.div
+        animate={{
+          scale: [1, 1.15, 1],
+          x: [0, 80, 0],
+          y: [0, -40, 0],
+        }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-slate-300/6 to-gray-400/6 rounded-full blur-3xl"
+      />
       <motion.div
         animate={{
           scale: [1, 1.2, 1],
-          x: [0, 100, 0],
-          y: [0, -50, 0],
-        }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-slate-300/8 to-gray-400/8 rounded-full blur-3xl"
-      />
-      <motion.div
-        animate={{
-          scale: [1, 1.3, 1],
-          x: [0, -100, 0],
-          y: [0, 100, 0],
+          x: [0, -80, 0],
+          y: [0, 80, 0],
         }}
         transition={{ duration: 25, repeat: Infinity, ease: "linear", delay: 5 }}
-        className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-gray-300/10 to-slate-400/10 rounded-full blur-3xl"
+        className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-gray-300/8 to-slate-400/8 rounded-full blur-3xl"
       />
       <motion.div
         animate={{
-          scale: [1, 1.1, 1],
+          scale: [1, 1.08, 1],
           rotate: [0, 180, 360],
         }}
         transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-br from-primary/5 to-accent/5 rounded-full blur-2xl"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-gradient-to-br from-primary/4 to-accent/4 rounded-full blur-2xl"
       />
 
       {/* Animated Mesh Background */}
@@ -73,7 +73,7 @@ const HeroSection = () => {
       />
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 pt-24 md:pt-32 pb-12 md:pb-20 relative z-10">
+      <div className="container mx-auto px-4 relative z-10">
         <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Left: Hero Text */}
           <motion.div

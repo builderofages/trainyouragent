@@ -155,12 +155,6 @@ export const ROIIndustryComparison = () => {
     });
   }, [results, monthlyLeads, conversionRate]);
 
-  const getRankColor = (rank: number): string => {
-    if (rank === 1) return "bg-green-500 text-white";
-    if (rank <= 3) return "bg-blue-500 text-white";
-    if (rank <= 5) return "bg-yellow-500 text-black";
-    return "bg-muted text-muted-foreground";
-  };
 
   const getIndustryInsights = (industry: IndustryComparisonResult): string[] => {
     const insights: string[] = [];
@@ -189,13 +183,13 @@ export const ROIIndustryComparison = () => {
       );
     }
 
-    if (industry.rank === 1) {
+    if (industry.roiMultiple > 10) {
       insights.push(
-        "Based on your inputs, this industry offers the highest monthly revenue increase potential"
+        "Based on your inputs, this industry offers exceptional revenue increase potential"
       );
-    } else if (industry.rank <= 3) {
+    } else if (industry.roiMultiple > 5) {
       insights.push(
-        "This is a strong opportunity, ranking in the top 3 industries for your business profile"
+        "This is a strong opportunity with above-average ROI potential for your business profile"
       );
     }
 
@@ -225,7 +219,7 @@ export const ROIIndustryComparison = () => {
             Compare ROI Across Industries
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            See which vertical has the highest revenue opportunity based on your business profile
+            Discover which industry offers the best fit for your business profile and goals
           </p>
         </motion.div>
 
@@ -281,23 +275,11 @@ export const ROIIndustryComparison = () => {
               transition={{ delay: index * 0.05 }}
             >
               <GlassCard
-                className={`p-6 cursor-pointer transition-all duration-300 h-full ${
-                  industry.rank === 1
-                    ? "border-2 border-green-500 shadow-glow"
-                    : industry.rank <= 3
-                    ? "border-primary/30"
-                    : "border-border/20"
-                } hover:scale-105 hover:shadow-lg`}
+                className="p-6 cursor-pointer transition-all duration-300 h-full border-border/20 hover:scale-105 hover:shadow-glow hover:border-primary/30"
                 onClick={() => handleIndustryClick(industry)}
               >
-                {/* Rank Badge */}
-                <div className="flex justify-between items-start mb-3">
-                  <Badge className={getRankColor(industry.rank)}>#{industry.rank}</Badge>
-                  {industry.rank === 1 && <Trophy className="w-6 h-6 text-yellow-500" />}
-                </div>
-
                 {/* Industry Name */}
-                <h4 className="font-bold text-lg mb-3">{industry.name}</h4>
+                <h4 className="font-bold text-xl mb-4">{industry.name}</h4>
 
                 {/* Monthly ROI */}
                 <div className="text-3xl font-bold text-gradient mb-2">
@@ -336,19 +318,6 @@ export const ROIIndustryComparison = () => {
                   {selectedIndustry.name} - Detailed Breakdown
                 </DialogTitle>
               </DialogHeader>
-
-              {/* Ranked Position */}
-              <div className="flex items-center gap-3 mb-6">
-                <Badge className={`${getRankColor(selectedIndustry.rank)} text-base px-4 py-1.5`}>
-                  Ranked #{selectedIndustry.rank} of 8
-                </Badge>
-                {selectedIndustry.rank === 1 && (
-                  <span className="text-sm text-green-600 flex items-center gap-2">
-                    <Trophy className="w-4 h-4" />
-                    Highest revenue opportunity for your business profile
-                  </span>
-                )}
-              </div>
 
               {/* Side-by-Side Comparison */}
               <div className="grid md:grid-cols-2 gap-6 mb-6">
@@ -420,7 +389,7 @@ export const ROIIndustryComparison = () => {
               <GlassCard className="p-6 bg-primary/5">
                 <h4 className="font-bold mb-3 flex items-center gap-2">
                   <Info className="w-5 h-5" />
-                  Why {selectedIndustry.name} Ranks #{selectedIndustry.rank}
+                  Why {selectedIndustry.name} Is a Strong Opportunity
                 </h4>
                 <ul className="space-y-2 text-sm">
                   {getIndustryInsights(selectedIndustry).map((insight, idx) => (
