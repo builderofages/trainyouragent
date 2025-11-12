@@ -2,10 +2,7 @@ import { useState } from "react";
 import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import HeroSectionEnhanced from "@/components/HeroSectionEnhanced";
 import { ComprehensiveSolutionsGrid } from "@/components/solutions/ComprehensiveSolutionsGrid";
-import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
-import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import ROICalculatorEnhanced from "@/components/ROICalculatorEnhanced";
 import { VoiceAgentDemo } from "@/components/VoiceAgentDemo";
@@ -35,13 +32,30 @@ const AutomotiveLanding = () => {
         <Header />
         
         {/* Hero Section */}
-        <HeroSectionEnhanced
-          industry="automotive"
-          headline="Turn Every Inquiry Into Service Revenue — AI That Never Sleeps"
-          subheadline="Capture service appointments, handle parts inquiries, and drive retention with proactive maintenance reminders. Deploy in 3-7 days."
-          onPrimaryCTA={() => document.getElementById('roi-calculator')?.scrollIntoView({ behavior: 'smooth' })}
-          onSecondaryCTA={() => setLeadGateOpen(true)}
-        />
+        <section className="relative pt-32 pb-20 px-4">
+          <div className="container mx-auto max-w-7xl text-center">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+              Turn Every Inquiry Into Service Revenue — AI That Never Sleeps
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+              Capture service appointments, handle parts inquiries, and drive retention with proactive maintenance reminders. Deploy in 3-7 days.
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <button
+                onClick={() => document.getElementById('roi-calculator')?.scrollIntoView({ behavior: 'smooth' })}
+                className="px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:opacity-90"
+              >
+                Calculate Savings
+              </button>
+              <button
+                onClick={() => setLeadGateOpen(true)}
+                className="px-8 py-4 border border-border rounded-lg font-semibold hover:bg-accent"
+              >
+                Get Free Strategy Session
+              </button>
+            </div>
+          </div>
+        </section>
         
         {/* Comprehensive Solutions Section */}
         <section className="py-20 px-4">
@@ -59,12 +73,6 @@ const AutomotiveLanding = () => {
             />
           </div>
         </section>
-        
-        {/* Pain Points Journey */}
-        <PainPointsJourney industry="automotive" />
-        
-        {/* Industry Benefits */}
-        <IndustryBenefits industry="automotive" />
         
         {/* Comparison Table */}
         <ComparisonTable industry="automotive" />

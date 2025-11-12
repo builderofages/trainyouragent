@@ -2,10 +2,7 @@ import { useState } from "react";
 import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import HeroSectionEnhanced from "@/components/HeroSectionEnhanced";
 import { ComprehensiveSolutionsGrid } from "@/components/solutions/ComprehensiveSolutionsGrid";
-import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
-import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import ROICalculatorEnhanced from "@/components/ROICalculatorEnhanced";
 import { VoiceAgentDemo } from "@/components/VoiceAgentDemo";
@@ -35,13 +32,30 @@ const HotelsLanding = () => {
         <Header />
         
         {/* Hero Section */}
-        <HeroSectionEnhanced
-          industry="hotels"
-          headline="Transform Guest Experience with AI-Powered Concierge Services"
-          subheadline="Capture every reservation, handle guest requests instantly, and increase upsells while your team delivers white-glove service. Deploy in 3-7 days."
-          onPrimaryCTA={() => document.getElementById('roi-calculator')?.scrollIntoView({ behavior: 'smooth' })}
-          onSecondaryCTA={() => setLeadGateOpen(true)}
-        />
+        <section className="relative pt-32 pb-20 px-4">
+          <div className="container mx-auto max-w-7xl text-center">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+              Transform Guest Experience with AI-Powered Concierge Services
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+              Capture every reservation, handle guest requests instantly, and increase upsells while your team delivers white-glove service. Deploy in 3-7 days.
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <button
+                onClick={() => document.getElementById('roi-calculator')?.scrollIntoView({ behavior: 'smooth' })}
+                className="px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:opacity-90"
+              >
+                Calculate Savings
+              </button>
+              <button
+                onClick={() => setLeadGateOpen(true)}
+                className="px-8 py-4 border border-border rounded-lg font-semibold hover:bg-accent"
+              >
+                Get Free Strategy Session
+              </button>
+            </div>
+          </div>
+        </section>
         
         {/* Comprehensive Solutions Section */}
         <section className="py-20 px-4">
@@ -59,12 +73,6 @@ const HotelsLanding = () => {
             />
           </div>
         </section>
-        
-        {/* Pain Points Journey */}
-        <PainPointsJourney industry="hotels" />
-        
-        {/* Industry Benefits */}
-        <IndustryBenefits industry="hotels" />
         
         {/* Comparison Table */}
         <ComparisonTable industry="hotels" />
