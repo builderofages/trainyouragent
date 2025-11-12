@@ -53,6 +53,30 @@ Key Points:
 Contact privacy@trainyouragent.com for detailed HIPAA compliance documentation.`,
     },
     {
+      title: "Voice Demo Recording and Microphone Usage",
+      content: `When you use our live voice demo feature, the following applies:
+
+Microphone Access and Recording:
+- Your browser will request microphone permission to enable voice interaction
+- Voice data is temporarily processed by VAPI.ai (our AI voice infrastructure provider)
+- Demo conversations are recorded for quality assurance and AI training purposes
+- Recordings are stored for 30 days, then automatically deleted
+- Voice data is used solely to demonstrate AI capabilities and improve our services
+
+Data Processing:
+- VAPI.ai complies with GDPR, CCPA, and SOC 2 Type II standards
+- Voice data is encrypted in transit and at rest
+- No voice data is sold to third parties
+- You may request deletion of your demo recording at privacy@trainyouragent.com
+
+Consent:
+- By submitting the voice demo form and using the demo, you explicitly consent to voice recording
+- You can decline by not using the voice demo feature
+- Microphone access can be revoked in your browser settings at any time
+
+For questions about voice data handling, contact privacy@trainyouragent.com`,
+    },
+    {
       title: "Data Security",
       content: `We implement industry-standard security measures including:
       

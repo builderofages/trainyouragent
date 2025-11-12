@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Mail, User, Phone, Building2, Sparkles, Mic } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { sendToApollo, getUTMParameters } from "@/lib/apollo-integration";
@@ -32,6 +34,7 @@ export const VoiceDemoLeadGate = ({ isOpen, onClose, onSuccess }: VoiceDemoLeadG
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [industry, setIndustry] = useState("");
+  const [voiceConsent, setVoiceConsent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
@@ -42,6 +45,15 @@ export const VoiceDemoLeadGate = ({ isOpen, onClose, onSuccess }: VoiceDemoLeadG
       toast({
         title: "Required fields missing",
         description: "Please enter your name and email to try the demo",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!voiceConsent) {
+      toast({
+        title: "Consent required",
+        description: "Please consent to voice recording to use the demo",
         variant: "destructive",
       });
       return;
@@ -226,6 +238,28 @@ export const VoiceDemoLeadGate = ({ isOpen, onClose, onSuccess }: VoiceDemoLeadG
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+
+              {/* Voice Consent Checkbox */}
+              <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg border border-border">
+                <Checkbox 
+                  id="voice-consent" 
+                  checked={voiceConsent}
+                  onCheckedChange={(checked) => setVoiceConsent(checked as boolean)}
+                  required 
+                  className="mt-1"
+                />
+                <Label 
+                  htmlFor="voice-consent" 
+                  className="text-xs text-muted-foreground leading-relaxed cursor-pointer flex-1"
+                >
+                  I consent to voice recording and processing by VAPI.ai for demo purposes. 
+                  Voice data is stored for 30 days for quality assurance. See our{" "}
+                  <Link to="/privacy" className="text-primary hover:underline font-medium">
+                    Privacy Policy
+                  </Link>{" "}
+                  for details. *
+                </Label>
               </div>
 
               {/* Submit Button */}

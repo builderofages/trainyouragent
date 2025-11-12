@@ -24,6 +24,37 @@ These terms apply to all users, including visitors, registered users, and paid s
 We reserve the right to modify, suspend, or discontinue any aspect of the service at any time.`,
     },
     {
+      title: "Voice Demo Terms",
+      content: `Website Voice Demo Feature:
+
+When using our live voice demo, you agree to the following:
+
+Demo Purpose:
+- Demos are for evaluation purposes only
+- Intended to demonstrate AI voice capabilities
+- Not a substitute for actual implementation or customer service
+
+Recording and Data:
+- All demo conversations are recorded
+- Voice data may be used for quality assurance and AI training
+- Recordings stored for 30 days, then automatically deleted
+- You explicitly consent to recording by using the demo feature
+
+Access and Availability:
+- Demo access provided at our discretion
+- May be limited based on system capacity or usage patterns
+- No guarantee of continuous availability
+- We reserve the right to restrict or revoke demo access
+
+Prohibited Uses:
+- Do not use the demo for actual business transactions
+- Do not share sensitive personal or business information
+- Do not attempt to exploit or abuse the demo system
+- Do not use the demo for testing malicious inputs
+
+By using the voice demo, you acknowledge these terms and our Privacy Policy regarding voice data handling.`,
+    },
+    {
       title: "Flexible Pilot Program",
       content: `Pilot Program Terms:
 
