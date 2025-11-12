@@ -23,6 +23,8 @@ import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 import { IndustryFAQ } from "@/components/IndustryFAQ";
 import { expandedSolutions } from "@/data/solutionsExpanded";
+import ROICalculatorEnhanced from "@/components/ROICalculatorEnhanced";
+import { VoiceAgentDemo } from "@/components/VoiceAgentDemo";
 import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
@@ -394,53 +396,37 @@ const HealthcareLanding = () => {
         </div>
       </section>
 
+      {/* Live Voice Demo */}
+      <section id="demo" className="py-20 relative overflow-hidden bg-gradient-to-br from-background to-muted/20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Experience Your HIPAA-Compliant AI
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Test drive the actual AI that will handle your patient communications 24/7
+            </p>
+          </motion.div>
+          
+          <VoiceAgentDemo defaultIndustry="healthcare" />
+        </div>
+      </section>
+
       {/* Industry Benefits */}
       <IndustryBenefits solution={expandedSolutions.healthcare} />
 
       {/* Comparison Table */}
       <ComparisonTable industry="healthcare" />
 
-      {/* ROI Calculator */}
-      <section className="py-20 bg-gradient-to-br from-pink-500/5 to-rose-500/5">
+      {/* ROI Calculator - Interactive */}
+      <section id="roi" className="py-20 relative overflow-hidden">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
-          >
-            <GlassCard className="p-12">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold mb-4">The Numbers Speak for Themselves</h2>
-                <p className="text-muted-foreground">Real savings from healthcare practices using AI</p>
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-8 mb-12">
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">$8,200</div>
-                  <div className="text-sm text-muted-foreground">Saved per month</div>
-                  <div className="text-xs text-muted-foreground mt-1">Reduced admin costs</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">80%</div>
-                  <div className="text-sm text-muted-foreground">Fewer no-shows</div>
-                  <div className="text-xs text-muted-foreground mt-1">Automated reminders</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">5x</div>
-                  <div className="text-sm text-muted-foreground">Faster intake</div>
-                  <div className="text-xs text-muted-foreground mt-1">Digital forms</div>
-                </div>
-              </div>
-
-              <div className="text-center pt-8 border-t border-border">
-                <div className="text-2xl font-bold mb-2">
-                  Typical ROI: <span className="text-gradient">First Month</span>
-                </div>
-                <p className="text-muted-foreground">Most practices break even in weeks, not months</p>
-              </div>
-            </GlassCard>
-          </motion.div>
+          <ROICalculatorEnhanced defaultIndustry="healthcare" />
         </div>
       </section>
 

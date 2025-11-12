@@ -23,6 +23,8 @@ import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 import { IndustryFAQ } from "@/components/IndustryFAQ";
 import { expandedSolutions } from "@/data/solutionsExpanded";
+import ROICalculatorEnhanced from "@/components/ROICalculatorEnhanced";
+import { VoiceAgentDemo } from "@/components/VoiceAgentDemo";
 import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
@@ -378,50 +380,34 @@ const LegalLanding = () => {
       {/* Industry Benefits */}
       <IndustryBenefits solution={expandedSolutions.legal} />
 
-      {/* Comparison Table */}
-      <ComparisonTable industry="legal" />
-
-      {/* ROI Calculator */}
-      <section className="py-20 bg-gradient-to-br from-purple-500/5 to-indigo-500/5">
+      {/* Live Voice Demo */}
+      <section id="demo" className="py-20 relative overflow-hidden bg-gradient-to-br from-background to-muted/20">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
+            className="text-center mb-12"
           >
-            <GlassCard className="p-12">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold mb-4">Calculate Your Savings</h2>
-                <p className="text-muted-foreground">Based on average law firm metrics</p>
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-8 mb-12">
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">$3,750</div>
-                  <div className="text-sm text-muted-foreground">Monthly time saved</div>
-                  <div className="text-xs text-muted-foreground mt-1">(10 hrs/week × $375/hr)</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">3x</div>
-                  <div className="text-sm text-muted-foreground">Better qualified cases</div>
-                  <div className="text-xs text-muted-foreground mt-1">Pre-screened leads</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">60%</div>
-                  <div className="text-sm text-muted-foreground">Faster intake</div>
-                  <div className="text-xs text-muted-foreground mt-1">Prepared consultations</div>
-                </div>
-              </div>
-
-              <div className="text-center pt-8 border-t border-border">
-                <div className="text-2xl font-bold mb-2">
-                  ROI Timeline: <span className="text-gradient">First Retainer</span>
-                </div>
-                <p className="text-muted-foreground">One qualified case pays for months of service</p>
-              </div>
-            </GlassCard>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Experience Your AI Intake System
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Test drive the actual AI that will qualify your legal leads 24/7
+            </p>
           </motion.div>
+          
+          <VoiceAgentDemo defaultIndustry="legal" />
+        </div>
+      </section>
+
+      {/* Comparison Table */}
+      <ComparisonTable industry="legal" />
+
+      {/* ROI Calculator - Interactive */}
+      <section id="roi" className="py-20 relative overflow-hidden">
+        <div className="container mx-auto px-4">
+          <ROICalculatorEnhanced defaultIndustry="legal" />
         </div>
       </section>
 

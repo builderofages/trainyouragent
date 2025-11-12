@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Check, X, Minus } from "lucide-react";
 import { GlassCard } from "@/components/enhanced/GlassCard";
+import { industryComparisonData } from "@/data/industryComparisonData";
 
 interface ComparisonFeature {
   feature: string;
@@ -14,6 +15,8 @@ interface ComparisonTableProps {
 }
 
 export const ComparisonTable = ({ industry = "business" }: ComparisonTableProps) => {
+  const comparisonData = industryComparisonData[industry?.toLowerCase()] || industryComparisonData.hvac;
+  
   const features: ComparisonFeature[] = [
     { feature: "24/7 Availability", aiAgent: true, humanStaff: false, missedCalls: false },
     { feature: "Instant Response Time", aiAgent: "< 2 seconds", humanStaff: "2-5 minutes", missedCalls: "Never" },
@@ -23,8 +26,8 @@ export const ComparisonTable = ({ industry = "business" }: ComparisonTableProps)
     { feature: "CRM Integration", aiAgent: "Automatic", humanStaff: "Manual entry", missedCalls: "Never" },
     { feature: "Call Recording & Transcription", aiAgent: true, humanStaff: "Sometimes", missedCalls: false },
     { feature: "Sick Days / Vacation", aiAgent: false, humanStaff: true, missedCalls: true },
-    { feature: "Monthly Cost", aiAgent: "$299-$799", humanStaff: "$3,500+", missedCalls: "$0 (+ lost revenue)" },
-    { feature: "Setup Time", aiAgent: "2 weeks", humanStaff: "4-6 weeks", missedCalls: "N/A" },
+    { feature: "Monthly Cost", aiAgent: comparisonData.aiAgentCost, humanStaff: comparisonData.humanStaffCost, missedCalls: "$0 (+ lost revenue)" },
+    { feature: "Setup Time", aiAgent: comparisonData.setupTime, humanStaff: "4-6 weeks", missedCalls: "N/A" },
   ];
 
   const renderCell = (value: boolean | string, isWinner?: boolean) => {
@@ -132,10 +135,10 @@ export const ComparisonTable = ({ industry = "business" }: ComparisonTableProps)
             <div className="p-8 bg-gradient-to-r from-primary/5 to-accent/5 border-t border-primary/20">
               <div className="text-center">
                 <div className="text-2xl font-bold mb-2">
-                  Average ROI: <span className="text-gradient">427%</span>
+                  Average ROI: <span className="text-gradient">{comparisonData.averageROI}</span>
                 </div>
                 <p className="text-muted-foreground">
-                  Most {industry} businesses see complete payback within 30 days
+                  Most {industry} businesses see complete payback within {comparisonData.paybackPeriod}
                 </p>
               </div>
             </div>

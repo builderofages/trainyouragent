@@ -23,6 +23,8 @@ import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 import { IndustryFAQ } from "@/components/IndustryFAQ";
 import { expandedSolutions } from "@/data/solutionsExpanded";
+import ROICalculatorEnhanced from "@/components/ROICalculatorEnhanced";
+import { VoiceAgentDemo } from "@/components/VoiceAgentDemo";
 import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
@@ -399,53 +401,37 @@ const LogisticsLanding = () => {
         </div>
       </section>
 
+      {/* Live Voice Demo */}
+      <section id="demo" className="py-20 relative overflow-hidden bg-gradient-to-br from-background to-muted/20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Experience Your AI Logistics Assistant
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Test drive the actual AI that will handle your quotes and tracking 24/7
+            </p>
+          </motion.div>
+          
+          <VoiceAgentDemo defaultIndustry="logistics" />
+        </div>
+      </section>
+
       {/* Industry Benefits */}
       <IndustryBenefits solution={expandedSolutions.logistics} />
 
       {/* Comparison Table */}
       <ComparisonTable industry="logistics" />
 
-      {/* ROI Calculator */}
-      <section className="py-20 bg-gradient-to-br from-yellow-500/5 to-amber-500/5">
+      {/* ROI Calculator - Interactive */}
+      <section id="roi" className="py-20 relative overflow-hidden">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
-          >
-            <GlassCard className="p-12">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold mb-4">Your Competitive Advantage in Numbers</h2>
-                <p className="text-muted-foreground">Real metrics from logistics companies using AI</p>
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-8 mb-12">
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">10x</div>
-                  <div className="text-sm text-muted-foreground">Faster quote generation</div>
-                  <div className="text-xs text-muted-foreground mt-1">4 hours → 30 seconds</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">$15K</div>
-                  <div className="text-sm text-muted-foreground">Monthly savings</div>
-                  <div className="text-xs text-muted-foreground mt-1">Support + admin costs</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">70%</div>
-                  <div className="text-sm text-muted-foreground">Support time saved</div>
-                  <div className="text-xs text-muted-foreground mt-1">Automated tracking updates</div>
-                </div>
-              </div>
-
-              <div className="text-center pt-8 border-t border-border">
-                <div className="text-2xl font-bold mb-2">
-                  Win Rate Increase: <span className="text-gradient">35-50%</span>
-                </div>
-                <p className="text-muted-foreground">Fastest quote wins. Every time.</p>
-              </div>
-            </GlassCard>
-          </motion.div>
+          <ROICalculatorEnhanced defaultIndustry="logistics" />
         </div>
       </section>
 

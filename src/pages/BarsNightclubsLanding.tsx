@@ -23,6 +23,8 @@ import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 import { IndustryFAQ } from "@/components/IndustryFAQ";
 import { expandedSolutions } from "@/data/solutionsExpanded";
+import ROICalculatorEnhanced from "@/components/ROICalculatorEnhanced";
+import { VoiceAgentDemo } from "@/components/VoiceAgentDemo";
 import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
@@ -378,88 +380,39 @@ const BarsNightclubsLanding = () => {
       {/* Industry Benefits */}
       <IndustryBenefits solution={solution} />
 
-      {/* Comparison Table */}
-      <ComparisonTable industry="bars and nightclubs" />
+      {/* Live Voice Demo */}
+      <section id="demo" className="py-20 relative overflow-hidden bg-gradient-to-br from-background to-muted/20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Experience Your AI VIP Host
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Test drive the actual AI that will handle your event bookings 24/7
+            </p>
+          </motion.div>
+          
+          <VoiceAgentDemo defaultIndustry="bars" />
+        </div>
+      </section>
 
-      {/* ROI Calculator */}
+      {/* Comparison Table */}
+      <ComparisonTable industry="bars" />
+
+      {/* ROI Calculator - Interactive */}
       <section id="roi" className="py-20 relative overflow-hidden">
         {!isMobile && (
-          <ParallaxSection speed={0.4} className="absolute inset-0">
+          <ParallaxSection speed={0.3} className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5" />
           </ParallaxSection>
         )}
         <div className="container mx-auto px-4 relative z-10">
-          <FloatingIsland intensity={isMobile ? "low" : "high"} delay={0.3}>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="max-w-4xl mx-auto"
-            >
-              <GlassCard className="p-12" style={{ willChange: 'transform' }}>
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold mb-4">Your Revenue Impact</h2>
-                <p className="text-muted-foreground">Based on average nightlife venue metrics</p>
-              </div>
-
-                <div ref={roiStatsRef} className="grid md:grid-cols-3 gap-8 mb-12">
-                  <motion.div
-                    className="text-center"
-                    whileHover={{ scale: 1.08, y: -10, rotate: 2 }}
-                    transition={{ duration: 0.3, ease: "backOut" }}
-                    style={{ willChange: 'transform' }}
-                  >
-                    <div className="text-5xl font-bold text-gradient mb-2">$50K+</div>
-                    <div className="text-sm text-muted-foreground">Additional monthly revenue</div>
-                    <div className="text-xs text-muted-foreground mt-1">From VIP/bottle bookings</div>
-                  </motion.div>
-                  <motion.div
-                    className="text-center"
-                    whileHover={{ scale: 1.08, y: -10, rotate: -2 }}
-                    transition={{ duration: 0.3, ease: "backOut" }}
-                    style={{ willChange: 'transform' }}
-                  >
-                    <div className="text-5xl font-bold text-gradient mb-2">70%</div>
-                    <div className="text-sm text-muted-foreground">Less staff phone time</div>
-                    <div className="text-xs text-muted-foreground mt-1">Focus on in-venue service</div>
-                  </motion.div>
-                  <motion.div
-                    className="text-center"
-                    whileHover={{ scale: 1.08, y: -10, rotate: 2 }}
-                    transition={{ duration: 0.3, ease: "backOut" }}
-                    style={{ willChange: 'transform' }}
-                  >
-                    <div className="text-5xl font-bold text-gradient mb-2">3x</div>
-                    <div className="text-sm text-muted-foreground">More event bookings</div>
-                    <div className="text-xs text-muted-foreground mt-1">24/7 availability</div>
-                  </motion.div>
-                </div>
-
-                <div className="text-center pt-8 border-t border-border">
-                  <div className="text-2xl font-bold mb-4">
-                    Average Payback Period: <span className="text-gradient">10 days</span>
-                  </div>
-                  <MagneticButton
-                    strength={isMobile ? 12 : 28}
-                    size="lg"
-                    className="gap-2 hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] transition-shadow"
-                    onClick={() => {
-                      conversions.demoBooked("bars");
-                      window.open(siteConfig.bookingUrl, '_blank');
-                    }}
-                  >
-                    Book Your Demo
-                    <motion.div
-                      animate={{ rotate: [0, 15, 0], scale: [1, 1.15, 1] }}
-                      transition={{ duration: 1.8, repeat: Infinity }}
-                    >
-                      <Calendar className="w-5 h-5" />
-                    </motion.div>
-                  </MagneticButton>
-                </div>
-              </GlassCard>
-            </motion.div>
-          </FloatingIsland>
+          <ROICalculatorEnhanced defaultIndustry="bars" />
         </div>
       </section>
 

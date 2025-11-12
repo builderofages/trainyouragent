@@ -51,8 +51,12 @@ const ResultCard = ({ icon: Icon, label, value, color, delay }: any) => {
   );
 };
 
-const ROICalculatorEnhanced = () => {
-  const [industry, setIndustry] = useState("hvac");
+interface ROICalculatorEnhancedProps {
+  defaultIndustry?: string;
+}
+
+const ROICalculatorEnhanced = ({ defaultIndustry }: ROICalculatorEnhancedProps = {}) => {
+  const [industry, setIndustry] = useState(defaultIndustry || "hvac");
   const [monthlyLeads, setMonthlyLeads] = useState(100);
   const [conversionRate, setConversionRate] = useState(7);
   const [avgJobValue, setAvgJobValue] = useState(500);
@@ -84,6 +88,17 @@ const ROICalculatorEnhanced = () => {
       variant_id: cta 
     });
   }, []);
+
+  // Update industry when defaultIndustry prop changes
+  useEffect(() => {
+    if (defaultIndustry) {
+      const selected = industries.find(i => i.id === defaultIndustry);
+      if (selected) {
+        setIndustry(defaultIndustry);
+        setAvgJobValue(selected.defaultJobValue);
+      }
+    }
+  }, [defaultIndustry]);
 
   // Headline variants
   const headlineVariants: Record<VariantId, string> = {

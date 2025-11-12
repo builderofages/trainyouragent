@@ -23,6 +23,8 @@ import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 import { IndustryFAQ } from "@/components/IndustryFAQ";
 import { expandedSolutions } from "@/data/solutionsExpanded";
+import ROICalculatorEnhanced from "@/components/ROICalculatorEnhanced";
+import { VoiceAgentDemo } from "@/components/VoiceAgentDemo";
 import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
@@ -377,13 +379,34 @@ const HVACLanding = () => {
       <SolutionJourney industry="HVAC contractors" currentStage={1} />
 
 
+      {/* Live Voice Demo */}
+      <section id="demo" className="py-20 relative overflow-hidden bg-gradient-to-br from-background to-muted/20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Experience Your AI Agent
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Test drive the actual AI that will answer your HVAC calls 24/7
+            </p>
+          </motion.div>
+          
+          <VoiceAgentDemo defaultIndustry="hvac" />
+        </div>
+      </section>
+
       {/* Industry Benefits */}
       <IndustryBenefits solution={solution} />
 
       {/* Comparison Table */}
-      <ComparisonTable industry="HVAC" />
+      <ComparisonTable industry="hvac" />
 
-      {/* ROI Calculator */}
+      {/* ROI Calculator - Interactive */}
       <section id="roi" className="py-20 relative overflow-hidden">
         {!isMobile && (
           <ParallaxSection speed={0.3} className="absolute inset-0">
@@ -391,77 +414,7 @@ const HVACLanding = () => {
           </ParallaxSection>
         )}
         <div className="container mx-auto px-4 relative z-10">
-          <FloatingIsland intensity={isMobile ? "low" : "medium"} delay={0.2}>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="max-w-4xl mx-auto"
-            >
-              <GlassCard className="p-12" style={{ willChange: 'transform' }}>
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold mb-4">Your Revenue Impact</h2>
-                <p className="text-muted-foreground">Based on average HVAC contractor metrics</p>
-              </div>
-
-                <div ref={roiStatsRef} className="grid md:grid-cols-3 gap-8 mb-12">
-                  <motion.div
-                    className="text-center"
-                    whileHover={{ scale: 1.05, y: -8 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ willChange: 'transform' }}
-                  >
-                    <div className="text-5xl font-bold text-gradient mb-2">$75K+</div>
-                    <div className="text-sm text-muted-foreground">Additional annual revenue</div>
-                    <div className="text-xs text-muted-foreground mt-1">From captured after-hours calls</div>
-                  </motion.div>
-                  <motion.div
-                    className="text-center"
-                    whileHover={{ scale: 1.05, y: -8 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ willChange: 'transform' }}
-                  >
-                    <div className="text-5xl font-bold text-gradient mb-2">35%</div>
-                    <div className="text-sm text-muted-foreground">More service bookings</div>
-                    <div className="text-xs text-muted-foreground mt-1">24/7 availability</div>
-                  </motion.div>
-                  <motion.div
-                    className="text-center"
-                    whileHover={{ scale: 1.05, y: -8 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ willChange: 'transform' }}
-                  >
-                    <div className="text-5xl font-bold text-gradient mb-2">15 hrs</div>
-                    <div className="text-sm text-muted-foreground">Office time saved/week</div>
-                    <div className="text-xs text-muted-foreground mt-1">Focus on actual work</div>
-                  </motion.div>
-                </div>
-
-                <div className="text-center pt-8 border-t border-border">
-                  <div className="text-2xl font-bold mb-4">
-                    Average Payback Period: <span className="text-gradient">18 days</span>
-                  </div>
-                  <MagneticButton
-                    strength={isMobile ? 10 : 25}
-                    size="lg"
-                    className="gap-2 hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] transition-shadow"
-                    onClick={() => {
-                      conversions.demoBooked("hvac");
-                      window.open(siteConfig.bookingUrl, '_blank');
-                    }}
-                  >
-                    Book Your Demo
-                    <motion.div
-                      animate={{ rotate: [0, 10, 0] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    >
-                      <Calendar className="w-5 h-5" />
-                    </motion.div>
-                  </MagneticButton>
-                </div>
-              </GlassCard>
-            </motion.div>
-          </FloatingIsland>
+          <ROICalculatorEnhanced defaultIndustry="hvac" />
         </div>
       </section>
 

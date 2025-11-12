@@ -23,6 +23,8 @@ import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 import { IndustryFAQ } from "@/components/IndustryFAQ";
 import { expandedSolutions } from "@/data/solutionsExpanded";
+import ROICalculatorEnhanced from "@/components/ROICalculatorEnhanced";
+import { VoiceAgentDemo } from "@/components/VoiceAgentDemo";
 import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
@@ -400,53 +402,37 @@ const AccountingLanding = () => {
         </div>
       </section>
 
+      {/* Live Voice Demo */}
+      <section id="demo" className="py-20 relative overflow-hidden bg-gradient-to-br from-background to-muted/20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Experience Your AI Tax Assistant
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Test drive the actual AI that will screen your accounting leads 24/7
+            </p>
+          </motion.div>
+          
+          <VoiceAgentDemo defaultIndustry="accounting" />
+        </div>
+      </section>
+
       {/* Industry Benefits */}
       <IndustryBenefits solution={expandedSolutions.accounting} />
 
       {/* Comparison Table */}
       <ComparisonTable industry="accounting" />
 
-      {/* ROI Calculator */}
-      <section className="py-20 bg-gradient-to-br from-green-500/5 to-emerald-500/5">
+      {/* ROI Calculator - Interactive */}
+      <section id="roi" className="py-20 relative overflow-hidden">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
-          >
-            <GlassCard className="p-12">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold mb-4">Your ROI in Numbers</h2>
-                <p className="text-muted-foreground">Based on average accounting firm metrics</p>
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-8 mb-12">
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">$4,500</div>
-                  <div className="text-sm text-muted-foreground">Monthly time saved</div>
-                  <div className="text-xs text-muted-foreground mt-1">(15 hrs/week × $75/hr)</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">3-5x</div>
-                  <div className="text-sm text-muted-foreground">More qualified leads</div>
-                  <div className="text-xs text-muted-foreground mt-1">24/7 capture vs 9-5</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">70%</div>
-                  <div className="text-sm text-muted-foreground">Faster onboarding</div>
-                  <div className="text-xs text-muted-foreground mt-1">5 days → 1.5 days</div>
-                </div>
-              </div>
-
-              <div className="text-center pt-8 border-t border-border">
-                <div className="text-2xl font-bold mb-2">
-                  Average Payback Period: <span className="text-gradient">14 days</span>
-                </div>
-                <p className="text-muted-foreground">Most firms see ROI within the first 2 weeks</p>
-              </div>
-            </GlassCard>
-          </motion.div>
+          <ROICalculatorEnhanced defaultIndustry="accounting" />
         </div>
       </section>
 

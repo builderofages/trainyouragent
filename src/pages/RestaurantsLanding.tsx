@@ -23,6 +23,8 @@ import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 import { IndustryFAQ } from "@/components/IndustryFAQ";
 import { expandedSolutions } from "@/data/solutionsExpanded";
+import ROICalculatorEnhanced from "@/components/ROICalculatorEnhanced";
+import { VoiceAgentDemo } from "@/components/VoiceAgentDemo";
 import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
@@ -380,53 +382,37 @@ const RestaurantsLanding = () => {
         </div>
       </section>
 
+      {/* Live Voice Demo */}
+      <section id="demo" className="py-20 relative overflow-hidden bg-gradient-to-br from-background to-muted/20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Experience Your AI Host
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Test drive the actual AI that will handle your restaurant reservations 24/7
+            </p>
+          </motion.div>
+          
+          <VoiceAgentDemo defaultIndustry="restaurants" />
+        </div>
+      </section>
+
       {/* Industry Benefits */}
       <IndustryBenefits solution={expandedSolutions.restaurants} />
 
       {/* Comparison Table */}
       <ComparisonTable industry="restaurants" />
 
-      {/* ROI Calculator */}
-      <section className="py-20 bg-gradient-to-br from-red-500/5 to-pink-500/5">
+      {/* ROI Calculator - Interactive */}
+      <section id="roi" className="py-20 relative overflow-hidden">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
-          >
-            <GlassCard className="p-12">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold mb-4">Fill More Tables, Stress Less</h2>
-                <p className="text-muted-foreground">Real results from restaurants using AI</p>
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-8 mb-12">
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">2x</div>
-                  <div className="text-sm text-muted-foreground">More reservations</div>
-                  <div className="text-xs text-muted-foreground mt-1">Never miss a call</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">$24K</div>
-                  <div className="text-sm text-muted-foreground">Extra catering revenue</div>
-                  <div className="text-xs text-muted-foreground mt-1">Per month average</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">50%</div>
-                  <div className="text-sm text-muted-foreground">Less staff burden</div>
-                  <div className="text-xs text-muted-foreground mt-1">Focus on service</div>
-                </div>
-              </div>
-
-              <div className="text-center pt-8 border-t border-border">
-                <div className="text-2xl font-bold mb-2">
-                  ROI Timeline: <span className="text-gradient">2-3 Weeks</span>
-                </div>
-                <p className="text-muted-foreground">Most restaurants break even in the first month</p>
-              </div>
-            </GlassCard>
-          </motion.div>
+          <ROICalculatorEnhanced defaultIndustry="restaurants" />
         </div>
       </section>
 

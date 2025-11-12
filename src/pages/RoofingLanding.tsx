@@ -23,6 +23,8 @@ import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 import { IndustryFAQ } from "@/components/IndustryFAQ";
 import { expandedSolutions } from "@/data/solutionsExpanded";
+import ROICalculatorEnhanced from "@/components/ROICalculatorEnhanced";
+import { VoiceAgentDemo } from "@/components/VoiceAgentDemo";
 import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
 import { ParallaxSection } from "@/components/effects/ParallaxSection";
@@ -397,53 +399,37 @@ const RoofingLanding = () => {
         </div>
       </section>
 
+      {/* Live Voice Demo */}
+      <section id="demo" className="py-20 relative overflow-hidden bg-gradient-to-br from-background to-muted/20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Experience Your AI Roofing Agent
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Test drive the actual AI that will capture your roofing leads 24/7
+            </p>
+          </motion.div>
+          
+          <VoiceAgentDemo defaultIndustry="roofing" />
+        </div>
+      </section>
+
       {/* Industry Benefits */}
       <IndustryBenefits solution={expandedSolutions.roofing} />
 
       {/* Comparison Table */}
       <ComparisonTable industry="roofing" />
 
-      {/* ROI Calculator */}
-      <section className="py-20 bg-gradient-to-br from-orange-500/5 to-red-500/5">
+      {/* ROI Calculator - Interactive */}
+      <section id="roi" className="py-20 relative overflow-hidden">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
-          >
-            <GlassCard className="p-12">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold mb-4">The Math That Matters</h2>
-                <p className="text-muted-foreground">Real numbers from roofing contractors using AI</p>
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-8 mb-12">
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">4x</div>
-                  <div className="text-sm text-muted-foreground">More qualified leads</div>
-                  <div className="text-xs text-muted-foreground mt-1">vs traditional methods</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">$8,400</div>
-                  <div className="text-sm text-muted-foreground">Avg. monthly revenue increase</div>
-                  <div className="text-xs text-muted-foreground mt-1">Based on 3 extra jobs/month</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-gradient mb-2">&lt; 30s</div>
-                  <div className="text-sm text-muted-foreground">Response time</div>
-                  <div className="text-xs text-muted-foreground mt-1">24/7/365 coverage</div>
-                </div>
-              </div>
-
-              <div className="text-center pt-8 border-t border-border">
-                <div className="text-2xl font-bold mb-2">
-                  Typical ROI: <span className="text-gradient">First Job</span>
-                </div>
-                <p className="text-muted-foreground">One extra roofing job pays for months of service</p>
-              </div>
-            </GlassCard>
-          </motion.div>
+          <ROICalculatorEnhanced defaultIndustry="roofing" />
         </div>
       </section>
 
