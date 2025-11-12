@@ -11,9 +11,13 @@ import FAQ from "@/components/FAQ";
 import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { SecurityDisclaimer } from "@/components/SecurityDisclaimer";
 import { comprehensiveSolutions } from "@/data/comprehensiveBusinessFunctions";
+import { expandedSolutions } from "@/data/solutionsExpanded";
+import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
+import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
 
 const AutomotiveLanding = () => {
   const [leadGateOpen, setLeadGateOpen] = useState(false);
+  const solution = expandedSolutions.automotive;
   
   return (
     <>
@@ -71,11 +75,14 @@ const AutomotiveLanding = () => {
             <ComprehensiveSolutionsGrid 
               businessFunctions={comprehensiveSolutions.automotive.businessFunctions}
             />
-          </div>
-        </section>
-        
-        {/* Comparison Table */}
-        <ComparisonTable industry="automotive" />
+        </div>
+      </section>
+
+      <PainPointsJourney solution={solution} />
+      <IndustryBenefits solution={solution} />
+      
+      {/* Comparison Table */}
+      <ComparisonTable industry="automotive" />
         
         {/* ROI Calculator */}
         <div id="roi-calculator">

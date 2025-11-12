@@ -11,9 +11,13 @@ import FAQ from "@/components/FAQ";
 import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { SecurityDisclaimer } from "@/components/SecurityDisclaimer";
 import { comprehensiveSolutions } from "@/data/comprehensiveBusinessFunctions";
+import { expandedSolutions } from "@/data/solutionsExpanded";
+import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
+import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
 
 const SolarLanding = () => {
   const [leadGateOpen, setLeadGateOpen] = useState(false);
+  const solution = expandedSolutions.solar;
   
   return (
     <>
@@ -71,11 +75,14 @@ const SolarLanding = () => {
             <ComprehensiveSolutionsGrid 
               businessFunctions={comprehensiveSolutions.solar.businessFunctions}
             />
-          </div>
-        </section>
-        
-        {/* Comparison Table */}
-        <ComparisonTable industry="solar" />
+        </div>
+      </section>
+
+      <PainPointsJourney solution={solution} />
+      <IndustryBenefits solution={solution} />
+      
+      {/* Comparison Table */}
+      <ComparisonTable industry="solar" />
         
         {/* ROI Calculator */}
         <div id="roi-calculator">
