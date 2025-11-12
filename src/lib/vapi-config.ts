@@ -1,6 +1,6 @@
 // VAPI Configuration
 export const vapiConfig = {
-  publicKey: "", // User needs to add their VAPI public key
+  publicKey: "fed77f7d-5673-4bcb-be6b-a43e149287aa",
   assistant: {
     firstMessage: "Hi! I'm your AI assistant. I can help you learn about our voice AI services, answer questions about pricing, and schedule a free strategy session. What would you like to know?",
     voice: {
