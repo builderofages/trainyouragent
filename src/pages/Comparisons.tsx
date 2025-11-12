@@ -13,9 +13,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
 import { ROIIndustryComparison } from "@/components/ROIIndustryComparison";
 import { trackEvent } from "@/lib/tracking";
+import { industryComparisonsData } from "@/data/industryComparisonsData";
 
 const Comparisons = () => {
   const [leadGateOpen, setLeadGateOpen] = useState(false);
+  const [selectedIndustry, setSelectedIndustry] = useState<string>("hvac");
+
+  // Get current industry data
+  const industryData = industryComparisonsData[selectedIndustry] || industryComparisonsData.hvac;
 
   return (
     <div className="min-h-screen bg-background">
@@ -48,12 +53,17 @@ const Comparisons = () => {
             transition={{ delay: 0.2 }}
             className="max-w-md mx-auto mb-12"
           >
-            <Select defaultValue="all">
+            <Select value={selectedIndustry} onValueChange={(value) => {
+              setSelectedIndustry(value);
+              trackEvent('industry_filter_changed', { 
+                industry: value, 
+                location: 'comparisons_page' 
+              });
+            }}>
               <SelectTrigger className="w-full h-12 text-base bg-background/50 backdrop-blur-sm border-primary/20">
                 <SelectValue placeholder="See comparisons for your industry" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Industries</SelectItem>
                 <SelectItem value="hvac">HVAC & Home Services</SelectItem>
                 <SelectItem value="legal">Legal Services</SelectItem>
                 <SelectItem value="healthcare">Healthcare</SelectItem>
@@ -67,6 +77,38 @@ const Comparisons = () => {
             <p className="text-sm text-muted-foreground text-center mt-2">
               Get industry-specific cost breakdowns and ROI examples
             </p>
+          </motion.div>
+
+          {/* Industry Context Banner */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mb-12"
+          >
+            <GlassCard className="p-6 border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <TrendingUp className="w-6 h-6 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg mb-2">{industryData.displayName} Industry Insights</h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    {industryData.peakSeasonFactors}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {industryData.criticalComplianceNeeds.map((need, idx) => (
+                      <span key={idx} className="text-xs px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                        {need}
+                      </span>
+                    ))}
+                    <span className="text-xs px-3 py-1 rounded-full bg-accent/10 text-accent border border-accent/20">
+                      After-hours: {industryData.afterHoursImportance} priority
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </GlassCard>
           </motion.div>
 
           {/* Comparison Tabs */}
@@ -100,14 +142,14 @@ const Comparisons = () => {
                         <tbody className="divide-y divide-border">
                           <ComparisonRow 
                             feature="Annual Cost"
-                            ai="$997-2,997/mo ($12K-36K/yr)"
-                            human="$35K-45K + benefits ($50K-65K)"
+                            ai={industryData.aiAgentCost}
+                            human={industryData.receptionistCost}
                             aiAdvantage
                           />
                           <ComparisonRow 
                             feature="Availability"
-                            ai="24/7/365 — never sleeps"
-                            human="40 hrs/week + PTO & sick days"
+                            ai={industryData.aiAvailability}
+                            human={industryData.receptionistAvailability}
                             aiAdvantage
                           />
                           <ComparisonRow 
@@ -118,14 +160,20 @@ const Comparisons = () => {
                           />
                           <ComparisonRow 
                             feature="Scalability"
-                            ai="Instant — unlimited concurrent calls"
-                            human="Hire & train new staff (weeks)"
+                            ai={industryData.aiScalability}
+                            human={industryData.receptionistScalability}
                             aiAdvantage
                           />
                           <ComparisonRow 
-                            feature="Training Time"
-                            ai="One-time setup (1-2 days)"
+                            feature="Setup Time"
+                            ai={industryData.setupTime}
                             human="2-4 weeks onboarding minimum"
+                            aiAdvantage
+                          />
+                          <ComparisonRow 
+                            feature="Contract Terms"
+                            ai={industryData.contractTerms}
+                            human="Full-time employment commitment"
                             aiAdvantage
                           />
                           <ComparisonRow 
@@ -143,13 +191,25 @@ const Comparisons = () => {
                           <ComparisonRow 
                             feature="Language Support"
                             ai="100+ languages instantly"
-                            human="Usually 1-2 languages"
+                            human={industryData.vaLanguageSupport}
+                            aiAdvantage
+                          />
+                          <ComparisonRow 
+                            feature="CRM Integration"
+                            ai={industryData.nativeCRMIntegrations}
+                            human="Manual data entry required"
                             aiAdvantage
                           />
                           <ComparisonRow 
                             feature="Data Entry Accuracy"
                             ai="99%+ (automated CRM sync)"
                             human="85-95% (human error)"
+                            aiAdvantage
+                          />
+                          <ComparisonRow 
+                            feature="Call Recording & Analytics"
+                            ai="100% automatic with transcripts"
+                            human="Optional, manual review"
                             aiAdvantage
                           />
                           <ComparisonRow 
@@ -277,8 +337,20 @@ const Comparisons = () => {
                     <tbody className="divide-y divide-border">
                       <ComparisonRow 
                         feature="Cost Structure"
-                        ai="Fixed monthly: $997-2,997"
-                        human="$3-8 per call (unpredictable)"
+                        ai={`Fixed monthly: ${industryData.aiAgentCost.split('/')[0]}`}
+                        human={`${industryData.callCenterCostPerCall} (${industryData.callCenterMonthlyEstimate})`}
+                        aiAdvantage
+                      />
+                      <ComparisonRow 
+                        feature="Setup Time"
+                        ai={industryData.setupTime}
+                        human="2-4 weeks minimum"
+                        aiAdvantage
+                      />
+                      <ComparisonRow 
+                        feature="Contract Length"
+                        ai={industryData.contractTerms}
+                        human="Annual contracts typical"
                         aiAdvantage
                       />
                       <ComparisonRow 
@@ -301,14 +373,20 @@ const Comparisons = () => {
                       />
                       <ComparisonRow 
                         feature="Integration Depth"
-                        ai="Direct CRM & tool integration"
+                        ai={industryData.nativeCRMIntegrations}
                         human="Limited integration options"
                         aiAdvantage
                       />
                       <ComparisonRow 
                         feature="Response Time"
-                        ai="Instant (< 1 second)"
-                        human="Queue times + transfers"
+                        ai={industryData.aiResponseTime}
+                        human={industryData.callCenterResponseTime}
+                        aiAdvantage
+                      />
+                      <ComparisonRow 
+                        feature="Holiday Coverage"
+                        ai="No additional cost"
+                        human="Premium holiday rates"
                         aiAdvantage
                       />
                       <ComparisonRow 
@@ -360,29 +438,41 @@ const Comparisons = () => {
                         <th className="text-left py-4 px-4 font-semibold">Virtual Assistant</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-border">
+                     <tbody className="divide-y divide-border">
                       <ComparisonRow 
                         feature="Cost"
-                        ai="$997-2,997/mo (unlimited)"
-                        human="$15-25/hr ($2,400-4,000/mo for 160hrs)"
+                        ai={industryData.aiAgentCost}
+                        human={industryData.vaCost}
                         aiAdvantage
                       />
                       <ComparisonRow 
                         feature="Hours Available"
-                        ai="24/7/365"
-                        human="Limited hours + time zones"
+                        ai={industryData.aiAvailability}
+                        human={industryData.vaAvailability}
                         aiAdvantage
                       />
                       <ComparisonRow 
                         feature="Scalability"
-                        ai="Instant unlimited capacity"
-                        human="One person at a time"
+                        ai={industryData.aiScalability}
+                        human="Limited to VA's working hours & capacity"
+                        aiAdvantage
+                      />
+                      <ComparisonRow 
+                        feature="Setup Time"
+                        ai={industryData.setupTime}
+                        human="1-2 weeks hiring + onboarding"
                         aiAdvantage
                       />
                       <ComparisonRow 
                         feature="Language & Accent"
                         ai="100+ languages, any accent"
-                        human="Depends on individual VA"
+                        human={industryData.vaLanguageSupport}
+                        aiAdvantage
+                      />
+                      <ComparisonRow 
+                        feature="CRM Integration"
+                        ai={industryData.nativeCRMIntegrations}
+                        human="Manual data entry typically"
                         aiAdvantage
                       />
                       <ComparisonRow 
@@ -704,10 +794,10 @@ const Comparisons = () => {
           {/* Cost Over Time Comparison */}
           <GlassCard className="p-8 mb-16 max-w-5xl mx-auto">
             <h3 className="text-3xl font-bold mb-6 text-center">
-              Total Cost Comparison Over Time
+              Total Cost Comparison Over Time: {industryData.displayName}
             </h3>
             <p className="text-center text-muted-foreground mb-8">
-              Based on average mid-sized business (30-50 calls/day)
+              Based on {industryData.typicalCallVolume}
             </p>
             
             <div className="grid md:grid-cols-3 gap-6">
