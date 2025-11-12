@@ -18,7 +18,7 @@ import { industryComparisonsData } from "@/data/industryComparisonsData";
 
 const Comparisons = () => {
   const [leadGateOpen, setLeadGateOpen] = useState(false);
-  const [selectedIndustry, setSelectedIndustry] = useState<string>("hvac");
+  const [selectedIndustry, setSelectedIndustry] = useState<string>("all");
 
   // Get current industry data
   const industryData = industryComparisonsData[selectedIndustry] || industryComparisonsData.hvac;
@@ -65,6 +65,7 @@ const Comparisons = () => {
                 <SelectValue placeholder="See comparisons for your industry" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="all">All Industries</SelectItem>
                 <SelectItem value="hvac">HVAC & Home Services</SelectItem>
                 <SelectItem value="legal">Legal Services</SelectItem>
                 <SelectItem value="healthcare">Healthcare</SelectItem>
@@ -675,77 +676,92 @@ const Comparisons = () => {
               }
             </p>
             
-            <div className="max-w-6xl mx-auto">
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {Object.values(industryComparisonsData).map((industry) => (
-                  <IndustryScenarioCard key={industry.industry} data={industry} />
-                ))}
+            {selectedIndustry === "all" ? (
+              <div className="max-w-6xl mx-auto">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {Object.values(industryComparisonsData).map((industry) => (
+                    <IndustryScenarioCard key={industry.industry} data={industry} />
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="max-w-3xl mx-auto">
+                <IndustryScenarioCard data={industryData} detailed />
+              </div>
+            )}
           </motion.div>
 
           {/* Cost Over Time Comparison */}
           <GlassCard className="p-8 mb-16 max-w-5xl mx-auto">
             <h3 className="text-3xl font-bold mb-6 text-center">
-              Total Cost Comparison Over Time: {industryData.displayName}
+              Total Cost Comparison Over Time{selectedIndustry !== "all" ? `: ${industryData.displayName}` : ""}
             </h3>
             <p className="text-center text-muted-foreground mb-8">
-              Based on {industryData.typicalCallVolume}
+              {selectedIndustry === "all" 
+                ? "See how costs compound when comparing AI vs traditional human staff"
+                : `Based on ${industryData.typicalCallVolume}`
+              }
             </p>
             
             <div className="grid md:grid-cols-3 gap-6">
-              {[
-                { 
-                  period: "3 Months", 
-                  ai: "$8,991", 
-                  human: "$16,250", 
-                  callCenter: "$19,500",
-                  saved: "$7,259-10,509" 
-                },
-                { 
-                  period: "1 Year", 
-                  ai: "$35,964", 
-                  human: "$65,000", 
-                  callCenter: "$78,000",
-                  saved: "$29,036-42,036" 
-                },
-                { 
-                  period: "3 Years", 
-                  ai: "$107,892", 
-                  human: "$195,000", 
-                  callCenter: "$234,000",
-                  saved: "$87,108-126,108" 
-                }
-              ].map((data, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="text-center p-6 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20"
-                >
-                  <div className="text-2xl font-bold mb-4 text-gradient">{data.period}</div>
-                  <div className="space-y-3 text-sm mb-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">AI Agent:</span>
-                      <span className="font-semibold text-primary">{data.ai}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Human Staff:</span>
-                      <span className="font-semibold">{data.human}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Call Center:</span>
-                      <span className="font-semibold">{data.callCenter}</span>
-                    </div>
-                  </div>
-                  <div className="pt-3 border-t border-border">
-                    <div className="text-xs text-muted-foreground mb-1">You Save</div>
-                    <div className="text-xl font-bold text-green-500">{data.saved}</div>
-                  </div>
-                </motion.div>
-              ))}
+              {(() => {
+                // Parse industry costs for calculations
+                const aiCostParts = industryData.aiMonthlyCost.split('-');
+                const aiCostLow = parseFloat(aiCostParts[0].replace(/[$,]/g, ''));
+                const aiCostHigh = aiCostParts[1] ? parseFloat(aiCostParts[1].replace(/[$,\/mo]/g, '')) : aiCostLow;
+                const aiCostAvg = (aiCostLow + aiCostHigh) / 2;
+                
+                const humanCostValue = parseFloat(industryData.humanStaffCost.replace(/[$,+\/mo]/g, ''));
+                const callCenterCostValue = parseFloat(industryData.callCenterMonthlyEstimate.split('-')[0].replace(/[$,]/g, ''));
+                
+                // Calculate period costs
+                const periods = [
+                  { name: "3 Months", multiplier: 3 },
+                  { name: "1 Year", multiplier: 12 },
+                  { name: "3 Years", multiplier: 36 }
+                ];
+                
+                return periods.map((period, idx) => {
+                  const aiTotal = Math.round(aiCostAvg * period.multiplier);
+                  const humanTotal = Math.round(humanCostValue * period.multiplier);
+                  const callCenterTotal = Math.round(callCenterCostValue * period.multiplier);
+                  const minSaved = humanTotal - aiTotal;
+                  const maxSaved = callCenterTotal - aiTotal;
+                  
+                  return (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: idx * 0.1 }}
+                      className="text-center p-6 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20"
+                    >
+                      <div className="text-2xl font-bold mb-4 text-gradient">{period.name}</div>
+                      <div className="space-y-3 text-sm mb-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-muted-foreground">AI Agent:</span>
+                          <span className="font-semibold text-primary">${aiTotal.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-muted-foreground">Human Staff:</span>
+                          <span className="font-semibold">${humanTotal.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-muted-foreground">Call Center:</span>
+                          <span className="font-semibold">${callCenterTotal.toLocaleString()}</span>
+                        </div>
+                      </div>
+                      <div className="pt-3 border-t border-border">
+                        <div className="text-xs text-muted-foreground mb-1">You Save</div>
+                        <div className="text-xl font-bold text-green-500">
+                          ${minSaved.toLocaleString()}-{maxSaved.toLocaleString()}
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                });
+              })()}
             </div>
             
             <div className="mt-8 p-4 bg-muted/30 rounded-lg text-center">
@@ -974,9 +990,10 @@ const HonestProsCons = ({ solution, pros, cons }: { solution: string; pros: stri
 // Industry Scenario Card Component
 interface IndustryScenarioCardProps {
   data: typeof industryComparisonsData[keyof typeof industryComparisonsData];
+  detailed?: boolean;
 }
 
-const IndustryScenarioCard = ({ data }: IndustryScenarioCardProps) => {
+const IndustryScenarioCard = ({ data, detailed = false }: IndustryScenarioCardProps) => {
   const getIndustryIcon = (industry: string) => {
     const icons: Record<string, any> = {
       hvac: Zap,
