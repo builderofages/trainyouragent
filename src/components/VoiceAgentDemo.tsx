@@ -174,17 +174,20 @@ export const VoiceAgentDemo = ({ defaultIndustry }: VoiceAgentDemoProps = {}) =>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <MagneticButton
-              variant="outline"
-              size="sm"
-              onClick={() => setShowTextMode(!showTextMode)}
-              className="gap-2"
-            >
-              <MessageSquare className="w-4 h-4" />
-              {showTextMode ? "Voice Mode" : "Text Mode"}
-            </MagneticButton>
-          </div>
+          {/* Only show Text Mode toggle when connected or has messages */}
+          {(isConnected || messages.length > 0) && (
+            <div className="flex items-center gap-2">
+              <MagneticButton
+                variant="outline"
+                size="sm"
+                onClick={() => setShowTextMode(!showTextMode)}
+                className="gap-2"
+              >
+                <MessageSquare className="w-4 h-4" />
+                {showTextMode ? "Voice Mode" : "Text Mode"}
+              </MagneticButton>
+            </div>
+          )}
         </div>
 
         {/* Main Content */}
