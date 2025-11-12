@@ -127,13 +127,16 @@ export const ExitIntentLeadCapture = ({ industry }: ExitIntentLeadCaptureProps) 
           />
 
           {/* Modal */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100%-2rem)] max-w-lg"
-          >
-            <GlassCard className="p-6 md:p-8 relative shadow-glow-intense bg-gradient-to-br from-background via-background to-primary/5">
+          <div className="fixed inset-0 z-[60] grid place-items-center p-4 pointer-events-none">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 8 }}
+              className="pointer-events-auto w-full max-w-lg"
+              role="dialog"
+              aria-modal="true"
+            >
+              <GlassCard className="relative max-h-[85vh] overflow-auto p-6 md:p-8 shadow-glow-intense bg-gradient-to-br from-background via-background to-primary/5">
               <button
                 onClick={handleDismiss}
                 className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
@@ -197,7 +200,8 @@ export const ExitIntentLeadCapture = ({ industry }: ExitIntentLeadCaptureProps) 
                 No spam. Just valuable insights for your business.
               </p>
             </GlassCard>
-          </motion.div>
+            </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>
