@@ -5,6 +5,7 @@ import Footer from "@/components/FooterEnhanced";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
+import { CustomSolutionsCallout } from "@/components/CustomSolutionsCallout";
 import { useState } from "react";
 import { trackEvent } from "@/lib/tracking";
 
@@ -662,6 +663,16 @@ const About = () => {
               </p>
             </GlassCard>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Custom Solutions Section */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <CustomSolutionsCallout 
+            variant="default"
+            onContactClick={() => setLeadGateOpen(true)}
+          />
         </div>
       </section>
 

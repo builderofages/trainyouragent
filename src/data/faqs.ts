@@ -108,6 +108,11 @@ export const faqs: FAQ[] = [
       { name: "TrainYourAgent Pilot Program Data 2024", url: "/terms" }
     ]
   },
+  {
+    question: "Do you offer custom solutions beyond voice agents?",
+    answer: "Absolutely! While our standard AI voice agents deploy in 3-7 days, we also build custom automation systems, advanced integrations with your existing tools, and complex multi-step workflows. Custom solutions typically take 1-6 weeks depending on complexity. This includes connecting AI to your CRM, scheduling software, inventory systems, payment processors, or proprietary tools. We can also build advanced workflows with conditional logic, escalation rules, and human-in-the-loop approval flows. Contact us during your free strategy session to discuss your specific needs and get an accurate timeline.",
+    category: "Pricing & ROI"
+  },
 
   // Technical & Integration
   {

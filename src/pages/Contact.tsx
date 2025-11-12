@@ -6,6 +6,7 @@ import Footer from "@/components/FooterEnhanced";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
+import { CustomSolutionsCallout } from "@/components/CustomSolutionsCallout";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
 import { siteConfig } from "@/config/site";
 
@@ -187,6 +188,16 @@ const Contact = () => {
               ))}
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Custom Solutions Info */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-6 max-w-2xl">
+          <CustomSolutionsCallout 
+            variant="compact"
+            onContactClick={() => setLeadGateOpen(true)}
+          />
         </div>
       </section>
 

@@ -431,6 +431,20 @@ const ImplementationTimeline = ({ industryId }: ImplementationTimelineProps = {}
             </MagneticButton>
           </GlassCard>
         </motion.div>
+
+        {/* Timeline Disclaimer */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="mt-12 max-w-3xl mx-auto"
+        >
+          <div className="p-6 bg-muted/50 rounded-xl border border-border">
+            <p className="text-sm text-muted-foreground text-center">
+              <strong className="text-foreground">Note:</strong> Timeline shown is for standard AI voice agent implementation. Custom integrations, advanced workflows, and enterprise solutions may require additional time (1-6 weeks depending on complexity). We'll provide accurate estimates during your free strategy session.
+            </p>
+          </div>
+        </motion.div>
       </div>
 
       {/* Timeline Estimator Modal */}

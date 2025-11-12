@@ -10,6 +10,7 @@ import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { PremiumIcon, industryIcons } from "@/components/icons/PremiumIconSystem";
 import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
+import { CustomSolutionsCallout } from "@/components/CustomSolutionsCallout";
 import { nicheSolutions } from "@/data/solutions";
 import { expandedSolutions } from "@/data/solutionsExpanded";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
@@ -254,6 +255,16 @@ const Solutions = () => {
               </MagneticButton>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Custom Solutions Callout */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-6">
+          <CustomSolutionsCallout 
+            variant="banner"
+            onContactClick={() => setLeadGateOpen(true)}
+          />
         </div>
       </section>
 
