@@ -252,6 +252,48 @@ export const faqs: FAQ[] = [
     answer: "The AI is trained to identify true medical emergencies and immediately direct callers to 911 or the ER. For urgent-but-not-emergency situations (severe pain, injury, concerning symptoms), it prioritizes same-day appointments or connects callers to the on-call provider. It never provides medical advice.",
     category: "Industry-Specific",
     industries: ["Healthcare"]
+  },
+
+  // Industry-Specific: Restaurants
+  {
+    question: "Can AI handle restaurant reservations during rush hours?",
+    answer: "Yes. Peak times (Friday/Saturday evenings) are when missed calls cost the most. The AI handles unlimited concurrent reservation requests, checks table availability in real-time, and books instantly. It can also manage waitlists, dietary restrictions, and special occasion requests without staff intervention.",
+    category: "Industry-Specific",
+    industries: ["Restaurants"]
+  },
+  {
+    question: "How does AI handle complex food allergies and dietary needs?",
+    answer: "The AI collects detailed dietary information (allergies, intolerances, preferences) and flags reservations requiring special attention. It asks clarifying questions (severity of allergy, cross-contamination concerns) and ensures kitchen staff receives all necessary details before service. This reduces liability and improves guest experience.",
+    category: "Industry-Specific",
+    industries: ["Restaurants"]
+  },
+
+  // Industry-Specific: Logistics
+  {
+    question: "Can AI provide real-time shipment tracking updates?",
+    answer: "Yes. The AI integrates with your TMS (Transportation Management System) and provides instant status updates to customers: current location, estimated delivery time, delays, and proof of delivery. This reduces 'Where is my shipment?' calls by 70-80% according to logistics industry data.",
+    category: "Industry-Specific",
+    industries: ["Logistics"]
+  },
+  {
+    question: "How does AI handle urgent freight booking requests?",
+    answer: "The AI qualifies urgent shipments 24/7: pickup/delivery locations, freight type, dimensions, weight, timeline, and special requirements. It routes hot leads to dispatch immediately and books routine freight automatically. This captures after-hours emergency freight opportunities competitors miss.",
+    category: "Industry-Specific",
+    industries: ["Logistics"]
+  },
+
+  // Industry-Specific: Bars & Nightclubs
+  {
+    question: "Can AI handle VIP bottle service reservations?",
+    answer: "Absolutely. The AI books VIP tables, bottle service packages, and event RSVPs 24/7. It collects party size, budget, special requests, and payment deposits. High-value VIP bookings are immediately flagged to management for personalized follow-up. This prevents losing $2,000-10,000 weekend bookings to competitors who answer first.",
+    category: "Industry-Specific",
+    industries: ["Bars & Nightclubs"]
+  },
+  {
+    question: "How does AI verify age for event reservations?",
+    answer: "The AI collects date of birth during booking and flags underage attempts. For 21+ events, it requires ID verification at door (not over phone for legal compliance). It clearly communicates age requirements and can automatically decline reservations that don't meet criteria, reducing liability.",
+    category: "Industry-Specific",
+    industries: ["Bars & Nightclubs"]
   }
 ];
 

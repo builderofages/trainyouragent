@@ -21,6 +21,7 @@ import { SolutionJourney } from "@/components/solutions/SolutionJourney";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
+import { IndustryFAQ } from "@/components/IndustryFAQ";
 import { expandedSolutions } from "@/data/solutionsExpanded";
 import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
@@ -558,6 +559,11 @@ const RestaurantsLanding = () => {
         open={leadGateOpen}
         onOpenChange={setLeadGateOpen}
         defaultIndustry="Restaurants"
+      />
+
+      <IndustryFAQ 
+        industry="Restaurants"
+        onStrategySessionClick={() => setLeadGateOpen(true)}
       />
 
       <Footer />

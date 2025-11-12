@@ -1,6 +1,41 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Initialize dataLayer -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      
+      // Capture UTM parameters on page load
+      (function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const utmData = {
+          utm_source: urlParams.get('utm_source'),
+          utm_medium: urlParams.get('utm_medium'),
+          utm_campaign: urlParams.get('utm_campaign'),
+          utm_content: urlParams.get('utm_content'),
+          utm_term: urlParams.get('utm_term'),
+          page_path: window.location.pathname,
+          page_title: document.title
+        };
+        
+        // Only push if UTM params exist
+        if (utmData.utm_source || utmData.utm_medium) {
+          window.dataLayer.push({
+            event: 'utm_capture',
+            ...utmData
+          });
+        }
+      })();
+    </script>
+    
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+    <!-- End Google Tag Manager -->
+    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TrainYourAgent — AI That Thinks Like Your Business</title>
@@ -261,6 +296,11 @@
 </head>
 
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

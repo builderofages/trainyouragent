@@ -21,6 +21,7 @@ import { SolutionJourney } from "@/components/solutions/SolutionJourney";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import { UrgencySection } from "@/components/conversion/UrgencySection";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
+import { IndustryFAQ } from "@/components/IndustryFAQ";
 import { expandedSolutions } from "@/data/solutionsExpanded";
 import { conversions } from "@/lib/tracking";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
@@ -598,6 +599,11 @@ const BarsNightclubsLanding = () => {
         open={leadGateOpen}
         onOpenChange={setLeadGateOpen}
         defaultIndustry="Bars & Nightclubs"
+      />
+
+      <IndustryFAQ 
+        industry="Bars & Nightclubs"
+        onStrategySessionClick={() => setLeadGateOpen(true)}
       />
 
       <Footer />

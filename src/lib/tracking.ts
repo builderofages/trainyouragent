@@ -37,16 +37,26 @@ export const getStoredUTMParams = (): UTMParams => {
   return stored ? JSON.parse(stored) : {};
 };
 
-// Track conversion events
+// Track conversion events (ENHANCED with GTM dataLayer)
 export const trackConversion = (eventName: string, data?: Record<string, any>) => {
   const utmParams = getStoredUTMParams();
   const eventData = {
     ...data,
     ...utmParams,
     timestamp: new Date().toISOString(),
+    page_path: window.location.pathname,
+    page_title: document.title
   };
 
-  // Google Analytics 4
+  // Google Tag Manager dataLayer (PRIORITY)
+  if (typeof window !== 'undefined' && (window as any).dataLayer) {
+    (window as any).dataLayer.push({
+      event: eventName,
+      ...eventData
+    });
+  }
+
+  // Google Analytics 4 (direct gtag - FALLBACK)
   if (typeof window !== 'undefined' && (window as any).gtag) {
     (window as any).gtag('event', eventName, eventData);
   }
@@ -54,6 +64,11 @@ export const trackConversion = (eventName: string, data?: Record<string, any>) =
   // Meta Pixel
   if (typeof window !== 'undefined' && (window as any).fbq) {
     (window as any).fbq('track', eventName, eventData);
+  }
+
+  // LinkedIn Insight Tag
+  if (typeof window !== 'undefined' && (window as any)._linkedin_data_partner_ids) {
+    (window as any).lintrk('track', { conversion_id: eventName });
   }
 
   // Console log for debugging
@@ -158,6 +173,116 @@ export const conversions = {
       trackConversion('industry_comparison_full_analysis_clicked', data);
     },
   },
+
+  // Lead Gate Events (NEW)
+  leadGateOpened: (component: string, hasIndustryPreselect: boolean) => {
+    trackConversion('lead_gate_opened', { 
+      component, 
+      has_industry_preselect: hasIndustryPreselect 
+    });
+  },
+
+  leadGateStepViewed: (step: number, component: string) => {
+    trackConversion('lead_gate_step_viewed', { 
+      step, 
+      component,
+      step_name: ['contact_info', 'business_context', 'needs_assessment', 'budget_qualification'][step - 1]
+    });
+  },
+
+  leadGateAbandoned: (step: number, timeSpent: number) => {
+    trackConversion('lead_gate_abandoned', { 
+      step, 
+      time_spent_seconds: timeSpent,
+      abandonment_reason: 'user_closed'
+    });
+  },
+
+  bookingPageOpened: (source: string, industry?: string) => {
+    trackConversion('booking_page_opened', { 
+      source, 
+      industry,
+      booking_platform: 'cal.com'
+    });
+  },
+
+  // ROI Calculator Events (ENHANCED)
+  roiCalculatorStarted: (industry: string, variant?: string) => {
+    trackConversion('roi_calculator_started', { 
+      industry,
+      ab_test_variant: variant
+    });
+  },
+
+  roiCalculatorCompleted: (data: {
+    industry: string;
+    monthly_roi: number;
+    annual_roi: number;
+    missed_calls: number;
+    recoverable_revenue: number;
+    variant?: string;
+  }) => {
+    trackConversion('roi_calculator_completed', {
+      ...data,
+      value: data.monthly_roi
+    });
+  },
+
+  roiPdfDownloaded: (industry: string, monthlyROI: number) => {
+    trackConversion('roi_pdf_downloaded', { 
+      industry,
+      monthly_roi: monthlyROI,
+      value: 50
+    });
+  },
+
+  // Voice Demo Events (ENHANCED)
+  voiceDemoLeadSubmitted: (industry: string, sessionDuration: number) => {
+    trackConversion('voice_demo_lead_submitted', { 
+      industry,
+      session_duration_seconds: sessionDuration,
+      value: 100 
+    });
+  },
+
+  voiceDemoCompleted: (industry: string, duration: number, messageCount: number) => {
+    trackConversion('voice_demo_completed', { 
+      industry,
+      demo_duration_seconds: duration,
+      message_count: messageCount,
+      value: 75
+    });
+  },
+
+  // Page Engagement Events (NEW)
+  scrollDepthReached: (depth: number, page: string) => {
+    trackConversion('scroll_depth', { 
+      depth_percentage: depth,
+      page_path: page
+    });
+  },
+
+  timeOnPageThreshold: (seconds: number, page: string) => {
+    trackConversion('time_on_page_threshold', { 
+      time_seconds: seconds,
+      page_path: page
+    });
+  },
+
+  // Social Proof Events (NEW)
+  caseStudyViewed: (industry: string, caseTitle: string) => {
+    trackConversion('case_study_viewed', { 
+      industry,
+      case_study_title: caseTitle
+    });
+  },
+
+  testimonialInteraction: (action: 'view' | 'click', source: string) => {
+    trackConversion('testimonial_interaction', { 
+      action,
+      source
+    });
+  }
 };
 
 // Alias for trackConversion for consistency
@@ -166,4 +291,18 @@ export const trackEvent = trackConversion;
 // Initialize tracking on page load
 export const initializeTracking = () => {
   captureUTMParams();
+  
+  // Initialize GA4 if measurement ID exists
+  if (import.meta.env.VITE_GA_MEASUREMENT_ID) {
+    (window as any).gtag?.('config', import.meta.env.VITE_GA_MEASUREMENT_ID, {
+      send_page_view: true,
+      page_path: window.location.pathname
+    });
+  }
+  
+  // Initialize Meta Pixel if ID exists
+  if (import.meta.env.VITE_META_PIXEL_ID) {
+    (window as any).fbq?.('init', import.meta.env.VITE_META_PIXEL_ID);
+    (window as any).fbq?.('track', 'PageView');
+  }
 };
