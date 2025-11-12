@@ -1,0 +1,583 @@
+export interface EmployeeStory {
+  name: string;
+  beforeTitle: string;
+  afterTitle: string;
+  beforeSalary: string;
+  afterSalary: string;
+  beforeResponsibilities: string[];
+  afterResponsibilities: string[];
+  revenueImpact: string;
+  satisfactionIncrease: string;
+  companySize: string;
+}
+
+export const employeeElevationStories: Record<string, EmployeeStory[]> = {
+  hvac: [
+    {
+      name: "Sarah M.",
+      beforeTitle: "Receptionist",
+      afterTitle: "Customer Success Manager",
+      beforeSalary: "$42,000/year",
+      afterSalary: "$65,000/year + bonus",
+      beforeResponsibilities: [
+        "Answered 100+ calls daily during summer heat waves",
+        "Manually scheduled service appointments",
+        "Dealt with frustrated customers on hold",
+        "No time for strategic or relationship work"
+      ],
+      afterResponsibilities: [
+        "Monitors AI quality 30 minutes daily",
+        "Proactive maintenance renewal outreach ($120K added revenue)",
+        "Vendor relationship management (12% cost savings)",
+        "Training coordinator for growing team",
+        "Customer retention strategy implementation"
+      ],
+      revenueImpact: "$120,000 annual maintenance renewal revenue",
+      satisfactionIncrease: "From stressed and overwhelmed to strategic leader",
+      companySize: "8 technicians, $2.5M annual revenue"
+    },
+    {
+      name: "Marcus T.",
+      beforeTitle: "Office Manager",
+      afterTitle: "Operations Coordinator",
+      beforeSalary: "$48,000/year",
+      afterSalary: "$72,000/year + profit sharing",
+      beforeResponsibilities: [
+        "Managed dispatch and scheduling manually",
+        "Fielded emergency calls at all hours",
+        "Coordinated technician routes on paper",
+        "Constant firefighting, no optimization time"
+      ],
+      afterResponsibilities: [
+        "Crew productivity optimization (30% more jobs per day)",
+        "Material procurement and vendor negotiation",
+        "Quality control inspections",
+        "Process documentation and efficiency improvements",
+        "Strategic capacity planning"
+      ],
+      revenueImpact: "$180,000 additional capacity from optimized routing",
+      satisfactionIncrease: "Work-life balance restored, promotion to leadership",
+      companySize: "15 technicians, $4.2M annual revenue"
+    },
+    {
+      name: "Jennifer L.",
+      beforeTitle: "Administrative Assistant",
+      afterTitle: "Revenue Operations Specialist",
+      beforeSalary: "$38,000/year",
+      afterSalary: "$58,000/year",
+      beforeResponsibilities: [
+        "Data entry for every service call",
+        "Manually followed up on unpaid invoices",
+        "Created basic reports in spreadsheets",
+        "Repetitive administrative tasks"
+      ],
+      afterResponsibilities: [
+        "Revenue cycle optimization and collections strategy",
+        "ServiceTitan reporting and analytics",
+        "Pricing strategy analysis",
+        "Upsell opportunity identification",
+        "Financial forecasting and planning"
+      ],
+      revenueImpact: "$95,000 improved collections, 40% faster payment",
+      satisfactionIncrease: "From data entry to strategic business analyst",
+      companySize: "12 technicians, $3.8M annual revenue"
+    }
+  ],
+  legal: [
+    {
+      name: "Amanda R.",
+      beforeTitle: "Legal Secretary",
+      afterTitle: "Client Retention Specialist",
+      beforeSalary: "$45,000/year",
+      afterSalary: "$68,000/year + bonus",
+      beforeResponsibilities: [
+        "Answered intake calls and scheduled consultations",
+        "Manually tracked case statuses",
+        "Fielded repetitive billing questions",
+        "No time for client relationship work"
+      ],
+      afterResponsibilities: [
+        "High-touch relationship management for top clients",
+        "Client retention campaigns (25% improvement)",
+        "Practice area expansion research",
+        "Billing optimization and collection strategy",
+        "Complex case coordination requiring judgment"
+      ],
+      revenueImpact: "$150,000 retained revenue from improved client relationships",
+      satisfactionIncrease: "From administrative to strategic client partner",
+      companySize: "5 attorneys, $2.8M annual revenue"
+    },
+    {
+      name: "David K.",
+      beforeTitle: "Intake Coordinator",
+      afterTitle: "Business Development Manager",
+      beforeSalary: "$42,000/year",
+      afterSalary: "$75,000/year + commission",
+      beforeResponsibilities: [
+        "Screened 50+ intake calls daily",
+        "Scheduled consultation appointments",
+        "Handled routine case status inquiries",
+        "Repetitive qualification questions"
+      ],
+      afterResponsibilities: [
+        "Referral network development and management",
+        "Strategic partnership cultivation",
+        "Marketing campaign optimization",
+        "High-value case identification and routing",
+        "Practice growth strategy implementation"
+      ],
+      revenueImpact: "$280,000 new business from referral partnerships",
+      satisfactionIncrease: "Career transformation from admin to revenue-driver",
+      companySize: "8 attorneys, $4.5M annual revenue"
+    },
+    {
+      name: "Patricia W.",
+      beforeTitle: "Legal Assistant",
+      afterTitle: "Practice Operations Director",
+      beforeSalary: "$48,000/year",
+      afterSalary: "$82,000/year",
+      beforeResponsibilities: [
+        "Coordinated attorney schedules manually",
+        "Handled client communication",
+        "Managed document filing and tracking",
+        "Constant interruptions and task-switching"
+      ],
+      afterResponsibilities: [
+        "Firm-wide process optimization",
+        "Technology implementation and training",
+        "Attorney productivity analysis",
+        "Client experience program development",
+        "Strategic capacity planning"
+      ],
+      revenueImpact: "$200,000 additional capacity from optimized workflows",
+      satisfactionIncrease: "From task-executor to strategic operations leader",
+      companySize: "12 attorneys, $6.2M annual revenue"
+    }
+  ],
+  healthcare: [
+    {
+      name: "Nicole P.",
+      beforeTitle: "Front Desk Receptionist",
+      afterTitle: "Patient Experience Coordinator",
+      beforeSalary: "$40,000/year",
+      afterSalary: "$62,000/year",
+      beforeResponsibilities: [
+        "Answered 150+ calls daily",
+        "Manually scheduled appointments",
+        "Verified insurance information",
+        "Managed walk-in patients during phone chaos"
+      ],
+      afterResponsibilities: [
+        "Care coordination for chronic disease patients",
+        "Community outreach and preventive care programs",
+        "Provider scheduling optimization (18% revenue increase)",
+        "Complex patient situations requiring empathy",
+        "Patient satisfaction improvement initiatives"
+      ],
+      revenueImpact: "$185,000 additional capacity from optimized schedules",
+      satisfactionIncrease: "From overwhelmed to making real patient impact",
+      companySize: "6 providers, $3.2M annual revenue"
+    },
+    {
+      name: "Carlos M.",
+      beforeTitle: "Medical Assistant",
+      afterTitle: "Clinical Coordinator",
+      beforeSalary: "$44,000/year",
+      afterSalary: "$65,000/year",
+      beforeResponsibilities: [
+        "Handled prescription refill calls",
+        "Managed appointment reminder calls",
+        "Fielded routine patient inquiries",
+        "Limited time for actual clinical work"
+      ],
+      afterResponsibilities: [
+        "Chronic care management program coordination",
+        "Provider workflow optimization",
+        "Quality metrics improvement",
+        "Clinical protocol development",
+        "Staff training and mentorship"
+      ],
+      revenueImpact: "$120,000 chronic care management revenue",
+      satisfactionIncrease: "Returned to patient care from phone duty",
+      companySize: "8 providers, $4.8M annual revenue"
+    },
+    {
+      name: "Lisa H.",
+      beforeTitle: "Office Manager",
+      afterTitle: "Revenue Cycle Director",
+      beforeSalary: "$52,000/year",
+      afterSalary: "$78,000/year + bonus",
+      beforeResponsibilities: [
+        "Managed front desk operations",
+        "Handled staff scheduling",
+        "Dealt with patient complaints",
+        "Basic billing oversight"
+      ],
+      afterResponsibilities: [
+        "Revenue cycle optimization",
+        "Payer contract negotiation",
+        "Denial management and appeals",
+        "Financial analytics and reporting",
+        "Strategic growth planning"
+      ],
+      revenueImpact: "$240,000 improved collections and reduced denials",
+      satisfactionIncrease: "From operational firefighting to strategic finance",
+      companySize: "10 providers, $5.5M annual revenue"
+    }
+  ],
+  accounting: [
+    {
+      name: "Rachel S.",
+      beforeTitle: "Staff Accountant",
+      afterTitle: "Advisory Services Specialist",
+      beforeSalary: "$50,000/year",
+      afterSalary: "$78,000/year + commission",
+      beforeResponsibilities: [
+        "Answered tax season phone calls",
+        "Collected documents from clients",
+        "Scheduled appointments",
+        "Basic tax return preparation"
+      ],
+      afterResponsibilities: [
+        "Proactive tax planning outreach to high-value clients",
+        "Client business analysis and strategic consulting",
+        "Advisory services presentation and closing",
+        "Complex tax scenarios requiring expertise",
+        "Client relationship depth building"
+      ],
+      revenueImpact: "$200,000 advisory services revenue",
+      satisfactionIncrease: "From transactional work to trusted advisor",
+      companySize: "4 CPAs, $1.8M annual revenue"
+    },
+    {
+      name: "Thomas J.",
+      beforeTitle: "Administrative Assistant",
+      afterTitle: "Client Success Manager",
+      beforeSalary: "$42,000/year",
+      afterSalary: "$62,000/year",
+      beforeResponsibilities: [
+        "Managed client intake calls",
+        "Tracked missing documents",
+        "Provided tax return status updates",
+        "Handled routine inquiries"
+      ],
+      afterResponsibilities: [
+        "Quarterly business review coordination",
+        "Service expansion opportunity identification",
+        "Client retention initiatives",
+        "Technology training for clients",
+        "Strategic planning support"
+      ],
+      revenueImpact: "$95,000 upsell revenue from existing clients",
+      satisfactionIncrease: "From administrative to strategic partner",
+      companySize: "6 CPAs, $2.5M annual revenue"
+    },
+    {
+      name: "Michelle D.",
+      beforeTitle: "Bookkeeper",
+      afterTitle: "Controller & CFO Services Lead",
+      beforeSalary: "$48,000/year",
+      afterSalary: "$85,000/year + profit sharing",
+      beforeResponsibilities: [
+        "Client bookkeeping and reconciliation",
+        "Answered QuickBooks questions",
+        "Generated basic financial reports",
+        "Managed monthly close processes"
+      ],
+      afterResponsibilities: [
+        "CFO services program development",
+        "Strategic financial planning for clients",
+        "Team management and training",
+        "High-value client relationship ownership",
+        "Fractional CFO consulting"
+      ],
+      revenueImpact: "$180,000 CFO services revenue stream",
+      satisfactionIncrease: "Career transformation to executive consulting",
+      companySize: "5 CPAs, $2.2M annual revenue"
+    }
+  ],
+  restaurants: [
+    {
+      name: "Elena G.",
+      beforeTitle: "Host/Hostess",
+      afterTitle: "Guest Experience Manager",
+      beforeSalary: "$32,000/year + tips",
+      afterSalary: "$52,000/year + bonus",
+      beforeResponsibilities: [
+        "Answered phone calls during dinner service",
+        "Managed reservations and waitlist",
+        "Dealt with walk-in guests",
+        "No time for guest relationship building"
+      ],
+      afterResponsibilities: [
+        "VIP customer relationship management (40% repeat increase)",
+        "Event planning and catering sales coordination",
+        "Staff training and service quality improvement",
+        "Social media and community engagement",
+        "Guest feedback analysis and improvements"
+      ],
+      revenueImpact: "$85,000 catering and event revenue",
+      satisfactionIncrease: "From reactive to strategic guest relationships",
+      companySize: "45 seats, $1.2M annual revenue"
+    },
+    {
+      name: "Miguel R.",
+      beforeTitle: "Assistant Manager",
+      afterTitle: "Operations & Revenue Manager",
+      beforeSalary: "$45,000/year",
+      afterSalary: "$68,000/year + profit sharing",
+      beforeResponsibilities: [
+        "Handled phone orders and reservations",
+        "Managed daily operations",
+        "Coordinated staff schedules",
+        "Constant firefighting"
+      ],
+      afterResponsibilities: [
+        "Menu engineering and profitability analysis",
+        "Vendor negotiation and cost optimization",
+        "Revenue forecasting and capacity planning",
+        "Multi-location expansion planning",
+        "Strategic partnership development"
+      ],
+      revenueImpact: "$120,000 improved margins through menu optimization",
+      satisfactionIncrease: "From operational to strategic business partner",
+      companySize: "65 seats, $1.8M annual revenue"
+    },
+    {
+      name: "Sophia L.",
+      beforeTitle: "Server/Coordinator",
+      afterTitle: "Catering & Events Director",
+      beforeSalary: "$35,000/year + tips",
+      afterSalary: "$65,000/year + commission",
+      beforeResponsibilities: [
+        "Took phone orders between tables",
+        "Coordinated catering inquiries",
+        "Managed reservation scheduling",
+        "Split attention between dining room and phones"
+      ],
+      afterResponsibilities: [
+        "Corporate catering sales and account management",
+        "Event planning and execution",
+        "Venue partnership development",
+        "Catering menu development",
+        "High-value client relationship ownership"
+      ],
+      revenueImpact: "$180,000 new catering revenue stream",
+      satisfactionIncrease: "Career path from server to sales leadership",
+      companySize: "50 seats, $1.5M annual revenue"
+    }
+  ],
+  roofing: [
+    {
+      name: "Jessica P.",
+      beforeTitle: "Office Manager",
+      afterTitle: "Insurance Claims Specialist",
+      beforeSalary: "$44,000/year",
+      afterSalary: "$72,000/year + commission",
+      beforeResponsibilities: [
+        "Answered emergency calls at all hours",
+        "Scheduled estimates and jobs",
+        "Coordinated crew schedules",
+        "Basic office administration"
+      ],
+      afterResponsibilities: [
+        "Insurance claim documentation and navigation",
+        "Supplement negotiation with adjusters",
+        "Homeowner insurance education",
+        "High-value claim coordination",
+        "40% higher close rates on insurance work"
+      ],
+      revenueImpact: "$320,000 additional insurance restoration revenue",
+      satisfactionIncrease: "From chaos coordinator to revenue specialist",
+      companySize: "8 crews, $3.2M annual revenue"
+    },
+    {
+      name: "Brandon H.",
+      beforeTitle: "Estimator",
+      afterTitle: "Business Development Director",
+      beforeSalary: "$52,000/year",
+      afterSalary: "$85,000/year + commission",
+      beforeResponsibilities: [
+        "Responded to quote requests",
+        "Scheduled own appointments",
+        "Wrote estimates in the field",
+        "Limited time for relationship building"
+      ],
+      afterResponsibilities: [
+        "Strategic partnership development (insurance agents, realtors)",
+        "Commercial roofing business development",
+        "Referral network cultivation",
+        "High-value project consultation",
+        "Sales team leadership and training"
+      ],
+      revenueImpact: "$450,000 new commercial and partnership revenue",
+      satisfactionIncrease: "From reactive estimator to strategic growth leader",
+      companySize: "12 crews, $5.8M annual revenue"
+    },
+    {
+      name: "Stephanie M.",
+      beforeTitle: "Customer Service Rep",
+      afterTitle: "Customer Success & Retention Manager",
+      beforeSalary: "$38,000/year",
+      afterSalary: "$58,000/year + bonus",
+      beforeResponsibilities: [
+        "Answered incoming phone calls",
+        "Provided project status updates",
+        "Handled customer complaints",
+        "Scheduled follow-up appointments"
+      ],
+      afterResponsibilities: [
+        "Proactive customer communication programs",
+        "Warranty and maintenance contract sales",
+        "Customer feedback analysis and improvements",
+        "Referral program management",
+        "Reputation and review strategy"
+      ],
+      revenueImpact: "$95,000 maintenance contract and referral revenue",
+      satisfactionIncrease: "From reactive service to strategic relationships",
+      companySize: "10 crews, $4.5M annual revenue"
+    }
+  ],
+  logistics: [
+    {
+      name: "Derek W.",
+      beforeTitle: "Dispatcher",
+      afterTitle: "Strategic Account Manager",
+      beforeSalary: "$48,000/year",
+      afterSalary: "$82,000/year + commission",
+      beforeResponsibilities: [
+        "Answered load inquiry calls 24/7",
+        "Booked individual loads",
+        "Coordinated pickups and deliveries",
+        "Handled tracking requests"
+      ],
+      afterResponsibilities: [
+        "Enterprise customer relationship management",
+        "Dedicated lane proposal development",
+        "Contract negotiation (35% increase in value)",
+        "Strategic capacity planning",
+        "Account growth strategy"
+      ],
+      revenueImpact: "$600,000 new contracted revenue",
+      satisfactionIncrease: "From transactional dispatcher to strategic partner",
+      companySize: "25 trucks, $8.5M annual revenue"
+    },
+    {
+      name: "Vanessa K.",
+      beforeTitle: "Operations Coordinator",
+      afterTitle: "Network Optimization Manager",
+      beforeSalary: "$52,000/year",
+      afterSalary: "$78,000/year + profit sharing",
+      beforeResponsibilities: [
+        "Coordinated daily dispatch operations",
+        "Handled customer inquiries",
+        "Managed driver communications",
+        "Reactive problem-solving"
+      ],
+      afterResponsibilities: [
+        "Network design and route optimization",
+        "Carrier relationship and rate negotiation",
+        "Backhaul opportunity identification",
+        "Strategic pricing analysis",
+        "Operational efficiency improvements"
+      ],
+      revenueImpact: "$280,000 improved margins through optimization",
+      satisfactionIncrease: "From daily operations to strategic planning",
+      companySize: "40 trucks, $12M annual revenue"
+    },
+    {
+      name: "Anthony L.",
+      beforeTitle: "Customer Service Rep",
+      afterTitle: "Operations Technology Specialist",
+      beforeSalary: "$42,000/year",
+      afterSalary: "$68,000/year",
+      beforeResponsibilities: [
+        "Provided shipment tracking updates",
+        "Answered customer inquiries",
+        "Generated basic reports",
+        "Data entry and admin tasks"
+      ],
+      afterResponsibilities: [
+        "TMS system optimization and automation",
+        "Advanced analytics and reporting",
+        "Technology vendor management",
+        "Process automation implementation",
+        "Team training on new technologies"
+      ],
+      revenueImpact: "$150,000 cost savings from automation",
+      satisfactionIncrease: "From manual tasks to technology leadership",
+      companySize: "35 trucks, $10M annual revenue"
+    }
+  ],
+  bars: [
+    {
+      name: "Jordan T.",
+      beforeTitle: "Manager/Host",
+      afterTitle: "VIP Program Director",
+      beforeSalary: "$42,000/year + tips",
+      afterSalary: "$72,000/year + commission",
+      beforeResponsibilities: [
+        "Answered reservation calls during shifts",
+        "Managed door and guest lists",
+        "Coordinated table assignments",
+        "General operations management"
+      ],
+      afterResponsibilities: [
+        "High-value customer cultivation and relationship management",
+        "VIP membership program development",
+        "Corporate event sales (50% bottle service increase)",
+        "Influencer and partnership coordination",
+        "Guest satisfaction and loyalty programs"
+      ],
+      revenueImpact: "$220,000 VIP and bottle service revenue increase",
+      satisfactionIncrease: "From operational chaos to strategic revenue leadership",
+      companySize: "200 capacity, $2.8M annual revenue"
+    },
+    {
+      name: "Alexis P.",
+      beforeTitle: "Event Coordinator",
+      afterTitle: "Entertainment & Revenue Manager",
+      beforeSalary: "$45,000/year",
+      afterSalary: "$75,000/year + profit sharing",
+      beforeResponsibilities: [
+        "Handled event inquiry calls",
+        "Coordinated private party bookings",
+        "Managed basic event logistics",
+        "Reactive booking management"
+      ],
+      afterResponsibilities: [
+        "Talent booking and entertainment curation",
+        "Event profitability analysis and optimization",
+        "Promotion strategy and marketing campaigns",
+        "Partnership development (brands, sponsors)",
+        "Revenue per guest optimization"
+      ],
+      revenueImpact: "$180,000 increased event and promotion revenue",
+      satisfactionIncrease: "From logistics coordinator to entertainment curator",
+      companySize: "300 capacity, $3.5M annual revenue"
+    },
+    {
+      name: "Marcus H.",
+      beforeTitle: "Bartender/Manager",
+      afterTitle: "Beverage Program Director",
+      beforeSalary: "$48,000/year + tips",
+      afterSalary: "$82,000/year + profit sharing",
+      beforeResponsibilities: [
+        "Managed bar operations",
+        "Answered bottle service inquiries",
+        "Coordinated reservations",
+        "Limited time for strategic work"
+      ],
+      afterResponsibilities: [
+        "Beverage program development and innovation",
+        "Supplier relationship and contract negotiation",
+        "Profitability analysis and menu engineering",
+        "Staff training and development",
+        "Multi-location beverage strategy"
+      ],
+      revenueImpact: "$150,000 improved beverage margins and sales",
+      satisfactionIncrease: "From bartending to beverage strategy leadership",
+      companySize: "250 capacity, $3.2M annual revenue"
+    }
+  ]
+};

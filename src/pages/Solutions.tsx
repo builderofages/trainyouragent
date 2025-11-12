@@ -13,6 +13,11 @@ import { StrategySessionLeadGate } from "@/components/conversion/StrategySession
 import { CustomSolutionsCallout } from "@/components/CustomSolutionsCallout";
 import { nicheSolutions } from "@/data/solutions";
 import { expandedSolutions } from "@/data/solutionsExpanded";
+import { comprehensiveSolutions } from "@/data/comprehensiveBusinessFunctions";
+import { employeeElevationStories } from "@/data/employeeElevationStories";
+import { industryResearch } from "@/data/industryResearch";
+import { ComprehensiveSolutionsGrid } from "@/components/solutions/ComprehensiveSolutionsGrid";
+import { EmployeeElevationShowcase } from "@/components/solutions/EmployeeElevationShowcase";
 import { FloatingIsland } from "@/components/effects/FloatingIsland";
 import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
 import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
@@ -33,6 +38,9 @@ const Solutions = () => {
   const [leadGateOpen, setLeadGateOpen] = useState(false);
   const solution = nicheSolutions[selectedNiche];
   const expandedSolution = expandedSolutions[selectedNiche];
+  const comprehensiveSolution = comprehensiveSolutions[selectedNiche];
+  const elevationStories = employeeElevationStories[selectedNiche] || [];
+  const researchStats = industryResearch[selectedNiche] || [];
   const selectedOption = nicheOptions.find(n => n.id === selectedNiche);
 
   return (
