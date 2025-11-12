@@ -23,14 +23,70 @@ import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
 import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
 
 const nicheOptions = [
-  { id: "hvac", name: "HVAC & Home Services", icon: Wrench, gradient: "gradient-hvac" },
-  { id: "accounting", name: "Accounting & Finance", icon: Calculator, gradient: "gradient-accounting" },
-  { id: "roofing", name: "Roofing & Construction", icon: Home, gradient: "gradient-roofing" },
-  { id: "legal", name: "Legal Services", icon: Scale, gradient: "gradient-legal" },
-  { id: "healthcare", name: "Healthcare & Medical", icon: Heart, gradient: "gradient-healthcare" },
-  { id: "logistics", name: "Logistics & Transportation", icon: Truck, gradient: "gradient-logistics" },
-  { id: "restaurants", name: "Restaurants & Hospitality", icon: UtensilsCrossed, gradient: "gradient-restaurants" },
-  { id: "general", name: "General Business", icon: Briefcase, gradient: "from-primary to-accent" },
+  { 
+    id: "hvac", 
+    name: "HVAC & Home Services", 
+    tagline: "Comfort. Reliability. 24/7.",
+    image: "/images/industries/hvac.jpg",
+    icon: Wrench,
+    gradient: "gradient-hvac" 
+  },
+  { 
+    id: "accounting", 
+    name: "Accounting & Finance", 
+    tagline: "Precision. Trust. Growth.",
+    image: "/images/industries/accounting.jpg",
+    icon: Calculator,
+    gradient: "gradient-accounting" 
+  },
+  { 
+    id: "roofing", 
+    name: "Roofing & Construction", 
+    tagline: "Quality. Safety. Excellence.",
+    image: "/images/industries/roofing.jpg",
+    icon: Home,
+    gradient: "gradient-roofing" 
+  },
+  { 
+    id: "legal", 
+    name: "Legal Services", 
+    tagline: "Justice. Advocacy. Results.",
+    image: "/images/industries/legal.jpg",
+    icon: Scale,
+    gradient: "gradient-legal" 
+  },
+  { 
+    id: "healthcare", 
+    name: "Healthcare & Medical", 
+    tagline: "Care. Compassion. Healing.",
+    image: "/images/industries/healthcare.jpg",
+    icon: Heart,
+    gradient: "gradient-healthcare" 
+  },
+  { 
+    id: "logistics", 
+    name: "Logistics & Transportation", 
+    tagline: "Speed. Precision. Delivery.",
+    image: "/images/industries/logistics.jpg",
+    icon: Truck,
+    gradient: "gradient-logistics" 
+  },
+  { 
+    id: "restaurants", 
+    name: "Restaurants & Hospitality", 
+    tagline: "Flavor. Service. Experience.",
+    image: "/images/industries/restaurants.jpg",
+    icon: UtensilsCrossed,
+    gradient: "gradient-restaurants" 
+  },
+  { 
+    id: "general", 
+    name: "General Business", 
+    tagline: "Innovation. Growth. Success.",
+    image: "/images/industries/general.jpg",
+    icon: Briefcase,
+    gradient: "from-primary to-accent" 
+  },
 ];
 
 const Solutions = () => {
@@ -70,44 +126,70 @@ const Solutions = () => {
       {/* Industry Selector */}
       <section className="py-12 px-6">
         <div className="container mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
             {nicheOptions.map((niche, index) => (
               <motion.div
                 key={niche.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
+                className="h-[280px] md:h-[320px]"
               >
-                <FloatingIsland delay={index * 0.05} intensity="low">
-                  <GlassCard
-                    onClick={() => setSelectedNiche(niche.id)}
-                    className={`cursor-pointer transition-all duration-300 hover-lift ${
-                      selectedNiche === niche.id
-                        ? "border-2 border-primary shadow-glow-intense border-gradient"
-                        : "border border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <div className="flex flex-col items-center text-center p-6 relative">
+                <div
+                  onClick={() => setSelectedNiche(niche.id)}
+                  onKeyPress={(e) => e.key === 'Enter' && setSelectedNiche(niche.id)}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Select ${niche.name} industry solutions`}
+                  aria-pressed={selectedNiche === niche.id}
+                  className={`
+                    relative h-full rounded-2xl overflow-hidden cursor-pointer
+                    transition-all duration-300 group
+                    ${selectedNiche === niche.id 
+                      ? "ring-2 ring-primary shadow-2xl shadow-primary/20 scale-[1.02]" 
+                      : "hover:scale-[1.02] shadow-xl hover:shadow-2xl"
+                    }
+                  `}
+                >
+                  {/* Background Image */}
+                  <div 
+                    className={`
+                      absolute inset-0 bg-cover bg-center transition-all duration-500
+                      ${selectedNiche === niche.id ? "scale-105" : "brightness-[0.6] group-hover:brightness-[0.8] group-hover:scale-105"}
+                    `}
+                    style={{ backgroundImage: `url(${niche.image})` }}
+                  />
+                  
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                  
+                  {/* Content */}
+                  <div className="relative h-full flex flex-col justify-end p-4 md:p-6 text-white">
+                    <h3 className="text-xl md:text-2xl font-bold mb-2 drop-shadow-lg">
+                      {niche.name}
+                    </h3>
+                    <p className="text-sm md:text-base text-white/90 mb-3 md:mb-4 drop-shadow">
+                      {niche.tagline}
+                    </p>
+                    
+                    {/* Selected Indicator */}
+                    {selectedNiche === niche.id && (
                       <motion.div
-                        animate={selectedNiche === niche.id ? {
-                          scale: [1, 1.05, 1],
-                        } : {}}
-                        transition={{ duration: 2, repeat: Infinity }}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="flex items-center gap-2 text-primary font-semibold text-sm"
                       >
-                        <PremiumIcon
-                          icon={niche.icon}
-                          style={industryIcons[niche.id as keyof typeof industryIcons]?.style || "hexagon"}
-                          gradient={industryIcons[niche.id as keyof typeof industryIcons]?.gradient}
-                          size="lg"
-                          animate={selectedNiche === niche.id}
-                        />
+                        <ArrowRight className="w-4 h-4" />
+                        <span>View Solutions</span>
                       </motion.div>
-                      <h3 className={`font-bold text-base mt-4 ${selectedNiche === niche.id ? "text-gradient-premium" : ""}`}>
-                        {niche.name}
-                      </h3>
-                    </div>
-                  </GlassCard>
-                </FloatingIsland>
+                    )}
+                  </div>
+
+                  {/* Fallback Icon (hidden when image loads) */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none">
+                    <niche.icon className="w-32 h-32 text-white" />
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>

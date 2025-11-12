@@ -1,154 +1,320 @@
-# Technology Partner Logo Sourcing Guide
+# Industry Image Sourcing Guide
 
-## Where to Get Official Brand Logos
+This guide provides specific image requirements and sourcing recommendations for all 8 industry verticals on the Solutions page.
 
-### 1. VAPI
-- **Website**: https://vapi.ai
-- **Brand Assets**: Look for "Press Kit", "Brand Assets", or "Media Resources" page (usually in footer)
-- **Preferred Format**: SVG (vector format)
-- **Brand Color**: Blue (#3B82F6 or similar)
-- **Contact**: support@vapi.ai if brand assets are not publicly available
-- **Save As**: `public/logos/vapi-logo.svg`
+## Image Requirements
 
-### 2. ElevenLabs
-- **Website**: https://elevenlabs.io
-- **Brand Assets**: Check footer for "Press" or "Brand" link
-- **Preferred Format**: SVG
-- **Brand Color**: Purple/Violet
-- **Alternative**: Search "ElevenLabs logo SVG" with `site:elevenlabs.io` filter
-- **Save As**: `public/logos/elevenlabs-logo.svg`
+**Technical Specifications:**
+- Resolution: Minimum 1200x800px (4:3 aspect ratio preferred)
+- Format: WebP with JPG fallback
+- File Size: <200KB after compression
+- Quality: High-resolution, professional photography
+- Licensing: Unsplash License or CC0 (commercial use, no attribution required)
+- Storage Location: `/public/images/industries/`
 
-### 3. Apollo.io
-- **Website**: https://apollo.io
-- **Brand Assets**: Usually in footer under "Press" or "About"
-- **Preferred Format**: SVG
-- **Brand Color**: Indigo blue
-- **Save As**: `public/logos/apollo-logo.svg`
-
-### 4. OpenAI
-- **Website**: https://openai.com
-- **Brand Guidelines**: https://openai.com/brand
-- **Preferred Format**: SVG
-- **Brand Color**: Emerald/Teal
-- **Note**: OpenAI has **strict brand usage guidelines**. Review their terms before using.
-- **Save As**: `public/logos/openai-logo.svg`
-
-### 5. Anthropic
-- **Website**: https://anthropic.com
-- **Brand Assets**: Press/Media section for official assets
-- **Preferred Format**: SVG
-- **Brand Color**: Orange
-- **Alternative**: Contact press@anthropic.com for official assets
-- **Save As**: `public/logos/anthropic-logo.svg`
-
-### 6. Twilio
-- **Website**: https://twilio.com
-- **Brand Assets**: https://www.twilio.com/brand
-- **Preferred Format**: SVG
-- **Brand Color**: Red (#F22F46 official)
-- **Note**: Comprehensive brand guidelines available with usage rules
-- **Save As**: `public/logos/twilio-logo.svg`
+**Visual Style Guidelines:**
+- Professional, clean, well-lit photography
+- Action-oriented (people working, not posed)
+- Modern equipment/environment visible
+- Authentic, not overly staged
+- Diverse representation when showing people
+- Bright, positive tone
 
 ---
 
-## Logo Specifications
+## Industry-Specific Image Requirements
 
-### Technical Requirements
-- **Size**: Optimize to maximum 200x200px (will scale responsively)
-- **Format**: SVG preferred (scales perfectly at any size, small file size)
-- **Fallback**: PNG at 2x resolution (400x400px) for high-DPI displays if SVG unavailable
-- **Color**: Full-color versions (grayscale filter applied via CSS on hover)
-- **Background**: **Transparent background required** (no white or colored backgrounds)
+### 1. HVAC & Home Services
+**File Name:** `hvac.jpg`
 
-### File Naming Convention
-- Use lowercase, hyphenated format
-- Examples: `vapi-logo.svg`, `elevenlabs-logo.svg`, `openai-logo.svg`
+**Recommended Sources:**
+- **Unsplash:** https://unsplash.com/s/photos/hvac-technician
+- **Pexels:** https://www.pexels.com/search/air-conditioning-repair/
 
-### Directory Structure
+**Search Terms:**
+- "HVAC technician working"
+- "air conditioning repair professional"
+- "home comfort technician"
+- "furnace installation"
+
+**Desired Scene:**
+- Professional technician in branded uniform
+- Servicing modern AC unit or furnace
+- Bright, contemporary home setting
+- Tools/equipment visible
+- Safety gear if applicable
+
+**Color Palette:** Blues, whites, clean metallic tones
+
+**AI Generation Prompt (if using Midjourney/DALL-E):**
 ```
-public/
-  logos/
-    vapi-logo.svg
-    elevenlabs-logo.svg
-    apollo-logo.svg
-    openai-logo.svg
-    anthropic-logo.svg
-    twilio-logo.svg
+Professional HVAC technician in blue uniform servicing modern air conditioning unit in bright contemporary home, clean corporate photography style, natural lighting, professional equipment visible, 4K quality --ar 4:3 --style raw
 ```
 
 ---
 
-## Licensing & Usage Rights
+### 2. Accounting & Finance
+**File Name:** `accounting.jpg`
 
-### Important Legal Considerations
-1. **Partner/Integration Display**: Most companies allow logo usage for partner/integration pages
-2. **Endorsement**: Do NOT imply endorsement or partnership beyond technical integration
-3. **Modification**: Do NOT modify logos (colors, shapes, proportions)
-4. **Trademark Guidelines**: Review each company's trademark usage guidelines
+**Recommended Sources:**
+- **Unsplash:** https://unsplash.com/s/photos/accountant-professional
+- **Pexels:** https://www.pexels.com/search/financial-planning/
 
-### Usage Context
-Our site displays these logos to indicate:
-- Technology integrations we support
-- Infrastructure partners powering our platform
-- Third-party services we connect with
+**Search Terms:**
+- "accountant professional office"
+- "financial planning consultant"
+- "tax preparation professional"
+- "CPA working"
 
-This is generally allowed under "partner display" or "powered by" clauses in brand guidelines.
+**Desired Scene:**
+- Professional accountant in modern office
+- Computer/laptop with financial charts visible
+- Calculator, documents, or tax forms on desk
+- Professional attire
+- Confident, focused expression
 
----
+**Color Palette:** Blues, grays, professional office tones
 
-## Implementation Checklist
-
-### Before Launching
-- [ ] Download official SVG logos from each partner's brand assets page
-- [ ] Save in `public/logos/` directory with correct naming convention
-- [ ] Verify transparent backgrounds (no white boxes around logos)
-- [ ] Test grayscale → color hover effect on dark and light backgrounds
-- [ ] Confirm logos display correctly at different screen sizes
-- [ ] Review licensing terms for each partner (ensure allowed usage)
-- [ ] Test fallback to text logos if images fail to load
-- [ ] Optimize SVG file sizes (remove unnecessary metadata)
-
-### Quality Assurance
-- [ ] Logos render sharply at all sizes (no pixelation)
-- [ ] Hover effects work smoothly (grayscale to color transition)
-- [ ] Colors match official brand guidelines
-- [ ] No layout shifts when logos load
-- [ ] Accessible alt text provided for each logo
-- [ ] Mobile responsive (logos stack correctly)
+**AI Generation Prompt:**
+```
+Confident professional accountant in modern office reviewing financial charts on computer screen, professional corporate photography, bright natural light, clean aesthetic, business attire, 4K quality --ar 4:3 --style raw
+```
 
 ---
 
-## Fallback System
+### 3. Roofing & Construction
+**File Name:** `roofing.jpg`
 
-The `TechnologyPartners` component includes automatic fallback to text-based logos if image files don't exist or fail to load. This ensures:
-- **Zero broken images**: Site always looks professional
-- **Graceful degradation**: Text logos use brand colors as backup
-- **No functionality loss**: Hover effects still work on text logos
+**Recommended Sources:**
+- **Unsplash:** https://unsplash.com/s/photos/roofing-construction
+- **Pexels:** https://www.pexels.com/search/roof-installation/
 
-**Note**: Real logo images should be prioritized for maximum credibility with enterprise clients.
+**Search Terms:**
+- "roofing construction worker"
+- "roof installation professional"
+- "roofer on residential home"
+- "construction site roofing"
+
+**Desired Scene:**
+- Roofer installing shingles on residential roof
+- Clear blue sky background
+- Safety equipment visible (harness, hard hat)
+- Active work in progress
+- Modern tools/equipment
+
+**Color Palette:** Blues (sky), earth tones, construction orange/yellow
+
+**AI Generation Prompt:**
+```
+Roofing construction worker installing shingles on residential roof, clear blue sky, safety equipment visible, professional construction photography, action shot, modern tools, 4K quality --ar 4:3 --style raw
+```
 
 ---
 
-## Alternative: Icon Libraries
+### 4. Legal Services
+**File Name:** `legal.jpg`
 
-If official logos cannot be obtained, consider using:
-- **Lucide Icons**: Professional icon alternatives for each service type
-- **Custom SVGs**: Simple geometric representations of each brand
-- **Typography-based logos**: Stylized text with brand colors
+**Recommended Sources:**
+- **Unsplash:** https://unsplash.com/s/photos/lawyer-office
+- **Pexels:** https://www.pexels.com/search/attorney-consultation/
 
-However, **real brand logos are strongly preferred** for B2B credibility and professional appearance.
+**Search Terms:**
+- "lawyer professional office"
+- "attorney consultation"
+- "legal professional working"
+- "law office modern"
+
+**Desired Scene:**
+- Attorney in professional suit in modern office
+- Law books or legal documents visible
+- Confident, trustworthy posture
+- Clean, professional environment
+- Laptop or tablet showing legal work
+
+**Color Palette:** Deep blues, wood tones, professional neutrals
+
+**AI Generation Prompt:**
+```
+Professional attorney in suit reviewing legal documents in modern law office, law books on shelves, confident posture, natural lighting through windows, corporate photography style, 4K quality --ar 4:3 --style raw
+```
 
 ---
 
-## Support Contacts
+### 5. Healthcare & Medical
+**File Name:** `healthcare.jpg`
 
-If you encounter issues obtaining official brand assets:
+**Recommended Sources:**
+- **Unsplash:** https://unsplash.com/s/photos/doctor-patient
+- **Pexels:** https://www.pexels.com/search/medical-consultation/
 
-- **VAPI**: support@vapi.ai
-- **ElevenLabs**: support@elevenlabs.io
-- **Apollo.io**: support@apollo.io
-- **OpenAI**: Go through official brand guidelines page
-- **Anthropic**: press@anthropic.com
-- **Twilio**: Brand guidelines page has contact form
+**Search Terms:**
+- "doctor patient consultation"
+- "medical professional clinic"
+- "healthcare provider"
+- "nurse practitioner"
 
-Most B2B companies are happy to provide assets for integration partners.
+**Desired Scene:**
+- Doctor or nurse with patient in modern clinic
+- Clean, bright medical environment
+- Medical equipment visible (stethoscope, tablet)
+- Caring, professional interaction
+- Diverse representation
+
+**Color Palette:** Whites, light blues, clean medical tones
+
+**AI Generation Prompt:**
+```
+Professional doctor with tablet consulting with patient in modern bright medical clinic, caring interaction, clean white environment, medical equipment visible, natural lighting, 4K quality --ar 4:3 --style raw
+```
+
+---
+
+### 6. Logistics & Transportation
+**File Name:** `logistics.jpg`
+
+**Recommended Sources:**
+- **Unsplash:** https://unsplash.com/s/photos/delivery-truck
+- **Pexels:** https://www.pexels.com/search/logistics-warehouse/
+
+**Search Terms:**
+- "delivery truck highway"
+- "semi truck transportation"
+- "warehouse logistics"
+- "cargo shipping"
+
+**Desired Scene:**
+- Modern semi-truck on highway
+- Motion blur effect (speed/movement)
+- Sunset or golden hour lighting
+- Clean, well-maintained vehicle
+- Professional transportation scene
+
+**Color Palette:** Road grays, truck blues/reds, golden hour tones
+
+**AI Generation Prompt:**
+```
+Modern semi truck driving on highway during sunset, motion blur effect, professional transportation photography, clean vehicle, dramatic lighting, 4K quality --ar 4:3 --style raw
+```
+
+---
+
+### 7. Restaurants & Hospitality
+**File Name:** `restaurants.jpg`
+
+**Recommended Sources:**
+- **Unsplash:** https://unsplash.com/s/photos/chef-restaurant
+- **Pexels:** https://www.pexels.com/search/fine-dining-kitchen/
+
+**Search Terms:**
+- "chef preparing food"
+- "fine dining restaurant"
+- "culinary kitchen professional"
+- "restaurant plating"
+
+**Desired Scene:**
+- Professional chef in kitchen
+- Plating gourmet dish or cooking
+- Clean, upscale kitchen environment
+- Professional culinary action
+- Beautiful food presentation
+
+**Color Palette:** Warm tones, stainless steel, vibrant food colors
+
+**AI Generation Prompt:**
+```
+Professional chef in white uniform plating gourmet dish in upscale restaurant kitchen, beautiful food presentation, stainless steel surfaces, warm lighting, culinary action shot, 4K quality --ar 4:3 --style raw
+```
+
+---
+
+### 8. Bars & Nightclubs
+**File Name:** `bars.jpg`
+
+**Recommended Sources:**
+- **Unsplash:** https://unsplash.com/s/photos/bartender
+- **Pexels:** https://www.pexels.com/search/bar-lounge/
+
+**Search Terms:**
+- "bartender mixing cocktails"
+- "upscale bar lounge"
+- "nightclub interior"
+- "craft cocktail preparation"
+
+**Desired Scene:**
+- Professional bartender mixing cocktails
+- Upscale bar with premium bottles visible
+- Ambient lighting (not too dark)
+- Modern, sophisticated environment
+- Craft cocktail preparation
+
+**Color Palette:** Warm amber lighting, rich wood tones, glass reflections
+
+**AI Generation Prompt:**
+```
+Professional bartender mixing craft cocktail in upscale bar, premium liquor bottles in background, warm ambient lighting, sophisticated modern bar environment, 4K quality --ar 4:3 --style raw
+```
+
+---
+
+### 9. General Business (Fallback)
+**File Name:** `general.jpg`
+
+**Recommended Sources:**
+- **Unsplash:** https://unsplash.com/s/photos/diverse-business-team
+- **Pexels:** https://www.pexels.com/search/modern-office-team/
+
+**Search Terms:**
+- "diverse business team meeting"
+- "modern office collaboration"
+- "professional workplace"
+- "business innovation"
+
+**Desired Scene:**
+- Diverse group of professionals collaborating
+- Modern, bright office environment
+- Technology visible (laptops, screens)
+- Positive, energetic interaction
+- Contemporary workspace
+
+**Color Palette:** Bright, modern neutrals with accent colors
+
+**AI Generation Prompt:**
+```
+Diverse professional business team collaborating in bright modern office, laptops and technology visible, natural lighting through windows, contemporary workspace, positive energy, 4K quality --ar 4:3 --style raw
+```
+
+---
+
+## Image Optimization Process
+
+### After Downloading Images:
+
+1. **Resize to 1200x800px** (if larger)
+   - Use Photoshop, GIMP, or online tool like Squoosh.app
+
+2. **Compress to <200KB**
+   - Use TinyPNG.com or Squoosh.app
+   - Maintain quality while reducing file size
+
+3. **Convert to WebP** (with JPG backup)
+   - Use Squoosh.app or CloudConvert
+   - Keep both formats for browser compatibility
+
+4. **Test Contrast for Text Readability**
+   - Apply gradient overlay in code (already handled)
+   - Ensure white text is readable on darkest part of image
+
+5. **Save to Project**
+   - Place in `/public/images/industries/`
+   - File naming: `[industry-id].jpg` (e.g., `hvac.jpg`, `legal.jpg`)
+
+---
+
+## Quick Start: Free Sources (30 minutes)
+
+1. Visit Unsplash.com
+2. Search each industry term from guide above
+3. Download 8 images (free, no attribution required)
+4. Use Squoosh.app to resize to 1200x800px and compress
+5. Save to `/public/images/industries/`
+6. Done!
