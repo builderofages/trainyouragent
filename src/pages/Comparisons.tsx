@@ -2,7 +2,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
   CheckCircle2, XCircle, AlertCircle, DollarSign, Clock, Users, 
-  TrendingUp, Shield, Zap, Sparkles, Phone, Building2 
+  TrendingUp, Shield, Zap, Sparkles, Phone, Building2, Home,
+  Truck as TruckIcon, Music, AlertTriangle
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -525,8 +526,57 @@ const Comparisons = () => {
                       />
                       <ComparisonRow 
                         feature="Integration Depth"
-                        ai="Deep native integrations (ServiceTitan, Clio, etc.)"
+                        ai={`Deep native integrations (${industryData.nativeCRMIntegrations})`}
                         human="Basic API connections only"
+                        aiAdvantage
+                      />
+                      <ComparisonRow 
+                        feature="Industry-Specific Features"
+                        ai={industryData.industrySpecificFeatures.slice(0, 3).join(", ")}
+                        human="Generic features for all industries"
+                        aiAdvantage
+                      />
+                      <ComparisonRow 
+                        feature="Compliance"
+                        ai={`Industry-specific (${industryData.criticalComplianceNeeds.slice(0, 2).join(", ")})`}
+                        human="Generic compliance claims"
+                        aiAdvantage
+                      />
+                      <ComparisonRow 
+                        feature="Setup Time"
+                        ai={industryData.setupTime}
+                        human="2-4 weeks minimum"
+                        aiAdvantage
+                      />
+                      <ComparisonRow 
+                        feature="Contract Terms"
+                        ai={industryData.contractTerms}
+                        human="Annual contracts typical"
+                        aiAdvantage
+                      />
+                      <ComparisonRow 
+                        feature="After-Hours Coverage Priority"
+                        ai={`${industryData.afterHoursImportance.toUpperCase()} - ${industryData.aiAvailability}`}
+                        human="Limited to business hours"
+                        aiAdvantage={industryData.afterHoursImportance === "critical" || industryData.afterHoursImportance === "high"}
+                        neutral={industryData.afterHoursImportance === "medium"}
+                      />
+                      <ComparisonRow 
+                        feature="Call Recording & Transcription"
+                        ai="100% automatic with searchable transcripts"
+                        human="Manual setup required"
+                        aiAdvantage
+                      />
+                      <ComparisonRow 
+                        feature="Lead Scoring"
+                        ai="Built-in qualification based on industry benchmarks"
+                        human="Manual configuration required"
+                        aiAdvantage
+                      />
+                      <ComparisonRow 
+                        feature="Multi-Language Support"
+                        ai="100+ languages, instant switching"
+                        human="Limited to pre-programmed languages"
                         aiAdvantage
                       />
                       <ComparisonRow 
@@ -542,28 +592,10 @@ const Comparisons = () => {
                         aiAdvantage
                       />
                       <ComparisonRow 
-                        feature="Training Data"
-                        ai="Your business data + industry benchmarks"
-                        human="Generic web-scraped data"
-                        aiAdvantage
-                      />
-                      <ComparisonRow 
-                        feature="Compliance"
-                        ai="Industry-specific (HIPAA, ABA ethics, etc.)"
-                        human="Generic compliance claims"
-                        aiAdvantage
-                      />
-                      <ComparisonRow 
                         feature="Pricing"
                         ai="Higher cost for specialization"
                         human="Lower cost for basic features"
                         humanAdvantage
-                      />
-                      <ComparisonRow 
-                        feature="DIY Flexibility"
-                        ai="Managed service with customization"
-                        human="Full DIY control"
-                        neutral
                       />
                     </tbody>
                   </table>
@@ -573,7 +605,7 @@ const Comparisons = () => {
                   <div className="bg-primary/5 border border-primary/20 rounded-lg p-6">
                     <h3 className="font-bold text-primary mb-2">🎯 Why Industry-Specific Matters</h3>
                     <p className="text-sm text-muted-foreground">
-                      Generic AI tools don't understand that HVAC emergency calls need immediate dispatch, or that legal intake requires conflict checking, or that healthcare scheduling must be HIPAA-compliant. Custom AI trained on your industry's nuances delivers 3-5x better results.
+                      Generic AI tools don't understand that {industryData.displayName} businesses need {industryData.industrySpecificFeatures[0].toLowerCase()}, {industryData.industrySpecificFeatures[1].toLowerCase()}, and {industryData.criticalComplianceNeeds[0].toLowerCase()}. Custom AI trained on your industry's nuances delivers 3-5x better results.
                     </p>
                   </div>
 
@@ -637,157 +669,18 @@ const Comparisons = () => {
               Real Business Scenarios: Which Solution is Right?
             </h2>
             <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-              Compare actual costs across different business types and call volumes
+              {selectedIndustry === "all" 
+                ? "Compare actual costs across different business types and call volumes"
+                : `See real cost comparisons for ${industryData.displayName} businesses`
+              }
             </p>
             
-            <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-              {/* HVAC Scenario */}
-              <GlassCard className="p-8">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                    <Zap className="w-6 h-6 text-blue-500" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold">HVAC Company</h3>
-                    <p className="text-sm text-muted-foreground">200 calls/week, 24/7 emergencies</p>
-                  </div>
-                </div>
-                
-                <div className="space-y-3 mb-6">
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-green-500/5 border border-green-500/20">
-                    <span className="text-sm">AI Agent Cost:</span>
-                    <span className="font-bold text-green-600 dark:text-green-400">$2,997/mo</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
-                    <span className="text-sm">Human Receptionist:</span>
-                    <span className="font-bold">$4,500/mo</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
-                    <span className="text-sm">Call Center ($6/call):</span>
-                    <span className="font-bold">$5,200/mo</span>
-                  </div>
-                </div>
-                
-                <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-                  <p className="text-sm font-semibold text-green-700 dark:text-green-400 mb-1">
-                    ✓ Recommended: AI Agent
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Saves $1,500-2,200/mo, handles unlimited concurrent emergency calls, never misses after-hours revenue
-                  </p>
-                </div>
-              </GlassCard>
-
-              {/* Legal Scenario */}
-              <GlassCard className="p-8">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                    <Shield className="w-6 h-6 text-purple-500" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold">Law Firm</h3>
-                    <p className="text-sm text-muted-foreground">50 intake calls/week, high-value clients</p>
-                  </div>
-                </div>
-                
-                <div className="space-y-3 mb-6">
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-green-500/5 border border-green-500/20">
-                    <span className="text-sm">AI Agent Cost:</span>
-                    <span className="font-bold text-green-600 dark:text-green-400">$1,997/mo</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
-                    <span className="text-sm">Paralegal Intake (20hr/wk):</span>
-                    <span className="font-bold">$3,200/mo</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
-                    <span className="text-sm">Legal Answering Service:</span>
-                    <span className="font-bold">$2,800/mo</span>
-                  </div>
-                </div>
-                
-                <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-                  <p className="text-sm font-semibold text-green-700 dark:text-green-400 mb-1">
-                    ✓ Recommended: AI Agent
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Saves $800-1,200/mo, pre-qualifies cases 24/7, gathers complete intake before consultation
-                  </p>
-                </div>
-              </GlassCard>
-
-              {/* Healthcare Scenario */}
-              <GlassCard className="p-8">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center">
-                    <Users className="w-6 h-6 text-pink-500" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold">Medical Practice</h3>
-                    <p className="text-sm text-muted-foreground">150 calls/week, appointment scheduling</p>
-                  </div>
-                </div>
-                
-                <div className="space-y-3 mb-6">
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
-                    <span className="text-sm">AI Agent Cost:</span>
-                    <span className="font-bold">$1,497/mo</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-green-500/5 border border-green-500/20">
-                    <span className="text-sm">Receptionist (part-time):</span>
-                    <span className="font-bold text-green-600 dark:text-green-400">$2,400/mo</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
-                    <span className="text-sm">Medical Answering Service:</span>
-                    <span className="font-bold">$2,200/mo</span>
-                  </div>
-                </div>
-                
-                <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
-                  <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-1">
-                    ⚠ Consider: Hybrid Approach
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    AI handles after-hours + overflow, human receptionist for complex patient needs during business hours
-                  </p>
-                </div>
-              </GlassCard>
-
-              {/* Restaurant Scenario */}
-              <GlassCard className="p-8">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center">
-                    <Phone className="w-6 h-6 text-orange-500" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold">Restaurant</h3>
-                    <p className="text-sm text-muted-foreground">80 reservation calls/week</p>
-                  </div>
-                </div>
-                
-                <div className="space-y-3 mb-6">
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-green-500/5 border border-green-500/20">
-                    <span className="text-sm">AI Agent Cost:</span>
-                    <span className="font-bold text-green-600 dark:text-green-400">$997/mo</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
-                    <span className="text-sm">Host (dedicated phone duty):</span>
-                    <span className="font-bold">$3,200/mo</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
-                    <span className="text-sm">Reservation Service:</span>
-                    <span className="font-bold">$1,800/mo</span>
-                  </div>
-                </div>
-                
-                <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-                  <p className="text-sm font-semibold text-green-700 dark:text-green-400 mb-1">
-                    ✓ Recommended: AI Agent
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Saves $800-2,200/mo, frees host to focus on in-person guest experience, never misses off-hours bookings
-                  </p>
-                </div>
-              </GlassCard>
+            <div className="max-w-6xl mx-auto">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {Object.values(industryComparisonsData).map((industry) => (
+                  <IndustryScenarioCard key={industry.industry} data={industry} />
+                ))}
+              </div>
             </div>
           </motion.div>
 
@@ -875,6 +768,19 @@ const Comparisons = () => {
                 </p>
               </div>
             </div>
+
+            {/* Industry-Specific Warning */}
+            {selectedIndustry !== "all" && (
+              <div className="mb-8 p-6 bg-orange-500/5 border border-orange-500/20 rounded-xl">
+                <h4 className="font-bold text-lg mb-3 flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-orange-500" />
+                  {industryData.displayName} Specific Considerations
+                </h4>
+                <p className="text-sm text-muted-foreground">
+                  <strong>Not Ideal For:</strong> {industryData.notIdealFor}
+                </p>
+              </div>
+            )}
             
             <div className="grid md:grid-cols-2 gap-8">
               {/* Left: When to Consider Humans */}
@@ -1064,5 +970,87 @@ const HonestProsCons = ({ solution, pros, cons }: { solution: string; pros: stri
     </div>
   </GlassCard>
 );
+
+// Industry Scenario Card Component
+interface IndustryScenarioCardProps {
+  data: typeof industryComparisonsData[keyof typeof industryComparisonsData];
+}
+
+const IndustryScenarioCard = ({ data }: IndustryScenarioCardProps) => {
+  const getIndustryIcon = (industry: string) => {
+    const icons: Record<string, any> = {
+      hvac: Zap,
+      legal: Shield,
+      healthcare: Users,
+      accounting: DollarSign,
+      restaurants: Phone,
+      roofing: Home,
+      logistics: TruckIcon,
+      bars: Music,
+    };
+    return icons[industry] || Phone;
+  };
+  
+  const Icon = getIndustryIcon(data.industry);
+  
+  return (
+    <GlassCard className="p-6">
+      <div className="flex items-center gap-3 mb-4">
+        <div className={`w-12 h-12 rounded-xl ${
+          data.industry === "hvac" ? "bg-blue-500/10" :
+          data.industry === "legal" ? "bg-purple-500/10" :
+          data.industry === "healthcare" ? "bg-pink-500/10" :
+          data.industry === "accounting" ? "bg-emerald-500/10" :
+          data.industry === "restaurants" ? "bg-orange-500/10" :
+          data.industry === "roofing" ? "bg-red-500/10" :
+          data.industry === "logistics" ? "bg-sky-500/10" :
+          "bg-violet-500/10"
+        } flex items-center justify-center`}>
+          <Icon className={`w-6 h-6 ${
+            data.industry === "hvac" ? "text-blue-500" :
+            data.industry === "legal" ? "text-purple-500" :
+            data.industry === "healthcare" ? "text-pink-500" :
+            data.industry === "accounting" ? "text-emerald-500" :
+            data.industry === "restaurants" ? "text-orange-500" :
+            data.industry === "roofing" ? "text-red-500" :
+            data.industry === "logistics" ? "text-sky-500" :
+            "text-violet-500"
+          }`} />
+        </div>
+        <div>
+          <h3 className="text-xl font-bold">{data.displayName}</h3>
+          <p className="text-sm text-muted-foreground">{data.typicalCallVolume}</p>
+        </div>
+      </div>
+      
+      <div className="space-y-3 mb-6">
+        <div className="flex justify-between items-center p-3 rounded-lg bg-green-500/5 border border-green-500/20">
+          <span className="text-sm">AI Agent:</span>
+          <span className="font-bold text-green-600 dark:text-green-400">{data.aiMonthlyCost}</span>
+        </div>
+        <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
+          <span className="text-sm">Human Staff:</span>
+          <span className="font-bold">{data.humanStaffCost}</span>
+        </div>
+        <div className="flex justify-between items-center p-3 rounded-lg bg-muted/30">
+          <span className="text-sm">Call Center:</span>
+          <span className="font-bold">{data.callCenterCost}</span>
+        </div>
+      </div>
+      
+      <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+        <p className="text-sm font-semibold text-green-700 dark:text-green-400 mb-1">
+          ✓ Monthly Savings
+        </p>
+        <p className="text-xs text-muted-foreground">
+          {data.monthlySavings}
+        </p>
+        <p className="text-xs text-muted-foreground mt-2">
+          <strong>Year One:</strong> {data.yearOneSavings}
+        </p>
+      </div>
+    </GlassCard>
+  );
+};
 
 export default Comparisons;
