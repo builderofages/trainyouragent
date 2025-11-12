@@ -8,6 +8,7 @@ import ROICalculator from "@/components/ROICalculatorEnhanced";
 import MissedCallCalculator from "@/components/calculators/MissedCallCalculator";
 import AIvsHumanCalculator from "@/components/calculators/AIvsHumanCalculator";
 import LeadResponseCalculator from "@/components/calculators/LeadResponseCalculator";
+import { ROIIndustryComparison } from "@/components/ROIIndustryComparison";
 
 const Calculators = () => {
   const [activeTab, setActiveTab] = useState("roi");
@@ -83,6 +84,27 @@ const Calculators = () => {
               CallRail 2024 Report • InsideSales.com Study • BLS Data • SHRM Research • Work Institute • Drift CX Report
             </p>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ROI Industry Comparison Section */}
+      <section className="py-20 bg-muted/10">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold mb-4">
+              Which Industry Has the Highest ROI?
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Compare revenue opportunity across all 8 verticals we serve
+            </p>
+          </motion.div>
+          
+          <ROIIndustryComparison />
         </div>
       </section>
 

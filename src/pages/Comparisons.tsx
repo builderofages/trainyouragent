@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
-  Users, Phone, Clock, DollarSign, TrendingUp, CheckCircle2, 
-  XCircle, Sparkles, Building2, Zap, Shield, Database
+  CheckCircle2, XCircle, AlertCircle, DollarSign, Clock, Users, 
+  TrendingUp, Shield, Zap, Sparkles, Phone, Building2 
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -11,6 +11,7 @@ import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
+import { ROIIndustryComparison } from "@/components/ROIIndustryComparison";
 import { trackEvent } from "@/lib/tracking";
 
 const Comparisons = () => {
@@ -871,6 +872,27 @@ const Comparisons = () => {
               </div>
             </div>
           </GlassCard>
+        </div>
+      </section>
+
+      {/* ROI Industry Comparison Section */}
+      <section className="py-20 bg-muted/20">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Compare ROI Across All Industries
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Not sure which vertical has the most opportunity? See side-by-side projections for all 8 industries based on your business profile.
+            </p>
+          </motion.div>
+          
+          <ROIIndustryComparison />
         </div>
       </section>
 
