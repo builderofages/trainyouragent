@@ -36,6 +36,7 @@ import CaseStudies from "./pages/CaseStudies";
 import DemoRequest from "./pages/DemoRequest";
 import SolutionConfigurator from "./pages/SolutionConfigurator";
 import Contact from "./pages/Contact";
+import DemoVideo from "./pages/DemoVideo";
 
 const queryClient = new QueryClient();
 
@@ -75,6 +76,7 @@ const App = () => (
           <Route path="/comparisons" element={<Comparisons />} />
           <Route path="/case-studies" element={<CaseStudies />} />
           <Route path="/demo-request" element={<DemoRequest />} />
+          <Route path="/demo-video" element={<DemoVideo />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/niche/:nicheId" element={<NicheLanding />} />
           <Route path="/pricing" element={<Pricing />} />

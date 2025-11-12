@@ -173,6 +173,7 @@ export const StrategySessionLeadGate = ({
 
         // Store in sessionStorage to prevent duplicate forms
         sessionStorage.setItem('strategy_session_lead_submitted', 'true');
+        sessionStorage.setItem('booking_industry', formData.industry);
 
         // Auto-open Cal.com after 2 seconds
         setTimeout(() => {
@@ -183,6 +184,11 @@ export const StrategySessionLeadGate = ({
             source: 'lead_gate_completion',
             industry: formData.industry
           });
+
+          // Redirect to demo video page after 3 seconds (1 second after Cal.com opens)
+          setTimeout(() => {
+            window.location.href = '/demo-video?confirmed=true';
+          }, 1000);
         }, 2000);
 
         toast.success("Thank you! Opening booking calendar...");
