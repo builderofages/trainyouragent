@@ -329,4 +329,199 @@ export const nicheSolutions: Record<string, NicheSolution> = {
     },
     integrations: ["HubSpot", "Salesforce", "Google Calendar", "Slack"],
   },
+  spas: {
+    id: "spas",
+    name: "Spas & Wellness",
+    icon: "Sparkles",
+    challenges: [
+      "Last-minute bookings during treatment sessions",
+      "Complex package selections confuse callers",
+      "Membership inquiries need detailed explanations",
+      "After-hours booking requests go to competitors"
+    ],
+    solutions: [
+      {
+        title: "24/7 Spa Booking",
+        description: "Accept appointments around the clock",
+        features: [
+          "Real-time availability checking",
+          "Package and membership explanations",
+          "Couples massage coordination",
+          "Gift certificate sales"
+        ]
+      },
+      {
+        title: "Membership Management",
+        description: "Automate membership enrollment and benefits",
+        features: [
+          "Membership plan comparisons",
+          "Automated renewal reminders",
+          "Usage tracking and reporting",
+          "VIP guest recognition"
+        ]
+      }
+    ],
+    roi: {
+      avgDealValue: 250,
+      monthlyLeads: 180,
+      conversionRate: 65
+    },
+    integrations: ["Mindbody", "Vagaro", "Booker", "Square"]
+  },
+  hotels: {
+    id: "hotels",
+    name: "Hotels & Hospitality",
+    icon: "Hotel",
+    challenges: [
+      "Guest inquiries 24/7 across time zones",
+      "Concierge requests overwhelm front desk",
+      "Room service orders during peak times",
+      "Event bookings need detailed coordination"
+    ],
+    solutions: [
+      {
+        title: "24/7 Guest Services",
+        description: "Handle guest requests around the clock",
+        features: [
+          "Room booking and modifications",
+          "Concierge recommendations",
+          "Room service order taking",
+          "Wake-up call scheduling"
+        ]
+      },
+      {
+        title: "Event Coordination",
+        description: "Streamline wedding and event bookings",
+        features: [
+          "Venue availability checking",
+          "Catering menu customization",
+          "Multi-event scheduling",
+          "Deposit and payment processing"
+        ]
+      }
+    ],
+    roi: {
+      avgDealValue: 850,
+      monthlyLeads: 220,
+      conversionRate: 55
+    },
+    integrations: ["Opera PMS", "Cloudbeds", "Maestro", "Mews"]
+  },
+  automotive: {
+    id: "automotive",
+    name: "Automotive Services",
+    icon: "Car",
+    challenges: [
+      "Service appointments need immediate scheduling",
+      "Test drive coordination is time-consuming",
+      "Parts inquiries require inventory checking",
+      "Breakdown emergencies need 24/7 response"
+    ],
+    solutions: [
+      {
+        title: "Service Scheduling",
+        description: "Automate service appointments and reminders",
+        features: [
+          "Service bay availability",
+          "Maintenance reminders",
+          "Loaner vehicle coordination",
+          "Warranty verification"
+        ]
+      },
+      {
+        title: "Sales Support",
+        description: "Qualify leads and schedule test drives",
+        features: [
+          "Inventory availability",
+          "Test drive scheduling",
+          "Trade-in value estimates",
+          "Financing pre-qualification"
+        ]
+      }
+    ],
+    roi: {
+      avgDealValue: 450,
+      monthlyLeads: 160,
+      conversionRate: 48
+    },
+    integrations: ["CDK", "Reynolds & Reynolds", "DealerSocket", "Tekion"]
+  },
+  real_estate: {
+    id: "real_estate",
+    name: "Real Estate",
+    icon: "Building",
+    challenges: [
+      "Showing requests need immediate response",
+      "After-hours inquiries go to competitors",
+      "Property information questions are repetitive",
+      "Lead qualification takes multiple calls"
+    ],
+    solutions: [
+      {
+        title: "24/7 Showing Coordination",
+        description: "Schedule property showings around the clock",
+        features: [
+          "Agent calendar integration",
+          "Property availability checking",
+          "Virtual tour scheduling",
+          "Open house registration"
+        ]
+      },
+      {
+        title: "Lead Qualification",
+        description: "Pre-qualify buyers and sellers automatically",
+        features: [
+          "Budget and timeline assessment",
+          "Property preference capture",
+          "Mortgage pre-approval status",
+          "CRM integration and follow-up"
+        ]
+      }
+    ],
+    roi: {
+      avgDealValue: 12000,
+      monthlyLeads: 85,
+      conversionRate: 18
+    },
+    integrations: ["Zillow", "Realtor.com", "MLS", "Follow Up Boss"]
+  },
+  solar: {
+    id: "solar",
+    name: "Solar Energy",
+    icon: "Sun",
+    challenges: [
+      "Complex consultations scare away leads",
+      "Site assessment scheduling takes multiple calls",
+      "Incentive questions require detailed explanations",
+      "Installation timeline inquiries need immediate answers"
+    ],
+    solutions: [
+      {
+        title: "Solar Consultation Automation",
+        description: "Educate and qualify solar leads 24/7",
+        features: [
+          "Incentive and rebate explanations",
+          "Site assessment scheduling",
+          "Energy savings calculations",
+          "Financing options presentation"
+        ]
+      },
+      {
+        title: "Installation Coordination",
+        description: "Streamline permitting and installation scheduling",
+        features: [
+          "Permit status updates",
+          "Installation scheduling",
+          "Utility interconnection tracking",
+          "Warranty registration automation"
+        ]
+      }
+    ],
+    roi: {
+      avgDealValue: 25000,
+      monthlyLeads: 45,
+      conversionRate: 22
+    },
+    integrations: ["Aurora Solar", "Energy Toolbase", "SolarWinds", "Enerflo"]
+  },
 };
