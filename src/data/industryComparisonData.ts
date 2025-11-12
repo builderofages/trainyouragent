@@ -62,5 +62,40 @@ export const industryComparisonData: Record<string, IndustryComparisonData> = {
     setupTime: "3-5 days",
     averageROI: "360%",
     paybackPeriod: "19 days"
+  },
+  spas: {
+    aiAgentCost: "$299-$799",
+    humanStaffCost: "$3,800+",
+    setupTime: "3-5 days",
+    averageROI: "375%",
+    paybackPeriod: "17 days"
+  },
+  hotels: {
+    aiAgentCost: "$499-$999",
+    humanStaffCost: "$5,200+",
+    setupTime: "5-7 days",
+    averageROI: "450%",
+    paybackPeriod: "14 days"
+  },
+  automotive: {
+    aiAgentCost: "$399-$899",
+    humanStaffCost: "$4,500+",
+    setupTime: "3-7 days",
+    averageROI: "415%",
+    paybackPeriod: "15 days"
+  },
+  real_estate: {
+    aiAgentCost: "$399-$899",
+    humanStaffCost: "$4,800+",
+    setupTime: "3-7 days",
+    averageROI: "435%",
+    paybackPeriod: "16 days"
+  },
+  solar: {
+    aiAgentCost: "$499-$999",
+    humanStaffCost: "$5,000+",
+    setupTime: "5-7 days",
+    averageROI: "480%",
+    paybackPeriod: "13 days"
   }
 };

@@ -86,11 +86,11 @@ const AutomotiveLanding = () => {
         
         {/* ROI Calculator */}
         <div id="roi-calculator">
-          <ROICalculatorEnhanced defaultIndustry="Automotive" />
+          <ROICalculatorEnhanced defaultIndustry="automotive" />
         </div>
         
         {/* Voice Demo */}
-        <VoiceAgentDemo defaultIndustry="Automotive" />
+        <VoiceAgentDemo defaultIndustry="automotive" />
         
         {/* Urgency Section */}
         <UrgencySection />
@@ -107,7 +107,7 @@ const AutomotiveLanding = () => {
         <StrategySessionLeadGate 
           open={leadGateOpen}
           onOpenChange={setLeadGateOpen}
-          defaultIndustry="Automotive"
+          defaultIndustry="Automotive Services"
         />
       </div>
     </>

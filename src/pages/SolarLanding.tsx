@@ -86,11 +86,11 @@ const SolarLanding = () => {
         
         {/* ROI Calculator */}
         <div id="roi-calculator">
-          <ROICalculatorEnhanced defaultIndustry="Solar" />
+          <ROICalculatorEnhanced defaultIndustry="solar" />
         </div>
         
         {/* Voice Demo */}
-        <VoiceAgentDemo defaultIndustry="Solar" />
+        <VoiceAgentDemo defaultIndustry="solar" />
         
         {/* Urgency Section */}
         <UrgencySection />
@@ -107,7 +107,7 @@ const SolarLanding = () => {
         <StrategySessionLeadGate 
           open={leadGateOpen}
           onOpenChange={setLeadGateOpen}
-          defaultIndustry="Solar"
+          defaultIndustry="Solar Energy"
         />
       </div>
     </>

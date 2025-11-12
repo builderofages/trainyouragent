@@ -86,11 +86,11 @@ const HotelsLanding = () => {
         
         {/* ROI Calculator */}
         <div id="roi-calculator">
-          <ROICalculatorEnhanced defaultIndustry="Hospitality" />
+          <ROICalculatorEnhanced defaultIndustry="hotels" />
         </div>
         
         {/* Voice Demo */}
-        <VoiceAgentDemo defaultIndustry="Hospitality" />
+        <VoiceAgentDemo defaultIndustry="hotels" />
         
         {/* Urgency Section */}
         <UrgencySection />
@@ -107,7 +107,7 @@ const HotelsLanding = () => {
         <StrategySessionLeadGate 
           open={leadGateOpen}
           onOpenChange={setLeadGateOpen}
-          defaultIndustry="Hospitality"
+          defaultIndustry="Hotels & Hospitality"
         />
       </div>
     </>

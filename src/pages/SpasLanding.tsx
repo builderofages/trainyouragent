@@ -86,11 +86,11 @@ const SpasLanding = () => {
         
         {/* ROI Calculator */}
         <div id="roi-calculator">
-          <ROICalculatorEnhanced defaultIndustry="Spas" />
+          <ROICalculatorEnhanced defaultIndustry="spas" />
         </div>
         
         {/* Voice Demo */}
-        <VoiceAgentDemo defaultIndustry="Spas" />
+        <VoiceAgentDemo defaultIndustry="spas" />
         
         {/* Urgency Section */}
         <UrgencySection />
@@ -107,7 +107,7 @@ const SpasLanding = () => {
         <StrategySessionLeadGate 
           open={leadGateOpen}
           onOpenChange={setLeadGateOpen}
-          defaultIndustry="Spas"
+          defaultIndustry="Spas & Wellness"
         />
       </div>
     </>

@@ -86,11 +86,11 @@ const RealEstateLanding = () => {
         
         {/* ROI Calculator */}
         <div id="roi-calculator">
-          <ROICalculatorEnhanced defaultIndustry="Real Estate" />
+          <ROICalculatorEnhanced defaultIndustry="real_estate" />
         </div>
         
         {/* Voice Demo */}
-        <VoiceAgentDemo defaultIndustry="Real Estate" />
+        <VoiceAgentDemo defaultIndustry="real_estate" />
         
         {/* Urgency Section */}
         <UrgencySection />

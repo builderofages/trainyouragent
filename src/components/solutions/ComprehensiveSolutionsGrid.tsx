@@ -2,21 +2,96 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
-import { ChevronDown, ChevronUp, Clock, DollarSign } from "lucide-react";
+import { ChevronDown, ChevronUp, Clock, DollarSign, AlertCircle, RefreshCw } from "lucide-react";
 import { BusinessFunction } from "@/data/comprehensiveBusinessFunctions";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface ComprehensiveSolutionsGridProps {
   businessFunctions: BusinessFunction[];
   onAddToPackage?: (functionId: string) => void;
   selectedFunctions?: string[];
+  isLoading?: boolean;
+  error?: Error | null;
 }
+
+const LoadingSkeleton = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {[...Array(8)].map((_, i) => (
+      <div key={i} className="space-y-4 p-6 rounded-xl border border-border/50 bg-background/50">
+        <div className="flex items-start gap-4">
+          <Skeleton className="w-12 h-12 rounded-xl" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-6 w-3/4" />
+            <Skeleton className="h-4 w-full" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-4/5" />
+        </div>
+        <div className="flex gap-3">
+          <Skeleton className="h-9 flex-1" />
+          <Skeleton className="h-9 flex-1" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const ErrorState = ({ error, onRetry }: { error: Error; onRetry: () => void }) => (
+  <Alert variant="destructive" className="max-w-2xl mx-auto">
+    <AlertCircle className="h-4 w-4" />
+    <AlertTitle>Unable to Load Solutions</AlertTitle>
+    <AlertDescription className="mt-2 space-y-3">
+      <p className="text-sm">{error.message || "Something went wrong loading the solutions data."}</p>
+      <MagneticButton onClick={onRetry} variant="outline" size="sm" className="mt-2">
+        <RefreshCw className="w-4 h-4 mr-2" />
+        Try Again
+      </MagneticButton>
+    </AlertDescription>
+  </Alert>
+);
+
+const EmptyState = () => (
+  <div className="text-center py-12 max-w-lg mx-auto">
+    <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mx-auto mb-4">
+      <AlertCircle className="w-8 h-8 text-muted-foreground" />
+    </div>
+    <h3 className="text-xl font-semibold mb-2">No Solutions Available</h3>
+    <p className="text-muted-foreground mb-4">
+      We couldn't find any AI solutions for this industry yet. Our team is constantly adding new industries.
+    </p>
+    <MagneticButton variant="outline" onClick={() => window.location.href = '/contact'}>
+      Contact Us for Custom Solutions
+    </MagneticButton>
+  </div>
+);
 
 export const ComprehensiveSolutionsGrid = ({
   businessFunctions,
   onAddToPackage,
-  selectedFunctions = []
+  selectedFunctions = [],
+  isLoading = false,
+  error = null
 }: ComprehensiveSolutionsGridProps) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  // Show loading skeleton
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
+
+  // Show error state
+  if (error) {
+    return <ErrorState error={error} onRetry={() => window.location.reload()} />;
+  }
+
+  // Validate data
+  if (!businessFunctions || !Array.isArray(businessFunctions) || businessFunctions.length === 0) {
+    return <EmptyState />;
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

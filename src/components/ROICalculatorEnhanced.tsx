@@ -199,6 +199,56 @@ const ROICalculatorEnhanced = ({ defaultIndustry, onCalculationComplete }: ROICa
       afterHoursRate: 75,
       source: "Nightclub & Bar Magazine 2024 & National Bar & Restaurant Association"
     },
+    { 
+      id: "spas", 
+      name: "Spas & Wellness", 
+      defaultJobValue: 400,
+      missedLeadRate: 60,
+      recoveryRate: 86,
+      avgConversionRate: 28,
+      afterHoursRate: 55,
+      source: "International Spa Association 2024 & Wellness Industry Report"
+    },
+    { 
+      id: "hotels", 
+      name: "Hotels & Hospitality", 
+      defaultJobValue: 800,
+      missedLeadRate: 52,
+      recoveryRate: 90,
+      avgConversionRate: 24,
+      afterHoursRate: 70,
+      source: "American Hotel & Lodging Association 2024 & STR Global Report"
+    },
+    { 
+      id: "automotive", 
+      name: "Automotive Services", 
+      defaultJobValue: 1200,
+      missedLeadRate: 64,
+      recoveryRate: 84,
+      avgConversionRate: 20,
+      afterHoursRate: 60,
+      source: "Automotive Service Association 2024 & NADA Industry Data"
+    },
+    { 
+      id: "real_estate", 
+      name: "Real Estate", 
+      defaultJobValue: 2500,
+      missedLeadRate: 56,
+      recoveryRate: 88,
+      avgConversionRate: 16,
+      afterHoursRate: 65,
+      source: "National Association of Realtors 2024 & Real Estate Trends Report"
+    },
+    { 
+      id: "solar", 
+      name: "Solar Energy", 
+      defaultJobValue: 12000,
+      missedLeadRate: 66,
+      recoveryRate: 87,
+      avgConversionRate: 10,
+      afterHoursRate: 50,
+      source: "Solar Energy Industries Association 2024 & SEIA Market Report"
+    },
   ];
 
   const handleIndustryChange = (industryId: string) => {
