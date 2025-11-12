@@ -1,4 +1,5 @@
 import { siteConfig } from "@/config/site";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface ApolloContactData {
   first_name: string;
@@ -79,23 +80,21 @@ export const sendToApollo = async (leadData: ApolloLeadData): Promise<boolean> =
   };
 
   try {
-    const response = await fetch("https://api.apollo.io/v1/contacts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Api-Key": apiKey,
-      },
-      body: JSON.stringify(apolloData),
+    const { data, error } = await supabase.functions.invoke('apollo-proxy', {
+      body: apolloData,
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      console.error("Apollo.io API error:", response.status, errorData);
+    if (error) {
+      console.error("Apollo proxy error:", error);
       return false;
     }
 
-    const result = await response.json();
-    console.log("Lead sent to Apollo.io successfully:", result.contact?.id);
+    if (!data?.success) {
+      console.error("Apollo proxy failed:", data?.error);
+      return false;
+    }
+
+    console.log("Lead sent to Apollo.io successfully:", data.data?.contact?.id);
     return true;
   } catch (error) {
     console.error("Failed to send lead to Apollo.io:", error);
@@ -200,23 +199,21 @@ export const sendStrategySessionLead = async (formData: {
   };
 
   try {
-    const response = await fetch("https://api.apollo.io/v1/contacts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Api-Key": apiKey,
-      },
-      body: JSON.stringify(apolloData),
+    const { data, error } = await supabase.functions.invoke('apollo-proxy', {
+      body: apolloData,
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      console.error("Apollo.io API error (strategy session):", response.status, errorData);
+    if (error) {
+      console.error("Apollo proxy error (strategy session):", error);
       return false;
     }
 
-    const result = await response.json();
-    console.log("Strategy session lead sent to Apollo.io successfully:", result.contact?.id);
+    if (!data?.success) {
+      console.error("Apollo proxy failed (strategy session):", data?.error);
+      return false;
+    }
+
+    console.log("Strategy session lead sent to Apollo.io successfully:", data.data?.contact?.id);
     return true;
   } catch (error) {
     console.error("Failed to send strategy session lead to Apollo.io:", error);
