@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Menu, X, Search } from "lucide-react";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
 import { Button } from "@/components/ui/button";
@@ -94,19 +94,56 @@ const Header = () => {
             </button>
           </div>
 
-          <motion.div initial={false} animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }} className="md:hidden overflow-hidden">
-            <div className="py-6 space-y-4">
+          {/* Mobile menu backdrop */}
+          <AnimatePresence>
+            {isOpen && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsOpen(false)}
+                className="fixed inset-0 bg-background/95 backdrop-blur-xl z-40 md:hidden"
+              />
+            )}
+          </AnimatePresence>
+
+          {/* Mobile menu content */}
+          <motion.div 
+            initial={false} 
+            animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+            className="md:hidden overflow-hidden relative z-50 bg-background/98 backdrop-blur-xl border-t border-glass-border shadow-2xl"
+          >
+            <div className="py-8 px-2 space-y-5">
               {navLinks.map((link) => (
-                <a key={link.name} href={link.href} className="block text-foreground hover:text-primary font-medium">{link.name}</a>
+                <a 
+                  key={link.name} 
+                  href={link.href} 
+                  className="block text-foreground hover:text-primary hover:bg-primary/10 font-semibold text-lg px-4 py-3 rounded-lg transition-all"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {link.name}
+                </a>
               ))}
               {siteConfig.phoneNumber && (
-                <ClickToCall 
-                  variant="outline"
-                  trackingLocation="header_mobile"
-                  className="w-full rounded-full"
-                />
+                <div className="px-2">
+                  <ClickToCall 
+                    variant="outline"
+                    trackingLocation="header_mobile"
+                    className="w-full rounded-full"
+                  />
+                </div>
               )}
-              <Button className="w-full rounded-full bg-gradient-primary" onClick={() => setLeadGateOpen(true)}>Get Your Free Strategy Session</Button>
+              <div className="px-2 pt-2">
+                <Button 
+                  className="w-full rounded-full bg-gradient-primary text-base font-semibold h-12" 
+                  onClick={() => {
+                    setLeadGateOpen(true);
+                    setIsOpen(false);
+                  }}
+                >
+                  Get Your Free Strategy Session
+                </Button>
+              </div>
             </div>
           </motion.div>
         </nav>
