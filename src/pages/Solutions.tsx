@@ -80,12 +80,44 @@ const nicheOptions = [
     gradient: "gradient-restaurants" 
   },
   { 
-    id: "general", 
-    name: "General Business", 
-    tagline: "Innovation. Growth. Success.",
-    image: "/images/industries/general.jpg",
+    id: "spas", 
+    name: "Spas & Wellness", 
+    tagline: "Relaxation. Rejuvenation. Results.",
+    image: "/images/industries/spas.jpg",
+    icon: Heart,
+    gradient: "gradient-spas" 
+  },
+  { 
+    id: "hotels", 
+    name: "Hotels & Hospitality", 
+    tagline: "Luxury. Service. Excellence.",
+    image: "/images/industries/hotels.jpg",
     icon: Briefcase,
-    gradient: "from-primary to-accent" 
+    gradient: "gradient-hotels" 
+  },
+  { 
+    id: "automotive", 
+    name: "Automotive", 
+    tagline: "Performance. Quality. Trust.",
+    image: "/images/industries/automotive.jpg",
+    icon: Wrench,
+    gradient: "gradient-automotive" 
+  },
+  { 
+    id: "real_estate", 
+    name: "Real Estate", 
+    tagline: "Properties. People. Possibilities.",
+    image: "/images/industries/real-estate.jpg",
+    icon: Home,
+    gradient: "gradient-real-estate" 
+  },
+  { 
+    id: "solar", 
+    name: "Solar Energy", 
+    tagline: "Sustainable. Efficient. Future.",
+    image: "/images/industries/solar.jpg",
+    icon: TrendingUp,
+    gradient: "gradient-solar" 
   },
 ];
 

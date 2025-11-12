@@ -1352,5 +1352,837 @@ export const comprehensiveSolutions: Record<string, ComprehensiveIndustrySolutio
         monthlyCost: "$129"
       }
     ]
+  },
+  spas: {
+    id: "spas",
+    name: "Spas & Wellness",
+    businessFunctions: [
+      {
+        id: "communication",
+        category: "Appointment Communication",
+        icon: Phone,
+        title: "24/7 Booking & Service Inquiries",
+        description: "Handle spa bookings, package inquiries, gift certificates 24/7. Multi-language support for luxury clientele.",
+        features: [
+          "Real-time availability for massage, facials, body treatments",
+          "Multi-therapist scheduling coordination",
+          "VIP client recognition and preference tracking",
+          "Package bundle recommendations",
+          "Gift certificate purchase and redemption",
+          "Cancellation and rescheduling management"
+        ],
+        industrySpecificExample: "During peak wedding season, AI handles 40+ daily bridal party inquiries, automatically offering package deals, checking multi-therapist availability for group bookings, and upselling premium add-ons like champagne and aromatherapy.",
+        implementationTime: "3-5 days",
+        integrations: ["Mindbody", "Booker", "Vagaro"],
+        roiMetric: "$85K recovered bookings annually",
+        monthlyCost: "$299"
+      },
+      {
+        id: "lead-management",
+        category: "Client Acquisition",
+        icon: Target,
+        title: "Luxury Client Qualification",
+        description: "Qualify spa package buyers, membership prospects, event planners. Route high-value medical spa inquiries.",
+        features: [
+          "Package interest assessment (wellness, beauty, medical)",
+          "Budget qualification for premium services",
+          "First-time vs. returning client identification",
+          "Special occasion detection (wedding, anniversary)",
+          "Corporate wellness program inquiries",
+          "Medical spa procedure qualification"
+        ],
+        industrySpecificExample: "Identify bride-to-be calling about bridal party packages, automatically offer 'Wedding Glow Package' with 4 pre-wedding facials + day-of services, route to spa director for VIP treatment, converting $800 inquiry into $3,500 package.",
+        implementationTime: "5-7 days",
+        integrations: ["Mindbody", "Apollo.io", "Zenoti"],
+        roiMetric: "55% increase in package sales",
+        monthlyCost: "$249"
+      },
+      {
+        id: "scheduling",
+        category: "Multi-Therapist Coordination",
+        icon: Calendar,
+        title: "Complex Appointment Orchestration",
+        description: "Coordinate couples massages, group spa days, back-to-back treatments. Manage therapist specialties and certifications.",
+        features: [
+          "Couples/group appointment coordination",
+          "Therapist specialty matching (deep tissue, prenatal, hot stone)",
+          "Back-to-back treatment sequencing",
+          "Room and equipment assignment",
+          "Buffer time for treatment room turnover",
+          "Preferred therapist requests"
+        ],
+        industrySpecificExample: "Book bachelorette party of 8 guests: coordinate 4 simultaneous massages at 2pm, followed by 4 facials at 3:30pm, ensuring certified prenatal therapist for pregnant bridesmaid, reserving private lounge, generating $2,400 booking.",
+        implementationTime: "1 week",
+        integrations: ["Mindbody", "Booker", "Google Calendar"],
+        roiMetric: "40% more group bookings",
+        monthlyCost: "$199"
+      },
+      {
+        id: "support",
+        category: "Client Experience",
+        icon: HeadphonesIcon,
+        title: "Pre & Post-Treatment Care",
+        description: "Answer treatment questions, provide pre-arrival instructions, post-treatment care guidance, product recommendations.",
+        features: [
+          "Treatment contraindication screening",
+          "Pre-arrival preparation instructions",
+          "Parking and arrival guidance",
+          "Robe and amenity information",
+          "Post-treatment care recommendations",
+          "Product suggestion and retail sales"
+        ],
+        industrySpecificExample: "Client books hot stone massage, AI automatically sends pre-treatment questionnaire, advises avoiding caffeine 2 hours before, provides parking instructions, follows up with hydration reminders and suggests muscle relief cream purchase.",
+        implementationTime: "3-5 days",
+        integrations: ["Mindbody", "Twilio", "Mailchimp"],
+        roiMetric: "25% retail product sales increase",
+        monthlyCost: "$149"
+      },
+      {
+        id: "sales",
+        category: "Membership & Packages",
+        icon: TrendingUp,
+        title: "Recurring Revenue Automation",
+        description: "Convert single visits to memberships, upsell packages, renew expiring gift certificates, reactivate lapsed clients.",
+        features: [
+          "Membership benefit explanation and signup",
+          "Package bundle upselling",
+          "Expiring gift certificate reminders",
+          "Lapsed client win-back campaigns",
+          "Birthday and anniversary promotions",
+          "Referral program enrollment"
+        ],
+        industrySpecificExample: "Client visits 3 times in 2 months, AI identifies membership opportunity, explains savings ($420/year), enrolls automatically, then upsells monthly aromatherapy add-on ($25/month), generating $900+ annual recurring revenue.",
+        implementationTime: "1 week",
+        integrations: ["Mindbody", "Stripe", "Zenoti"],
+        roiMetric: "$180K membership revenue",
+        monthlyCost: "$279"
+      },
+      {
+        id: "analytics",
+        category: "Business Intelligence",
+        icon: BarChart3,
+        title: "Spa Performance Analytics",
+        description: "Track therapist utilization, peak booking times, popular treatments, package conversion rates, retail attachment.",
+        features: [
+          "Therapist utilization and productivity tracking",
+          "Treatment popularity and profitability analysis",
+          "Peak hours and seasonal trends",
+          "Package conversion rate monitoring",
+          "Retail attachment rate tracking",
+          "Client retention and lifetime value"
+        ],
+        industrySpecificExample: "Discover Friday evening couples massages have 90% booking rate but Thursday mornings at 40%. Shift marketing to fill Thursday slots, add 15 weekly appointments, worth $78K annually.",
+        implementationTime: "2-3 days",
+        integrations: ["Mindbody", "Zenoti"],
+        roiMetric: "Capacity optimization insights",
+        monthlyCost: "$179"
+      },
+      {
+        id: "workflow",
+        category: "Client Journey Automation",
+        icon: Workflow,
+        title: "Booking to Post-Visit Follow-Up",
+        description: "Automate entire client journey: booking → pre-treatment prep → arrival → service → follow-up → rebooking.",
+        features: [
+          "Booking confirmation with instructions",
+          "Pre-treatment questionnaire delivery",
+          "Arrival notification to therapist",
+          "Treatment notes and recommendations",
+          "Post-visit thank you and feedback request",
+          "Rebooking reminder in 4-6 weeks"
+        ],
+        industrySpecificExample: "Complete spa journey: Client books online → receives confirmation + pre-treatment questionnaire → arrival text notifies therapist → service completed with notes → thank you email with product recommendations → rebooking reminder 30 days later → repeat visit.",
+        implementationTime: "1-2 weeks",
+        integrations: ["Mindbody", "Twilio", "Mailchimp"],
+        roiMetric: "60% repeat visit rate",
+        monthlyCost: "$249"
+      },
+      {
+        id: "compliance",
+        category: "Health & Safety Protocols",
+        icon: Shield,
+        title: "Liability & Sanitation Tracking",
+        description: "Manage health waivers, contraindication screening, sanitation logs, therapist certifications, insurance documentation.",
+        features: [
+          "Digital health waiver and consent forms",
+          "Contraindication screening automation",
+          "Equipment sanitation logging",
+          "Therapist certification tracking",
+          "Liability insurance documentation",
+          "Incident and injury reporting"
+        ],
+        industrySpecificExample: "Client books prenatal massage, AI automatically requires signed prenatal waiver and physician clearance, verifies therapist's prenatal certification, logs equipment sanitation, protecting spa from liability.",
+        implementationTime: "5-7 days",
+        integrations: ["Mindbody", "Google Drive", "DocuSign"],
+        roiMetric: "Liability protection",
+        monthlyCost: "$149"
+      }
+    ]
+  },
+  hotels: {
+    id: "hotels",
+    name: "Hotels & Hospitality",
+    businessFunctions: [
+      {
+        id: "communication",
+        category: "Guest Services",
+        icon: Phone,
+        title: "24/7 Concierge & Reservations",
+        description: "Handle reservations, room service, concierge requests, wake-up calls, local recommendations 24/7.",
+        features: [
+          "Room availability and reservation booking",
+          "Multi-language guest communication",
+          "Room service ordering and coordination",
+          "Concierge recommendations (dining, activities)",
+          "Wake-up call scheduling",
+          "Maintenance and housekeeping requests"
+        ],
+        industrySpecificExample: "International guest calls at 2am for restaurant recommendations, AI suggests 3 nearby options in their native language, books reservation, arranges car service, sends confirmation, delivering white-glove service without waking night manager.",
+        implementationTime: "5-7 days",
+        integrations: ["Opera PMS", "Cloudbeds", "Mews"],
+        roiMetric: "$120K+ saved staffing costs",
+        monthlyCost: "$399"
+      },
+      {
+        id: "lead-management",
+        category: "Group & Event Sales",
+        icon: Target,
+        title: "Corporate & Event Qualification",
+        description: "Qualify wedding parties, corporate retreats, conference groups. Route high-value bookings to sales team.",
+        features: [
+          "Group size and room block assessment",
+          "Event type identification (wedding, corporate, conference)",
+          "Date availability checking",
+          "Budget qualification",
+          "Amenity and catering requirements",
+          "RFP routing to sales team"
+        ],
+        industrySpecificExample: "Corporate event planner inquires about 50-person leadership retreat, AI qualifies budget ($75K+), checks availability, offers ballroom + breakout rooms + catering, routes to director of sales, converting inquiry to $85K booking.",
+        implementationTime: "1 week",
+        integrations: ["Opera PMS", "Salesforce", "Cvent"],
+        roiMetric: "45% more group bookings",
+        monthlyCost: "$299"
+      },
+      {
+        id: "scheduling",
+        category: "Housekeeping & Maintenance",
+        icon: Calendar,
+        title: "Staff Coordination & Room Readiness",
+        description: "Coordinate housekeeping, maintenance, turndown service. Prioritize VIP and early check-in requests.",
+        features: [
+          "Housekeeping task assignment and tracking",
+          "Maintenance work order creation",
+          "Room readiness status updates",
+          "Early check-in prioritization",
+          "VIP room preparation protocols",
+          "Turndown service scheduling"
+        ],
+        industrySpecificExample: "VIP guest requests early 11am check-in, AI prioritizes room cleaning, assigns experienced housekeeper, coordinates maintenance to check AC, alerts front desk when ready, ensuring seamless VIP experience.",
+        implementationTime: "1-2 weeks",
+        integrations: ["Opera PMS", "Alice", "HotSOS"],
+        roiMetric: "30% faster room turnover",
+        monthlyCost: "$249"
+      },
+      {
+        id: "support",
+        category: "Guest Experience",
+        icon: HeadphonesIcon,
+        title: "In-Stay Problem Resolution",
+        description: "Handle room issues, amenity questions, local information, special requests, complaint resolution 24/7.",
+        features: [
+          "Room temperature and maintenance issues",
+          "Extra amenity requests (pillows, towels)",
+          "Local dining and activity recommendations",
+          "Special occasion arrangements",
+          "Complaint logging and escalation",
+          "Lost and found tracking"
+        ],
+        industrySpecificExample: "Guest reports noisy AC at midnight, AI immediately creates maintenance ticket, offers room move, dispatches engineer, provides complimentary breakfast, logs for follow-up, turning potential bad review into loyal guest.",
+        implementationTime: "3-5 days",
+        integrations: ["Opera PMS", "HotSOS", "Twilio"],
+        roiMetric: "40% faster issue resolution",
+        monthlyCost: "$199"
+      },
+      {
+        id: "sales",
+        category: "Upsell & Loyalty",
+        icon: TrendingUp,
+        title: "Room Upgrades & Amenity Sales",
+        description: "Upsell room upgrades, spa packages, dining experiences, airport transfers, loyalty program enrollment.",
+        features: [
+          "Pre-arrival room upgrade offers",
+          "Spa and dining package upsells",
+          "Airport transfer and car rental coordination",
+          "Special occasion enhancement (flowers, champagne)",
+          "Loyalty program enrollment and benefits",
+          "Extended stay discounts"
+        ],
+        industrySpecificExample: "Guest books standard room for anniversary, AI offers suite upgrade ($150), spa couples package ($300), champagne and roses ($75), generates $525 additional revenue with 40% conversion rate.",
+        implementationTime: "1 week",
+        integrations: ["Opera PMS", "Revinate", "Upsell Guru"],
+        roiMetric: "$95K annual upsell revenue",
+        monthlyCost: "$279"
+      },
+      {
+        id: "analytics",
+        category: "Revenue Management",
+        icon: BarChart3,
+        title: "Occupancy & Pricing Optimization",
+        description: "Track occupancy patterns, analyze booking lead times, monitor competitor rates, optimize dynamic pricing.",
+        features: [
+          "Occupancy rate tracking and forecasting",
+          "Average daily rate (ADR) analysis",
+          "Revenue per available room (RevPAR) monitoring",
+          "Booking lead time patterns",
+          "Competitor rate comparison",
+          "Seasonal demand trends"
+        ],
+        industrySpecificExample: "Identify Thursday-Sunday bookings highest in September-October (wedding season), increase weekend rates 25%, add minimum 2-night stay, generate $180K+ additional revenue annually.",
+        implementationTime: "3-5 days",
+        integrations: ["Opera PMS", "IDeaS", "Duetto"],
+        roiMetric: "Revenue optimization insights",
+        monthlyCost: "$199"
+      },
+      {
+        id: "workflow",
+        category: "Guest Journey Automation",
+        icon: Workflow,
+        title: "Pre-Arrival to Post-Stay",
+        description: "Automate complete guest journey: reservation → pre-arrival → check-in → in-stay → checkout → follow-up.",
+        features: [
+          "Booking confirmation with property information",
+          "Pre-arrival upsell and preference collection",
+          "Mobile check-in and keyless entry",
+          "In-stay service coordination",
+          "Express checkout and folio delivery",
+          "Post-stay feedback and loyalty points"
+        ],
+        industrySpecificExample: "Complete journey: Booking confirmed → pre-arrival email with upgrade offer → mobile check-in → room ready notification → in-stay dining recommendation → express checkout → feedback request → loyalty points posted → rebooking incentive.",
+        implementationTime: "2-3 weeks",
+        integrations: ["Opera PMS", "Twilio", "OpenKey"],
+        roiMetric: "Elevated guest satisfaction",
+        monthlyCost: "$349"
+      },
+      {
+        id: "compliance",
+        category: "Safety & Regulatory",
+        icon: Shield,
+        title: "Security & Health Compliance",
+        description: "Track security incidents, health department requirements, fire safety, alcohol service logs, guest registry.",
+        features: [
+          "Security incident documentation",
+          "Health department inspection logs",
+          "Fire safety compliance tracking",
+          "Alcohol service responsible beverage logs",
+          "Guest registry and ID verification",
+          "Data privacy (GDPR, CCPA) compliance"
+        ],
+        industrySpecificExample: "Automatically log all security incidents, maintain guest registry for law enforcement, track fire inspection schedules, document responsible alcohol service, ensuring full regulatory compliance and liability protection.",
+        implementationTime: "5-7 days",
+        integrations: ["Opera PMS", "Google Drive", "Guestware"],
+        roiMetric: "Regulatory compliance",
+        monthlyCost: "$179"
+      }
+    ]
+  },
+  automotive: {
+    id: "automotive",
+    name: "Automotive",
+    businessFunctions: [
+      {
+        id: "communication",
+        category: "Sales & Service",
+        icon: Phone,
+        title: "24/7 Dealership Communication",
+        description: "Handle vehicle inquiries, service appointments, parts requests, trade-in assessments, financing questions 24/7.",
+        features: [
+          "New and used vehicle inventory searches",
+          "Test drive scheduling",
+          "Service appointment booking",
+          "Parts availability and ordering",
+          "Trade-in value estimates",
+          "Financing pre-qualification"
+        ],
+        industrySpecificExample: "Buyer sees online ad at 9pm, calls about 2024 SUV in stock, AI confirms availability and features, schedules test drive for tomorrow at 11am, pre-qualifies for financing, captures lead before competitor dealership opens.",
+        implementationTime: "5-7 days",
+        integrations: ["DealerSocket", "CDK Drive", "Reynolds & Reynolds"],
+        roiMetric: "$250K recovered leads annually",
+        monthlyCost: "$399"
+      },
+      {
+        id: "lead-management",
+        category: "Sales Funnel",
+        icon: Target,
+        title: "Buyer Intent Qualification",
+        description: "Qualify purchase timeline, budget, trade-in, financing needs. Route hot buyers to sales consultants instantly.",
+        features: [
+          "Purchase timeline assessment (immediate, 1-3 months, researching)",
+          "Budget qualification and financing pre-approval",
+          "Trade-in vehicle details and condition",
+          "Preferred vehicle features and comparison",
+          "Down payment availability",
+          "Credit situation assessment"
+        ],
+        industrySpecificExample: "Caller asks about truck with towing package, AI qualifies needs (towing 8K lbs boat), budget ($55K), has trade-in (2019 sedan), ready to buy this week, routes to truck specialist who closes $58K sale same day.",
+        implementationTime: "1 week",
+        integrations: ["DealerSocket", "VinSolutions", "Apollo.io"],
+        roiMetric: "60% more qualified leads",
+        monthlyCost: "$349"
+      },
+      {
+        id: "scheduling",
+        category: "Service Department",
+        icon: Calendar,
+        title: "Service Bay Optimization",
+        description: "Schedule oil changes, tire rotations, major repairs. Manage technician specialties, parts availability, loaner vehicles.",
+        features: [
+          "Service type identification and bay assignment",
+          "Technician certification matching (ASE, manufacturer)",
+          "Parts availability verification",
+          "Loaner vehicle coordination",
+          "Service shuttle scheduling",
+          "Multi-service bundling"
+        ],
+        industrySpecificExample: "Customer calls for brake service, AI checks parts in stock, schedules certified brake tech, offers loaner car, bundles with due oil change and tire rotation, converts $400 brake job to $650 comprehensive service.",
+        implementationTime: "1-2 weeks",
+        integrations: ["DealerSocket", "CDK", "Tekion"],
+        roiMetric: "35% more service appointments",
+        monthlyCost: "$299"
+      },
+      {
+        id: "support",
+        category: "Customer Assistance",
+        icon: HeadphonesIcon,
+        title: "Service Status & Warranty Support",
+        description: "Provide service status updates, explain warranty coverage, answer vehicle feature questions, roadside assistance.",
+        features: [
+          "Real-time service status updates",
+          "Warranty coverage verification",
+          "Recall notification and scheduling",
+          "Vehicle feature tutorials",
+          "Roadside assistance coordination",
+          "Parts and accessories ordering"
+        ],
+        industrySpecificExample: "Customer calls about check engine light, AI checks warranty (still covered), schedules diagnostic appointment, offers loaner vehicle, coordinates tow service if needed, ensuring seamless customer care.",
+        implementationTime: "3-5 days",
+        integrations: ["DealerSocket", "CDK", "Twilio"],
+        roiMetric: "50% faster service response",
+        monthlyCost: "$249"
+      },
+      {
+        id: "sales",
+        category: "Revenue Growth",
+        icon: TrendingUp,
+        title: "Service Upsell & Retention",
+        description: "Upsell maintenance packages, extended warranties, accessories, loyalty programs. Win back service customers.",
+        features: [
+          "Maintenance package bundling",
+          "Extended warranty offers at mileage milestones",
+          "Accessory upsells (floor mats, bed liners, roof racks)",
+          "Tire and battery replacement reminders",
+          "Service lapsed customer win-back",
+          "Lease-end purchase or trade-in campaigns"
+        ],
+        industrySpecificExample: "Customer brings car for 50K mile service, AI offers $899 maintenance package (covers 50K, 60K, 70K services saving $400), 60% conversion rate generates $180K+ annual package revenue.",
+        implementationTime: "1 week",
+        integrations: ["DealerSocket", "Xtime", "Podium"],
+        roiMetric: "$210K service upsell revenue",
+        monthlyCost: "$349"
+      },
+      {
+        id: "analytics",
+        category: "Dealership Intelligence",
+        icon: BarChart3,
+        title: "Sales & Service Performance",
+        description: "Track lead conversion, service capacity utilization, technician productivity, inventory turn rates, customer satisfaction.",
+        features: [
+          "Lead-to-sale conversion tracking",
+          "Service bay utilization and efficiency",
+          "Technician productivity and flagged hours",
+          "Parts inventory turnover analysis",
+          "Customer satisfaction scores (CSI)",
+          "Sales consultant performance comparison"
+        ],
+        industrySpecificExample: "Discover service appointments scheduled for 8am and 5pm are fully booked, but 2pm slots at 40% capacity. Shift marketing to fill midday, add 12 daily appointments, worth $420K annually.",
+        implementationTime: "3-5 days",
+        integrations: ["DealerSocket", "CDK", "Google Analytics"],
+        roiMetric: "Capacity optimization insights",
+        monthlyCost: "$249"
+      },
+      {
+        id: "workflow",
+        category: "Customer Journey",
+        icon: Workflow,
+        title: "Inquiry to Delivery & Service",
+        description: "Automate entire ownership journey: inquiry → test drive → purchase → delivery → service reminders → loyalty.",
+        features: [
+          "Initial inquiry response and qualification",
+          "Test drive scheduling and confirmation",
+          "Purchase paperwork and financing coordination",
+          "Vehicle delivery preparation",
+          "Onboarding and feature tutorial",
+          "Ongoing service reminders and offers"
+        ],
+        industrySpecificExample: "Complete journey: Lead inquiry → test drive scheduled → financing pre-approved → purchase negotiation → delivery date set → vehicle prep → orientation → 30-day check-in → oil change reminder → tire rotation → loyalty rewards.",
+        implementationTime: "2-3 weeks",
+        integrations: ["DealerSocket", "Twilio", "Mailchimp"],
+        roiMetric: "Lifetime customer value increase",
+        monthlyCost: "$399"
+      },
+      {
+        id: "compliance",
+        category: "Regulatory Compliance",
+        icon: Shield,
+        title: "FTC, EPA, Safety Recalls",
+        description: "Track FTC Safeguards Rule, EPA emissions, safety recalls, financing disclosures, warranty documentation.",
+        features: [
+          "FTC Safeguards Rule customer data protection",
+          "EPA emissions compliance documentation",
+          "NHTSA recall tracking and customer notification",
+          "Truth in Lending Act (TILA) financing disclosures",
+          "Lemon law documentation",
+          "Service record retention"
+        ],
+        industrySpecificExample: "NHTSA issues recall for model in inventory, AI automatically identifies affected VINs, notifies customers, schedules repair appointments, logs completion, ensuring 100% recall compliance and customer safety.",
+        implementationTime: "1 week",
+        integrations: ["DealerSocket", "CDK", "Google Drive"],
+        roiMetric: "Regulatory compliance",
+        monthlyCost: "$229"
+      }
+    ]
+  },
+  real_estate: {
+    id: "real_estate",
+    name: "Real Estate",
+    businessFunctions: [
+      {
+        id: "communication",
+        category: "Lead Response",
+        icon: Phone,
+        title: "Instant Lead Engagement",
+        description: "Respond to property inquiries, schedule showings, answer listing questions, provide neighborhood info 24/7.",
+        features: [
+          "Instant response to Zillow/Realtor.com leads",
+          "Property feature and availability information",
+          "Neighborhood schools, amenities, commute times",
+          "Showing scheduling with agent calendar sync",
+          "Open house registration",
+          "Pre-qualification assessment"
+        ],
+        industrySpecificExample: "Buyer sees listing at 8pm Sunday, texts about 4-bedroom home, AI confirms availability, provides school ratings and walkability score, schedules showing for Tuesday 6pm, captures lead before 50 competing agents even see it.",
+        implementationTime: "3-5 days",
+        integrations: ["Follow Up Boss", "BoomTown", "KVCore"],
+        roiMetric: "$180K recovered leads annually",
+        monthlyCost: "$349"
+      },
+      {
+        id: "lead-management",
+        category: "Buyer Qualification",
+        icon: Target,
+        title: "Pre-Qualification & Routing",
+        description: "Qualify buyer budget, timeline, pre-approval status, property preferences. Route hot leads to listing agents instantly.",
+        features: [
+          "Budget and pre-approval status verification",
+          "Purchase timeline assessment (urgent, 3-6 months, exploring)",
+          "Property criteria (beds, baths, location, features)",
+          "First-time buyer vs. repeat buyer identification",
+          "Cash buyer vs. financing needs",
+          "Agent specialization matching"
+        ],
+        industrySpecificExample: "Lead inquires about $850K listing, AI qualifies pre-approved for $900K, needs 4 beds in specific school district, relocating in 30 days (urgent), routes to luxury specialist who books showing same day, closes sale.",
+        implementationTime: "1 week",
+        integrations: ["Follow Up Boss", "Zillow Integration", "Apollo.io"],
+        roiMetric: "55% more qualified leads",
+        monthlyCost: "$299"
+      },
+      {
+        id: "scheduling",
+        category: "Showing Coordination",
+        icon: Calendar,
+        title: "Multi-Property Tour Planning",
+        description: "Schedule property showings, coordinate multi-home tours, manage lockbox access, optimize agent routes.",
+        features: [
+          "Single and multi-property showing scheduling",
+          "Agent calendar synchronization",
+          "Lockbox access code coordination",
+          "Geographic route optimization",
+          "Seller showing notification",
+          "Buyer showing confirmation and reminders"
+        ],
+        industrySpecificExample: "Buyer wants to see 5 homes Saturday, AI checks agent availability, coordinates seller schedules, optimizes driving route (saves 45 minutes), sends lockbox codes, confirms with buyer, seamless showing experience.",
+        implementationTime: "1 week",
+        integrations: ["Follow Up Boss", "ShowingTime", "Google Calendar"],
+        roiMetric: "40% more showings per agent",
+        monthlyCost: "$249"
+      },
+      {
+        id: "support",
+        category: "Transaction Support",
+        icon: HeadphonesIcon,
+        title: "Offer to Close Coordination",
+        description: "Answer transaction questions, coordinate inspections, provide document checklists, track contingencies and deadlines.",
+        features: [
+          "Offer submission and status updates",
+          "Inspection and appraisal scheduling",
+          "Contingency deadline tracking",
+          "Document checklist and reminders",
+          "Title and escrow coordination",
+          "Closing date and time confirmation"
+        ],
+        industrySpecificExample: "Buyer's offer accepted, AI automatically schedules home inspection, coordinates appraisal, sends document checklist, tracks financing contingency deadline, reminds about final walkthrough, ensuring smooth 30-day close.",
+        implementationTime: "1-2 weeks",
+        integrations: ["Dotloop", "DocuSign", "Skyslope"],
+        roiMetric: "30% faster transaction coordination",
+        monthlyCost: "$279"
+      },
+      {
+        id: "sales",
+        category: "Client Expansion",
+        icon: TrendingUp,
+        title: "Sphere Nurturing & Referrals",
+        description: "Nurture past clients, generate referrals, promote open houses, reactivate old leads, anniversary campaigns.",
+        features: [
+          "Home anniversary and market update campaigns",
+          "Referral request automation",
+          "Open house invitation and registration",
+          "Expired listing follow-up",
+          "For Sale By Owner (FSBO) conversion",
+          "Past client reactivation"
+        ],
+        industrySpecificExample: "Client purchased home 3 years ago, AI sends home anniversary note + market report showing 18% appreciation, asks for referrals, generates 2 buyer leads and 1 seller listing from single past client touchpoint.",
+        implementationTime: "1 week",
+        integrations: ["Follow Up Boss", "Mailchimp", "BombBomb"],
+        roiMetric: "$150K referral revenue",
+        monthlyCost: "$279"
+      },
+      {
+        id: "analytics",
+        category: "Market Intelligence",
+        icon: BarChart3,
+        title: "Lead Source & Conversion Analytics",
+        description: "Track lead sources (Zillow, Realtor.com, referrals), conversion rates, days to close, agent performance, market trends.",
+        features: [
+          "Lead source ROI analysis",
+          "Lead-to-showing conversion tracking",
+          "Showing-to-offer conversion rates",
+          "Average days to close by price range",
+          "Agent productivity and GCI tracking",
+          "Market absorption rate trends"
+        ],
+        industrySpecificExample: "Discover Zillow leads convert at 12% but cost $80 each, while Facebook ads convert at 18% and cost $35. Shift budget to Facebook, double lead volume at same cost, add $280K GCI annually.",
+        implementationTime: "3-5 days",
+        integrations: ["Follow Up Boss", "Google Analytics", "Zillow"],
+        roiMetric: "Marketing optimization insights",
+        monthlyCost: "$199"
+      },
+      {
+        id: "workflow",
+        category: "Client Lifecycle",
+        icon: Workflow,
+        title: "Lead to Post-Close Nurture",
+        description: "Automate complete client journey: inquiry → showing → offer → contract → close → anniversary → referrals.",
+        features: [
+          "Initial inquiry instant response",
+          "Showing follow-up and feedback collection",
+          "Offer strategy and negotiation support",
+          "Transaction milestone tracking",
+          "Closing gift and celebration",
+          "Post-close check-ins and referral requests"
+        ],
+        industrySpecificExample: "Complete journey: Lead inquiry → showing scheduled → showing feedback → offer submitted → offer accepted → inspection coordinated → appraisal ordered → closing confirmed → closing gift → 30-day check-in → market updates → referral requests.",
+        implementationTime: "2-3 weeks",
+        integrations: ["Follow Up Boss", "Twilio", "BombBomb"],
+        roiMetric: "Lifetime client value increase",
+        monthlyCost: "$349"
+      },
+      {
+        id: "compliance",
+        category: "Fair Housing & Legal",
+        icon: Shield,
+        title: "Fair Housing & Disclosure Compliance",
+        description: "Ensure Fair Housing Act compliance, track disclosure requirements, document steering prevention, maintain transaction records.",
+        features: [
+          "Fair Housing Act language compliance",
+          "Lead-based paint disclosure tracking",
+          "Seller disclosure delivery confirmation",
+          "Anti-steering documentation",
+          "Transaction document retention (7 years)",
+          "E-signature and audit trail logging"
+        ],
+        industrySpecificExample: "AI ensures all communications comply with Fair Housing Act (never mentions demographics), tracks lead paint disclosures for pre-1978 homes, logs showing feedback without protected class references, protecting brokerage from discrimination claims.",
+        implementationTime: "1 week",
+        integrations: ["Dotloop", "DocuSign", "Google Drive"],
+        roiMetric: "Legal compliance protection",
+        monthlyCost: "$229"
+      }
+    ]
+  },
+  solar: {
+    id: "solar",
+    name: "Solar Energy",
+    businessFunctions: [
+      {
+        id: "communication",
+        category: "Lead Generation",
+        icon: Phone,
+        title: "24/7 Solar Inquiry Response",
+        description: "Handle homeowner inquiries, utility bill assessments, system sizing questions, financing options, installation scheduling 24/7.",
+        features: [
+          "Instant response to solar interest inquiries",
+          "Utility bill analysis and savings estimates",
+          "Roof suitability preliminary assessment",
+          "Federal/state incentive eligibility",
+          "Financing and leasing options explanation",
+          "Site survey appointment scheduling"
+        ],
+        industrySpecificExample: "Homeowner sees Facebook ad about rising utility rates at 7pm, calls to inquire, AI qualifies $300/month electric bill, calculates $95K 25-year savings, explains $0-down financing, books site survey for Saturday, captures lead immediately.",
+        implementationTime: "5-7 days",
+        integrations: ["Salesforce", "Aurora Solar", "EnergyToolbase"],
+        roiMetric: "$280K recovered leads annually",
+        monthlyCost: "$399"
+      },
+      {
+        id: "lead-management",
+        category: "Homeowner Qualification",
+        icon: Target,
+        title: "Solar Viability Assessment",
+        description: "Qualify roof condition, utility bills, credit score, homeownership status, shading issues. Route high-value leads to solar consultants.",
+        features: [
+          "Monthly electric bill qualification ($150+ minimum)",
+          "Homeownership verification (no renters)",
+          "Roof age and condition assessment",
+          "Credit score pre-qualification for financing",
+          "Shading and orientation preliminary analysis",
+          "Utility company and net metering availability"
+        ],
+        industrySpecificExample: "Caller mentions $400/month electric bill, owns home 5 years, south-facing roof, no large trees, credit score 720+, AI identifies prime candidate, routes to senior solar consultant who closes $42K system sale.",
+        implementationTime: "1 week",
+        integrations: ["Salesforce", "Aurora Solar", "Apollo.io"],
+        roiMetric: "65% more qualified leads",
+        monthlyCost: "$349"
+      },
+      {
+        id: "scheduling",
+        category: "Site Survey & Installation",
+        icon: Calendar,
+        title: "Survey and Install Coordination",
+        description: "Schedule site surveys, roof inspections, permit appointments, installation dates. Coordinate multi-day installations.",
+        features: [
+          "Site survey appointment scheduling",
+          "Roof inspection coordination",
+          "Permit and utility approval tracking",
+          "Installation crew scheduling",
+          "Electrical inspection appointments",
+          "System activation and training"
+        ],
+        industrySpecificExample: "Customer signs contract, AI automatically schedules site survey (3 days), submits permit application, coordinates HOA approval, schedules 2-day installation (4 weeks), books electrical inspection, manages entire 60-day process seamlessly.",
+        implementationTime: "1-2 weeks",
+        integrations: ["Salesforce", "JobNimbus", "Google Calendar"],
+        roiMetric: "40% faster project completion",
+        monthlyCost: "$299"
+      },
+      {
+        id: "support",
+        category: "Homeowner Education",
+        icon: HeadphonesIcon,
+        title: "Solar System & Incentive Support",
+        description: "Answer system performance questions, explain utility billing, track incentive applications, monitor troubleshooting.",
+        features: [
+          "System performance monitoring support",
+          "Net metering and utility billing explanation",
+          "Federal tax credit (ITC) guidance",
+          "State and local incentive tracking",
+          "Warranty coverage verification",
+          "Basic troubleshooting and maintenance tips"
+        ],
+        industrySpecificExample: "Homeowner confused about first electric bill after solar install, AI explains net metering credit rollover, confirms 30% federal tax credit application status, provides monitoring app tutorial, eliminating support burden on installation team.",
+        implementationTime: "5-7 days",
+        integrations: ["Salesforce", "Enphase Enlighten", "SolarEdge"],
+        roiMetric: "60% reduced support calls",
+        monthlyCost: "$249"
+      },
+      {
+        id: "sales",
+        category: "Revenue Expansion",
+        icon: TrendingUp,
+        title: "Battery, EV Charger, Referral Programs",
+        description: "Upsell battery backup, EV chargers, panel expansions, maintenance plans. Generate homeowner referrals.",
+        features: [
+          "Battery backup system upsells",
+          "EV charger installation offers",
+          "Panel expansion for pool/spa electrification",
+          "Maintenance and cleaning plan enrollment",
+          "Referral program incentives",
+          "Neighbor solar interest campaigns"
+        ],
+        industrySpecificExample: "Customer installs solar, AI offers Tesla Powerwall for blackout protection ($15K upsell), then EV charger for new electric car ($2K), enrolls in annual maintenance plan ($299/year), plus generates 2 neighbor referrals.",
+        implementationTime: "1 week",
+        integrations: ["Salesforce", "EnergyPal", "Podium"],
+        roiMetric: "$220K upsell + referral revenue",
+        monthlyCost: "$349"
+      },
+      {
+        id: "analytics",
+        category: "Solar Business Intelligence",
+        icon: BarChart3,
+        title: "Lead Source & Installation Performance",
+        description: "Track lead source ROI, conversion rates, average system size, installation cycle time, customer satisfaction.",
+        features: [
+          "Lead source cost per acquisition",
+          "Quote-to-contract conversion rates",
+          "Average system size and revenue per install",
+          "Installation cycle time tracking",
+          "Customer satisfaction and referral rates",
+          "Seasonal demand forecasting"
+        ],
+        industrySpecificExample: "Discover homeowners with $300+ monthly bills convert at 40% vs. $200 bills at 15%. Focus marketing on high-usage homes, increase average deal size from $28K to $38K, add $420K annual revenue.",
+        implementationTime: "3-5 days",
+        integrations: ["Salesforce", "Aurora Solar", "Google Analytics"],
+        roiMetric: "Marketing optimization insights",
+        monthlyCost: "$249"
+      },
+      {
+        id: "workflow",
+        category: "Homeowner Journey",
+        icon: Workflow,
+        title: "Inquiry to Activation & Monitoring",
+        description: "Automate entire solar journey: inquiry → survey → proposal → contract → install → activation → monitoring → referrals.",
+        features: [
+          "Initial inquiry qualification and response",
+          "Site survey scheduling and preparation",
+          "Custom proposal generation",
+          "Contract signing and financing coordination",
+          "Installation progress updates",
+          "System activation and training",
+          "Ongoing performance monitoring",
+          "Referral request campaigns"
+        ],
+        industrySpecificExample: "Complete journey: Inquiry → survey scheduled → proposal delivered → financing approved → contract signed → permits obtained → installation completed → inspection passed → system activated → training provided → monitoring enrolled → referral requested.",
+        implementationTime: "2-3 weeks",
+        integrations: ["Salesforce", "Aurora Solar", "Twilio"],
+        roiMetric: "Streamlined customer experience",
+        monthlyCost: "$399"
+      },
+      {
+        id: "compliance",
+        category: "Solar Regulations",
+        icon: Shield,
+        title: "Permits, Incentives, Interconnection",
+        description: "Track building permits, electrical permits, HOA approvals, utility interconnection, incentive documentation.",
+        features: [
+          "Building and electrical permit tracking",
+          "HOA architectural approval management",
+          "Utility interconnection application",
+          "Federal ITC (Investment Tax Credit) documentation",
+          "State and local incentive submissions",
+          "Warranty and equipment certification logging"
+        ],
+        industrySpecificExample: "Automatically submit building permit, coordinate electrical inspection, manage HOA approval process, complete utility interconnection, document federal tax credit eligibility, ensuring smooth installation and customer qualification.",
+        implementationTime: "1 week",
+        integrations: ["Salesforce", "Aurora Solar", "Google Drive"],
+        roiMetric: "Regulatory compliance",
+        monthlyCost: "$249"
+      }
+    ]
   }
 };
