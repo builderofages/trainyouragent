@@ -15,9 +15,14 @@ serve(async (req) => {
   try {
     const contactData = await req.json();
     
-    console.log('Apollo proxy: Received contact data', { 
+    // Enhanced logging - show what data we're sending
+    console.log('📤 Apollo proxy: Received contact data', { 
       email: contactData.email,
-      labels: contactData.label_names 
+      name: `${contactData.first_name} ${contactData.last_name}`,
+      labels: contactData.label_names,
+      custom_field_keys: Object.keys(contactData.custom_fields || {}),
+      has_phone: !!contactData.phone,
+      has_organization: !!contactData.organization_name
     });
 
     // Apollo.io API key from config
@@ -35,15 +40,23 @@ serve(async (req) => {
     const responseData = await response.json();
     
     if (!response.ok) {
-      console.error('Apollo API error:', {
+      // Enhanced error logging
+      console.error('❌ Apollo API error:', {
         status: response.status,
-        error: responseData
+        statusText: response.statusText,
+        error: responseData,
+        sent_data_summary: {
+          email: contactData.email,
+          labels: contactData.label_names,
+          custom_fields: Object.keys(contactData.custom_fields || {})
+        }
       });
       
       return new Response(
         JSON.stringify({ 
           success: false, 
-          error: responseData.error || 'Apollo API request failed' 
+          error: responseData.error || 'Apollo API request failed',
+          details: responseData
         }),
         { 
           status: response.status,
@@ -52,8 +65,12 @@ serve(async (req) => {
       );
     }
 
-    console.log('Apollo proxy: Contact created successfully', {
-      contactId: responseData.contact?.id
+    // Enhanced success logging
+    console.log('✅ Apollo proxy: Contact created successfully', {
+      contactId: responseData.contact?.id,
+      email: responseData.contact?.email,
+      labels_applied: contactData.label_names,
+      custom_fields_sent: Object.keys(contactData.custom_fields || {}).length
     });
 
     return new Response(
@@ -62,14 +79,15 @@ serve(async (req) => {
     );
     
   } catch (error) {
-    console.error('Apollo proxy error:', error);
+    console.error('❌ Apollo proxy exception:', error);
     
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: errorMessage 
+        error: errorMessage,
+        stack: error instanceof Error ? error.stack : undefined
       }),
       { 
         status: 500,

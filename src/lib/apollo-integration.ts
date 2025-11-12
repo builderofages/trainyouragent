@@ -1,5 +1,6 @@
 import { siteConfig } from "@/config/site";
 import { supabase } from "@/integrations/supabase/client";
+import { validateApolloPayload, logValidationResults } from "./test-utilities";
 
 export interface ApolloContactData {
   first_name: string;
@@ -79,6 +80,14 @@ export const sendToApollo = async (leadData: ApolloLeadData): Promise<boolean> =
     },
   };
 
+  // Validate payload before sending
+  const validationErrors = validateApolloPayload(apolloData);
+  if (validationErrors.length > 0) {
+    console.error("❌ Apollo payload validation failed:");
+    logValidationResults(validationErrors);
+    return false;
+  }
+
   try {
     const { data, error } = await supabase.functions.invoke('apollo-proxy', {
       body: apolloData,
@@ -94,7 +103,7 @@ export const sendToApollo = async (leadData: ApolloLeadData): Promise<boolean> =
       return false;
     }
 
-    console.log("Lead sent to Apollo.io successfully:", data.data?.contact?.id);
+    console.log("✅ Lead sent to Apollo.io successfully:", data.data?.contact?.id);
     return true;
   } catch (error) {
     console.error("Failed to send lead to Apollo.io:", error);
@@ -198,6 +207,14 @@ export const sendStrategySessionLead = async (formData: {
     },
   };
 
+  // Validate payload before sending
+  const validationErrors = validateApolloPayload(apolloData);
+  if (validationErrors.length > 0) {
+    console.error("❌ Apollo payload validation failed (strategy session):");
+    logValidationResults(validationErrors);
+    return false;
+  }
+
   try {
     const { data, error } = await supabase.functions.invoke('apollo-proxy', {
       body: apolloData,
@@ -213,7 +230,7 @@ export const sendStrategySessionLead = async (formData: {
       return false;
     }
 
-    console.log("Strategy session lead sent to Apollo.io successfully:", data.data?.contact?.id);
+    console.log("✅ Strategy session lead sent to Apollo.io successfully:", data.data?.contact?.id);
     return true;
   } catch (error) {
     console.error("Failed to send strategy session lead to Apollo.io:", error);

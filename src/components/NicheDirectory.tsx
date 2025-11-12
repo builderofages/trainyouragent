@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Wrench, Calculator, Home, ArrowRight, Star, Users } from "lucide-react";
+import { Search, Wrench, Calculator, Home, ArrowRight, Scale, Heart, UtensilsCrossed, Truck, GlassWater } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,7 @@ const niches = [
     stats: { metric: "85% capture rate", source: "Industry Benchmark" },
     tags: ["Lead Gen", "Scheduling", "Analytics"],
     available: true,
-    link: "/niche/hvac",
+    link: "/hvac",
   },
   {
     id: 2,
@@ -26,7 +26,8 @@ const niches = [
     color: "from-emerald-500 to-emerald-600",
     stats: { metric: "60% miss after-hours calls", source: "CallRail Study" },
     tags: ["Automation", "Reporting", "Compliance"],
-    available: false,
+    available: true,
+    link: "/accounting",
   },
   {
     id: 3,
@@ -36,7 +37,63 @@ const niches = [
     color: "from-orange-500 to-orange-600",
     stats: { metric: "62% never call back", source: "Harvard Business Review" },
     tags: ["Project Mgmt", "Quotes", "Crew Ops"],
-    available: false,
+    available: true,
+    link: "/roofing",
+  },
+  {
+    id: 4,
+    icon: Scale,
+    title: "Legal AI Agents",
+    description: "Intelligent case intake, client qualification, and consultation scheduling for law firms.",
+    color: "from-purple-500 to-purple-600",
+    stats: { metric: "48% miss lead calls", source: "CallRail Legal" },
+    tags: ["Case Intake", "Scheduling", "Qualification"],
+    available: true,
+    link: "/legal",
+  },
+  {
+    id: 5,
+    icon: Heart,
+    title: "Healthcare AI Agents",
+    description: "HIPAA-compliant appointment scheduling, patient triage, and prescription refill automation.",
+    color: "from-red-500 to-red-600",
+    stats: { metric: "55% after-hours miss", source: "Healthcare Analytics" },
+    tags: ["Appointments", "Triage", "HIPAA"],
+    available: true,
+    link: "/healthcare",
+  },
+  {
+    id: 6,
+    icon: UtensilsCrossed,
+    title: "Restaurant AI Agents",
+    description: "Reservation management, takeout orders, and event bookings with dietary restriction tracking.",
+    color: "from-amber-500 to-amber-600",
+    stats: { metric: "68% call volume peaks", source: "Restaurant Tech" },
+    tags: ["Reservations", "Orders", "Events"],
+    available: true,
+    link: "/restaurants",
+  },
+  {
+    id: 7,
+    icon: Truck,
+    title: "Logistics AI Agents",
+    description: "Quote requests, shipment tracking, and load scheduling for transportation companies.",
+    color: "from-indigo-500 to-indigo-600",
+    stats: { metric: "72% after-hours inquiries", source: "Logistics Today" },
+    tags: ["Quotes", "Tracking", "Scheduling"],
+    available: true,
+    link: "/logistics",
+  },
+  {
+    id: 8,
+    icon: GlassWater,
+    title: "Bars & Nightclubs AI",
+    description: "VIP reservations, event RSVPs, and bottle service bookings with guest list management.",
+    color: "from-pink-500 to-pink-600",
+    stats: { metric: "80% weekend call surge", source: "Hospitality Insights" },
+    tags: ["Events", "VIP", "Reservations"],
+    available: true,
+    link: "/bars-nightclubs",
   },
 ];
 
@@ -136,7 +193,7 @@ const NicheDirectory = () => {
                 onHoverStart={() => setHoveredCard(niche.id)}
                 onHoverEnd={() => setHoveredCard(null)}
               >
-                <Card className="relative group overflow-hidden bg-white border-2 border-border hover:border-primary transition-all duration-500 shadow-card hover:shadow-blue h-full">
+                <Card className="relative group overflow-hidden bg-card border-2 border-border hover:border-primary transition-all duration-500 shadow-card hover:shadow-blue h-[420px] flex flex-col">
                   {/* Gradient Background on Hover */}
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -144,70 +201,63 @@ const NicheDirectory = () => {
                     className={`absolute inset-0 bg-gradient-to-br ${niche.color}`}
                   />
 
-                  {/* Coming Soon Badge */}
-                  {!niche.available && (
-                    <div className="absolute top-4 right-4 z-10">
-                      <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full border border-primary/20 backdrop-blur-sm">
-                        Coming Soon
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="p-8 relative z-10">
-                    {/* Icon */}
-                    <motion.div
-                      animate={{
-                        rotateY: hoveredCard === niche.id ? 360 : 0,
-                      }}
-                      transition={{ duration: 0.6 }}
-                      className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br ${niche.color} rounded-2xl mb-6 shadow-lg`}
-                    >
-                      <niche.icon className="w-8 h-8 text-white" />
-                    </motion.div>
-
-                    {/* Content */}
-                    <h3 className="text-2xl font-black text-foreground mb-3">
-                      {niche.title}
-                    </h3>
-                    <p className="text-muted-foreground mb-6 leading-relaxed">
-                      {niche.description}
-                    </p>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {niche.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-3 py-1 bg-secondary text-foreground text-xs font-medium rounded-full"
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                  <div className="p-8 relative z-10 flex-1 flex flex-col">
+                    {/* Icon - Fixed height */}
+                    <div className="flex-none mb-6">
+                      <motion.div
+                        animate={{
+                          rotateY: hoveredCard === niche.id ? 360 : 0,
+                        }}
+                        transition={{ duration: 0.6 }}
+                        className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br ${niche.color} rounded-2xl shadow-lg`}
+                      >
+                        <niche.icon className="w-8 h-8 text-white" />
+                      </motion.div>
                     </div>
 
-                    {/* Stats */}
-                    <div className="mb-6">
-                      <p className="text-sm font-semibold text-foreground mb-1">
-                        {niche.stats.metric}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Source: {niche.stats.source}
+                    {/* Content that grows */}
+                    <div className="flex-1 flex flex-col">
+                      <h3 className="text-2xl font-black text-foreground mb-3">
+                        {niche.title}
+                      </h3>
+                      <p className="text-muted-foreground mb-6 leading-relaxed flex-1">
+                        {niche.description}
                       </p>
                     </div>
 
-                    {/* CTA Button */}
-                    <Button
-                      className={`w-full rounded-full group/btn ${
-                        niche.available
-                          ? "bg-gradient-primary hover:shadow-blue"
-                          : "bg-secondary text-foreground hover:bg-secondary/80"
-                      }`}
-                      disabled={!niche.available}
-                      onClick={() => niche.link && navigate(`${niche.link}?source=directory`)}
-                    >
-                      {niche.available ? "Enter Realm" : "Notify Me"}
-                      <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
-                    </Button>
+                    {/* Fixed bottom section */}
+                    <div className="flex-none space-y-4">
+                      {/* Tags */}
+                      <div className="flex flex-wrap gap-2">
+                        {niche.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-3 py-1 bg-secondary text-foreground text-xs font-medium rounded-full"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Stats */}
+                      <div>
+                        <p className="text-sm font-semibold text-foreground mb-1">
+                          {niche.stats.metric}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Source: {niche.stats.source}
+                        </p>
+                      </div>
+
+                      {/* CTA Button */}
+                      <Button
+                        className="w-full rounded-full group/btn bg-gradient-primary hover:shadow-blue"
+                        onClick={() => niche.link && navigate(`${niche.link}?source=directory`)}
+                      >
+                        Explore Solutions
+                        <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                      </Button>
+                    </div>
                   </div>
                 </Card>
               </motion.div>

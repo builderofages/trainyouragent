@@ -11,6 +11,9 @@ import AIvsHumanCalculator from "@/components/calculators/AIvsHumanCalculator";
 import LeadResponseCalculator from "@/components/calculators/LeadResponseCalculator";
 import { GlassCard } from "@/components/enhanced/GlassCard";
 import { MagneticButton } from "@/components/enhanced/MagneticButton";
+import { DemoLeadGate } from "@/components/DemoLeadGate";
+import { trackConversion } from "@/lib/tracking";
+import { useToast } from "@/hooks/use-toast";
 
 const nicheData = {
   all: {
@@ -63,10 +66,64 @@ const nicheData = {
 };
 
 const Demos = () => {
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("roi");
   const [selectedNiche, setSelectedNiche] = useState("all");
+  const [demoLeadGateOpen, setDemoLeadGateOpen] = useState(false);
+  const [selectedDemo, setSelectedDemo] = useState<{
+    name: string;
+    type: 'voice' | 'lead-capture' | 'scheduling';
+  } | null>(null);
 
   const currentNiche = nicheData[selectedNiche as keyof typeof nicheData];
+
+  const handleWatchDemo = (demoName: string, demoType: 'voice' | 'lead-capture' | 'scheduling') => {
+    // Check if user already submitted demo lead
+    const hasSubmittedDemo = sessionStorage.getItem('demo_lead_submitted');
+    
+    trackConversion('demo_watch_clicked', {
+      demo_name: demoName,
+      demo_type: demoType,
+      industry: selectedNiche,
+    });
+
+    if (hasSubmittedDemo) {
+      // User already qualified, open demo directly
+      openDemo(demoType, demoName);
+    } else {
+      // Show lead gate first
+      setSelectedDemo({ name: demoName, type: demoType });
+      setDemoLeadGateOpen(true);
+    }
+  };
+
+  const openDemo = (demoType: string, demoName: string) => {
+    trackConversion('demo_opened', {
+      demo_type: demoType,
+      demo_name: demoName,
+      industry: selectedNiche,
+    });
+
+    toast({
+      title: "Demo Feature Coming Soon",
+      description: `The ${demoName} will be available shortly. Thank you for your interest!`,
+    });
+    
+    // TODO: Implement actual demo opening logic
+    // if (demoType === 'voice') { /* open voice demo */ }
+    // if (demoType === 'lead-capture') { /* open lead capture demo */ }
+    // if (demoType === 'scheduling') { /* open scheduling demo */ }
+  };
+
+  const getDemoType = (demoName: string): 'voice' | 'lead-capture' | 'scheduling' => {
+    if (demoName.toLowerCase().includes('voice') || demoName.toLowerCase().includes('call') || demoName.toLowerCase().includes('dispatch')) {
+      return 'voice';
+    }
+    if (demoName.toLowerCase().includes('scheduling') || demoName.toLowerCase().includes('appointment') || demoName.toLowerCase().includes('booking')) {
+      return 'scheduling';
+    }
+    return 'lead-capture';
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -132,7 +189,12 @@ const Demos = () => {
                       <p className="text-sm text-muted-foreground mb-4">
                         See how AI handles real {selectedNiche === 'all' ? 'customer' : currentNiche.title.toLowerCase()} interactions
                       </p>
-                      <MagneticButton variant="outline" size="sm" className="rounded-full">
+                      <MagneticButton 
+                        variant="outline" 
+                        size="sm" 
+                        className="rounded-full"
+                        onClick={() => handleWatchDemo(demo, getDemoType(demo))}
+                      >
                         <Play className="w-4 h-4 mr-2" />
                         Watch Demo
                       </MagneticButton>
@@ -238,6 +300,25 @@ const Demos = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Demo Lead Gate */}
+      {selectedDemo && (
+        <DemoLeadGate
+          isOpen={demoLeadGateOpen}
+          onClose={() => {
+            setDemoLeadGateOpen(false);
+            setSelectedDemo(null);
+          }}
+          onSuccess={(demoType) => {
+            setDemoLeadGateOpen(false);
+            openDemo(demoType, selectedDemo.name);
+            setSelectedDemo(null);
+          }}
+          selectedIndustry={selectedNiche !== 'all' ? selectedNiche.toUpperCase() : ''}
+          demoType={selectedDemo.type}
+          demoName={selectedDemo.name}
+        />
+      )}
 
       <Footer />
     </div>
