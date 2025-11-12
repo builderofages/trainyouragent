@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSectionEnhanced";
 import StatsSection from "@/components/StatsSectionEnhanced";
@@ -28,9 +29,20 @@ import { PhoneSection } from "@/components/PhoneSection";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 import { TechnologyPartners } from "@/components/TechnologyPartners";
 import { Differentiation } from "@/components/Differentiation";
+import { SmartCTAEngine } from "@/components/conversion/SmartCTAEngine";
+import { ExitIntentLeadCapture } from "@/components/conversion/ExitIntentLeadCapture";
+import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
+import { useEngagementTracking } from "@/hooks/useEngagementTracking";
 
 const Index = () => {
   useGSAP();
+  
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
+  const [calculatorROI, setCalculatorROI] = useState<number | undefined>(undefined);
+  
+  const {
+    trackCalculatorCompleted,
+  } = useEngagementTracking();
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -58,7 +70,12 @@ const Index = () => {
         <ParallaxSection speed={-0.3}>
           <section className="py-20 bg-muted/30">
             <div className="container mx-auto px-4">
-              <ROICalculator />
+              <ROICalculator 
+                onCalculationComplete={(roi) => {
+                  setCalculatorROI(roi);
+                  trackCalculatorCompleted();
+                }}
+              />
             </div>
           </section>
         </ParallaxSection>
@@ -107,6 +124,19 @@ const Index = () => {
         <LiveChat />
         <FloatingContactMenu />
         <SocialProofNotifications />
+        
+        {/* Smart Lead Funnel Components */}
+        <SmartCTAEngine
+          calculatorROI={calculatorROI}
+          onCTAClick={() => setLeadGateOpen(true)}
+        />
+        
+        <ExitIntentLeadCapture />
+        
+        <StrategySessionLeadGate
+          open={leadGateOpen}
+          onOpenChange={setLeadGateOpen}
+        />
       </div>
   );
 };

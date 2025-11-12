@@ -20,6 +20,11 @@ export const ExitIntentLeadCapture = ({ industry }: ExitIntentLeadCaptureProps) 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    // Don't enable exit intent on touch devices (mobile)
+    if ('ontouchstart' in window) {
+      return;
+    }
+    
     // Don't show if already shown this session
     if (sessionStorage.getItem('exit_intent_shown')) {
       return;

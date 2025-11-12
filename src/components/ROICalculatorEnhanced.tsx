@@ -16,6 +16,7 @@ import { siteConfig } from "@/config/site";
 import { ResultsDisclaimer } from "@/components/ResultsDisclaimer";
 import { TimelineEstimatorCTA } from "@/components/TimelineEstimatorCTA";
 import { getVariant, type VariantId, type ExperimentId } from "@/lib/ab-testing";
+import { addEngagementSignal } from "@/lib/engagement-scoring";
 
 const ResultCard = ({ icon: Icon, label, value, color, delay }: any) => {
   const { ref, style, onMouseMove, onMouseLeave } = use3DCard(8);
@@ -53,9 +54,10 @@ const ResultCard = ({ icon: Icon, label, value, color, delay }: any) => {
 
 interface ROICalculatorEnhancedProps {
   defaultIndustry?: string;
+  onCalculationComplete?: (monthlyROI: number) => void;
 }
 
-const ROICalculatorEnhanced = ({ defaultIndustry }: ROICalculatorEnhancedProps = {}) => {
+const ROICalculatorEnhanced = ({ defaultIndustry, onCalculationComplete }: ROICalculatorEnhancedProps = {}) => {
   const [industry, setIndustry] = useState(defaultIndustry || "hvac");
   const [monthlyLeads, setMonthlyLeads] = useState(100);
   const [conversionRate, setConversionRate] = useState(7);
@@ -219,6 +221,14 @@ const ROICalculatorEnhanced = ({ defaultIndustry }: ROICalculatorEnhancedProps =
     sessionStorage.setItem('calculator_completed', 'true');
     setIsCalculating(false);
     setShowResults(true);
+    
+    // Add engagement signal for calculator completion
+    addEngagementSignal('calculatorCompleted');
+    
+    // Notify parent component of ROI calculation
+    if (onCalculationComplete) {
+      onCalculationComplete(monthlyROI);
+    }
     
     trackEvent('calculator_completed', {
       industry,
