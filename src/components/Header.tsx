@@ -65,15 +65,15 @@ const Header = () => {
         }`}
       >
         <nav className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <motion.a href="/" className="flex items-center gap-3 group flex-shrink-0" whileHover={{ scale: 1.05 }}>
-              <motion.div className="w-10 h-10 rounded-lg overflow-hidden shadow-glow-sm" whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }}>
+          <div className="flex items-center justify-between gap-4">
+            <motion.a href="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink-0 mr-4" whileHover={{ scale: 1.05 }}>
+              <motion.div className="w-10 h-10 rounded-lg overflow-hidden shadow-glow-sm flex-shrink-0" whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }}>
                 <img src={logo} alt="TrainYourAgent Logo" className="w-full h-full object-contain" />
               </motion.div>
-              <span className="text-lg sm:text-xl font-black text-gradient whitespace-nowrap">TrainYourAgent</span>
+              <span className="text-base sm:text-lg lg:text-xl font-black text-gradient whitespace-nowrap">TrainYourAgent</span>
             </motion.a>
 
-            <div className="hidden md:flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-4 lg:gap-6">
               {navLinks.map((link) => (
                 <a key={link.name} href={link.href} className="text-foreground hover:text-primary font-medium transition-colors">{link.name}</a>
               ))}
