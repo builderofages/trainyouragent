@@ -1,14 +1,67 @@
+# TrainYourAgent - Robots.txt
+# Updated: 2025-01-12
+
+# Allow all major search engines
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 0
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# Social media crawlers (for OG image previews)
 User-agent: Twitterbot
 Allow: /
 
 User-agent: facebookexternalhit
 Allow: /
 
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Pinterestbot
+Allow: /
+
+# AI crawlers (for ChatGPT, Claude, etc.)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# Generic crawlers
 User-agent: *
 Allow: /
+Crawl-delay: 2
+
+# Disallow rules (private/admin paths if any exist)
+# Disallow: /admin/
+# Disallow: /api/private/
+# Disallow: /_*
+
+# Sitemap location
+Sitemap: https://trainyouragent.com/sitemap.xml
+
+# Note: Update domain after custom domain is live
