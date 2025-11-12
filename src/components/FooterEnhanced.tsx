@@ -28,16 +28,17 @@ const Footer = () => {
         { name: "Research Partners", href: "/research" },
       ],
     },
-    {
-      title: "Company",
-      links: [
-        { name: "About", href: "/about" },
-        { name: "Our Team", href: "/team" },
-        { name: "Technology", href: "/technology" },
-        { name: "Security", href: "/security" },
-        { name: "Integrations", href: "/integrations" },
-      ],
-    },
+      {
+        title: "Company",
+        links: [
+          { name: "About", href: "/about" },
+          { name: "Our Team", href: "/team" },
+          { name: "Contact", href: "/contact" },
+          { name: "Technology", href: "/technology" },
+          { name: "Security", href: "/security" },
+          { name: "Integrations", href: "/integrations" },
+        ],
+      },
     {
       title: "Legal",
       links: [
