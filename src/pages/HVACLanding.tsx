@@ -18,6 +18,7 @@ import { PainPointsJourney } from "@/components/solutions/PainPointsJourney";
 import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
 import { SolutionJourney } from "@/components/solutions/SolutionJourney";
 import { ComprehensiveSolutionsGrid } from "@/components/solutions/ComprehensiveSolutionsGrid";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { comprehensiveSolutions } from "@/data/comprehensiveBusinessFunctions";
 
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
@@ -40,9 +41,20 @@ gsap.registerPlugin(ScrollTrigger);
 const HVACLanding = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", company: "" });
   const solution = expandedSolutions.hvac;
+  const businessFunctions = comprehensiveSolutions.hvac?.businessFunctions;
   const isMobile = useIsMobile();
   const [performanceTier, setPerformanceTier] = useState<'high' | 'medium' | 'low'>('high');
   const [leadGateOpen, setLeadGateOpen] = useState(false);
+  
+  // Validate data on mount
+  useEffect(() => {
+    if (!solution) {
+      console.error('Missing solution data for HVAC');
+    }
+    if (!businessFunctions || businessFunctions.length === 0) {
+      console.error('Missing business functions for HVAC');
+    }
+  }, [solution, businessFunctions]);
   const heroStatsRef = useRef<HTMLDivElement>(null);
   const demoMessagesRef = useRef<HTMLDivElement>(null);
   const roiStatsRef = useRef<HTMLDivElement>(null);
@@ -150,16 +162,24 @@ const HVACLanding = () => {
   const seoData = landingPageSEO.hvac;
 
   return (
-    <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>{seoData.title}</title>
-        <meta name="description" content={seoData.description} />
-        <meta name="keywords" content={seoData.keywords.join(", ")} />
-        <meta property="og:title" content={seoData.title} />
-        <meta property="og:description" content={seoData.description} />
-        <meta property="og:type" content={seoData.ogType} />
-      </Helmet>
-      <Header />
+    <ErrorBoundary
+      onError={(error, errorInfo) => {
+        console.error('HVAC Landing Page Error:', {
+          error: error.message,
+          componentStack: errorInfo.componentStack,
+        });
+      }}
+    >
+      <div className="min-h-screen bg-background">
+        <Helmet>
+          <title>{seoData.title}</title>
+          <meta name="description" content={seoData.description} />
+          <meta name="keywords" content={seoData.keywords.join(", ")} />
+          <meta property="og:title" content={seoData.title} />
+          <meta property="og:description" content={seoData.description} />
+          <meta property="og:type" content={seoData.ogType} />
+        </Helmet>
+        <Header />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
@@ -617,6 +637,7 @@ const HVACLanding = () => {
 
       <Footer />
     </div>
+    </ErrorBoundary>
   );
 };
 

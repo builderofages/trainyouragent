@@ -32,6 +32,11 @@
   - Roofing
   - Logistics
   - Bars & Nightclubs
+  - Spas
+  - Hotels
+  - Automotive
+  - Real Estate
+  - Solar
 
 **Usage:** Identifies which industry vertical the lead came from. Used for segmentation, lead scoring, and industry-specific follow-up sequences.
 
