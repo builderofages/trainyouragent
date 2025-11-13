@@ -176,7 +176,7 @@ const nicheData: Record<string, any> = {
     icon: Heart,
     title: "Healthcare Practices",
     subtitle: "Patient intake, appointment management, and follow-up automation",
-    color: "from-pink-500 to-rose-500",
+    color: "from-primary to-accent",
     painPoints: [
       {
         icon: Clock,

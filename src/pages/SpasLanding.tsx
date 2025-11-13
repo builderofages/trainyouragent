@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ComprehensiveSolutionsGrid } from "@/components/solutions/ComprehensiveSolutionsGrid";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import ROICalculatorEnhanced from "@/components/ROICalculatorEnhanced";
@@ -20,7 +21,15 @@ const SpasLanding = () => {
   const solution = expandedSolutions.spas;
   
   return (
-    <>
+    <ErrorBoundary
+      onError={(error, errorInfo) => {
+        console.error('Spas Landing Page Error:', {
+          error: error.message,
+          componentStack: errorInfo.componentStack,
+        });
+      }}
+    >
+      <>
       <Helmet>
         <title>Spa & Wellness AI Voice Agents | TrainYourAgent - 24/7 Booking & Client Management</title>
         <meta 
@@ -111,6 +120,7 @@ const SpasLanding = () => {
         />
       </div>
     </>
+    </ErrorBoundary>
   );
 };
 

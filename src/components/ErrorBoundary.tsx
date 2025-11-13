@@ -62,8 +62,8 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="min-h-screen flex items-center justify-center bg-gradient-mesh p-4">
           <div className="max-w-md w-full bg-background rounded-lg shadow-xl p-8 text-center border border-border">
             <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-red-100 dark:bg-red-950 rounded-full flex items-center justify-center">
-                <AlertCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                <AlertCircle className="w-8 h-8 text-primary" />
               </div>
             </div>
             
@@ -73,8 +73,8 @@ export class ErrorBoundary extends Component<Props, State> {
             </p>
 
             {process.env.NODE_ENV === 'development' && this.state.error && (
-              <div className="bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800 rounded p-4 mb-6 text-left">
-                <p className="text-sm font-mono text-red-800 dark:text-red-300 break-all">
+              <div className="bg-primary/5 border border-primary/20 rounded p-4 mb-6 text-left">
+                <p className="text-sm font-mono text-foreground break-all">
                   {this.state.error.message}
                 </p>
               </div>

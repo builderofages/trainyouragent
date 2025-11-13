@@ -391,15 +391,15 @@ All colors MUST be HSL.
   }
   
   .gradient-restaurants {
-    @apply bg-gradient-to-r from-amber-500 to-orange-500;
+    @apply bg-gradient-to-r from-primary to-accent;
   }
   
   .gradient-bars {
-    @apply bg-gradient-to-r from-pink-500 to-purple-500;
+    @apply bg-gradient-to-r from-primary to-accent;
   }
   
   .gradient-spas {
-    @apply bg-gradient-to-r from-pink-400 to-purple-500;
+    @apply bg-gradient-to-r from-primary to-accent;
   }
   
   .gradient-hotels {
