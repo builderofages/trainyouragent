@@ -89,7 +89,7 @@ const niches = [
     icon: GlassWater,
     title: "Bars & Nightclubs AI",
     description: "VIP reservations, event RSVPs, and bottle service bookings with guest list management.",
-    color: "from-pink-500 to-pink-600",
+    color: "from-primary to-accent",
     stats: { metric: "80% weekend call surge", source: "Hospitality Insights" },
     tags: ["Events", "VIP", "Reservations"],
     available: true,

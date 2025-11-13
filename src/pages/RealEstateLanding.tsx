@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Helmet } from "react-helmet";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ComprehensiveSolutionsGrid } from "@/components/solutions/ComprehensiveSolutionsGrid";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import ROICalculatorEnhanced from "@/components/ROICalculatorEnhanced";
@@ -20,7 +21,15 @@ const RealEstateLanding = () => {
   const solution = expandedSolutions.real_estate;
   
   return (
-    <>
+    <ErrorBoundary
+      onError={(error, errorInfo) => {
+        console.error('Real Estate Landing Page Error:', {
+          error: error.message,
+          componentStack: errorInfo.componentStack,
+        });
+      }}
+    >
+      <>
       <Helmet>
         <title>Real Estate AI Voice Agents | TrainYourAgent - Lead Capture & Showing Coordination</title>
         <meta 
@@ -111,6 +120,7 @@ const RealEstateLanding = () => {
         />
       </div>
     </>
+    </ErrorBoundary>
   );
 };
 
