@@ -19,6 +19,7 @@ import { IndustryBenefits } from "@/components/solutions/IndustryBenefits";
 import { SolutionJourney } from "@/components/solutions/SolutionJourney";
 import { ComprehensiveSolutionsGrid } from "@/components/solutions/ComprehensiveSolutionsGrid";
 import { comprehensiveSolutions } from "@/data/comprehensiveBusinessFunctions";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
 import { UrgencySection } from "@/components/conversion/UrgencySection";

@@ -22,7 +22,7 @@ When properly configured, ALL lead capture forms on your site will automatically
 5. **ROI Calculator** - Lead magnet for calculator results PDF
 6. **Timeline Estimator** - Personalized timeline estimation tool
 7. **Solution Configurator** - Custom solution roadmap generator
-8. **Landing Page Forms** - All 8 industry-specific landing page forms
+8. **Landing Page Forms** - All 13 industry-specific landing page forms
 
 ---
 
@@ -115,9 +115,14 @@ Create these labels to track lead origin:
 - `Roofing Landing`
 - `Logistics Landing`
 - `Bars & Nightclubs Landing`
+- `Spas Landing`
+- `Hotels Landing`
+- `Automotive Landing`
+- `Real Estate Landing`
+- `Solar Landing`
 
 ### 3.3 Create Industry Labels
-Create labels for each vertical you serve:
+Create labels for each vertical you serve (13 total):
 - `HVAC`
 - `Legal`
 - `Healthcare`
@@ -126,6 +131,11 @@ Create labels for each vertical you serve:
 - `Roofing`
 - `Logistics`
 - `Bars & Nightclubs`
+- `Spas`
+- `Hotels`
+- `Automotive`
+- `Real Estate`
+- `Solar`
 
 ### 3.4 Create Engagement Labels (Optional)
 Track high-value engagement:

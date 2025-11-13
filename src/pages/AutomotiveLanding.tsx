@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ComprehensiveSolutionsGrid } from "@/components/solutions/ComprehensiveSolutionsGrid";
 import { ComparisonTable } from "@/components/conversion/ComparisonTable";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import ROICalculatorEnhanced from "@/components/ROICalculatorEnhanced";
 import { VoiceAgentDemo } from "@/components/VoiceAgentDemo";
 import { UrgencySection } from "@/components/conversion/UrgencySection";
