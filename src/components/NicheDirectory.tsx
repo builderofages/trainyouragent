@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Wrench, Calculator, Home, ArrowRight, Scale, Heart, UtensilsCrossed, Truck, GlassWater } from "lucide-react";
+import { Search, Wrench, Calculator, Home, ArrowRight, Scale, Heart, UtensilsCrossed, Truck, GlassWater, Dumbbell } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -94,6 +94,17 @@ const niches = [
     tags: ["Events", "VIP", "Reservations"],
     available: true,
     link: "/bars-nightclubs",
+  },
+  {
+    id: 9,
+    icon: Dumbbell,
+    title: "Gym & Fitness AI",
+    description: "Membership sales, trial conversions, PT bookings, and retention campaigns with 24/7 automation.",
+    color: "from-primary to-accent",
+    stats: { metric: "67% trial leads never followed up", source: "IHRSA" },
+    tags: ["Memberships", "PT Booking", "Retention"],
+    available: true,
+    link: "/gym",
   },
 ];
 
