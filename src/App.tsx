@@ -20,6 +20,7 @@ import HotelsLanding from "./pages/HotelsLanding";
 import AutomotiveLanding from "./pages/AutomotiveLanding";
 import RealEstateLanding from "./pages/RealEstateLanding";
 import SolarLanding from "./pages/SolarLanding";
+import GymLanding from "./pages/GymLanding";
 import SalesToolkit from "./pages/SalesToolkit";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
@@ -67,6 +68,7 @@ const App = () => (
           <Route path="/automotive" element={<AutomotiveLanding />} />
           <Route path="/real-estate" element={<RealEstateLanding />} />
           <Route path="/solar" element={<SolarLanding />} />
+          <Route path="/gym" element={<GymLanding />} />
           <Route path="/sales-toolkit" element={<SalesToolkit />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/resources/:slug" element={<ResourceArticle />} />

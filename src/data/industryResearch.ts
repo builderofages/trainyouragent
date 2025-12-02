@@ -1124,5 +1124,92 @@ export const industryResearch: Record<string, ResearchStatistic[]> = {
       context: "Existing customers adding EV chargers or more panels are easiest upsells",
       impact: "Automated expansion outreach adds $165K+ in existing customer growth revenue"
     }
+  ],
+
+  gym: [
+    {
+      statistic: "67% of gym trial leads never receive proper follow-up",
+      source: "IHRSA Health Club Consumer Report 2024",
+      sourceUrl: "https://www.ihrsa.org",
+      context: "Trial visitors leave contact info but gym staff too busy with current members",
+      impact: "$4,800+ monthly membership revenue lost from cold leads"
+    },
+    {
+      statistic: "31% average annual member churn rate for fitness facilities",
+      source: "Club Industry State of the Industry Report",
+      sourceUrl: "https://www.clubindustry.com",
+      context: "Members cancel without any retention attempt or win-back contact",
+      impact: "$180K+ lifetime value walking out with no intervention"
+    },
+    {
+      statistic: "Gyms with automated follow-up see 3.2x higher trial conversion",
+      source: "ABC Fitness Benchmarking Study",
+      sourceUrl: "https://www.abcfitness.com",
+      context: "Consistent follow-up within 24 hours dramatically improves conversion",
+      impact: "AI follow-up captures $57K+ annual additional memberships"
+    },
+    {
+      statistic: "78% of gym prospects join the first facility that responds",
+      source: "IHRSA Consumer Behavior Research",
+      sourceUrl: "https://www.ihrsa.org",
+      context: "Speed-to-lead is critical in competitive fitness market",
+      impact: "Instant AI response captures prospects before competitors"
+    },
+    {
+      statistic: "Personal training has 68% profit margin vs 12% for basic membership",
+      source: "IDEA Fitness Industry Report",
+      sourceUrl: "https://www.ideafit.com",
+      context: "PT packages are highest-margin revenue for gyms",
+      impact: "Automated PT booking captures $95K+ in high-margin revenue"
+    },
+    {
+      statistic: "40% of churn occurs in first 90 days of membership",
+      source: "Les Mills Global Consumer Report",
+      sourceUrl: "https://www.lesmills.com",
+      context: "New member onboarding is critical retention opportunity",
+      impact: "AI onboarding sequences reduce early churn by 45%"
+    },
+    {
+      statistic: "Members who attend 3+ times per week have 92% annual retention",
+      source: "IHRSA Retention Research Study",
+      sourceUrl: "https://www.ihrsa.org",
+      context: "Engagement is the #1 predictor of membership retention",
+      impact: "AI engagement campaigns increase visit frequency by 28%"
+    },
+    {
+      statistic: "Referral members have 37% higher lifetime value than other sources",
+      source: "Club Industry Marketing Study",
+      sourceUrl: "https://www.clubindustry.com",
+      context: "Referred members stay longer and spend more",
+      impact: "Automated referral programs generate 15+ qualified leads monthly"
+    },
+    {
+      statistic: "Peak hours (5-8pm) account for 47% of daily visits but 60% of missed calls",
+      source: "Mindbody Peak Performance Report",
+      sourceUrl: "https://www.mindbodyonline.com",
+      context: "Best sales hours are when staff is busiest serving members",
+      impact: "AI handles peak hour calls, capturing $3,200+ monthly in lost opportunities"
+    },
+    {
+      statistic: "Corporate wellness programs have 340% higher retention than individual members",
+      source: "SHRM Employee Benefits Survey",
+      sourceUrl: "https://www.shrm.org",
+      context: "Company-sponsored memberships are most stable revenue",
+      impact: "AI corporate outreach captures $45K+ annual enterprise accounts"
+    },
+    {
+      statistic: "23% no-show rate for group fitness classes without reminders",
+      source: "Glofox Attendance Optimization Report",
+      sourceUrl: "https://www.glofox.com",
+      context: "Empty class spots represent lost capacity utilization",
+      impact: "Automated reminders and waitlist management improves fill rate to 94%"
+    },
+    {
+      statistic: "Members who use mobile booking visit 2.4x more frequently",
+      source: "ABC Fitness Technology Adoption Study",
+      sourceUrl: "https://www.abcfitness.com",
+      context: "Booking convenience directly correlates with engagement",
+      impact: "AI booking removes friction, increasing member utilization"
+    }
   ]
 };

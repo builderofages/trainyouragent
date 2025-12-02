@@ -418,6 +418,10 @@ All colors MUST be HSL.
     @apply bg-gradient-to-r from-yellow-400 to-amber-500;
   }
   
+  .gradient-gym {
+    @apply bg-gradient-to-r from-primary to-accent;
+  }
+  
   /* Premium Typography */
   .text-hero {
     font-size: clamp(3rem, 8vw, 6rem);

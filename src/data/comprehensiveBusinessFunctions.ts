@@ -2184,5 +2184,172 @@ export const comprehensiveSolutions: Record<string, ComprehensiveIndustrySolutio
         monthlyCost: "$249"
       }
     ]
+  },
+
+  gym: {
+    id: "gym",
+    name: "Gym & Fitness",
+    businessFunctions: [
+      {
+        id: "communication",
+        category: "Member Communication",
+        icon: Phone,
+        title: "24/7 Membership Sales & Inquiries",
+        description: "Never miss a prospect. Answer membership questions, schedule tours, handle trial requests around the clock.",
+        features: [
+          "Instant trial pass scheduling",
+          "Membership plan comparisons and pricing",
+          "Facility tour booking",
+          "Class schedule information",
+          "Personal training inquiries",
+          "After-hours prospect capture"
+        ],
+        industrySpecificExample: "Prospect calls at 10pm after watching a fitness video. AI answers immediately, explains membership options, schedules a tour for tomorrow at 6pm, and sends membership comparison. Instead of lost lead, you have a scheduled tour.",
+        implementationTime: "3-5 days",
+        integrations: ["Mindbody", "Glofox", "Zen Planner", "ClubReady"],
+        roiMetric: "$4,800/mo recovered leads",
+        monthlyCost: "$299"
+      },
+      {
+        id: "lead-management",
+        category: "Lead Management",
+        icon: Target,
+        title: "Trial Lead Conversion System",
+        description: "Convert trial passes to memberships with automated follow-up based on visit patterns and fitness goals.",
+        features: [
+          "Trial visitor follow-up within 2 hours",
+          "Goal-based conversation personalization",
+          "Visit pattern tracking and engagement",
+          "Membership offer timing optimization",
+          "Objection handling sequences",
+          "Lead scoring by conversion likelihood"
+        ],
+        industrySpecificExample: "Trial visitor comes in Tuesday, AI calls Wednesday asking about their experience. Mentions they tried weights but felt unsure. AI offers complimentary PT session. Convert from trial to premium membership + PT package ($1,500 value).",
+        implementationTime: "5-7 days",
+        integrations: ["Mindbody", "ABC Fitness", "Apollo.io"],
+        roiMetric: "67% → 85% trial conversion",
+        monthlyCost: "$249"
+      },
+      {
+        id: "scheduling",
+        category: "Scheduling & Booking",
+        icon: Calendar,
+        title: "Class & PT Session Booking",
+        description: "Members book classes, PT sessions, and assessments 24/7. Automatic waitlist management and reminders.",
+        features: [
+          "Real-time class availability and booking",
+          "Personal trainer schedule management",
+          "Fitness assessment appointments",
+          "Waitlist with instant notification",
+          "Cancellation and rescheduling",
+          "Multi-session package booking"
+        ],
+        industrySpecificExample: "Member tries to book popular 6pm spin class - full. AI adds to waitlist. Cancellation happens at 5:45pm. AI instantly notifies waitlisted member, who confirms via text. Class at 100% capacity instead of empty spot.",
+        implementationTime: "1 week",
+        integrations: ["Mindbody", "Google Calendar", "Glofox"],
+        roiMetric: "95% class fill rate",
+        monthlyCost: "$199"
+      },
+      {
+        id: "support",
+        category: "Member Support",
+        icon: HeadphonesIcon,
+        title: "Billing, Access & Account Questions",
+        description: "Handle billing inquiries, access issues, freeze requests, and account updates without staff involvement.",
+        features: [
+          "Billing and payment questions",
+          "Membership freeze and cancellation",
+          "Access card issues",
+          "Account updates and upgrades",
+          "Facility hours and amenities",
+          "Guest pass information"
+        ],
+        industrySpecificExample: "Member calls at 5:30am - card not working. AI verifies identity, checks system, sees payment failed. Takes updated card, processes payment, reactivates access in 2 minutes. Member works out, grateful for quick resolution.",
+        implementationTime: "3-5 days",
+        integrations: ["Mindbody", "ABC Fitness", "Stripe"],
+        roiMetric: "80% inquiries resolved instantly",
+        monthlyCost: "$149"
+      },
+      {
+        id: "sales",
+        category: "Revenue Expansion",
+        icon: TrendingUp,
+        title: "Upsells, Upgrades & Referrals",
+        description: "Proactive campaigns for PT packages, membership upgrades, add-ons, and referral program promotion.",
+        features: [
+          "Membership upgrade campaigns",
+          "Personal training package upsells",
+          "Add-on services (towel, locker, parking)",
+          "Referral program promotion",
+          "Corporate membership outreach",
+          "Seasonal promotion campaigns"
+        ],
+        industrySpecificExample: "Basic member visits 4x/week for 3 months. AI identifies pattern, calls with premium membership offer (unlimited classes, towel service). 15% of basic members upgrade = $45K annual revenue boost.",
+        implementationTime: "1 week",
+        integrations: ["Mindbody", "Mailchimp", "Twilio"],
+        roiMetric: "$95K annual upsell revenue",
+        monthlyCost: "$249"
+      },
+      {
+        id: "analytics",
+        category: "Fitness Business Intelligence",
+        icon: BarChart3,
+        title: "Member Engagement & Churn Prediction",
+        description: "Track visit patterns, identify at-risk members, measure campaign effectiveness, forecast revenue.",
+        features: [
+          "Member visit frequency tracking",
+          "Churn risk identification",
+          "Class popularity analytics",
+          "Revenue per member analysis",
+          "Lead source ROI tracking",
+          "Peak hour capacity planning"
+        ],
+        industrySpecificExample: "AI identifies members who visited 3x/week but dropped to 1x/week. Flags 47 at-risk members. Proactive win-back campaign contacts all 47. 28 return to regular visits = $67K annual revenue saved.",
+        implementationTime: "3-5 days",
+        integrations: ["Mindbody", "Google Analytics", "Power BI"],
+        roiMetric: "Churn prediction accuracy",
+        monthlyCost: "$199"
+      },
+      {
+        id: "workflow",
+        category: "Member Journey",
+        icon: Workflow,
+        title: "Prospect to Loyal Member Automation",
+        description: "Automate entire journey: inquiry → tour → trial → membership → onboarding → engagement → referral.",
+        features: [
+          "Lead capture and tour scheduling",
+          "Trial pass experience optimization",
+          "Membership conversion sequence",
+          "30-day new member onboarding",
+          "Engagement milestone celebrations",
+          "Loyalty program and referral requests"
+        ],
+        industrySpecificExample: "Complete automation: Inquiry → AI schedules tour → tour confirmed → trial pass activated → day 1-7 check-ins → membership offer → signed → welcome sequence → PT intro → class recommendations → 90-day celebration → referral request.",
+        implementationTime: "2 weeks",
+        integrations: ["Mindbody", "Twilio", "Zapier"],
+        roiMetric: "3.2x trial conversion rate",
+        monthlyCost: "$349"
+      },
+      {
+        id: "compliance",
+        category: "Facility Operations",
+        icon: Shield,
+        title: "Waivers, Safety & Member Records",
+        description: "Manage liability waivers, health questionnaires, emergency contacts, and member documentation.",
+        features: [
+          "Digital waiver collection",
+          "Health questionnaire intake",
+          "Emergency contact management",
+          "Minor consent forms",
+          "PT session documentation",
+          "Incident reporting"
+        ],
+        industrySpecificExample: "New member signs up online. AI sends waiver, health questionnaire, emergency contacts before first visit. All documentation complete before member walks in. No staff time spent on paperwork.",
+        implementationTime: "3-5 days",
+        integrations: ["Mindbody", "DocuSign", "Google Drive"],
+        roiMetric: "100% waiver compliance",
+        monthlyCost: "$149"
+      }
+    ]
   }
 };

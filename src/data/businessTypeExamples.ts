@@ -1264,8 +1264,341 @@ export const businessTypeExamples: BusinessTypeExample[] = [
     }
   },
 
-  // HOTELS & HOSPITALITY (4 types) - will continue with next chunk
-  // AUTOMOTIVE (4 types)
-  // REAL ESTATE (4 types)
-  // SOLAR (4 types)
+  // GYM & FITNESS (6 types)
+  {
+    businessType: "CrossFit Box",
+    industry: "gym",
+    specificPainPoints: [
+      "WOD explanations confuse potential members",
+      "On-ramp scheduling requires coordination",
+      "Competition team inquiries need coach involvement",
+      "Community events and competitions need promotion"
+    ],
+    specificSolutions: [
+      "AI explains CrossFit methodology and WOD structure",
+      "Automated on-ramp class scheduling",
+      "Competition prep program information",
+      "Event registration and community updates"
+    ],
+    realScenario: {
+      title: "Thursday, 7:15 PM during the 6:30pm WOD",
+      location: "CrossFit box, 180 members, 3 coaches",
+      withoutAI: "Prospect calls asking about CrossFit for beginners - intimidated by what they've seen online. Coach mid-WOD can't answer. Voicemail. Prospect loses courage, signs up for Planet Fitness instead. Lost: $200/month unlimited + $500 on-ramp = $2,900 first year.",
+      lostValue: "$2,900 first year membership + $8,700 over 3 years (CrossFit members stay 3+ years on average)",
+      withAIBenefits: [
+        "✅ AI answers immediately during WOD",
+        "✅ Explains scaled workouts for all fitness levels",
+        "✅ Describes supportive community atmosphere",
+        "✅ Schedules free intro class",
+        "✅ Books on-ramp program start date",
+        "✅ Sends what-to-expect guide calming fears"
+      ],
+      employeeFocus: [
+        "Coaches focus on athlete development and safety",
+        "Build personal relationships with members",
+        "Program competition prep for serious athletes",
+        "Develop community events and challenges"
+      ]
+    },
+    avgCallVolume: "25-40 calls/day",
+    peakTimes: "Lunch 11am-1pm, After-work 5-8pm, Saturday mornings",
+    typicalCallerQuestions: [
+      "Is CrossFit safe for beginners?",
+      "What's an on-ramp program?",
+      "How much does membership cost?",
+      "Do I need to be fit to start?",
+      "What's a WOD?",
+      "Can I try a class first?"
+    ],
+    employeeExample: {
+      before: "Coach: Interrupted mid-workout for phone calls, stressed about missing prospects, no time for programming",
+      after: "Head Coach & Program Director: Developing athletes, creating programming, building competition team",
+      specificTasks: [
+        "Designing periodized programming for 180+ athletes",
+        "Coaching competition team (12 athletes, $18K+ annual revenue)",
+        "Running specialty clinics (Olympic lifting, gymnastics)",
+        "Building corporate CrossFit partnerships ($45K+ annual)"
+      ]
+    }
+  },
+  {
+    businessType: "Boutique Fitness Studio",
+    industry: "gym",
+    specificPainPoints: [
+      "Class pack explanations and membership comparisons",
+      "Instructor-specific booking requests",
+      "First-timer anxiety and new student onboarding",
+      "Retail and apparel questions during classes"
+    ],
+    specificSolutions: [
+      "AI explains class packs, unlimited options, intro offers",
+      "Instructor schedule and specialty information",
+      "First-timer welcome sequence and what-to-bring guide",
+      "Retail availability and sizing information"
+    ],
+    realScenario: {
+      title: "Tuesday, 5:45 PM - Instructor teaching back-to-back classes",
+      location: "Spin studio, 32 bikes, 8 classes/day",
+      withoutAI: "Woman calls wanting to try spin for first time - nervous about clipping in, worried about keeping up. Instructor teaching 5:30 class. Voicemail. Woman books SoulCycle instead (they answered). Lost: $150 intro pack + $250/month unlimited = $3,150 first year.",
+      lostValue: "$3,150 first year + potential 2-year rider loyalty ($6,300)",
+      withAIBenefits: [
+        "✅ AI answers with encouraging, welcoming tone",
+        "✅ Explains bike setup and clipping in process",
+        "✅ Reassures about all-level welcome policy",
+        "✅ Books first ride with recommended beginner-friendly instructor",
+        "✅ Sends first-ride guide with outfit and arrival tips",
+        "✅ Offers intro pack special"
+      ],
+      employeeFocus: [
+        "Instructors deliver transformative class experiences",
+        "Build personal connections with regular riders",
+        "Create playlists and programming",
+        "Community engagement outside studio"
+      ]
+    },
+    avgCallVolume: "35-55 calls/day",
+    peakTimes: "Morning 6-8am, Lunch 11am-1pm, Evening 5-8pm",
+    typicalCallerQuestions: [
+      "I've never done spin - is it hard?",
+      "What's the difference between class packs and unlimited?",
+      "Which instructor is best for beginners?",
+      "What should I wear?",
+      "Do you have shoes I can borrow?",
+      "Can I reserve a specific bike?"
+    ],
+    employeeExample: {
+      before: "Studio Manager: Answering phones between teaching, checking people in, selling retail, overwhelmed",
+      after: "Experience Director: Creating signature class formats, instructor development, brand partnerships",
+      specificTasks: [
+        "Developing themed ride series (20% attendance increase)",
+        "Instructor recruitment and training program",
+        "Corporate wellness partnerships ($65K+ annual)",
+        "Retail merchandise expansion and brand collaborations"
+      ]
+    }
+  },
+  {
+    businessType: "Yoga Studio",
+    industry: "gym",
+    specificPainPoints: [
+      "Multiple yoga style explanations (vinyasa, hot, yin, restorative)",
+      "Teacher training program inquiries require detailed info",
+      "Retreat and workshop registration coordination",
+      "Membership vs class pack decisions"
+    ],
+    specificSolutions: [
+      "AI explains yoga styles with recommendation based on goals",
+      "Teacher training information and application process",
+      "Workshop and retreat booking with payment plans",
+      "Personalized membership recommendations"
+    ],
+    realScenario: {
+      title: "Saturday, 9:45 AM during popular 9am Vinyasa",
+      location: "Full-service yoga studio, 6 teachers, 25+ classes/week",
+      withoutAI: "Caller interested in 200-hour yoga teacher training ($3,500 program). Has questions about curriculum, schedule, certification. Front desk busy with post-class check-ins. Voicemail. Caller enrolls at competing studio that answered immediately.",
+      lostValue: "$3,500 teacher training + $1,200 annual membership (trainees become members) = $4,700 immediate + $12K lifetime",
+      withAIBenefits: [
+        "✅ AI answers during busy post-class period",
+        "✅ Explains 200-hour curriculum and certification",
+        "✅ Discusses schedule options (weekends, intensive)",
+        "✅ Shares payment plan options",
+        "✅ Schedules call with lead trainer",
+        "✅ Sends detailed program brochure"
+      ],
+      employeeFocus: [
+        "Teachers focus on student development and class quality",
+        "Lead trainer develops teacher training curriculum",
+        "Studio owner builds retreat and workshop programming",
+        "Community building and sangha cultivation"
+      ]
+    },
+    avgCallVolume: "30-50 calls/day",
+    peakTimes: "Morning 7-9am, Lunch 11am-1pm, Evening 5-7pm",
+    typicalCallerQuestions: [
+      "What style of yoga is best for stress relief?",
+      "I'm not flexible - can I do yoga?",
+      "Tell me about your teacher training program",
+      "Do you have hot yoga?",
+      "What's included in the membership?",
+      "Do you offer private sessions?"
+    ],
+    employeeExample: {
+      before: "Studio Owner: Teaching 15+ classes/week, answering phones, managing schedule, burning out",
+      after: "Visionary Leader: Retreat programming, teacher training expansion, studio culture development",
+      specificTasks: [
+        "Leading international yoga retreats ($85K+ annual revenue)",
+        "Expanding teacher training to 300 and 500-hour programs",
+        "Building online membership platform",
+        "Cultivating studio community and philosophy"
+      ]
+    }
+  },
+  {
+    businessType: "Personal Training Studio",
+    industry: "gym",
+    specificPainPoints: [
+      "Trainer matching based on client goals",
+      "Session package pricing and scheduling",
+      "Assessment and consultation booking",
+      "Results and transformation questions"
+    ],
+    specificSolutions: [
+      "AI matches prospects with appropriate trainer specialties",
+      "Package comparison and payment plan options",
+      "Complimentary assessment scheduling",
+      "Transformation story sharing and goal setting"
+    ],
+    realScenario: {
+      title: "Wednesday, 6:30 PM - All trainers with clients",
+      location: "Private PT studio, 6 trainers, semi-private and 1-on-1 sessions",
+      withoutAI: "Executive calls wanting to lose 30 lbs and improve energy for demanding job. Budget no concern. All trainers mid-session. Voicemail. Executive hires Equinox PT ($180/session) instead. Lost: $150/session × 3/week × 52 weeks = $23,400/year.",
+      lostValue: "$23,400 first year + $70,200 over 3 years (executives stay with results)",
+      withAIBenefits: [
+        "✅ AI answers immediately with professional tone",
+        "✅ Discusses executive's goals and schedule constraints",
+        "✅ Recommends trainer specializing in executive performance",
+        "✅ Schedules complimentary fitness assessment",
+        "✅ Sends transformation stories of similar clients",
+        "✅ Offers executive training package with nutrition coaching"
+      ],
+      employeeFocus: [
+        "Trainers deliver results-focused sessions",
+        "Build deep relationships with clients",
+        "Continue education and specialization",
+        "Track client progress and adjust programming"
+      ]
+    },
+    avgCallVolume: "20-35 calls/day",
+    peakTimes: "Early morning 5-7am, Lunch 11am-1pm, Evening 5-8pm",
+    typicalCallerQuestions: [
+      "How much does personal training cost?",
+      "What results can I expect?",
+      "How do I know which trainer is right for me?",
+      "Do you offer nutrition coaching?",
+      "Can I train early morning or late evening?",
+      "What's your cancellation policy?"
+    ],
+    employeeExample: {
+      before: "Lead Trainer: Training clients while fielding calls, managing schedule, losing high-value prospects",
+      after: "Director of Training: Building training systems, mentor program, premium offerings",
+      specificTasks: [
+        "Developing signature training methodology",
+        "Recruiting and mentoring junior trainers",
+        "Creating corporate executive wellness program ($120K+ annual)",
+        "Building online coaching expansion ($45K+ additional revenue)"
+      ]
+    }
+  },
+  {
+    businessType: "24-Hour Gym",
+    industry: "gym",
+    specificPainPoints: [
+      "After-hours membership and access questions",
+      "Equipment availability and peak time guidance",
+      "Membership tier comparisons (basic vs premium)",
+      "Personal training and add-on service inquiries"
+    ],
+    specificSolutions: [
+      "AI handles membership inquiries 24/7 matching facility hours",
+      "Real-time peak hour guidance and equipment availability",
+      "Tier comparison with upgrade recommendations",
+      "PT and add-on service booking"
+    ],
+    realScenario: {
+      title: "Sunday, 11:45 PM - Night shift worker researching gyms",
+      location: "24-hour fitness center, 3,500 members, 35,000 sq ft",
+      withoutAI: "Nurse finishing night shift researches gyms that fit her 7am-3pm sleep schedule. Needs to work out at 4am or 11pm. Calls your 24-hour gym at midnight - voicemail until 8am. Joins competitor 24-hour gym that answered via chat. Lost: $50/month × 24 months = $1,200.",
+      lostValue: "$1,200 over 2 years + referrals from hospital coworkers ($3,600+)",
+      withAIBenefits: [
+        "✅ AI answers at midnight when she's making decision",
+        "✅ Explains 24-hour access and off-peak benefits",
+        "✅ Discusses equipment availability at 4am (empty, no wait)",
+        "✅ Schedules tour during her awake hours (4pm)",
+        "✅ Mentions healthcare worker discount",
+        "✅ Sends virtual tour and equipment guide"
+      ],
+      employeeFocus: [
+        "Staff focuses on daytime peak hour member experience",
+        "Facility maintenance and cleanliness",
+        "Equipment optimization and upgrades",
+        "Community events and member appreciation"
+      ]
+    },
+    avgCallVolume: "60-100 calls/day",
+    peakTimes: "After-work 5-8pm, Lunch 11am-1pm, Weekend mornings",
+    typicalCallerQuestions: [
+      "What hours are you open?",
+      "When is it least crowded?",
+      "What's included in basic vs premium membership?",
+      "Do you have [specific equipment]?",
+      "Is there someone there 24 hours?",
+      "How do I access the gym after hours?"
+    ],
+    employeeExample: {
+      before: "General Manager: Handling all calls, managing 3 shifts, equipment issues, member complaints",
+      after: "Regional Director: Multi-location oversight, corporate accounts, growth strategy",
+      specificTasks: [
+        "Managing 3 locations with consistent member experience",
+        "Corporate and multi-membership account development ($180K+ annual)",
+        "Facility expansion and equipment investment planning",
+        "Staff development and promotion pipeline"
+      ]
+    }
+  },
+  {
+    businessType: "MMA/Boxing Gym",
+    industry: "gym",
+    specificPainPoints: [
+      "Combat sport intimidation for beginners",
+      "Class type explanations (boxing, Muay Thai, BJJ, MMA)",
+      "Private lesson and competition training inquiries",
+      "Equipment requirements and gear purchases"
+    ],
+    specificSolutions: [
+      "AI explains beginner-friendly approach and non-contact options",
+      "Martial arts style comparison based on goals",
+      "Private coaching and fight camp booking",
+      "Gear recommendations and pro shop information"
+    ],
+    realScenario: {
+      title: "Friday, 7:30 PM during evening classes",
+      location: "MMA gym, boxing ring, 2 mat areas, 400 members",
+      withoutAI: "Dad calls wanting to enroll 14-year-old son in boxing for confidence and discipline. Concerned about safety. All coaches teaching evening classes. Voicemail. Dad enrolls son at karate school (they answered and addressed concerns). Lost: $180/month youth unlimited + gear = $2,500 first year.",
+      lostValue: "$2,500 first year + family memberships when dad and older brother join ($7,500 annual)",
+      withAIBenefits: [
+        "✅ AI answers during busy class time",
+        "✅ Addresses safety concerns with youth program details",
+        "✅ Explains discipline and respect focus of training",
+        "✅ Describes beginner progression and no-contact fundamentals",
+        "✅ Schedules family tour and youth class trial",
+        "✅ Sends youth program information and parent testimonials"
+      ],
+      employeeFocus: [
+        "Coaches focus on athlete development and technique",
+        "Build mentorship relationships with youth",
+        "Prepare competitors for fights and tournaments",
+        "Develop fighters' careers and professional opportunities"
+      ]
+    },
+    avgCallVolume: "30-50 calls/day",
+    peakTimes: "After-school 3-5pm, Evening 6-9pm, Saturday mornings",
+    typicalCallerQuestions: [
+      "Is it safe for beginners?",
+      "Do I have to fight?",
+      "What's the difference between boxing and MMA?",
+      "Do you have youth programs?",
+      "What equipment do I need?",
+      "Can I train just for fitness, not fighting?"
+    ],
+    employeeExample: {
+      before: "Head Coach: Teaching classes, answering phones, selling memberships, corner work for fighters",
+      after: "Gym Owner & Elite Coach: Fighter management, gym expansion, competition team development",
+      specificTasks: [
+        "Managing 8 competitive fighters (fight purses + sponsorships)",
+        "Youth program expansion to schools ($55K+ annual)",
+        "Corporate team building and self-defense workshops",
+        "Building gym brand through fighter success and social media"
+      ]
+    }
+  }
 ];

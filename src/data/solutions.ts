@@ -485,6 +485,45 @@ export const nicheSolutions: Record<string, NicheSolution> = {
     },
     integrations: ["Zillow", "Realtor.com", "MLS", "Follow Up Boss"]
   },
+  gym: {
+    id: "gym",
+    name: "Gym & Fitness",
+    icon: "Dumbbell",
+    challenges: [
+      "67% of trial pass leads never get proper follow-up",
+      "$2.3B lost annually to poor lead management industry-wide",
+      "31% annual member churn rate costs thousands per gym",
+      "Peak hour phone chaos - 5-8pm staff overwhelmed"
+    ],
+    solutions: [
+      {
+        title: "24/7 Membership Sales",
+        description: "Capture leads and convert trials around the clock",
+        features: [
+          "Instant trial pass scheduling",
+          "Membership plan comparisons",
+          "Personal training package upsells",
+          "Class schedule information"
+        ]
+      },
+      {
+        title: "Member Retention Automation",
+        description: "Reduce churn with proactive engagement",
+        features: [
+          "Automated check-in follow-ups",
+          "Frozen account win-back campaigns",
+          "Personal training upsells for plateau members",
+          "Class recommendation based on goals"
+        ]
+      }
+    ],
+    roi: {
+      avgDealValue: 1068,
+      monthlyLeads: 200,
+      conversionRate: 32
+    },
+    integrations: ["Mindbody", "Glofox", "Zen Planner", "ClubReady", "ABC Fitness"]
+  },
   solar: {
     id: "solar",
     name: "Solar Energy",

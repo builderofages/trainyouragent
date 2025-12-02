@@ -934,5 +934,100 @@ export const employeeElevationStories: Record<string, EmployeeStory[]> = {
       satisfactionIncrease: "From paperwork processing to critical-path project enabler",
       companySize: "Large regional installer, $22M annual revenue"
     }
+  ],
+
+  gym: [
+    {
+      name: "Ashley T.",
+      beforeTitle: "Front Desk Staff",
+      afterTitle: "Member Success Manager",
+      beforeSalary: "$32,000/year",
+      afterSalary: "$52,000/year + retention bonus",
+      beforeResponsibilities: [
+        "Answered 80+ calls daily during peak hours",
+        "Checked in members and gave tours",
+        "Handled membership questions and complaints",
+        "No time for relationship building"
+      ],
+      afterResponsibilities: [
+        "Proactive member retention campaigns (reduced churn 35%)",
+        "New member onboarding excellence program",
+        "At-risk member intervention and win-back",
+        "Member experience improvement initiatives",
+        "Referral program management and growth"
+      ],
+      revenueImpact: "$145,000 annual retention improvement from reduced churn",
+      satisfactionIncrease: "From overwhelmed gatekeeper to strategic member advocate",
+      companySize: "Mid-size gym, 2,500 members, $1.8M annual revenue"
+    },
+    {
+      name: "Marcus J.",
+      beforeTitle: "Membership Sales Associate",
+      afterTitle: "Business Development Director",
+      beforeSalary: "$38,000/year + commission",
+      afterSalary: "$68,000/year + profit sharing",
+      beforeResponsibilities: [
+        "Followed up on trial leads manually",
+        "Gave tours and closed individual memberships",
+        "Cold called past members",
+        "Limited time for strategic sales"
+      ],
+      afterResponsibilities: [
+        "Corporate wellness program development ($180K+ annual)",
+        "Strategic partnership cultivation (hotels, apartments)",
+        "Premium membership tier development",
+        "Sales team training and process optimization",
+        "Community event sponsorship and local marketing"
+      ],
+      revenueImpact: "$225,000 from corporate accounts and strategic partnerships",
+      satisfactionIncrease: "From individual sales to revenue growth leadership",
+      companySize: "Growing fitness center, 4,000 members, $3.2M annual revenue"
+    },
+    {
+      name: "Taylor R.",
+      beforeTitle: "Personal Training Coordinator",
+      afterTitle: "Fitness Program Director",
+      beforeSalary: "$42,000/year",
+      afterSalary: "$65,000/year + program revenue share",
+      beforeResponsibilities: [
+        "Scheduled PT sessions between training clients",
+        "Handled PT package sales calls",
+        "Coordinated trainer schedules",
+        "Answered equipment and training questions"
+      ],
+      afterResponsibilities: [
+        "Group fitness program development and expansion",
+        "Personal training package optimization (28% revenue increase)",
+        "Trainer recruitment, development, and retention",
+        "Specialized program creation (seniors, athletes, rehab)",
+        "Member transformation success story campaigns"
+      ],
+      revenueImpact: "$195,000 from PT revenue growth and new program launches",
+      satisfactionIncrease: "From scheduler to fitness programming visionary",
+      companySize: "Full-service gym, 3,200 members, $2.8M annual revenue"
+    },
+    {
+      name: "Jordan K.",
+      beforeTitle: "Operations Assistant",
+      afterTitle: "Member Experience & Analytics Lead",
+      beforeSalary: "$36,000/year",
+      afterSalary: "$58,000/year + performance bonus",
+      beforeResponsibilities: [
+        "Managed front desk coverage schedules",
+        "Processed membership changes and freezes",
+        "Handled billing disputes",
+        "Basic reporting for management"
+      ],
+      afterResponsibilities: [
+        "Member journey analytics and optimization",
+        "Churn prediction and prevention programs",
+        "Facility utilization analysis and capacity planning",
+        "Member satisfaction surveying and improvement",
+        "Data-driven marketing campaign optimization"
+      ],
+      revenueImpact: "$165,000 from churn reduction and capacity optimization",
+      satisfactionIncrease: "From administrative support to strategic business analyst",
+      companySize: "Multi-location fitness brand, 8,500 members, $6.2M annual revenue"
+    }
   ]
 };
