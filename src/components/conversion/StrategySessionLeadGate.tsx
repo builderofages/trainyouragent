@@ -463,6 +463,12 @@ export const StrategySessionLeadGate = ({
                           <SelectItem value="Roofing">Roofing & Construction</SelectItem>
                           <SelectItem value="Logistics">Logistics & Transportation</SelectItem>
                           <SelectItem value="Bars & Nightclubs">Bars & Nightclubs</SelectItem>
+                          <SelectItem value="Spas">Spas & Wellness</SelectItem>
+                          <SelectItem value="Hotels">Hotels & Hospitality</SelectItem>
+                          <SelectItem value="Automotive">Automotive</SelectItem>
+                          <SelectItem value="Real Estate">Real Estate</SelectItem>
+                          <SelectItem value="Solar">Solar & Energy</SelectItem>
+                          <SelectItem value="Gym & Fitness">Gym & Fitness</SelectItem>
                           <SelectItem value="Other">Other Industry</SelectItem>
                         </SelectContent>
                       </Select>

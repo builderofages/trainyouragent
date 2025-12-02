@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Wrench, Calculator, Home, Briefcase, Heart, Truck, Utensils, Sparkles, ArrowRight } from "lucide-react";
+import { Search, Wrench, Calculator, Home, Briefcase, Heart, Truck, Utensils, Sparkles, ArrowRight, Dumbbell } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { GlassCard } from "@/components/enhanced/GlassCard";
@@ -82,13 +82,23 @@ const niches = [
     tags: ["Reservations", "Catering", "Menu"],
     customLink: "/restaurants",
   },
+  {
+    id: "gym",
+    icon: Dumbbell,
+    title: "Gym & Fitness",
+    description: "Membership sales, trial conversions, PT bookings, and retention automation",
+    color: "from-primary to-accent",
+    stats: { metric: "67% trial leads never followed up", source: "IHRSA" },
+    tags: ["Memberships", "PT Booking", "Retention"],
+    customLink: "/gym",
+  },
 ].map(niche => ({
   ...niche,
   available: nicheConfig[niche.id]?.enabled || false,
   link: niche.customLink || `/niche/${niche.id}`,
 }));
 
-const categories = ["All", "Home Services", "Professional Services", "Healthcare", "Logistics", "Food Service"];
+const categories = ["All", "Home Services", "Professional Services", "Healthcare", "Logistics", "Food Service", "Fitness"];
 
 const NicheCard = ({ niche, index }: { niche: any; index: number }) => {
   const navigate = useNavigate();
@@ -205,6 +215,7 @@ const NicheDirectory = () => {
     "Healthcare": ["healthcare"],
     "Logistics": ["logistics"],
     "Food Service": ["restaurants"],
+    "Fitness": ["gym"],
   };
 
   const filteredNiches = niches.filter((niche) => {
