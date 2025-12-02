@@ -35,9 +35,9 @@ Apollo.io requires all custom fields and labels to be pre-created in your dashbo
 
 ---
 
-## Required Tags/Labels (15 Total)
+## Required Tags/Labels (16 Total)
 
-Tags/Labels in Apollo.io are used for segmentation, automation triggers, and lead scoring. You must create all 15 tags listed below.
+Tags/Labels in Apollo.io are used for segmentation, automation triggers, and lead scoring. You must create all 16 tags listed below.
 
 ### Source Tags (6 Total)
 
@@ -50,7 +50,7 @@ These identify where the lead originated on your website:
 5. **Newsletter Subscriber**
 6. **Website Chat**
 
-### Industry Tags (13 Total)
+### Industry Tags (14 Total)
 
 These identify which vertical the lead belongs to:
 
@@ -67,6 +67,7 @@ These identify which vertical the lead belongs to:
 17. **Automotive**
 18. **Real Estate**
 19. **Solar**
+20. **Gym & Fitness**
 
 ### How to Create Tags in Apollo.io
 
@@ -77,7 +78,7 @@ These identify which vertical the lead belongs to:
 5. Enter the exact tag name from the list above (case-sensitive)
 6. Optionally add a color to help visually distinguish tag categories
 7. Click **"Save"**
-8. Repeat for all 15 tags
+8. Repeat for all 16 tags
 
 **Pro Tip:** Use color coding:
 - Source Tags → Blue
@@ -95,7 +96,7 @@ Custom fields capture detailed qualification data from lead forms. Each field mu
 - **Field Name:** `industry` (lowercase, no spaces)
 - **Field Type:** Dropdown (Single Select)
 - **Required:** Yes
-- **Dropdown Options (13 Total):**
+- **Dropdown Options (14 Total):**
   - HVAC
   - Accounting
   - Roofing
@@ -109,6 +110,7 @@ Custom fields capture detailed qualification data from lead forms. Each field mu
   - Automotive
   - Real Estate
   - Solar
+  - Gym & Fitness
 
 **Usage:** Identifies which industry vertical the lead came from. Used for segmentation, lead scoring, and industry-specific follow-up sequences.
 
@@ -373,7 +375,7 @@ After creating all fields and tags, verify they exist:
 **Tags/Labels:**
 - Go to Settings → Labels
 - Filter by "Contact" type
-- You should see all 15 tags listed
+- You should see all 16 tags listed
 
 ---
 
@@ -382,7 +384,7 @@ After creating all fields and tags, verify they exist:
 Use this checklist to ensure your Apollo.io configuration is complete:
 
 ### Custom Fields (14 Total)
-- [ ] `industry` (Dropdown with 13 industries)
+- [ ] `industry` (Dropdown with 14 industries)
 - [ ] `call_volume` (Dropdown with 5 options)
 - [ ] `company_size` (Dropdown with 7 options)
 - [ ] `current_solution` (Dropdown with 6 options)
@@ -405,7 +407,7 @@ Use this checklist to ensure your Apollo.io configuration is complete:
 - [ ] Newsletter Subscriber
 - [ ] Website Chat
 
-### Industry Tags (13 Total)
+### Industry Tags (14 Total)
 - [ ] HVAC
 - [ ] Accounting
 - [ ] Roofing
@@ -419,6 +421,7 @@ Use this checklist to ensure your Apollo.io configuration is complete:
 - [ ] Automotive
 - [ ] Real Estate
 - [ ] Solar
+- [ ] Gym & Fitness
 
 ### API Configuration
 - [ ] Apollo.io API key added to `src/config/site.ts`

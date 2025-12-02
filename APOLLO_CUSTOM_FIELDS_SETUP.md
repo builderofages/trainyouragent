@@ -37,6 +37,7 @@
   - Automotive
   - Real Estate
   - Solar
+  - Gym & Fitness
 
 **Usage:** Identifies which industry vertical the lead came from. Used for segmentation, lead scoring, and industry-specific follow-up sequences.
 
