@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
   Wrench, Calculator, Home, Scale, Heart, Truck, 
-  UtensilsCrossed, Briefcase, ArrowRight, TrendingUp 
+  UtensilsCrossed, Briefcase, ArrowRight, TrendingUp, Dumbbell 
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/FooterEnhanced";
@@ -118,6 +118,14 @@ const nicheOptions = [
     image: "/images/industries/solar.jpg",
     icon: TrendingUp,
     gradient: "gradient-solar" 
+  },
+  { 
+    id: "gym", 
+    name: "Gym & Fitness", 
+    tagline: "Strength. Community. Results.",
+    image: "/images/industries/gym.jpg",
+    icon: Dumbbell,
+    gradient: "gradient-gym" 
   },
 ];
 

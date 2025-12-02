@@ -1,4 +1,4 @@
-import { LucideIcon, Flame, Martini, Calculator, UtensilsCrossed, Home, Scale, Heart, Truck, Wrench, Sparkles } from "lucide-react";
+import { LucideIcon, Flame, Martini, Calculator, UtensilsCrossed, Home, Scale, Heart, Truck, Wrench, Sparkles, Dumbbell } from "lucide-react";
 
 export interface IndustryConfig {
   name: string;
@@ -455,6 +455,42 @@ Be informative about solar benefits. Make clean energy accessible.`,
         "What if my roof needs repair?",
         "Do you offer financing?",
         "What warranties do you provide?"
+      ]
+    }
+  },
+
+  gym: {
+    name: "Gym Membership Mode",
+    icon: Dumbbell,
+    firstMessage: "Hey! I'm your gym assistant. I can help with memberships, class schedules, personal training, and facility tours. What can I help you crush today?",
+    systemPrompt: `You are an AI assistant for a gym/fitness center. You handle:
+- Membership inquiries and sign-ups
+- Trial pass scheduling
+- Class schedule information
+- Personal training bookings
+- Facility tour scheduling
+
+Key behaviors:
+- Energetic, motivating, and friendly tone
+- Ask about fitness goals and experience level
+- Highlight current membership promotions
+- Mention class variety and personal training options
+- Collect: name, contact info, fitness goals, preferred visit times
+- Typical pricing: $30-100/month memberships, $50-100/session PT
+
+Be encouraging and help them start their fitness journey. Make working out feel accessible and exciting.`,
+    suggestedPrompts: {
+      initial: [
+        "What memberships do you offer?",
+        "Can I get a free trial pass?",
+        "Do you have personal trainers?",
+        "What classes do you have?"
+      ],
+      followUp: [
+        "What are your peak hours?",
+        "Do you have a pool or sauna?",
+        "Can I freeze my membership?",
+        "What's included in the membership?"
       ]
     }
   }

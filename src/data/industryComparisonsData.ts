@@ -414,5 +414,51 @@ export const industryComparisonsData: Record<string, IndustryComparisonDetails> 
     contractTerms: "Month-to-month flexible",
     
     notIdealFor: "Managing intoxicated customer complaints or handling security incident escalations requiring immediate on-site management"
+  },
+
+  gym: {
+    industry: "gym",
+    displayName: "Gym & Fitness",
+    
+    aiAgentCost: "$599-1,297/mo ($7.2K-15.6K/yr)",
+    receptionistCost: "$32K-42K + benefits ($46K-60K/yr)",
+    aiAvailability: "24/7 — capture late-night fitness seekers",
+    receptionistAvailability: "Business hours — miss after-work and weekend inquiries",
+    aiScalability: "Handle January rush and New Year resolution surge",
+    receptionistScalability: "Overwhelmed during peak enrollment periods",
+    
+    callCenterCostPerCall: "$4-7 per call",
+    callCenterMonthlyEstimate: "$5,600-9,800/mo (140 calls/week)",
+    aiResponseTime: "Instant membership info — no hold times",
+    callCenterResponseTime: "3-6 min wait times during peak hours",
+    
+    vaCost: "$1,400-2,800/mo",
+    vaAvailability: "Business hours — misses evening and weekend prospects",
+    vaLanguageSupport: "English + Spanish typically",
+    
+    typicalCallVolume: "120-200 calls/week (400+ during January)",
+    aiMonthlyCost: "$997/mo",
+    humanStaffCost: "$3,800/mo (front desk + benefits)",
+    callCenterCost: "$7,700/mo (avg $5.50/call × 140 calls/week)",
+    monthlySavings: "$2,803 vs receptionist / $6,703 vs call center",
+    yearOneSavings: "$33,636 vs receptionist / $80,436 vs call center",
+    
+    industrySpecificFeatures: [
+      "Membership plan comparison and pricing",
+      "Trial pass scheduling and follow-up",
+      "Class schedule and availability info",
+      "Personal training session booking",
+      "Mindbody, Glofox, Zen Planner integration",
+      "Member account and billing support"
+    ],
+    criticalComplianceNeeds: ["Liability waiver collection", "Minor consent forms", "Health questionnaire intake"],
+    peakSeasonFactors: "January New Year resolution surge creates 3-4x normal inquiry volume — staff overwhelmed",
+    afterHoursImportance: "high",
+    
+    nativeCRMIntegrations: "Mindbody, Glofox, Zen Planner, ClubReady, ABC Fitness",
+    setupTime: "3-5 days",
+    contractTerms: "Month-to-month flexible",
+    
+    notIdealFor: "Complex personal training assessments requiring in-person evaluation or handling member injuries and medical emergencies"
   }
 };

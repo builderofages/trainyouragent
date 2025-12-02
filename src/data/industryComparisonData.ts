@@ -97,5 +97,12 @@ export const industryComparisonData: Record<string, IndustryComparisonData> = {
     setupTime: "5-7 days",
     averageROI: "480%",
     paybackPeriod: "13 days"
+  },
+  gym: {
+    aiAgentCost: "$399-$899",
+    humanStaffCost: "$4,200+",
+    setupTime: "3-5 days",
+    averageROI: "425%",
+    paybackPeriod: "14 days"
   }
 };

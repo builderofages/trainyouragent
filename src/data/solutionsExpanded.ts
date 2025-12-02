@@ -1174,4 +1174,40 @@ export const expandedSolutions: Record<string, ExpandedNicheSolution> = {
       { stat: "Each solar install generates 2-3 referrals with follow-up", source: "Renewable Energy Referral Study", impact: "$200K+ annual referral revenue from automation" },
     ],
   },
+
+  gym: {
+    id: "gym",
+    name: "Gym & Fitness",
+    icon: "Dumbbell",
+    painPoints: [
+      { category: "Lead Follow-Up Failure", title: "67% of Trial Pass Leads Never Get a Call Back", impact: "Trial visitors leave contact info and never hear from you again", cost: "$4,800/month in lost membership conversions" },
+      { category: "Peak Hour Phone Chaos", title: "5-8pm Calls Go to Voicemail While Staff Trains", impact: "Best sales hours are when staff is busiest with members", cost: "40% of inquiry calls abandoned during peak" },
+      { category: "Member Churn Crisis", title: "31% Annual Member Churn With No Win-Back System", impact: "Frozen and cancelled members never contacted for re-engagement", cost: "$180K lifetime value walking out the door" },
+      { category: "PT Booking Friction", title: "Members Want PT But Can't Reach Anyone", impact: "Interested members give up after failed attempts to book training", cost: "$8K/month in lost personal training revenue" },
+      { category: "Membership Upgrade Missed", title: "No Proactive Outreach for Premium Upgrades", impact: "Basic members would upgrade to premium with the right offer", cost: "$150/member/year in missed upsells" },
+      { category: "Class Fill Rate", title: "Empty Class Spots Not Filled From Waitlists", impact: "Cancellations don't trigger waitlist notifications fast enough", cost: "20% capacity utilization loss" },
+      { category: "Referral Program Dead", title: "Members Don't Know About Referral Incentives", impact: "Happy members would refer if asked consistently", cost: "$95K/year in referral revenue never captured" },
+      { category: "New Member Onboarding", title: "New Members Don't Get Proper Welcome Sequence", impact: "First 30 days determines if members stay or churn", cost: "60% of early churn preventable with better onboarding" },
+      { category: "Corporate Sales Gap", title: "Corporate Leads Never Get Follow-Up", impact: "Company wellness program inquiries require dedicated attention", cost: "$45K/year in corporate account revenue lost" },
+      { category: "After-Hours Interest", title: "Late Night Website Visitors Never Convert", impact: "People research gyms at 10pm but can't talk to anyone", cost: "35% of leads lost to 24/7 competitor chatbots" },
+    ],
+    transformation: {
+      before: ["67% of trial visitors never get follow-up calls", "Peak hour calls go to voicemail while staff trains", "31% annual churn with no win-back campaigns", "Members can't book PT sessions easily", "Referral program barely generates leads"],
+      after: ["100% of trial leads contacted within 2 hours", "AI handles unlimited calls during peak hours", "Proactive win-back campaigns reduce churn 40%", "PT sessions booked 24/7 without staff involvement", "Automated referral requests generate 15+ leads/month"],
+      timeframe: "3-7 days to deployment",
+    },
+    benefits: [
+      { title: "Never Miss Another Trial Lead", description: "AI contacts every trial visitor within 2 hours with personalized follow-up based on their fitness goals - converts interest into memberships", metric: "$4,800/month recovered revenue", cta: { type: "calculator", text: "Calculate Your Recovery", link: "/calculators" }},
+      { title: "Handle Peak Hour Surge", description: "5-8pm is your best sales time and busiest floor time. AI answers every call, books tours, explains memberships while staff focuses on current members", metric: "40% more inquiries converted", cta: { type: "demo", text: "See Peak Hour Handling", link: "/demos?niche=gym" }},
+      { title: "Win Back Churned Members", description: "AI identifies frozen and cancelled members, makes win-back calls with personalized offers based on their history - brings back lost revenue", metric: "Reduce churn by 40%", cta: { type: "primary", text: "Book Strategy Call", link: "https://cal.com/trainyouragent" }},
+      { title: "24/7 PT Booking", description: "Members book personal training sessions any time - AI checks trainer availability, confirms appointments, sends reminders", metric: "$8K/month PT revenue recovered", cta: { type: "secondary", text: "See PT Booking Flow", link: "/demos?niche=gym" }},
+      { title: "Automated Referral Machine", description: "AI asks satisfied members for referrals at the right moments - after great workouts, anniversary dates, goal achievements", metric: "15+ referrals/month generated", cta: { type: "demo", text: "See Referral System", link: "/demos?niche=gym" }},
+      { title: "Mindbody Integration", description: "Seamless sync with Mindbody, Glofox, Zen Planner - AI accesses schedules, processes bookings, updates member records in real-time", metric: "Zero manual data entry", cta: { type: "secondary", text: "View Integrations", link: "/integrations" }},
+    ],
+    socialProof: [
+      { stat: "67% of gym trial leads never receive proper follow-up", source: "IHRSA Health Club Consumer Report 2024", impact: "$4,800+ monthly membership revenue lost from cold leads" },
+      { stat: "31% average annual member churn rate for fitness facilities", source: "Club Industry State of the Industry Report", impact: "$180K+ lifetime value walking out with no win-back attempt" },
+      { stat: "Gyms with automated follow-up see 3.2x higher trial conversion", source: "ABC Fitness Benchmarking Study", impact: "AI follow-up captures $57K+ annual additional memberships" },
+    ],
+  },
 };
