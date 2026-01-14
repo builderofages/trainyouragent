@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useState } from "react";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
 import { ArrowRight, Play, Zap, Target, Shield, RotateCcw, LucideIcon } from "lucide-react";
@@ -13,6 +13,8 @@ import { FinalCTA } from "./FinalCTA";
 import { FooterPremium } from "./FooterPremium";
 import Header from "@/components/Header";
 import { siteConfig } from "@/config/site";
+import { comprehensiveSolutions } from "@/data/comprehensiveBusinessFunctions";
+import { expandedSolutions } from "@/data/solutionsExpanded";
 import heroVideo from "/videos/hero-bg.mp4";
 
 // Lazy load heavy components
@@ -67,6 +69,12 @@ interface IndustryLandingTemplateProps {
 }
 
 export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps) => {
+  const [leadGateOpen, setLeadGateOpen] = useState(false);
+  
+  // Get industry-specific data
+  const businessFunctions = comprehensiveSolutions[config.id]?.businessFunctions || [];
+  const solution = expandedSolutions[config.id];
+  
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -272,28 +280,32 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
           </motion.div>
           
           <Suspense fallback={<SectionLoader />}>
-            <ComprehensiveSolutionsGrid selectedIndustry={config.id} />
+            <ComprehensiveSolutionsGrid businessFunctions={businessFunctions} />
           </Suspense>
         </div>
       </section>
 
       {/* Pain Points Journey */}
-      <section className="py-24 bg-gradient-to-b from-deep-space/50 to-deep-space">
-        <div className="container mx-auto px-4">
-          <Suspense fallback={<SectionLoader />}>
-            <PainPointsJourney selectedIndustry={config.id} />
-          </Suspense>
-        </div>
-      </section>
+      {solution && (
+        <section className="py-24 bg-gradient-to-b from-deep-space/50 to-deep-space">
+          <div className="container mx-auto px-4">
+            <Suspense fallback={<SectionLoader />}>
+              <PainPointsJourney solution={solution} />
+            </Suspense>
+          </div>
+        </section>
+      )}
 
       {/* Industry Benefits */}
-      <section className="py-24 bg-deep-space">
-        <div className="container mx-auto px-4">
-          <Suspense fallback={<SectionLoader />}>
-            <IndustryBenefits selectedIndustry={config.id} />
-          </Suspense>
-        </div>
-      </section>
+      {solution && (
+        <section className="py-24 bg-deep-space">
+          <div className="container mx-auto px-4">
+            <Suspense fallback={<SectionLoader />}>
+              <IndustryBenefits solution={solution} />
+            </Suspense>
+          </div>
+        </section>
+      )}
 
       {/* Comparison Table */}
       <section className="py-24 bg-deep-space/50">
@@ -370,14 +382,40 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
       {/* FAQ */}
       <FAQPremium />
 
-      {/* Strategy Session Lead Gate */}
+      {/* CTA Section with Lead Gate */}
       <section className="py-24 bg-deep-space">
-        <div className="container mx-auto px-4">
-          <Suspense fallback={<SectionLoader />}>
-            <StrategySessionLeadGate />
-          </Suspense>
+        <div className="container mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Ready to Transform Your {config.name} Business?
+            </h2>
+            <p className="text-xl text-white/60 max-w-2xl mx-auto mb-8">
+              Book a free strategy session to see how AI can work for your specific situation.
+            </p>
+            <Button
+              size="lg"
+              onClick={() => setLeadGateOpen(true)}
+              className="bg-white text-deep-space hover:bg-white/90 font-semibold px-8 py-6 text-lg"
+            >
+              Get Your Free Strategy Session
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </motion.div>
         </div>
       </section>
+
+      {/* Strategy Session Lead Gate */}
+      <Suspense fallback={null}>
+        <StrategySessionLeadGate 
+          open={leadGateOpen} 
+          onOpenChange={setLeadGateOpen}
+          defaultIndustry={config.name}
+        />
+      </Suspense>
 
       {/* Final CTA */}
       <FinalCTA />
