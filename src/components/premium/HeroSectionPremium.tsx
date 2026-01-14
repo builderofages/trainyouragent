@@ -138,57 +138,6 @@ export const HeroSectionPremium = () => {
 
         {/* Premium CTA Button */}
         <div className="flex flex-col items-center justify-center gap-6 mb-12">
-          transition={{ duration: 0.8, delay: 0.9 }}
-        >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
-            <span className="bg-gradient-to-r from-tech-cyan via-trust-blue to-tech-cyan bg-clip-text text-transparent">
-              You Grow
-            </span>
-            <span className="ml-2 inline-block min-w-[200px] md:min-w-[280px] text-left">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={currentIndex}
-                  className="inline-block bg-gradient-to-r from-white via-tech-cyan to-white bg-clip-text text-transparent"
-                  initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -20, filter: "blur(8px)" }}
-                  transition={{ duration: 0.5 }}
-                >
-                  {rotatingWords[currentIndex].word}
-                </motion.span>
-              </AnimatePresence>
-            </span>
-          </h2>
-        </motion.div>
-
-        {/* Synced Tagline */}
-        <motion.div
-          className="mb-10 h-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
-        >
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={currentIndex}
-              className="text-lg md:text-xl text-white/70 font-light"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.4 }}
-            >
-              {rotatingWords[currentIndex].tagline}
-            </motion.p>
-          </AnimatePresence>
-        </motion.div>
-
-        {/* Premium CTA Button */}
-        <motion.div
-          className="flex flex-col items-center justify-center gap-6 mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.5 }}
-        >
           <Button
             size="lg"
             onClick={() => scrollToSection("live-demo")}
@@ -198,7 +147,6 @@ export const HeroSectionPremium = () => {
                        hover:shadow-[0_0_60px_hsla(185,80%,50%,0.6)]
                        transition-all duration-300"
           >
-            {/* Shine effect */}
             <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent 
                              -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
             <Play className="mr-3 h-6 w-6 fill-current relative z-10" />
@@ -216,17 +164,12 @@ export const HeroSectionPremium = () => {
           >
             See Pricing
           </Button>
-        </motion.div>
+        </div>
 
         {/* Single elegant social proof */}
-        <motion.p
-          className="text-white/50 text-sm tracking-wide"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1.8 }}
-        >
+        <p className="text-white/50 text-sm tracking-wide">
           Trusted by <span className="text-white font-semibold">200+</span> businesses to never miss a call
-        </motion.p>
+        </p>
       </div>
 
       <ScrollChevron targetId="problem-section" />
