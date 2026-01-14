@@ -20,7 +20,7 @@ import HotelsLanding from "./pages/HotelsLanding";
 import AutomotiveLanding from "./pages/AutomotiveLanding";
 import RealEstateLanding from "./pages/RealEstateLanding";
 import SolarLanding from "./pages/SolarLanding";
-import GymLanding from "./pages/GymLanding";
+import GymLanding from "./pages/GymLandingPremium";
 import SalesToolkit from "./pages/SalesToolkit";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";

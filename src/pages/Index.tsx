@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Suspense, lazy } from "react";
 import Header from "@/components/Header";
 import { HeroSectionPremium } from "@/components/premium/HeroSectionPremium";
 import { ProblemSection } from "@/components/premium/ProblemSection";
@@ -11,7 +11,11 @@ import { BeyondVoice } from "@/components/premium/BeyondVoice";
 import { FAQPremium } from "@/components/premium/FAQPremium";
 import { FinalCTA } from "@/components/premium/FinalCTA";
 import { FooterPremium } from "@/components/premium/FooterPremium";
-import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
+
+// Lazy load lead gate for performance
+const StrategySessionLeadGate = lazy(() => 
+  import("@/components/conversion/StrategySessionLeadGate").then(m => ({ default: m.StrategySessionLeadGate }))
+);
 
 const Index = () => {
   const [leadGateOpen, setLeadGateOpen] = useState(false);
@@ -31,10 +35,12 @@ const Index = () => {
       <FinalCTA />
       <FooterPremium />
       
-      <StrategySessionLeadGate
-        open={leadGateOpen}
-        onOpenChange={setLeadGateOpen}
-      />
+      <Suspense fallback={null}>
+        <StrategySessionLeadGate
+          open={leadGateOpen}
+          onOpenChange={setLeadGateOpen}
+        />
+      </Suspense>
     </div>
   );
 };
