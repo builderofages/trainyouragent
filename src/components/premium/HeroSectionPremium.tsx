@@ -3,7 +3,9 @@ import { ArrowRight, Zap, Target, Shield, RotateCcw, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollChevron } from "./ScrollChevron";
 import { VideoBackground } from "@/components/performance/VideoBackground";
-import heroVideo from "/videos/hero-bg.mp4";
+
+// Use direct path for public folder videos
+const heroVideo = "/videos/hero-bg.mp4";
 
 export const HeroSectionPremium = () => {
   const scrollToSection = (id: string) => {
