@@ -8,9 +8,19 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* TrainYourAgent Brand - Bright Blue & White */
+    /* Premium Dark-First Palette */
     --background: 0 0% 100%;
     --foreground: 222 47% 11%;
+    
+    /* New Premium Colors */
+    --deep-space: 220 50% 6%;
+    --trust-blue: 217 91% 60%;
+    --tech-cyan: 185 80% 50%;
+    --success-green: 160 84% 39%;
+    --warning-orange: 38 92% 50%;
+    --text-primary: 222 47% 11%;
+    --text-secondary: 215 16% 47%;
+    --surface: 210 40% 98%;
     
     --bright-blue: 211 100% 66%;
     --bright-blue-foreground: 0 0% 100%;
