@@ -61,37 +61,69 @@ const Header = () => {
       <motion.header
         style={{ opacity: headerOpacity }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled ? "glass-card border-b border-glass-border shadow-dramatic" : "bg-transparent"
+          isScrolled 
+            ? "bg-deep-space/95 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)]" 
+            : "bg-gradient-to-b from-deep-space/80 via-deep-space/40 to-transparent backdrop-blur-sm"
         }`}
       >
+        {/* Subtle animated gradient line at top */}
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-tech-cyan/50 to-transparent" />
+        
         <nav className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between gap-4">
-            <motion.a href="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink-0 mr-4" whileHover={{ scale: 1.05 }}>
-              <motion.div className="w-10 h-10 rounded-lg overflow-hidden shadow-glow-sm flex-shrink-0" whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }}>
-                <img src={logo} alt="TrainYourAgent Logo" className="w-full h-full object-contain" />
+            <motion.a href="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink-0 mr-4" whileHover={{ scale: 1.02 }}>
+              {/* Glowing logo container */}
+              <motion.div 
+                className="relative w-10 h-10 rounded-xl overflow-hidden flex-shrink-0"
+                whileHover={{ rotate: 360 }} 
+                transition={{ duration: 0.6 }}
+              >
+                {/* Glow effect behind logo */}
+                <div className="absolute inset-0 bg-gradient-to-br from-tech-cyan/30 to-primary/30 blur-sm" />
+                <div className="absolute inset-0 bg-deep-space/80 rounded-xl" />
+                <img src={logo} alt="TrainYourAgent Logo" className="relative w-full h-full object-contain p-1" />
               </motion.div>
-              <span className="text-base sm:text-lg lg:text-xl font-black text-gradient whitespace-nowrap">TrainYourAgent</span>
+              <span className="text-base sm:text-lg lg:text-xl font-black bg-gradient-to-r from-white via-white to-white/80 bg-clip-text text-transparent whitespace-nowrap">
+                TrainYourAgent
+              </span>
             </motion.a>
 
             <div className="hidden md:flex items-center gap-4 lg:gap-6">
               {navLinks.map((link) => (
-                <a key={link.name} href={link.href} className="text-foreground hover:text-primary font-medium transition-colors">{link.name}</a>
+                <a 
+                  key={link.name} 
+                  href={link.href} 
+                  className="relative text-white/70 hover:text-white font-medium transition-all duration-300 py-2
+                           after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] 
+                           after:bg-gradient-to-r after:from-tech-cyan after:to-primary
+                           after:transition-all after:duration-300 hover:after:w-full"
+                >
+                  {link.name}
+                </a>
               ))}
             </div>
 
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-3">
               {siteConfig.phoneNumber && (
                 <ClickToCall 
                   variant="ghost" 
                   trackingLocation="header"
-                  className="rounded-full"
+                  className="rounded-full text-white/70 hover:text-white hover:bg-white/10"
                 />
               )}
-              <MagneticButton variant="ghost" size="icon" className="rounded-full" onClick={() => setSearchOpen(true)}>
+              <MagneticButton 
+                variant="ghost" 
+                size="icon" 
+                className="rounded-full text-white/70 hover:text-white hover:bg-white/10" 
+                onClick={() => setSearchOpen(true)}
+              >
                 <Search className="w-5 h-5" />
               </MagneticButton>
               <MagneticButton 
-                className="rounded-full bg-gradient-primary text-sm lg:text-base px-4 lg:px-6" 
+                className="relative rounded-full text-sm lg:text-base px-5 lg:px-6 py-2.5
+                         bg-gradient-to-r from-tech-cyan to-primary text-deep-space font-semibold
+                         shadow-[0_0_20px_hsla(185,80%,50%,0.3)] hover:shadow-[0_0_30px_hsla(185,80%,50%,0.5)]
+                         transition-all duration-300" 
                 onClick={() => setLeadGateOpen(true)}
               >
                 <span className="hidden xl:inline">Get Your Free Strategy Session</span>

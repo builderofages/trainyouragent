@@ -15,7 +15,9 @@ import Header from "@/components/Header";
 import { siteConfig } from "@/config/site";
 import { comprehensiveSolutions } from "@/data/comprehensiveBusinessFunctions";
 import { expandedSolutions } from "@/data/solutionsExpanded";
-import heroVideo from "/videos/hero-bg.mp4";
+
+// Video paths for public folder
+const heroVideo = "/videos/hero-bg.mp4";
 
 // Lazy load heavy components
 const VoiceAgentDemo = lazy(() => import("@/components/VoiceAgentDemo").then(m => ({ default: m.VoiceAgentDemo })));
@@ -62,6 +64,7 @@ export interface IndustryConfig {
   };
   gradient: string;
   accentColor: string;
+  videoPath?: string;
 }
 
 interface IndustryLandingTemplateProps {
@@ -117,7 +120,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
       {/* Premium Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <VideoBackground
-          src={heroVideo}
+          src={config.videoPath || heroVideo}
           overlay
           overlayOpacity={0.75}
           fallbackGradient

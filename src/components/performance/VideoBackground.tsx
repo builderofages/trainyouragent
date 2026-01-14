@@ -157,8 +157,8 @@ export const VideoBackground = ({
         </video>
       )}
 
-      {/* Dark base layer */}
-      <div className="absolute inset-0 bg-deep-space" style={{ opacity: showFallback ? 1 : 0 }} />
+      {/* Dark base layer - always visible */}
+      <div className="absolute inset-0 bg-deep-space" />
 
       {/* Overlay */}
       {overlay && (

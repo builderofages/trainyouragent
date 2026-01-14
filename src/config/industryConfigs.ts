@@ -33,7 +33,8 @@ export const industryConfigs: Record<string, IndustryConfig> = {
       keywords: ["HVAC AI", "HVAC answering service", "HVAC voice agent", "HVAC call handling", "ServiceTitan integration"]
     },
     gradient: "from-blue-400 to-cyan-400",
-    accentColor: "blue"
+    accentColor: "blue",
+    videoPath: "/videos/industries/hvac-hero.mp4"
   },
   legal: {
     id: "legal",
@@ -63,7 +64,8 @@ export const industryConfigs: Record<string, IndustryConfig> = {
       keywords: ["legal AI", "law firm answering service", "legal voice agent", "attorney call handling", "Clio integration"]
     },
     gradient: "from-amber-400 to-yellow-400",
-    accentColor: "amber"
+    accentColor: "amber",
+    videoPath: "/videos/industries/legal-hero.mp4"
   },
   healthcare: {
     id: "healthcare",
@@ -93,7 +95,8 @@ export const industryConfigs: Record<string, IndustryConfig> = {
       keywords: ["healthcare AI", "medical answering service", "HIPAA compliant AI", "patient scheduling", "Epic integration"]
     },
     gradient: "from-emerald-400 to-teal-400",
-    accentColor: "emerald"
+    accentColor: "emerald",
+    videoPath: "/videos/industries/healthcare-hero.mp4"
   },
   accounting: {
     id: "accounting",
@@ -123,7 +126,8 @@ export const industryConfigs: Record<string, IndustryConfig> = {
       keywords: ["accounting AI", "CPA answering service", "tax season AI", "accounting firm automation"]
     },
     gradient: "from-violet-400 to-purple-400",
-    accentColor: "violet"
+    accentColor: "violet",
+    videoPath: "/videos/industries/accounting-hero.mp4"
   },
   roofing: {
     id: "roofing",
@@ -153,7 +157,8 @@ export const industryConfigs: Record<string, IndustryConfig> = {
       keywords: ["roofing AI", "roofing answering service", "storm damage leads", "roofing automation"]
     },
     gradient: "from-orange-400 to-red-400",
-    accentColor: "orange"
+    accentColor: "orange",
+    videoPath: "/videos/industries/roofing-hero.mp4"
   },
   restaurants: {
     id: "restaurants",
@@ -183,7 +188,8 @@ export const industryConfigs: Record<string, IndustryConfig> = {
       keywords: ["restaurant AI", "restaurant answering service", "reservation AI", "restaurant automation"]
     },
     gradient: "from-rose-400 to-pink-400",
-    accentColor: "rose"
+    accentColor: "rose",
+    videoPath: "/videos/industries/restaurants-hero.mp4"
   },
   bars: {
     id: "bars",
@@ -213,7 +219,8 @@ export const industryConfigs: Record<string, IndustryConfig> = {
       keywords: ["nightclub AI", "bar answering service", "VIP reservation AI", "nightlife automation"]
     },
     gradient: "from-fuchsia-400 to-purple-400",
-    accentColor: "fuchsia"
+    accentColor: "fuchsia",
+    videoPath: "/videos/industries/bars-hero.mp4"
   },
   spas: {
     id: "spas",
@@ -243,7 +250,8 @@ export const industryConfigs: Record<string, IndustryConfig> = {
       keywords: ["spa AI", "wellness answering service", "spa booking AI", "Mindbody integration"]
     },
     gradient: "from-pink-400 to-rose-400",
-    accentColor: "pink"
+    accentColor: "pink",
+    videoPath: "/videos/industries/spas-hero.mp4"
   },
   hotels: {
     id: "hotels",
@@ -273,7 +281,8 @@ export const industryConfigs: Record<string, IndustryConfig> = {
       keywords: ["hotel AI", "hospitality answering service", "hotel concierge AI", "hotel automation"]
     },
     gradient: "from-amber-400 to-orange-400",
-    accentColor: "amber"
+    accentColor: "amber",
+    videoPath: "/videos/industries/hotels-hero.mp4"
   },
   automotive: {
     id: "automotive",
@@ -303,7 +312,8 @@ export const industryConfigs: Record<string, IndustryConfig> = {
       keywords: ["automotive AI", "car dealership answering service", "auto service AI", "DMS integration"]
     },
     gradient: "from-slate-400 to-zinc-400",
-    accentColor: "slate"
+    accentColor: "slate",
+    videoPath: "/videos/industries/automotive-hero.mp4"
   },
   "real-estate": {
     id: "real-estate",
@@ -333,7 +343,8 @@ export const industryConfigs: Record<string, IndustryConfig> = {
       keywords: ["real estate AI", "realtor answering service", "real estate lead capture", "MLS integration"]
     },
     gradient: "from-green-400 to-emerald-400",
-    accentColor: "green"
+    accentColor: "green",
+    videoPath: "/videos/industries/real-estate-hero.mp4"
   },
   solar: {
     id: "solar",
@@ -363,7 +374,8 @@ export const industryConfigs: Record<string, IndustryConfig> = {
       keywords: ["solar AI", "solar lead qualification", "solar answering service", "solar automation"]
     },
     gradient: "from-yellow-400 to-amber-400",
-    accentColor: "yellow"
+    accentColor: "yellow",
+    videoPath: "/videos/industries/solar-hero.mp4"
   },
   logistics: {
     id: "logistics",
@@ -393,7 +405,8 @@ export const industryConfigs: Record<string, IndustryConfig> = {
       keywords: ["logistics AI", "freight answering service", "trucking AI", "dispatch automation"]
     },
     gradient: "from-indigo-400 to-blue-400",
-    accentColor: "indigo"
+    accentColor: "indigo",
+    videoPath: "/videos/industries/logistics-hero.mp4"
   },
   gym: {
     id: "gym",
@@ -423,6 +436,7 @@ export const industryConfigs: Record<string, IndustryConfig> = {
       keywords: ["gym AI", "fitness answering service", "gym membership AI", "Mindbody integration"]
     },
     gradient: "from-red-400 to-orange-400",
-    accentColor: "red"
+    accentColor: "red",
+    videoPath: "/videos/industries/gym-hero.mp4"
   }
 };
