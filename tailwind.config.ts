@@ -19,6 +19,15 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        // Premium colors
+        "deep-space": "hsl(var(--deep-space))",
+        "trust-blue": "hsl(var(--trust-blue))",
+        "tech-cyan": "hsl(var(--tech-cyan))",
+        "success-green": "hsl(var(--success-green))",
+        "warning-orange": "hsl(var(--warning-orange))",
+        "text-primary": "hsl(var(--text-primary))",
+        "text-secondary": "hsl(var(--text-secondary))",
+        "surface": "hsl(var(--surface))",
         "bright-blue": {
           DEFAULT: "hsl(var(--bright-blue))",
           foreground: "hsl(var(--bright-blue-foreground))",
