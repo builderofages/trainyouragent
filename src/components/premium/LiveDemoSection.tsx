@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Check, Mic, Volume2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Check, Phone, MessageSquare } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -9,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { VoiceAgentDemo } from "@/components/VoiceAgentDemo";
+import InteractiveDemo from "@/components/InteractiveDemo";
 
 const industries = [
   { value: "gym", label: "Gym & Fitness" },
@@ -25,12 +24,6 @@ const features = [
   "Handles interruptions naturally",
   "Books appointments in real-time",
   "Trained specifically for your industry",
-];
-
-const suggestions = [
-  "What services do you offer?",
-  "Can I book an appointment?",
-  "What are your prices?",
 ];
 
 export const LiveDemoSection = () => {
@@ -131,26 +124,41 @@ export const LiveDemoSection = () => {
               {/* Glow effect */}
               <div className="absolute -inset-1 bg-gradient-to-r from-trust-blue via-tech-cyan to-trust-blue rounded-2xl opacity-20 blur-xl" />
               
-            {/* Widget */}
-            <div className="relative bg-deep-space rounded-2xl p-8">
-              <VoiceAgentDemo defaultIndustry={selectedIndustry} />
-            </div>
-          </div>
+              {/* Widget with Interactive Demo */}
+              <div className="relative bg-deep-space rounded-2xl p-6">
+                {/* Phone mockup header */}
+                <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-tech-cyan to-trust-blue flex items-center justify-center">
+                      <Phone className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold">AI Voice Agent</p>
+                      <p className="text-white/50 text-sm">Live Demo Mode</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-success-green animate-pulse" />
+                    <span className="text-success-green text-xs font-medium">Active</span>
+                  </div>
+                </div>
 
-            {/* Suggestion bubbles */}
-            <div className="flex flex-wrap gap-2 mt-4 justify-center">
-              {suggestions.map((suggestion, index) => (
-                <motion.button
-                  key={index}
-                  className="px-4 py-2 text-sm text-text-secondary bg-white border border-border 
-                           rounded-full hover:border-trust-blue hover:text-trust-blue transition-all duration-200"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  "{suggestion}"
-                </motion.button>
-              ))}
+                {/* Interactive Demo Component */}
+                <InteractiveDemo />
+              </div>
             </div>
+
+            {/* Bottom CTA hint */}
+            <motion.p
+              className="text-center text-text-secondary text-sm mt-4"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.8 }}
+            >
+              <MessageSquare className="w-4 h-4 inline mr-1" />
+              Try the conversation above to see how our AI responds
+            </motion.p>
           </motion.div>
         </div>
       </div>
