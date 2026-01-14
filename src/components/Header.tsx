@@ -71,19 +71,27 @@ const Header = () => {
         
         <nav className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between gap-4">
-            <motion.a href="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink-0 mr-4" whileHover={{ scale: 1.02 }}>
-              {/* Glowing logo container */}
-              <motion.div 
-                className="relative w-10 h-10 rounded-xl overflow-hidden flex-shrink-0"
-                whileHover={{ rotate: 360 }} 
-                transition={{ duration: 0.6 }}
+            <motion.a 
+              href="/" 
+              className="flex items-center gap-3 group flex-shrink-0" 
+              whileHover={{ scale: 1.02 }}
+            >
+              <motion.div
+                className="relative w-9 h-9 flex items-center justify-center"
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 400 }}
               >
-                {/* Glow effect behind logo */}
-                <div className="absolute inset-0 bg-gradient-to-br from-tech-cyan/30 to-primary/30 blur-sm" />
-                <div className="absolute inset-0 bg-deep-space/80 rounded-xl" />
-                <img src={logo} alt="TrainYourAgent Logo" className="relative w-full h-full object-contain p-1" />
+                {/* Subtle glow on hover */}
+                <motion.div
+                  className="absolute inset-0 bg-tech-cyan/30 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                />
+                <img
+                  src={logo}
+                  alt="TrainYourAgent"
+                  className="relative w-8 h-8 object-contain drop-shadow-[0_0_8px_hsla(185,80%,50%,0.3)]"
+                />
               </motion.div>
-              <span className="text-base sm:text-lg lg:text-xl font-black bg-gradient-to-r from-white via-white to-white/80 bg-clip-text text-transparent whitespace-nowrap">
+              <span className="text-lg font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent whitespace-nowrap">
                 TrainYourAgent
               </span>
             </motion.a>

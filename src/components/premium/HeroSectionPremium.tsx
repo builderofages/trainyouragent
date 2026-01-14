@@ -1,13 +1,30 @@
-import { motion } from "framer-motion";
-import { ArrowRight, Zap, Target, Shield, RotateCcw, Play } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollChevron } from "./ScrollChevron";
 import { VideoBackground } from "@/components/performance/VideoBackground";
 
-// Use direct path for public folder videos
 const heroVideo = "/videos/hero-bg.mp4";
 
+const rotatingWords = [
+  { word: "Effortlessly.", tagline: "Watch AI handle your calls in real-time" },
+  { word: "Faster.", tagline: "Every ring answered in under 1 second" },
+  { word: "Smarter.", tagline: "Conversations that actually convert" },
+  { word: "24/7.", tagline: "Never miss another opportunity" },
+  { word: "Automatically.", tagline: "Set it up once, profit forever" },
+];
+
 export const HeroSectionPremium = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % rotatingWords.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -17,7 +34,6 @@ export const HeroSectionPremium = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Video Background with fallback */}
       <VideoBackground
         src={heroVideo}
         overlay
@@ -26,7 +42,6 @@ export const HeroSectionPremium = () => {
         className="absolute inset-0"
       />
       
-      {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center">
         {/* Subtle enterprise badge */}
         <motion.div
@@ -44,11 +59,9 @@ export const HeroSectionPremium = () => {
           </motion.span>
         </motion.div>
 
-        {/* Main headline - sequential animation */}
-        <div className="mb-6">
-          <motion.h1
-            className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[1.1] tracking-tight"
-          >
+        {/* Main headline */}
+        <div className="mb-4">
+          <motion.h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[1.1] tracking-tight">
             <motion.span
               className="block"
               initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
@@ -65,51 +78,80 @@ export const HeroSectionPremium = () => {
             >
               We Answer.
             </motion.span>
-            <motion.span
-              className="block bg-gradient-to-r from-tech-cyan via-trust-blue to-tech-cyan bg-clip-text text-transparent"
-              initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 0.8, delay: 0.9 }}
-            >
-              You Grow.
-            </motion.span>
           </motion.h1>
         </div>
 
-        {/* Subheadline */}
-        <motion.p
-          className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed font-light"
+        {/* You Grow + Rotating Keywords */}
+        <motion.div
+          className="mb-6"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.9 }}
+        >
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">
+            <span className="bg-gradient-to-r from-tech-cyan via-trust-blue to-tech-cyan bg-clip-text text-transparent">
+              You Grow
+            </span>
+            <span className="ml-2 inline-block min-w-[200px] md:min-w-[280px] text-left">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={currentIndex}
+                  className="inline-block bg-gradient-to-r from-white via-tech-cyan to-white bg-clip-text text-transparent"
+                  initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -20, filter: "blur(8px)" }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {rotatingWords[currentIndex].word}
+                </motion.span>
+              </AnimatePresence>
+            </span>
+          </h2>
+        </motion.div>
+
+        {/* Synced Tagline */}
+        <motion.div
+          className="mb-10 h-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1.2 }}
         >
-          AI voice agents that handle calls, book appointments, and capture leads 24/7.
-          <br className="hidden md:block" />
-          <span className="text-white/80">No scripts. No hold music. No missed opportunities.</span>
-        </motion.p>
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={currentIndex}
+              className="text-lg md:text-xl text-white/70 font-light"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.4 }}
+            >
+              {rotatingWords[currentIndex].tagline}
+            </motion.p>
+          </AnimatePresence>
+        </motion.div>
 
-        {/* CTA Buttons */}
+        {/* Premium CTA Button */}
         <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+          className="flex flex-col items-center justify-center gap-6 mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ 
-            duration: 0.6, 
-            delay: 1.5,
-            type: "spring",
-            stiffness: 200,
-          }}
+          transition={{ duration: 0.6, delay: 1.5 }}
         >
           <Button
             size="lg"
             onClick={() => scrollToSection("live-demo")}
-            className="group bg-white text-deep-space hover:bg-white/90 font-semibold px-8 py-6 text-lg
-                       shadow-[0_0_40px_hsla(0,0%,100%,0.2)] hover:shadow-[0_0_60px_hsla(0,0%,100%,0.3)]
+            className="group relative overflow-hidden bg-gradient-to-r from-tech-cyan to-primary 
+                       text-deep-space font-bold px-10 py-7 text-xl rounded-full
+                       shadow-[0_0_40px_hsla(185,80%,50%,0.4)] 
+                       hover:shadow-[0_0_60px_hsla(185,80%,50%,0.6)]
                        transition-all duration-300"
           >
-            <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
-            Hear It Live
-            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            {/* Shine effect */}
+            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent 
+                             -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+            <Play className="mr-3 h-6 w-6 fill-current relative z-10" />
+            <span className="relative z-10">Hear It Live</span>
+            <ArrowRight className="ml-3 h-6 w-6 relative z-10 group-hover:translate-x-1 transition-transform" />
           </Button>
           
           <Button
@@ -124,33 +166,15 @@ export const HeroSectionPremium = () => {
           </Button>
         </motion.div>
 
-        {/* Trust indicators */}
-        <motion.div
-          className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-white/50 text-sm"
+        {/* Single elegant social proof */}
+        <motion.p
+          className="text-white/50 text-sm tracking-wide"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1.8 }}
         >
-          <div className="flex items-center gap-2 hover:text-white/70 transition-colors">
-            <Zap className="h-4 w-4 text-tech-cyan" />
-            <span>Live in 5 Days</span>
-          </div>
-          <div className="hidden sm:block w-1 h-1 rounded-full bg-white/30" />
-          <div className="flex items-center gap-2 hover:text-white/70 transition-colors">
-            <Target className="h-4 w-4 text-tech-cyan" />
-            <span>94% Booking Rate</span>
-          </div>
-          <div className="hidden sm:block w-1 h-1 rounded-full bg-white/30" />
-          <div className="flex items-center gap-2 hover:text-white/70 transition-colors">
-            <Shield className="h-4 w-4 text-tech-cyan" />
-            <span>Enterprise Security</span>
-          </div>
-          <div className="hidden sm:block w-1 h-1 rounded-full bg-white/30" />
-          <div className="flex items-center gap-2 hover:text-white/70 transition-colors">
-            <RotateCcw className="h-4 w-4 text-tech-cyan" />
-            <span>Cancel Anytime</span>
-          </div>
-        </motion.div>
+          Trusted by <span className="text-white font-semibold">200+</span> businesses to never miss a call
+        </motion.p>
       </div>
 
       <ScrollChevron targetId="problem-section" />

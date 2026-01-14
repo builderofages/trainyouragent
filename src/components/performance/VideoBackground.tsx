@@ -76,9 +76,12 @@ export const VideoBackground = ({
       ref={containerRef}
       className={`relative overflow-hidden ${className}`}
     >
-      {/* Fallback animated gradient */}
-      {fallbackGradient && showFallback && (
-        <div className="absolute inset-0">
+      {/* Dark base layer - ALWAYS first/bottom */}
+      <div className="absolute inset-0 bg-deep-space z-0" />
+
+      {/* Fallback animated gradient - z-10 */}
+      {fallbackGradient && (
+        <div className="absolute inset-0 z-10">
           <motion.div
             className="absolute w-[800px] h-[800px] rounded-full opacity-30"
             style={{
@@ -138,11 +141,11 @@ export const VideoBackground = ({
         </div>
       )}
 
-      {/* Video element */}
+      {/* Video element - z-20 */}
       {src && isInView && (
         <video
           ref={videoRef}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 z-20 ${
             isLoaded && !hasError ? "opacity-100" : "opacity-0"
           }`}
           poster={poster}
@@ -157,19 +160,16 @@ export const VideoBackground = ({
         </video>
       )}
 
-      {/* Dark base layer - always visible */}
-      <div className="absolute inset-0 bg-deep-space" />
-
-      {/* Overlay */}
+      {/* Overlay - z-30 */}
       {overlay && (
         <div
-          className="absolute inset-0 bg-gradient-to-b from-deep-space/80 via-deep-space/60 to-deep-space/90"
+          className="absolute inset-0 bg-gradient-to-b from-deep-space/80 via-deep-space/60 to-deep-space/90 z-30"
           style={{ opacity: overlayOpacity }}
         />
       )}
 
-      {/* Content */}
-      <div className="relative z-10">{children}</div>
+      {/* Content - z-40 */}
+      <div className="relative z-40">{children}</div>
     </div>
   );
 };
