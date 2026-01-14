@@ -7,20 +7,21 @@ import Index from "./pages/Index";
 import Pricing from "./pages/Pricing";
 import Dashboard from "./pages/Dashboard";
 import NicheLanding from "./pages/NicheLanding";
-import AccountingLanding from "./pages/AccountingLanding";
-import RoofingLanding from "./pages/RoofingLanding";
-import LegalLanding from "./pages/LegalLanding";
-import HealthcareLanding from "./pages/HealthcareLanding";
-import LogisticsLanding from "./pages/LogisticsLanding";
-import RestaurantsLanding from "./pages/RestaurantsLanding";
-import BarsNightclubsLanding from "./pages/BarsNightclubsLanding";
-import HVACLanding from "./pages/HVACLanding";
-import SpasLanding from "./pages/SpasLanding";
-import HotelsLanding from "./pages/HotelsLanding";
-import AutomotiveLanding from "./pages/AutomotiveLanding";
-import RealEstateLanding from "./pages/RealEstateLanding";
-import SolarLanding from "./pages/SolarLanding";
-import GymLanding from "./pages/GymLandingPremium";
+// Premium Industry Landing Pages
+import AccountingLandingPremium from "./pages/AccountingLandingPremium";
+import RoofingLandingPremium from "./pages/RoofingLandingPremium";
+import LegalLandingPremium from "./pages/LegalLandingPremium";
+import HealthcareLandingPremium from "./pages/HealthcareLandingPremium";
+import LogisticsLandingPremium from "./pages/LogisticsLandingPremium";
+import RestaurantsLandingPremium from "./pages/RestaurantsLandingPremium";
+import BarsNightclubsLandingPremium from "./pages/BarsNightclubsLandingPremium";
+import HVACLandingPremium from "./pages/HVACLandingPremium";
+import SpasLandingPremium from "./pages/SpasLandingPremium";
+import HotelsLandingPremium from "./pages/HotelsLandingPremium";
+import AutomotiveLandingPremium from "./pages/AutomotiveLandingPremium";
+import RealEstateLandingPremium from "./pages/RealEstateLandingPremium";
+import SolarLandingPremium from "./pages/SolarLandingPremium";
+import GymLandingPremiumNew from "./pages/GymLandingPremiumNew";
 import SalesToolkit from "./pages/SalesToolkit";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
@@ -55,20 +56,20 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/accounting" element={<AccountingLanding />} />
-          <Route path="/roofing" element={<RoofingLanding />} />
-          <Route path="/legal" element={<LegalLanding />} />
-          <Route path="/healthcare" element={<HealthcareLanding />} />
-          <Route path="/logistics" element={<LogisticsLanding />} />
-          <Route path="/restaurants" element={<RestaurantsLanding />} />
-          <Route path="/bars-nightclubs" element={<BarsNightclubsLanding />} />
-          <Route path="/hvac" element={<HVACLanding />} />
-          <Route path="/spas" element={<SpasLanding />} />
-          <Route path="/hotels" element={<HotelsLanding />} />
-          <Route path="/automotive" element={<AutomotiveLanding />} />
-          <Route path="/real-estate" element={<RealEstateLanding />} />
-          <Route path="/solar" element={<SolarLanding />} />
-          <Route path="/gym" element={<GymLanding />} />
+          <Route path="/accounting" element={<AccountingLandingPremium />} />
+          <Route path="/roofing" element={<RoofingLandingPremium />} />
+          <Route path="/legal" element={<LegalLandingPremium />} />
+          <Route path="/healthcare" element={<HealthcareLandingPremium />} />
+          <Route path="/logistics" element={<LogisticsLandingPremium />} />
+          <Route path="/restaurants" element={<RestaurantsLandingPremium />} />
+          <Route path="/bars-nightclubs" element={<BarsNightclubsLandingPremium />} />
+          <Route path="/hvac" element={<HVACLandingPremium />} />
+          <Route path="/spas" element={<SpasLandingPremium />} />
+          <Route path="/hotels" element={<HotelsLandingPremium />} />
+          <Route path="/automotive" element={<AutomotiveLandingPremium />} />
+          <Route path="/real-estate" element={<RealEstateLandingPremium />} />
+          <Route path="/solar" element={<SolarLandingPremium />} />
+          <Route path="/gym" element={<GymLandingPremiumNew />} />
           <Route path="/sales-toolkit" element={<SalesToolkit />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/resources/:slug" element={<ResourceArticle />} />
