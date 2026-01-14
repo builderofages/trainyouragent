@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Zap, Target, Shield, RotateCcw } from "lucide-react";
+import { ArrowRight, Zap, Target, Shield, RotateCcw, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AnimatedGradientMesh } from "./AnimatedGradientMesh";
 import { ScrollChevron } from "./ScrollChevron";
+import { VideoBackground } from "@/components/performance/VideoBackground";
+import heroVideo from "/videos/hero-bg.mp4";
 
 export const HeroSectionPremium = () => {
   const scrollToSection = (id: string) => {
@@ -14,11 +15,18 @@ export const HeroSectionPremium = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <AnimatedGradientMesh />
+      {/* Video Background with fallback */}
+      <VideoBackground
+        src={heroVideo}
+        overlay
+        overlayOpacity={0.7}
+        fallbackGradient
+        className="absolute inset-0"
+      />
       
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center">
-        {/* Glowing badge */}
+        {/* Subtle enterprise badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -26,18 +34,11 @@ export const HeroSectionPremium = () => {
           className="mb-8"
         >
           <motion.span
-            className="inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold tracking-widest uppercase
-                       bg-white/5 border border-white/10 text-tech-cyan backdrop-blur-sm"
-            animate={{
-              boxShadow: [
-                "0 0 20px hsla(185, 80%, 50%, 0.2)",
-                "0 0 40px hsla(185, 80%, 50%, 0.4)",
-                "0 0 20px hsla(185, 80%, 50%, 0.2)",
-              ],
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-medium tracking-[0.2em] uppercase
+                       bg-white/5 border border-white/10 text-white/60 backdrop-blur-sm"
           >
-            AI That Answers. AI That Closes. AI That Never Sleeps.
+            <span className="w-1.5 h-1.5 rounded-full bg-success-green animate-pulse" />
+            Enterprise AI • Live in 5 Days
           </motion.span>
         </motion.div>
 
@@ -48,25 +49,25 @@ export const HeroSectionPremium = () => {
           >
             <motion.span
               className="block"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.8, delay: 0.3 }}
             >
               Your Phone Rings.
             </motion.span>
             <motion.span
               className="block"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
+              initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.8, delay: 0.6 }}
             >
               We Answer.
             </motion.span>
             <motion.span
               className="block bg-gradient-to-r from-tech-cyan via-trust-blue to-tech-cyan bg-clip-text text-transparent"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.9 }}
+              initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.8, delay: 0.9 }}
             >
               You Grow.
             </motion.span>
@@ -75,14 +76,14 @@ export const HeroSectionPremium = () => {
 
         {/* Subheadline */}
         <motion.p
-          className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed"
+          className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed font-light"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1.2 }}
         >
-          The AI voice agent that handles calls, books appointments, and captures leads 24/7.
+          AI voice agents that handle calls, book appointments, and capture leads 24/7.
           <br className="hidden md:block" />
-          No scripts. No hold music. No missed opportunities.
+          <span className="text-white/80">No scripts. No hold music. No missed opportunities.</span>
         </motion.p>
 
         {/* CTA Buttons */}
@@ -100,12 +101,13 @@ export const HeroSectionPremium = () => {
           <Button
             size="lg"
             onClick={() => scrollToSection("live-demo")}
-            className="bg-white text-deep-space hover:bg-white/90 font-semibold px-8 py-6 text-lg
+            className="group bg-white text-deep-space hover:bg-white/90 font-semibold px-8 py-6 text-lg
                        shadow-[0_0_40px_hsla(0,0%,100%,0.2)] hover:shadow-[0_0_60px_hsla(0,0%,100%,0.3)]
                        transition-all duration-300"
           >
+            <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
             Hear It Live
-            <ArrowRight className="ml-2 h-5 w-5" />
+            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Button>
           
           <Button
@@ -127,22 +129,22 @@ export const HeroSectionPremium = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1.8 }}
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 hover:text-white/70 transition-colors">
             <Zap className="h-4 w-4 text-tech-cyan" />
             <span>Live in 5 Days</span>
           </div>
           <div className="hidden sm:block w-1 h-1 rounded-full bg-white/30" />
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 hover:text-white/70 transition-colors">
             <Target className="h-4 w-4 text-tech-cyan" />
             <span>94% Booking Rate</span>
           </div>
           <div className="hidden sm:block w-1 h-1 rounded-full bg-white/30" />
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 hover:text-white/70 transition-colors">
             <Shield className="h-4 w-4 text-tech-cyan" />
             <span>Enterprise Security</span>
           </div>
           <div className="hidden sm:block w-1 h-1 rounded-full bg-white/30" />
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 hover:text-white/70 transition-colors">
             <RotateCcw className="h-4 w-4 text-tech-cyan" />
             <span>Cancel Anytime</span>
           </div>
