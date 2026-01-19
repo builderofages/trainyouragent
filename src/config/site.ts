@@ -17,8 +17,4 @@ export const siteConfig = {
     linkedin: "https://www.linkedin.com/company/train-your-agent/",
     instagram: "https://www.instagram.com/trainyouragent",
   },
-  // Apollo.io Integration
-  apollo: {
-    apiKey: "nefi97FTOwzcMi5WsvjHHw",
-  },
 };

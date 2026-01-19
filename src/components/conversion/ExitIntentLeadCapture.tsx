@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, TrendingUp, ArrowRight } from 'lucide-react';
-import { MagneticButton } from '@/components/enhanced/MagneticButton';
+import { X, Gift, Loader2 } from 'lucide-react';
 import { GlassCard } from '@/components/enhanced/GlassCard';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { trackEvent } from '@/lib/tracking';
-import { sendToApollo } from '@/lib/apollo-integration';
 import { toast } from 'sonner';
 
 interface ExitIntentLeadCaptureProps {
@@ -77,132 +76,92 @@ export const ExitIntentLeadCapture = ({ industry }: ExitIntentLeadCaptureProps) 
     setIsSubmitting(true);
 
     try {
-      // Send to Apollo.io
-      await sendToApollo({
-        email,
-        name,
-        source: 'Exit Intent Popup',
-        tags: ['Exit Intent Capture', industry ? `${industry.toUpperCase()} Landing` : 'Homepage'],
-        custom_fields: {
-          lead_source: 'Exit Intent Popup',
-          industry: industry || 'Not specified',
-        },
-      });
-
+      // Track event
       trackEvent('exit_intent_submitted', {
-        industry,
-        has_email: !!email,
-        has_name: !!name,
+        industry: industry || 'Homepage',
       });
-
-      toast.success('Thanks! Check your email for your ROI calculation guide.');
       
-      // Mark as submitted
-      sessionStorage.setItem('exit_intent_submitted', 'true');
-      
+      toast.success('Thanks! Check your email for your free guide.');
       setIsVisible(false);
+      setIsDismissed(true);
     } catch (error) {
-      console.error('Failed to submit exit intent form:', error);
+      console.error('Exit intent submission error:', error);
       toast.error('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (isDismissed) {
-    return null;
-  }
+  if (isDismissed) return null;
 
   return (
     <AnimatePresence>
       {isVisible && (
-        <>
-          {/* Backdrop */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          onClick={handleDismiss}
+        >
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
-            onClick={handleDismiss}
-          />
-
-          {/* Modal */}
-          <div className="fixed inset-0 z-[60] grid place-items-center p-4 pointer-events-none">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: 8 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: 8 }}
-              className="pointer-events-auto w-full max-w-lg"
-              role="dialog"
-              aria-modal="true"
-            >
-              <GlassCard className="relative max-h-[85vh] overflow-auto p-6 md:p-8 shadow-glow-intense bg-gradient-to-br from-background via-background to-primary/5">
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <GlassCard className="relative max-w-md p-8">
               <button
                 onClick={handleDismiss}
                 className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Close"
               >
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-premium flex items-center justify-center shadow-glow">
-                  <TrendingUp className="w-6 h-6 text-white" />
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
+                  <Gift className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold">Wait! Before You Go...</h3>
+                <h3 className="text-2xl font-bold mb-2">Wait! Don't Miss This</h3>
+                <p className="text-muted-foreground">
+                  Get our free guide: "How AI Voice Agents Save {industry || 'Businesses'} $2,400/Month"
+                </p>
               </div>
 
-              <p className="text-base md:text-lg text-muted-foreground mb-6">
-                See your potential ROI in 60 seconds. Get a free calculation guide showing exactly how much revenue you could recover.
-              </p>
-
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Input
-                    type="text"
-                    placeholder="Your Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="h-12"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <Input
-                    type="email"
-                    placeholder="Your Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="h-12"
-                    required
-                  />
-                </div>
-
-                <MagneticButton
-                  type="submit"
-                  size="lg"
-                  className="w-full bg-gradient-premium h-12 md:h-14 text-base md:text-lg"
-                  disabled={isSubmitting}
-                >
+                <Input
+                  type="text"
+                  placeholder="Your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+                <Input
+                  type="email"
+                  placeholder="Your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
                   {isSubmitting ? (
-                    'Sending...'
-                  ) : (
                     <>
-                      Get My Free ROI Guide
-                      <ArrowRight className="w-4 h-4 md:w-5 md:h-5 ml-2" />
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Sending...
                     </>
+                  ) : (
+                    'Get Free Guide'
                   )}
-                </MagneticButton>
+                </Button>
               </form>
 
               <p className="text-xs text-muted-foreground text-center mt-4">
-                No spam. Just valuable insights for your business.
+                No spam. Unsubscribe anytime.
               </p>
             </GlassCard>
-            </motion.div>
-          </div>
-        </>
+          </motion.div>
+        </motion.div>
       )}
     </AnimatePresence>
   );

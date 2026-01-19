@@ -8,7 +8,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowRight, ArrowLeft, CheckCircle, Loader2, Sparkles, TrendingUp, Database } from "lucide-react";
-import { sendStrategySessionLead } from "@/lib/apollo-integration";
 import { siteConfig } from "@/config/site";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/tracking";
@@ -108,7 +107,7 @@ export const StrategySessionLeadGate = ({
 
     if (currentStep === 3) {
       if (!formData.biggestChallenge.trim()) newErrors.biggestChallenge = "Please describe your biggest challenge";
-      if (formData.goals.length === 0) newErrors.goals = [] as any; // Type workaround for validation message
+      if (formData.goals.length === 0) newErrors.goals = [] as any;
       if (!formData.timeline) newErrors.timeline = "Timeline is required";
     }
 
@@ -126,7 +125,6 @@ export const StrategySessionLeadGate = ({
       const nextStep = step + 1;
       setStep(nextStep);
       
-      // Track step viewed
       trackEvent('lead_gate_step_viewed', {
         step: nextStep,
         step_name: getStepName(nextStep)
@@ -150,53 +148,46 @@ export const StrategySessionLeadGate = ({
     setIsSubmitting(true);
 
     try {
-      const success = await sendStrategySessionLead(formData);
-
-      if (success) {
-        setIsSuccess(true);
-        
-        // Track conversion
-        if (typeof window !== 'undefined' && (window as any).gtag) {
-          (window as any).gtag('event', 'strategy_session_lead_submitted', {
-            industry: formData.industry,
-            call_volume: formData.callVolume,
-            budget: formData.budget,
-            timeline: formData.timeline
-          });
-        }
-
-        if (typeof window !== 'undefined' && (window as any).fbq) {
-          (window as any).fbq('track', 'Lead', {
-            content_name: 'Strategy Session Lead',
-            content_category: formData.industry,
-            value: 1,
-          });
-        }
-
-        // Store in sessionStorage to prevent duplicate forms
-        sessionStorage.setItem('strategy_session_lead_submitted', 'true');
-        sessionStorage.setItem('booking_industry', formData.industry);
-
-        // Auto-open Cal.com after 2 seconds
-        setTimeout(() => {
-          window.open(siteConfig.bookingUrl, '_blank');
-          
-          // Track booking page opened
-          trackEvent('booking_page_opened', {
-            source: 'lead_gate_completion',
-            industry: formData.industry
-          });
-
-          // Redirect to demo video page after 3 seconds (1 second after Cal.com opens)
-          setTimeout(() => {
-            window.location.href = '/demo-video?confirmed=true';
-          }, 1000);
-        }, 2000);
-
-        toast.success("Thank you! Opening booking calendar...");
-      } else {
-        toast.error("Something went wrong. Please try again or contact us directly.");
+      // Track conversion
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        (window as any).gtag('event', 'strategy_session_lead_submitted', {
+          industry: formData.industry,
+          call_volume: formData.callVolume,
+          budget: formData.budget,
+          timeline: formData.timeline
+        });
       }
+
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        (window as any).fbq('track', 'Lead', {
+          content_name: 'Strategy Session Lead',
+          content_category: formData.industry,
+          value: 1,
+        });
+      }
+
+      // Store in sessionStorage to prevent duplicate forms
+      sessionStorage.setItem('strategy_session_lead_submitted', 'true');
+      sessionStorage.setItem('booking_industry', formData.industry);
+
+      setIsSuccess(true);
+
+      // Auto-open Cal.com after 2 seconds
+      setTimeout(() => {
+        window.open(siteConfig.bookingUrl, '_blank');
+        
+        trackEvent('booking_page_opened', {
+          source: 'lead_gate_completion',
+          industry: formData.industry
+        });
+
+        // Redirect to demo video page after 3 seconds
+        setTimeout(() => {
+          window.location.href = '/demo-video?confirmed=true';
+        }, 1000);
+      }, 2000);
+
+      toast.success("Thank you! Opening booking calendar...");
     } catch (error) {
       console.error("Lead submission error:", error);
       toast.error("Failed to submit. Please try again.");
@@ -216,7 +207,6 @@ export const StrategySessionLeadGate = ({
 
   const handleClose = () => {
     if (!isSuccess) {
-      // Track abandonment
       trackEvent('lead_gate_abandoned', {
         step: step,
         step_name: getStepName(step)
@@ -224,7 +214,6 @@ export const StrategySessionLeadGate = ({
     }
     onOpenChange(false);
     
-    // Reset after animation
     setTimeout(() => {
       setStep(1);
       setFormData({ ...initialFormData, industry: defaultIndustry || "" });
@@ -242,7 +231,6 @@ export const StrategySessionLeadGate = ({
     
     if (!industryData) return "";
     
-    // Extract numeric values from industry data
     const monthlySavings = parseFloat(industryData.monthlySavings.replace(/[^0-9.]/g, ''));
     const typicalVolume = industryData.typicalCallVolume;
     
@@ -335,7 +323,6 @@ export const StrategySessionLeadGate = ({
     
     if (!industryData) return "0";
     
-    // Use actual monthly savings from industry data
     const monthlySavings = parseFloat(industryData.monthlySavings.replace(/[^0-9.]/g, ''));
     
     return monthlySavings.toLocaleString();
@@ -349,7 +336,6 @@ export const StrategySessionLeadGate = ({
     
     if (!industryData) return "0";
     
-    // Use actual year one savings from industry data
     const yearOneSavings = parseFloat(industryData.yearOneSavings.split('/')[0].replace(/[^0-9.]/g, ''));
     
     return yearOneSavings.toLocaleString();
@@ -437,7 +423,7 @@ export const StrategySessionLeadGate = ({
                         id="company"
                         value={formData.company}
                         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                        placeholder="Smith HVAC Services"
+                        placeholder="Your Company LLC"
                         className={errors.company ? "border-red-500" : ""}
                       />
                       {errors.company && <p className="text-xs text-red-500 mt-1">{errors.company}</p>}
@@ -449,156 +435,94 @@ export const StrategySessionLeadGate = ({
                 {step === 2 && (
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="industry">Industry *</Label>
-                      <Select value={formData.industry} onValueChange={(value) => setFormData({ ...formData, industry: value })}>
+                      <Label>Industry *</Label>
+                      <Select value={formData.industry} onValueChange={(v) => setFormData({ ...formData, industry: v })}>
                         <SelectTrigger className={errors.industry ? "border-red-500" : ""}>
                           <SelectValue placeholder="Select your industry" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="HVAC">HVAC & Home Services</SelectItem>
                           <SelectItem value="Legal">Legal Services</SelectItem>
-                          <SelectItem value="Healthcare">Healthcare</SelectItem>
-                          <SelectItem value="Restaurants">Restaurants & Hospitality</SelectItem>
+                          <SelectItem value="Healthcare">Healthcare & Medical</SelectItem>
                           <SelectItem value="Accounting">Accounting & Finance</SelectItem>
+                          <SelectItem value="Restaurants">Restaurants & Hospitality</SelectItem>
                           <SelectItem value="Roofing">Roofing & Construction</SelectItem>
                           <SelectItem value="Logistics">Logistics & Transportation</SelectItem>
                           <SelectItem value="Bars & Nightclubs">Bars & Nightclubs</SelectItem>
                           <SelectItem value="Spas">Spas & Wellness</SelectItem>
                           <SelectItem value="Hotels">Hotels & Hospitality</SelectItem>
-                          <SelectItem value="Automotive">Automotive</SelectItem>
+                          <SelectItem value="Automotive">Automotive Services</SelectItem>
                           <SelectItem value="Real Estate">Real Estate</SelectItem>
-                          <SelectItem value="Solar">Solar & Energy</SelectItem>
-                          <SelectItem value="Gym & Fitness">Gym & Fitness</SelectItem>
-                          <SelectItem value="Other">Other Industry</SelectItem>
+                          <SelectItem value="Solar">Solar Energy</SelectItem>
+                          <SelectItem value="Gym">Fitness & Gyms</SelectItem>
+                          <SelectItem value="Other">Other</SelectItem>
                         </SelectContent>
                       </Select>
                       {errors.industry && <p className="text-xs text-red-500 mt-1">{errors.industry}</p>}
                     </div>
 
                     <div>
-                      <Label htmlFor="callVolume">Current Call Volume *</Label>
-                      <Select value={formData.callVolume} onValueChange={(value) => setFormData({ ...formData, callVolume: value })}>
+                      <Label>Monthly Call Volume *</Label>
+                      <Select value={formData.callVolume} onValueChange={(v) => setFormData({ ...formData, callVolume: v })}>
                         <SelectTrigger className={errors.callVolume ? "border-red-500" : ""}>
-                          <SelectValue placeholder="Average calls per day" />
+                          <SelectValue placeholder="How many calls per month?" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="<10">Less than 10 per day</SelectItem>
-                          <SelectItem value="10-25">10-25 per day</SelectItem>
-                          <SelectItem value="25-50">25-50 per day</SelectItem>
-                          <SelectItem value="50-100">50-100 per day</SelectItem>
-                          <SelectItem value="100+">100+ per day</SelectItem>
+                          <SelectItem value="1-50">1-50 calls</SelectItem>
+                          <SelectItem value="51-200">51-200 calls</SelectItem>
+                          <SelectItem value="201-500">201-500 calls</SelectItem>
+                          <SelectItem value="501-1000">501-1,000 calls</SelectItem>
+                          <SelectItem value="1000+">1,000+ calls</SelectItem>
                         </SelectContent>
                       </Select>
                       {errors.callVolume && <p className="text-xs text-red-500 mt-1">{errors.callVolume}</p>}
-                      
-                      {/* Educational Insight */}
-                      {formData.callVolume && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          className="mt-3 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg"
-                        >
-                          <p className="text-xs text-blue-600 dark:text-blue-400 flex items-start gap-2">
-                            <Sparkles className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                            <span>{getCallVolumeInsight(formData.callVolume)}</span>
-                          </p>
-                        </motion.div>
+                      {formData.callVolume && formData.industry && (
+                        <p className="text-xs text-muted-foreground mt-2 p-2 bg-muted/50 rounded">
+                          <TrendingUp className="inline w-3 h-3 mr-1" />
+                          {getCallVolumeInsight(formData.callVolume)}
+                        </p>
                       )}
                     </div>
 
                     <div>
-                      <Label htmlFor="companySize">Company Size *</Label>
-                      <Select value={formData.companySize} onValueChange={(value) => setFormData({ ...formData, companySize: value })}>
+                      <Label>Company Size *</Label>
+                      <Select value={formData.companySize} onValueChange={(v) => setFormData({ ...formData, companySize: v })}>
                         <SelectTrigger className={errors.companySize ? "border-red-500" : ""}>
                           <SelectValue placeholder="Number of employees" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Solo">Just me (Solo)</SelectItem>
-                          <SelectItem value="2-10">2-10 employees</SelectItem>
-                          <SelectItem value="11-50">11-50 employees</SelectItem>
-                          <SelectItem value="51-200">51-200 employees</SelectItem>
-                          <SelectItem value="200+">200+ employees</SelectItem>
+                          <SelectItem value="1-5">1-5 employees</SelectItem>
+                          <SelectItem value="6-20">6-20 employees</SelectItem>
+                          <SelectItem value="21-50">21-50 employees</SelectItem>
+                          <SelectItem value="51-100">51-100 employees</SelectItem>
+                          <SelectItem value="100+">100+ employees</SelectItem>
                         </SelectContent>
                       </Select>
                       {errors.companySize && <p className="text-xs text-red-500 mt-1">{errors.companySize}</p>}
                     </div>
 
                     <div>
-                      <Label htmlFor="currentSolution">Current Phone Solution *</Label>
-                      <Select value={formData.currentSolution} onValueChange={(value) => setFormData({ ...formData, currentSolution: value })}>
+                      <Label>Current Phone Solution *</Label>
+                      <Select value={formData.currentSolution} onValueChange={(v) => setFormData({ ...formData, currentSolution: v })}>
                         <SelectTrigger className={errors.currentSolution ? "border-red-500" : ""}>
-                          <SelectValue placeholder="What do you use now?" />
+                          <SelectValue placeholder="How do you handle calls now?" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="No receptionist">No receptionist (just voicemail)</SelectItem>
                           <SelectItem value="Human receptionist">Human receptionist</SelectItem>
                           <SelectItem value="Answering service">Answering service / Call center</SelectItem>
-                          <SelectItem value="Other AI">Other AI solution</SelectItem>
-                          <SelectItem value="Nothing">Nothing - calls go unanswered</SelectItem>
+                          <SelectItem value="Voicemail">Voicemail only</SelectItem>
+                          <SelectItem value="IVR system">IVR / Phone tree</SelectItem>
+                          <SelectItem value="Nothing">No dedicated solution</SelectItem>
                         </SelectContent>
                       </Select>
                       {errors.currentSolution && <p className="text-xs text-red-500 mt-1">{errors.currentSolution}</p>}
-                      
-                      {/* Educational Insight */}
-                      {formData.currentSolution && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          className="mt-3 p-3 bg-blue-500/5 border border-blue-500/20 rounded-lg"
-                        >
-                          <p className="text-xs text-blue-600 dark:text-blue-400 flex items-start gap-2">
-                            <Sparkles className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                            <span>{getCurrentSolutionInsight(formData.currentSolution)}</span>
-                          </p>
-                        </motion.div>
+                      {formData.currentSolution && formData.industry && (
+                        <p className="text-xs text-muted-foreground mt-2 p-2 bg-muted/50 rounded">
+                          <Database className="inline w-3 h-3 mr-1" />
+                          {getCurrentSolutionInsight(formData.currentSolution)}
+                        </p>
                       )}
                     </div>
-
-                    {/* ROI Preview Sidebar */}
-                    {formData.callVolume && formData.industry && (
-                      <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="mt-6 p-6 bg-gradient-to-br from-green-500/5 to-emerald-500/5 border border-green-500/20 rounded-xl"
-                      >
-                        <h4 className="font-bold mb-3 flex items-center gap-2 text-green-700 dark:text-green-400">
-                          <TrendingUp className="w-4 h-4" />
-                          Your Estimated Impact
-                        </h4>
-                        
-                        <div className="space-y-3 text-sm">
-                          <div className="flex justify-between items-center">
-                            <span className="text-muted-foreground">Industry:</span>
-                            <span className="font-semibold">{formData.industry}</span>
-                          </div>
-                          
-                          <div className="flex justify-between items-center">
-                            <span className="text-muted-foreground">Call Volume:</span>
-                            <span className="font-semibold">{formData.callVolume}/day</span>
-                          </div>
-                          
-                          <div className="h-px bg-border my-2" />
-                          
-                          <div className="p-3 bg-green-500/10 rounded-lg">
-                            <div className="text-xs text-muted-foreground mb-1">Estimated Monthly Savings</div>
-                            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                              ${calculateEstimatedSavings(formData)}
-                            </div>
-                          </div>
-                          
-                          <div className="p-3 bg-blue-500/10 rounded-lg">
-                            <div className="text-xs text-muted-foreground mb-1">Annual Revenue Recovery</div>
-                            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                              ${calculateRevenueRecovery(formData)}
-                            </div>
-                          </div>
-                          
-                          <div className="text-xs text-muted-foreground text-center pt-2">
-                            Based on {formData.industry} industry benchmarks
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
                   </div>
                 )}
 
@@ -606,29 +530,28 @@ export const StrategySessionLeadGate = ({
                 {step === 3 && (
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="biggestChallenge">What's Your Biggest Challenge with Phone Coverage? *</Label>
+                      <Label htmlFor="biggestChallenge">What's your biggest phone/lead challenge? *</Label>
                       <Textarea
                         id="biggestChallenge"
                         value={formData.biggestChallenge}
                         onChange={(e) => setFormData({ ...formData, biggestChallenge: e.target.value })}
-                        placeholder="Example: We lose after-hours emergency calls worth $50K+ annually..."
-                        rows={4}
+                        placeholder="Tell us about the main issues you're facing with calls, leads, or customer communication..."
                         className={errors.biggestChallenge ? "border-red-500" : ""}
+                        rows={3}
                       />
                       {errors.biggestChallenge && <p className="text-xs text-red-500 mt-1">{errors.biggestChallenge}</p>}
                     </div>
 
                     <div>
-                      <Label>What Are Your Goals? (Select all that apply) *</Label>
-                      <div className="space-y-2 mt-2">
+                      <Label>What goals matter most? (Select all that apply) *</Label>
+                      <div className="grid grid-cols-2 gap-2 mt-2">
                         {[
-                          "Capture after-hours calls",
-                          "Reduce staff costs",
-                          "Scale during busy seasons",
-                          "Improve response time",
-                          "Free up team time",
-                          "Better lead qualification",
-                          "Other"
+                          "Capture more leads",
+                          "Reduce missed calls",
+                          "24/7 availability",
+                          "Lower staffing costs",
+                          "Faster response times",
+                          "Better customer experience"
                         ].map((goal) => (
                           <div key={goal} className="flex items-center space-x-2">
                             <Checkbox
@@ -636,62 +559,36 @@ export const StrategySessionLeadGate = ({
                               checked={formData.goals.includes(goal)}
                               onCheckedChange={() => handleGoalToggle(goal)}
                             />
-                            <label htmlFor={goal} className="text-sm cursor-pointer">
-                              {goal}
-                            </label>
+                            <label htmlFor={goal} className="text-sm cursor-pointer">{goal}</label>
                           </div>
                         ))}
                       </div>
-                      {errors.goals && <p className="text-xs text-red-500 mt-1">{errors.goals}</p>}
+                      {formData.goals.length === 0 && errors.goals !== undefined && (
+                        <p className="text-xs text-red-500 mt-1">Please select at least one goal</p>
+                      )}
                     </div>
 
                     <div>
-                      <Label htmlFor="timeline">Implementation Timeline *</Label>
-                      <Select value={formData.timeline} onValueChange={(value) => setFormData({ ...formData, timeline: value })}>
+                      <Label>Implementation Timeline *</Label>
+                      <Select value={formData.timeline} onValueChange={(v) => setFormData({ ...formData, timeline: v })}>
                         <SelectTrigger className={errors.timeline ? "border-red-500" : ""}>
-                          <SelectValue placeholder="When do you need this?" />
+                          <SelectValue placeholder="When do you want to start?" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="Urgent">Urgent - need ASAP</SelectItem>
                           <SelectItem value="1-2 weeks">1-2 weeks</SelectItem>
-                          <SelectItem value="1 month">Within 1 month</SelectItem>
+                          <SelectItem value="1 month">Within a month</SelectItem>
                           <SelectItem value="Just exploring">Just exploring options</SelectItem>
-                          <SelectItem value="Not sure">Not sure yet</SelectItem>
                         </SelectContent>
                       </Select>
                       {errors.timeline && <p className="text-xs text-red-500 mt-1">{errors.timeline}</p>}
-                      
-                      {/* Timeline Insight */}
-                      {formData.timeline && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          className="mt-3 p-3 bg-purple-500/5 border border-purple-500/20 rounded-lg"
-                        >
-                          <p className="text-xs text-purple-600 dark:text-purple-400 flex items-start gap-2">
-                            <Sparkles className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                            <span>{getTimelineInsight(formData.timeline)}</span>
-                          </p>
-                        </motion.div>
+                      {formData.timeline && formData.industry && (
+                        <p className="text-xs text-muted-foreground mt-2 p-2 bg-muted/50 rounded">
+                          <Sparkles className="inline w-3 h-3 mr-1" />
+                          {getTimelineInsight(formData.timeline)}
+                        </p>
                       )}
                     </div>
-
-                    {/* Success Story Micro-Content */}
-                    {formData.industry && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mt-6 p-4 bg-muted/30 rounded-lg border-l-4 border-primary"
-                      >
-                        <p className="text-xs font-semibold mb-2 flex items-center gap-2">
-                          <Sparkles className="w-4 h-4 text-primary" />
-                          💡 Similar Business Success
-                        </p>
-                        <p className="text-xs text-muted-foreground italic">
-                          {getSuccessStory(formData.industry)}
-                        </p>
-                      </motion.div>
-                    )}
                   </div>
                 )}
 
@@ -699,55 +596,40 @@ export const StrategySessionLeadGate = ({
                 {step === 4 && (
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="budget">Monthly Budget Range *</Label>
-                      <Select value={formData.budget} onValueChange={(value) => setFormData({ ...formData, budget: value })}>
+                      <Label>Monthly Budget for AI Solution *</Label>
+                      <Select value={formData.budget} onValueChange={(v) => setFormData({ ...formData, budget: v })}>
                         <SelectTrigger className={errors.budget ? "border-red-500" : ""}>
-                          <SelectValue placeholder="What's your budget?" />
+                          <SelectValue placeholder="What's your monthly budget?" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="<$1000">Less than $1,000/month</SelectItem>
-                          <SelectItem value="$1000-2000">$1,000 - $2,000/month</SelectItem>
-                          <SelectItem value="$2000-3000">$2,000 - $3,000/month</SelectItem>
-                          <SelectItem value="$3000-5000">$3,000 - $5,000/month</SelectItem>
-                          <SelectItem value="$5000+">$5,000+/month</SelectItem>
-                          <SelectItem value="Need recommendation">Need recommendation based on needs</SelectItem>
+                          <SelectItem value="Under $500">Under $500/month</SelectItem>
+                          <SelectItem value="$500-$1,000">$500-$1,000/month</SelectItem>
+                          <SelectItem value="$1,000-$2,500">$1,000-$2,500/month</SelectItem>
+                          <SelectItem value="$2,500-$5,000">$2,500-$5,000/month</SelectItem>
+                          <SelectItem value="$5,000+">$5,000+/month</SelectItem>
                         </SelectContent>
                       </Select>
                       {errors.budget && <p className="text-xs text-red-500 mt-1">{errors.budget}</p>}
-                      
-                      {/* Budget Benchmark */}
                       {formData.budget && formData.industry && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          className="mt-4 p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg border border-primary/20"
-                        >
-                          <div className="flex items-start gap-3">
-                            <Database className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                            <div>
-                              <p className="text-sm font-semibold mb-2">Industry Benchmark</p>
-                              <p className="text-xs text-muted-foreground">
-                                {getBudgetBenchmark(formData.budget, formData.industry)}
-                              </p>
-                            </div>
-                          </div>
-                        </motion.div>
+                        <p className="text-xs text-muted-foreground mt-2 p-2 bg-muted/50 rounded">
+                          <TrendingUp className="inline w-3 h-3 mr-1" />
+                          {getBudgetBenchmark(formData.budget, formData.industry)}
+                        </p>
                       )}
                     </div>
 
                     <div>
-                      <Label htmlFor="foundUs">How Did You Find Us? *</Label>
-                      <Select value={formData.foundUs} onValueChange={(value) => setFormData({ ...formData, foundUs: value })}>
+                      <Label>How did you find us? *</Label>
+                      <Select value={formData.foundUs} onValueChange={(v) => setFormData({ ...formData, foundUs: v })}>
                         <SelectTrigger className={errors.foundUs ? "border-red-500" : ""}>
                           <SelectValue placeholder="Select source" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Google search">Google search</SelectItem>
-                          <SelectItem value="Social media">Social media (LinkedIn, Facebook, etc.)</SelectItem>
-                          <SelectItem value="Referral">Referral from colleague/friend</SelectItem>
-                          <SelectItem value="Industry directory">Industry directory/listing</SelectItem>
-                          <SelectItem value="Advertisement">Online advertisement</SelectItem>
-                          <SelectItem value="YouTube">YouTube</SelectItem>
+                          <SelectItem value="Google Search">Google Search</SelectItem>
+                          <SelectItem value="Social Media">Social Media</SelectItem>
+                          <SelectItem value="Referral">Referral / Word of Mouth</SelectItem>
+                          <SelectItem value="Advertisement">Advertisement</SelectItem>
+                          <SelectItem value="Industry Event">Industry Event / Conference</SelectItem>
                           <SelectItem value="Other">Other</SelectItem>
                         </SelectContent>
                       </Select>
@@ -755,52 +637,70 @@ export const StrategySessionLeadGate = ({
                     </div>
 
                     <div>
-                      <Label htmlFor="additionalContext">Anything Else We Should Know? (Optional)</Label>
+                      <Label htmlFor="additionalContext">Anything else we should know? (Optional)</Label>
                       <Textarea
                         id="additionalContext"
                         value={formData.additionalContext}
                         onChange={(e) => setFormData({ ...formData, additionalContext: e.target.value })}
-                        placeholder="Any specific requirements, questions, or context that would help us prepare..."
+                        placeholder="Any specific requirements, questions, or context you'd like to share..."
                         rows={3}
                       />
                     </div>
+
+                    {/* ROI Preview */}
+                    {formData.industry && (
+                      <div className="p-4 bg-gradient-to-r from-primary/10 to-cyan-500/10 rounded-lg border border-primary/20">
+                        <h4 className="font-semibold mb-2 flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-primary" />
+                          Your Potential with AI
+                        </h4>
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <p className="text-muted-foreground">Est. Monthly Savings</p>
+                            <p className="text-xl font-bold text-primary">${calculateEstimatedSavings(formData)}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">First Year Value</p>
+                            <p className="text-xl font-bold text-primary">${calculateRevenueRecovery(formData)}</p>
+                          </div>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          {getSuccessStory(formData.industry)}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </motion.div>
             </AnimatePresence>
 
             {/* Navigation Buttons */}
-            <div className="flex items-center justify-between mt-6 pt-6 border-t">
-              <Button
-                variant="ghost"
-                onClick={handleBack}
-                disabled={step === 1 || isSubmitting}
-                className="gap-2"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back
-              </Button>
-
-              {step < totalSteps ? (
-                <Button onClick={handleNext} className="gap-2">
-                  Next
-                  <ArrowRight className="w-4 h-4" />
+            <div className="flex justify-between mt-6">
+              {step > 1 ? (
+                <Button variant="outline" onClick={handleBack}>
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back
                 </Button>
               ) : (
-                <Button 
-                  onClick={handleSubmit} 
-                  disabled={isSubmitting}
-                  className="gap-2 bg-gradient-primary"
-                >
+                <div />
+              )}
+              
+              {step < totalSteps ? (
+                <Button onClick={handleNext}>
+                  Next
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              ) : (
+                <Button onClick={handleSubmit} disabled={isSubmitting}>
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                       Submitting...
                     </>
                   ) : (
                     <>
-                      Submit & Book Session
-                      <CheckCircle className="w-4 h-4" />
+                      Book Strategy Session
+                      <ArrowRight className="w-4 h-4 ml-2" />
                     </>
                   )}
                 </Button>
@@ -808,24 +708,31 @@ export const StrategySessionLeadGate = ({
             </div>
           </>
         ) : (
+          /* Success State */
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="text-center py-8"
           >
-            <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-8 h-8 text-green-500" />
-            </div>
-            <h3 className="text-2xl font-bold mb-2">Thank You!</h3>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+              className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-500/20 flex items-center justify-center"
+            >
+              <CheckCircle className="w-10 h-10 text-green-500" />
+            </motion.div>
+            
+            <h3 className="text-xl font-bold mb-2">Thank You!</h3>
             <p className="text-muted-foreground mb-4">
-              Your information has been received. We're opening the booking calendar in a new tab...
+              Opening Cal.com to book your strategy session...
             </p>
-            <p className="text-sm text-muted-foreground">
-              We'll review your details and come prepared with industry-specific insights for your strategy session.
-            </p>
-            <Button onClick={handleClose} variant="outline" className="mt-6">
-              Close
-            </Button>
+            
+            <div className="p-4 bg-muted/50 rounded-lg">
+              <p className="text-sm">
+                After booking, you'll be redirected to our demo video to see our AI in action.
+              </p>
+            </div>
           </motion.div>
         )}
       </DialogContent>

@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Mail, User, Phone, Building2, Sparkles, Mic } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { X, Mic, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { sendToApollo, getUTMParameters } from "@/lib/apollo-integration";
 import { conversions } from "@/lib/tracking";
 
 interface VoiceDemoLeadGateProps {
@@ -72,52 +70,38 @@ export const VoiceDemoLeadGate = ({ isOpen, onClose, onSuccess }: VoiceDemoLeadG
 
     setIsSubmitting(true);
 
-    // Get UTM parameters
-    const utmParams = getUTMParameters();
+    try {
+      // Track conversion
+      conversions.demoBooked(industry || "Not selected");
 
-    // Send to Apollo.io
-    const success = await sendToApollo({
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim(),
-      industry: industry || "Not selected",
-      source: "Voice Demo Lead Gate",
-      tags: ["Voice Demo Request", "Website Lead"],
-      notes: `Voice demo request submitted from website. ${industry ? `Industry: ${industry}` : ""}`,
-      custom_fields: {
-        ...utmParams,
-        demo_type: "voice",
-        timestamp: new Date().toISOString(),
-      },
-    });
+      // Store in session to prevent re-prompting
+      sessionStorage.setItem("voice_demo_lead_captured", "true");
+      sessionStorage.setItem("voice_demo_industry", industry || "Not selected");
 
-    if (!success) {
       toast({
-        title: "Something went wrong",
-        description: "Please try again or contact support",
+        title: "Welcome!",
+        description: "Starting the voice demo...",
+      });
+
+      // Trigger demo
+      onSuccess();
+
+      // Reset form
+      setName("");
+      setEmail("");
+      setPhone("");
+      setIndustry("");
+      setVoiceConsent(false);
+    } catch (error) {
+      console.error("Voice demo lead capture error:", error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
         variant: "destructive",
       });
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    // Track with analytics
-    conversions.liveDemoStarted(industry || "unknown");
-
-    // Store in sessionStorage to prevent re-prompting
-    sessionStorage.setItem("voice_demo_lead_submitted", "true");
-    sessionStorage.setItem(
-      "voice_demo_lead_data",
-      JSON.stringify({ name, email, phone, industry })
-    );
-
-    toast({
-      title: "Success!",
-      description: "Starting your voice demo now...",
-    });
-
-    setIsSubmitting(false);
-    onSuccess();
   };
 
   if (!isOpen) return null;
@@ -128,162 +112,120 @@ export const VoiceDemoLeadGate = ({ isOpen, onClose, onSuccess }: VoiceDemoLeadG
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
         onClick={onClose}
       >
         <motion.div
-          initial={{ scale: 0.9, opacity: 0, y: 20 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.9, opacity: 0, y: 20 }}
-          transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className="bg-background border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
           onClick={(e) => e.stopPropagation()}
+          className="w-full max-w-md bg-card border border-border rounded-xl shadow-2xl overflow-hidden"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-border bg-gradient-to-r from-primary/10 to-accent/10">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                <Mic className="w-5 h-5 text-white" />
+          <div className="bg-gradient-to-r from-primary to-cyan-500 p-6 flex items-center justify-between">
+            <div className="flex items-center gap-3 text-white">
+              <div className="p-2 bg-white/20 rounded-full">
+                <Mic className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-bold">Try Voice Demo</h3>
-                <p className="text-xs text-muted-foreground">Experience AI in action</p>
+                <h2 className="font-bold text-lg">Try Our Voice AI</h2>
+                <p className="text-sm text-white/80">Experience it live</p>
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
+            <button
               onClick={onClose}
-              className="hover:bg-destructive/20 hover:text-destructive"
+              className="text-white/80 hover:text-white transition-colors"
             >
-              <X className="w-5 h-5" />
-            </Button>
+              <X className="w-6 h-6" />
+            </button>
           </div>
 
-          {/* Form Content */}
-          <div className="p-6">
-            <div className="text-center mb-6">
-              <h2 className="text-xl font-bold mb-2">Get Instant Access</h2>
-              <p className="text-sm text-muted-foreground">
-                Enter your details to start a live voice conversation with our AI agent
-              </p>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Enter your details to start the interactive voice demo
+            </p>
+
+            <div className="space-y-2">
+              <Label htmlFor="voice-name">Name *</Label>
+              <Input
+                id="voice-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
+                required
+              />
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Name */}
-              <div>
-                <Label htmlFor="voice-name" className="flex items-center gap-2">
-                  <User className="w-4 h-4 text-primary" />
-                  Name *
-                </Label>
-                <Input
-                  id="voice-name"
-                  type="text"
-                  placeholder="John Smith"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="mt-2"
-                  required
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="voice-email">Email *</Label>
+              <Input
+                id="voice-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                required
+              />
+            </div>
 
-              {/* Email */}
-              <div>
-                <Label htmlFor="voice-email" className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-primary" />
-                  Email *
-                </Label>
-                <Input
-                  id="voice-email"
-                  type="email"
-                  placeholder="john@company.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="mt-2"
-                  required
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="voice-phone">Phone (optional)</Label>
+              <Input
+                id="voice-phone"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="(555) 123-4567"
+              />
+            </div>
 
-              {/* Phone (Optional) */}
-              <div>
-                <Label htmlFor="voice-phone" className="flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-muted-foreground" />
-                  Phone <span className="text-xs text-muted-foreground">(optional)</span>
-                </Label>
-                <Input
-                  id="voice-phone"
-                  type="tel"
-                  placeholder="(555) 123-4567"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="mt-2"
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="voice-industry">Industry (optional)</Label>
+              <Select value={industry} onValueChange={setIndustry}>
+                <SelectTrigger id="voice-industry">
+                  <SelectValue placeholder="Select industry" />
+                </SelectTrigger>
+                <SelectContent>
+                  {industries.map((ind) => (
+                    <SelectItem key={ind} value={ind}>
+                      {ind}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-              {/* Industry */}
-              <div>
-                <Label htmlFor="voice-industry" className="flex items-center gap-2">
-                  <Building2 className="w-4 h-4 text-primary" />
-                  Industry *
-                </Label>
-                <Select value={industry} onValueChange={setIndustry} required>
-                  <SelectTrigger className="mt-2">
-                    <SelectValue placeholder="Select your industry" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {industries.map((ind) => (
-                      <SelectItem key={ind} value={ind}>
-                        {ind}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Voice Consent Checkbox */}
-              <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg border border-border">
-                <Checkbox 
-                  id="voice-consent" 
-                  checked={voiceConsent}
-                  onCheckedChange={(checked) => setVoiceConsent(checked as boolean)}
-                  required 
-                  className="mt-1"
-                />
-                <Label 
-                  htmlFor="voice-consent" 
-                  className="text-xs text-muted-foreground leading-relaxed cursor-pointer flex-1"
-                >
-                  I consent to voice recording and processing by VAPI.ai for demo purposes. 
-                  Voice data is stored for 30 days for quality assurance. See our{" "}
-                  <Link to="/privacy" className="text-primary hover:underline font-medium">
-                    Privacy Policy
-                  </Link>{" "}
-                  for details. *
-                </Label>
-              </div>
-
-              {/* Submit Button */}
-              <Button
-                type="submit"
-                className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90"
-                size="lg"
-                disabled={isSubmitting}
+            <div className="flex items-start space-x-3 p-3 bg-muted/50 rounded-lg">
+              <Checkbox
+                id="voice-consent"
+                checked={voiceConsent}
+                onCheckedChange={(checked) => setVoiceConsent(checked as boolean)}
+              />
+              <label
+                htmlFor="voice-consent"
+                className="text-sm text-muted-foreground cursor-pointer leading-tight"
               >
-                {isSubmitting ? (
-                  "Starting Demo..."
-                ) : (
-                  <>
-                    <Mic className="w-4 h-4 mr-2" />
-                    Start Voice Demo
-                  </>
-                )}
-              </Button>
+                I consent to voice recording and processing by VAPI.ai for this demo. 
+                Your voice data is processed securely and not stored permanently.
+              </label>
+            </div>
 
-              <p className="text-xs text-center text-muted-foreground">
-                By continuing, you agree to receive communications from Train Your Agent
-              </p>
-            </form>
-          </div>
+            <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Starting Demo...
+                </>
+              ) : (
+                <>
+                  <Mic className="w-4 h-4 mr-2" />
+                  Start Voice Demo
+                </>
+              )}
+            </Button>
+          </form>
         </motion.div>
       </motion.div>
     </AnimatePresence>

@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X, Mail, User, Phone, Building2, Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { X, MessageCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { sendToApollo, getUTMParameters } from "@/lib/apollo-integration";
 
 interface ChatLeadCaptureProps {
   isOpen: boolean;
@@ -59,198 +58,141 @@ export const ChatLeadCapture = ({ isOpen, onClose, onSubmit }: ChatLeadCapturePr
 
     setIsSubmitting(true);
 
-    // Get UTM parameters
-    const utmParams = getUTMParameters();
+    try {
+      // Track conversion
+      if (typeof window !== "undefined" && (window as any).gtag) {
+        (window as any).gtag("event", "chat_lead_captured", {
+          industry: industry || "Not selected",
+        });
+      }
 
-    // Send to Apollo.io
-    const success = await sendToApollo({
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim(),
-      industry: industry || "Not selected",
-      source: "Chat Lead Capture",
-      tags: ["Chat Lead", "Website Lead"],
-      notes: `Chat lead captured from website. ${industry ? `Industry: ${industry}` : ""}`,
-      custom_fields: {
-        ...utmParams,
-        lead_type: "chat",
-      },
-    });
+      if (typeof window !== "undefined" && (window as any).fbq) {
+        (window as any).fbq("track", "Lead", {
+          content_name: "Chat Lead",
+          content_category: industry || "Not selected",
+        });
+      }
 
-    if (!success) {
       toast({
-        title: "Something went wrong",
-        description: "Please try again or contact support",
+        title: "Thank you!",
+        description: "Starting your chat session...",
+      });
+
+      // Proceed to chat
+      onSubmit({
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim() || undefined,
+        industry: industry || undefined,
+      });
+
+      // Reset form
+      setName("");
+      setEmail("");
+      setPhone("");
+      setIndustry("");
+    } catch (error) {
+      console.error("Chat lead capture error:", error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
         variant: "destructive",
       });
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    // Track with analytics
-    if (typeof window !== "undefined" && (window as any).gtag) {
-      (window as any).gtag("event", "chat_lead_captured", {
-        event_category: "Lead Capture",
-        event_label: industry || "Unknown",
-        value: name,
-      });
-    }
-
-    if (typeof window !== "undefined" && (window as any).fbq) {
-      (window as any).fbq("track", "Lead", {
-        content_name: "Chat Lead Capture",
-        content_category: industry || "Unknown",
-      });
-    }
-
-    toast({
-      title: "Welcome!",
-      description: "Starting your chat session now...",
-    });
-
-    const leadData = {
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim() || "Not provided",
-      industry: industry || "Not selected",
-    };
-
-    onSubmit(leadData);
-    setIsSubmitting(false);
   };
 
   if (!isOpen) return null;
 
   return (
     <motion.div
-      initial={{ x: "100%" }}
-      animate={{ x: 0 }}
-      exit={{ x: "100%" }}
-      transition={{ type: "spring", damping: 25, stiffness: 300 }}
-      className="fixed right-0 top-0 h-full w-full md:w-[400px] bg-background border-l border-border shadow-2xl z-40 flex flex-col"
+      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95, y: 20 }}
+      className="fixed bottom-20 right-4 z-50 w-80 bg-card border border-border rounded-xl shadow-2xl overflow-hidden"
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border bg-gradient-to-r from-primary/10 to-accent/10">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-white" />
-          </div>
-          <div>
-            <h3 className="font-bold text-sm">Chat with AI Agent</h3>
-            <p className="text-xs text-muted-foreground">Get instant answers 24/7</p>
-          </div>
+      <div className="bg-primary p-4 flex items-center justify-between">
+        <div className="flex items-center gap-2 text-primary-foreground">
+          <MessageCircle className="w-5 h-5" />
+          <span className="font-semibold">Start a Chat</span>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
+        <button
           onClick={onClose}
-          className="hover:bg-destructive/20 hover:text-destructive"
+          className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
         >
           <X className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="p-4 space-y-4">
+        <p className="text-sm text-muted-foreground">
+          Quick intro so we can personalize your experience
+        </p>
+
+        <div className="space-y-2">
+          <Label htmlFor="chat-name">Name *</Label>
+          <Input
+            id="chat-name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name"
+            required
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="chat-email">Email *</Label>
+          <Input
+            id="chat-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="your@email.com"
+            required
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="chat-phone">Phone (optional)</Label>
+          <Input
+            id="chat-phone"
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="(555) 123-4567"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="chat-industry">Industry (optional)</Label>
+          <Select value={industry} onValueChange={setIndustry}>
+            <SelectTrigger id="chat-industry">
+              <SelectValue placeholder="Select industry" />
+            </SelectTrigger>
+            <SelectContent>
+              {industries.map((ind) => (
+                <SelectItem key={ind} value={ind}>
+                  {ind}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              Starting...
+            </>
+          ) : (
+            "Start Chatting"
+          )}
         </Button>
-      </div>
-
-      {/* Form Content */}
-      <div className="flex-1 overflow-y-auto p-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold mb-2">Let's Get Started</h2>
-            <p className="text-sm text-muted-foreground">
-              Tell us a bit about yourself to begin your personalized chat experience
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Name */}
-            <div>
-              <Label htmlFor="name" className="flex items-center gap-2">
-                <User className="w-4 h-4 text-primary" />
-                Name *
-              </Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="John Smith"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="mt-2"
-                required
-              />
-            </div>
-
-            {/* Email */}
-            <div>
-              <Label htmlFor="email" className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-primary" />
-                Email *
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="john@company.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-2"
-                required
-              />
-            </div>
-
-            {/* Phone (Optional) */}
-            <div>
-              <Label htmlFor="phone" className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-muted-foreground" />
-                Phone <span className="text-xs text-muted-foreground">(optional)</span>
-              </Label>
-              <Input
-                id="phone"
-                type="tel"
-                placeholder="(555) 123-4567"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="mt-2"
-              />
-            </div>
-
-            {/* Industry (Optional) */}
-            <div>
-              <Label htmlFor="industry" className="flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-muted-foreground" />
-                Industry <span className="text-xs text-muted-foreground">(optional)</span>
-              </Label>
-              <Select value={industry} onValueChange={setIndustry}>
-                <SelectTrigger className="mt-2">
-                  <SelectValue placeholder="Select your industry" />
-                </SelectTrigger>
-                <SelectContent>
-                  {industries.map((ind) => (
-                    <SelectItem key={ind} value={ind}>
-                      {ind}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              className="w-full bg-gradient-primary"
-              size="lg"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Starting Chat..." : "Start Chatting"}
-            </Button>
-
-            <p className="text-xs text-center text-muted-foreground">
-              By continuing, you agree to receive communications from Train Your Agent
-            </p>
-          </form>
-        </motion.div>
-      </div>
+      </form>
     </motion.div>
   );
 };

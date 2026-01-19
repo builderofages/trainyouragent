@@ -73,38 +73,9 @@ export default function SolutionConfigurator() {
   };
 
   const handleSubmit = async () => {
-    // Send to Apollo.io
-    try {
-      const { sendToApollo, getUTMParameters } = await import('@/lib/apollo-integration');
-      const utmParams = getUTMParameters();
-      
-      await sendToApollo({
-        name: `${formData.name}`,
-        email: formData.email,
-        phone: formData.phone,
-        company: formData.company,
-        source: 'Solution Configurator',
-        tags: ['Solution Configurator', 'Website Lead'],
-        notes: `Challenge: ${formData.challenge}. Revenue: ${formData.revenue}. Staff Size: ${formData.staffSize}. Tech Stack: ${formData.techStack}. Goals: ${formData.goals}`,
-        custom_fields: {
-          ...utmParams,
-          challenge: formData.challenge,
-          revenue: formData.revenue,
-          staff_size: formData.staffSize,
-          tech_stack: formData.techStack,
-          goals: formData.goals,
-        },
-      });
-
-      trackEvent("configurator_completed", { challenge: formData.challenge });
-      toast.success("Your personalized roadmap is ready!");
-      
-      // In production, this would generate a PDF. For now, redirect to booking.
-      window.open(siteConfig.bookingUrl, "_blank");
-    } catch (error) {
-      console.error("Failed to submit configurator:", error);
-      toast.error("Something went wrong. Please try again.");
-    }
+    trackEvent("configurator_completed", { challenge: formData.challenge });
+    toast.success("Your personalized roadmap is ready!");
+    window.open(siteConfig.bookingUrl, "_blank");
   };
 
   const renderStep = () => {
