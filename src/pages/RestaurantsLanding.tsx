@@ -100,35 +100,8 @@ const RestaurantsLanding = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    try {
-      const { sendToApollo, getUTMParameters } = await import('@/lib/apollo-integration');
-      const utmParams = getUTMParameters();
-      
-      await sendToApollo({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        company: formData.restaurantName,
-        industry: 'Restaurants',
-        source: 'Restaurants Landing Page Form',
-        tags: ['Restaurants Landing', 'Contact Form', 'Website Lead'],
-        notes: `Restaurant: ${formData.restaurantName}`,
-        custom_fields: {
-          ...utmParams,
-          restaurant_name: formData.restaurantName,
-          page_url: window.location.href,
-          form_type: 'contact'
-        },
-      });
-      
-      toast.success("Thanks! We'll be in touch to schedule your free strategy session.");
-      window.open(siteConfig.bookingUrl, '_blank');
-    } catch (error) {
-      console.error('Form submission error:', error);
-      toast.success("Thanks! We'll be in touch to schedule your free strategy session.");
-      window.open(siteConfig.bookingUrl, '_blank');
-    }
+    toast.success("Thanks! We'll be in touch to schedule your free strategy session.");
+    window.open(siteConfig.bookingUrl, '_blank');
   };
 
   const seoData = landingPageSEO.restaurants;
