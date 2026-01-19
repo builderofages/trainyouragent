@@ -1,9 +1,7 @@
 /**
  * Automated Testing Utilities
- * Monitors console errors, validates dataLayer events, and checks Apollo.io payload structure
+ * Monitors console errors and validates dataLayer events
  */
-
-import { ApolloContactData } from "./apollo-integration";
 
 // ============= Console Error Monitoring =============
 
@@ -175,92 +173,15 @@ export const waitForDataLayerEvent = (
   });
 };
 
-// ============= Apollo.io Payload Validation =============
-
-export interface ApolloValidationError {
-  field: string;
-  error: string;
-}
-
-export const validateApolloPayload = (payload: ApolloContactData): ApolloValidationError[] => {
-  const errors: ApolloValidationError[] = [];
-
-  // Required fields
-  if (!payload.first_name || payload.first_name.trim().length === 0) {
-    errors.push({ field: 'first_name', error: 'First name is required' });
-  }
-
-  if (!payload.last_name || payload.last_name.trim().length === 0) {
-    errors.push({ field: 'last_name', error: 'Last name is required' });
-  }
-
-  if (!payload.email || payload.email.trim().length === 0) {
-    errors.push({ field: 'email', error: 'Email is required' });
-  } else {
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(payload.email)) {
-      errors.push({ field: 'email', error: 'Invalid email format' });
-    }
-  }
-
-  // Validate phone format if provided
-  if (payload.phone && payload.phone.trim().length > 0) {
-    const phoneRegex = /^[\d\s\-\(\)\+]+$/;
-    if (!phoneRegex.test(payload.phone)) {
-      errors.push({ field: 'phone', error: 'Invalid phone format' });
-    }
-  }
-
-  // Validate label_names array
-  if (!payload.label_names || !Array.isArray(payload.label_names)) {
-    errors.push({ field: 'label_names', error: 'Tags array is required' });
-  } else if (payload.label_names.length === 0) {
-    errors.push({ field: 'label_names', error: 'At least one tag is required' });
-  }
-
-  // Validate custom_fields structure
-  if (!payload.custom_fields || typeof payload.custom_fields !== 'object') {
-    errors.push({ field: 'custom_fields', error: 'Custom fields object is required' });
-  } else {
-    // Check for important custom fields
-    const requiredCustomFields = ['industry', 'lead_source', 'submitted_at'];
-    requiredCustomFields.forEach(field => {
-      if (!(field in payload.custom_fields!)) {
-        errors.push({ 
-          field: `custom_fields.${field}`, 
-          error: `Missing required custom field: ${field}` 
-        });
-      }
-    });
-  }
-
-  return errors;
-};
-
-export const logValidationResults = (errors: ApolloValidationError[]) => {
-  if (errors.length === 0) {
-    console.log('✅ Apollo payload validation passed');
-    return;
-  }
-
-  console.error('❌ Apollo payload validation failed:');
-  errors.forEach(error => {
-    console.error(`  - ${error.field}: ${error.error}`);
-  });
-};
-
 // ============= Complete Test Suite =============
 
 export interface TestResults {
   consoleErrors: ConsoleError[];
   dataLayerValidation: Record<string, DataLayerValidationResult>;
-  apolloValidation: ApolloValidationError[];
 }
 
 export const runCompleteTestSuite = async (
-  expectedEvents: Record<string, Record<string, 'string' | 'number' | 'array' | 'object'>>,
-  apolloPayload?: ApolloContactData
+  expectedEvents: Record<string, Record<string, 'string' | 'number' | 'array' | 'object'>>
 ): Promise<TestResults> => {
   console.log('🧪 Running complete test suite...');
 
@@ -276,9 +197,6 @@ export const runCompleteTestSuite = async (
     dataLayerValidation[eventName] = validateDataLayerEvent(eventName, expectedParams);
   });
 
-  // Validate Apollo payload if provided
-  const apolloValidation = apolloPayload ? validateApolloPayload(apolloPayload) : [];
-
   // Get console errors
   const consoleErrors = getConsoleErrors();
 
@@ -289,11 +207,9 @@ export const runCompleteTestSuite = async (
   console.log('\n📊 Test Results:');
   console.log(`Console Errors: ${consoleErrors.length}`);
   console.log(`DataLayer Events Validated: ${Object.keys(dataLayerValidation).length}`);
-  console.log(`Apollo Validation Errors: ${apolloValidation.length}`);
 
   return {
     consoleErrors,
-    dataLayerValidation,
-    apolloValidation
+    dataLayerValidation
   };
 };

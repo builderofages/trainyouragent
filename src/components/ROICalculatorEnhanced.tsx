@@ -413,30 +413,7 @@ const ROICalculatorEnhanced = ({ defaultIndustry, onCalculationComplete }: ROICa
     
     setIsGeneratingPDF(true);
     
-    // Send to Apollo.io for lead nurture
     try {
-      const { sendToApollo, getUTMParameters } = await import('@/lib/apollo-integration');
-      const utmParams = getUTMParameters();
-      
-      await sendToApollo({
-        name: name.trim(),
-        email: email.trim(),
-        industry,
-        source: 'ROI Calculator PDF Request',
-        tags: ['ROI Calculator', 'Lead Magnet', 'Website Lead'],
-        notes: `ROI Calculator Results: Monthly ROI: $${monthlyROI.toLocaleString()}, Annual ROI: $${yearlyROI.toLocaleString()}, ROI Multiple: ${roiMultiplier}x`,
-        custom_fields: {
-          ...utmParams,
-          monthly_leads: monthlyLeads,
-          conversion_rate: conversionRate,
-          avg_job_value: avgJobValue,
-          projected_monthly_roi: monthlyROI,
-          projected_annual_roi: yearlyROI,
-          roi_multiple: roiMultiplier,
-          calculator_type: 'roi',
-        },
-      });
-      
       // Track in analytics
       trackEvent('lead_magnet_download', {
         type: 'roi_report',
@@ -447,13 +424,13 @@ const ROICalculatorEnhanced = ({ defaultIndustry, onCalculationComplete }: ROICa
       // Generate and download PDF
       generatePDF();
       
-      toast.success('PDF downloaded! Check your email for follow-up resources.');
+      toast.success('PDF downloaded!');
       setShowEmailCapture(false);
       setEmail('');
       setName('');
     } catch (error) {
-      console.error('Failed to capture email:', error);
-      toast.error('Failed to send. Please try again.');
+      console.error('Failed to generate PDF:', error);
+      toast.error('Failed to generate PDF. Please try again.');
     } finally {
       setIsGeneratingPDF(false);
     }

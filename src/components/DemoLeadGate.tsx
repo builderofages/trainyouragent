@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Play, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { X, Play, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { sendToApollo } from "@/lib/apollo-integration";
 import { trackConversion } from "@/lib/tracking";
 
 interface DemoLeadGateProps {
@@ -71,49 +70,36 @@ export const DemoLeadGate = ({
     setIsSubmitting(true);
 
     try {
-      // Send to Apollo.io
-      const success = await sendToApollo({
-        name: formData.name,
-        email: formData.email,
+      // Track conversion
+      trackConversion(`demo_request_${demoType}`, {
         industry: formData.industry,
-        source: `Demo Request - ${demoName}`,
-        tags: ["Demo Request", formData.industry, demoType],
-        notes: `Requested ${demoName} demo`,
-        custom_fields: {
-          demo_type: demoType,
-          demo_name: demoName,
-        }
+        demo_type: demoType,
+        demo_name: demoName,
       });
 
-      if (success) {
-        // Track conversion
-        trackConversion('demo_lead_submitted', {
-          demo_type: demoType,
-          demo_name: demoName,
-          industry: formData.industry,
-        });
-
-        // Set session flag
-        sessionStorage.setItem('demo_lead_submitted', 'true');
-        sessionStorage.setItem('demo_user_industry', formData.industry);
-
-        toast({
-          title: "Success!",
-          description: "Your demo is loading...",
-        });
-
-        // Close modal and trigger demo
-        setTimeout(() => {
-          onSuccess(demoType);
-        }, 500);
-      } else {
-        throw new Error("Failed to submit lead data");
-      }
-    } catch (error) {
-      console.error("Demo lead submission error:", error);
       toast({
-        title: "Something went wrong",
-        description: "Please try again or contact support.",
+        title: "Welcome!",
+        description: `Starting ${demoName}...`,
+      });
+
+      // Store in session
+      sessionStorage.setItem("demo_lead_captured", "true");
+      sessionStorage.setItem("demo_industry", formData.industry);
+
+      // Trigger success
+      onSuccess(demoType);
+      
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        industry: selectedIndustry,
+      });
+    } catch (error) {
+      console.error("Demo lead gate error:", error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -125,113 +111,103 @@ export const DemoLeadGate = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        {/* Backdrop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-        />
-
-        {/* Modal */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+        onClick={onClose}
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-md bg-card border-2 border-border rounded-2xl shadow-2xl p-8"
+          onClick={(e) => e.stopPropagation()}
+          className="w-full max-w-md bg-card border border-border rounded-xl shadow-2xl overflow-hidden"
         >
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-
           {/* Header */}
-          <div className="mb-6 text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-2xl mb-4">
-              <Play className="w-8 h-8 text-primary" />
+          <div className="bg-gradient-to-r from-primary to-cyan-500 p-6 flex items-center justify-between">
+            <div className="flex items-center gap-3 text-white">
+              <div className="p-2 bg-white/20 rounded-full">
+                <Play className="w-6 h-6" />
+              </div>
+              <div>
+                <h2 className="font-bold text-lg">{demoName}</h2>
+                <p className="text-sm text-white/80">Experience it live</p>
+              </div>
             </div>
-            <h2 className="text-2xl font-bold mb-2">Watch the Demo</h2>
-            <p className="text-muted-foreground text-sm">
-              Enter your info to unlock the {demoName}
-            </p>
+            <button
+              onClick={onClose}
+              className="text-white/80 hover:text-white transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="name">Full Name *</Label>
+          <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Enter your details to start the demo
+            </p>
+
+            <div className="space-y-2">
+              <Label htmlFor="demo-name">Name *</Label>
               <Input
-                id="name"
-                type="text"
-                placeholder="John Smith"
+                id="demo-name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="mt-1.5"
+                placeholder="Your name"
                 required
               />
             </div>
 
-            <div>
-              <Label htmlFor="email">Email *</Label>
+            <div className="space-y-2">
+              <Label htmlFor="demo-email">Email *</Label>
               <Input
-                id="email"
+                id="demo-email"
                 type="email"
-                placeholder="john@company.com"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="mt-1.5"
+                placeholder="your@email.com"
                 required
               />
             </div>
 
-            <div>
-              <Label htmlFor="industry">Industry *</Label>
+            <div className="space-y-2">
+              <Label htmlFor="demo-industry">Industry *</Label>
               <Select 
                 value={formData.industry} 
                 onValueChange={(value) => setFormData({ ...formData, industry: value })}
               >
-                <SelectTrigger id="industry" className="mt-1.5">
-                  <SelectValue placeholder="Select your industry" />
+                <SelectTrigger id="demo-industry">
+                  <SelectValue placeholder="Select industry" />
                 </SelectTrigger>
                 <SelectContent>
-                  {industries.map((industry) => (
-                    <SelectItem key={industry} value={industry}>
-                      {industry}
+                  {industries.map((ind) => (
+                    <SelectItem key={ind} value={ind}>
+                      {ind}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={isSubmitting}
-            >
+            <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Unlocking Demo...
+                  Starting...
                 </>
               ) : (
                 <>
                   <Play className="w-4 h-4 mr-2" />
-                  Watch Demo
+                  Start Demo
                 </>
               )}
             </Button>
           </form>
-
-          <p className="text-xs text-muted-foreground text-center mt-4">
-            By submitting, you agree to receive product updates and demos.
-          </p>
         </motion.div>
-      </div>
+      </motion.div>
     </AnimatePresence>
   );
 };
