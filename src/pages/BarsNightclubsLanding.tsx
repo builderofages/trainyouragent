@@ -106,36 +106,9 @@ const BarsNightclubsLanding = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    try {
-      const { sendToApollo, getUTMParameters } = await import('@/lib/apollo-integration');
-      const utmParams = getUTMParameters();
-      
-      await sendToApollo({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        company: formData.venue,
-        industry: 'Bars & Nightclubs',
-        source: 'Bars & Nightclubs Landing Page Form',
-        tags: ['Bars Landing', 'Contact Form', 'Website Lead'],
-        notes: `Venue: ${formData.venue}`,
-        custom_fields: {
-          ...utmParams,
-          venue_name: formData.venue,
-          page_url: window.location.href,
-          form_type: 'contact'
-        },
-      });
-      
-      conversions.formSubmitted("bars_contact", "bars");
-      toast.success("Thanks! We'll be in touch to schedule your free strategy session.");
-      window.open(siteConfig.bookingUrl, '_blank');
-    } catch (error) {
-      console.error('Form submission error:', error);
-      toast.success("Thanks! We'll be in touch to schedule your free strategy session.");
-      window.open(siteConfig.bookingUrl, '_blank');
-    }
+    conversions.formSubmitted("bars_contact", "bars");
+    toast.success("Thanks! We'll be in touch to schedule your free strategy session.");
+    window.open(siteConfig.bookingUrl, '_blank');
   };
 
   const seoData = landingPageSEO.bars;
