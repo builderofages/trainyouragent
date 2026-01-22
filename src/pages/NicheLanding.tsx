@@ -23,7 +23,7 @@ import {
   Utensils,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { nicheConfig } from "@/config/niches";
+import { nicheConfig, isAllowedRedirect } from "@/config/niches";
 import { toast } from "sonner";
 import { MondayWebhookSetup, getWebhookUrl, sendToMonday } from "@/components/MondayWebhookSetup";
 
@@ -321,7 +321,13 @@ const NicheLanding = () => {
       setCountdown((prev) => {
         if (prev === null || prev <= 1) {
           clearInterval(countdownInterval);
-          window.location.href = config.redirectUrl;
+          // Validate redirect URL before navigating
+          if (isAllowedRedirect(config.redirectUrl)) {
+            window.location.href = config.redirectUrl;
+          } else {
+            console.error("Invalid redirect URL blocked:", config.redirectUrl);
+            navigate("/");
+          }
           return 0;
         }
         return prev - 1;
@@ -363,7 +369,13 @@ const NicheLanding = () => {
 
     if (config) {
       setTimeout(() => {
-        window.location.href = config.redirectUrl;
+        // Validate redirect URL before navigating
+        if (isAllowedRedirect(config.redirectUrl)) {
+          window.location.href = config.redirectUrl;
+        } else {
+          console.error("Invalid redirect URL blocked:", config.redirectUrl);
+          navigate("/");
+        }
       }, 1000);
     }
   };
@@ -400,7 +412,14 @@ const NicheLanding = () => {
                 </p>
                 <Button
                   size="sm"
-                  onClick={() => (window.location.href = config.redirectUrl)}
+                  onClick={() => {
+                    if (isAllowedRedirect(config.redirectUrl)) {
+                      window.location.href = config.redirectUrl;
+                    } else {
+                      console.error("Invalid redirect URL blocked:", config.redirectUrl);
+                      navigate("/");
+                    }
+                  }}
                   className="ml-auto gap-2"
                 >
                   Go Now <ExternalLink className="w-4 h-4" />

@@ -175,19 +175,22 @@ IMPORTANT:
   ]
 };
 
-// Webhook URL for sending call data to Monday.com
-// TODO: Add your Monday.com webhook URL here after setup
-export const phoneWebhookUrl = ""; // User needs to configure this
+// Get webhook URL from localStorage for phone call data
+export const getPhoneWebhookUrl = (): string => {
+  return localStorage.getItem("phone_webhook_url") || "";
+};
 
 // Helper to send call data to Monday.com
 export const sendCallDataToMonday = async (callData: any) => {
-  if (!phoneWebhookUrl) {
-    console.warn("Phone webhook URL not configured");
+  const webhookUrl = getPhoneWebhookUrl();
+  
+  if (!webhookUrl) {
+    console.warn("Phone webhook URL not configured - configure in Settings");
     return;
   }
 
   try {
-    const response = await fetch(phoneWebhookUrl, {
+    const response = await fetch(webhookUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

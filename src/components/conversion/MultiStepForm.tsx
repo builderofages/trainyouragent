@@ -80,17 +80,24 @@ export const MultiStepForm = () => {
     }
 
     try {
-      // Monday.com webhook integration
-      const webhookUrl = "YOUR_MONDAY_WEBHOOK_URL"; // Replace with actual webhook
-      await fetch(webhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          source: "multi_step_form",
-          timestamp: new Date().toISOString(),
-        }),
-      });
+      // Check for configured webhook
+      const webhookUrl = localStorage.getItem("multi_step_form_webhook") || "";
+      
+      if (webhookUrl && !webhookUrl.includes("YOUR_")) {
+        const response = await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...formData,
+            source: "multi_step_form",
+            timestamp: new Date().toISOString(),
+          }),
+        });
+        
+        if (!response.ok) {
+          throw new Error("Webhook request failed");
+        }
+      }
 
       toast({
         title: "Success!",
@@ -108,9 +115,10 @@ export const MultiStepForm = () => {
       });
       setStep(1);
     } catch (error) {
+      console.error("Multi-step form webhook error:", error);
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again.",
+        description: "Failed to submit. Please email us at support@trainyouragent.com",
         variant: "destructive",
       });
     }
