@@ -4,6 +4,31 @@ export interface NicheConfig {
   delaySeconds: number;
 }
 
+// Whitelist of allowed redirect domains to prevent open redirect vulnerabilities
+const ALLOWED_REDIRECT_DOMAINS = [
+  "trainyouragent.com",
+  "trainyouragentai.com",
+  "calendly.com",
+  "cal.com",
+];
+
+/**
+ * Validates if a redirect URL is safe to use
+ * @param url - The URL to validate
+ * @returns true if the URL is on an allowed domain
+ */
+export function isAllowedRedirect(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return ALLOWED_REDIRECT_DOMAINS.some(
+      (domain) =>
+        parsed.hostname === domain || parsed.hostname.endsWith(`.${domain}`)
+    );
+  } catch {
+    return false;
+  }
+}
+
 export const nicheConfig: Record<string, NicheConfig> = {
   hvac: {
     redirectUrl: "https://trainyouragentai.com",

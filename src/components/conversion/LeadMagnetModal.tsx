@@ -33,20 +33,26 @@ export const LeadMagnetModal = ({
     try {
       const utmParams = getStoredUTMParams();
       
-      // Send to Monday.com webhook
-      const webhookUrl = "https://hook.us2.make.com/YOUR_LEAD_MAGNET_WEBHOOK"; // User needs to configure
+      // Check for configured webhook
+      const webhookUrl = localStorage.getItem("lead_magnet_webhook") || "";
       
-      await fetch(webhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          resource_name: resourceName,
-          industry,
-          ...utmParams,
-          timestamp: new Date().toISOString(),
-        }),
-      });
+      if (webhookUrl && !webhookUrl.includes("YOUR_")) {
+        const response = await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...formData,
+            resource_name: resourceName,
+            industry,
+            ...utmParams,
+            timestamp: new Date().toISOString(),
+          }),
+        });
+        
+        if (!response.ok) {
+          throw new Error("Webhook request failed");
+        }
+      }
 
       // Track conversion
       conversions.leadMagnetDownloaded(resourceName, industry);
@@ -62,7 +68,7 @@ export const LeadMagnetModal = ({
       onClose();
     } catch (error) {
       console.error("Lead magnet submission error:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Failed to submit. Please email us at support@trainyouragent.com");
     } finally {
       setIsSubmitting(false);
     }

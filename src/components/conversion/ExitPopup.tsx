@@ -43,17 +43,24 @@ export const ExitPopup = () => {
     }
 
     try {
-      // Monday.com webhook integration
-      const webhookUrl = "YOUR_MONDAY_WEBHOOK_URL"; // Replace with actual webhook
-      await fetch(webhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          source: "exit_popup",
-          timestamp: new Date().toISOString(),
-        }),
-      });
+      // Check for configured webhook
+      const webhookUrl = localStorage.getItem("exit_popup_webhook") || "";
+      
+      if (webhookUrl && !webhookUrl.includes("YOUR_")) {
+        const response = await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            source: "exit_popup",
+            timestamp: new Date().toISOString(),
+          }),
+        });
+        
+        if (!response.ok) {
+          throw new Error("Webhook request failed");
+        }
+      }
 
       toast({
         title: "Success!",
@@ -63,9 +70,10 @@ export const ExitPopup = () => {
       setIsVisible(false);
       setEmail("");
     } catch (error) {
+      console.error("Exit popup webhook error:", error);
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again.",
+        description: "Failed to submit. Please email us at support@trainyouragent.com",
         variant: "destructive",
       });
     }
