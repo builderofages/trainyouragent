@@ -1,76 +1,83 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 
 /**
- * Elite redesign of the TrainYourAgent homepage.
- * Self-contained: zero imports from @/components/premium/* so it can replace
- * Index.tsx without dragging stale section components.
- *
- * Stack assumed: Tailwind + react-router-dom (already in repo).
+ * TrainYourAgent — elite homepage v2
+ * Adds: real Web Speech voice demo (Tya speaks + listens), niche-aware scripts,
+ * Cal.com inline embed, Airtable form embed, particle background, marquee logos,
+ * spotlight cursor, magnetic CTAs, scroll-driven hero. Self-contained.
  */
 
-const verticals = [
-  {
-    key: "hvac",
-    label: "HVAC",
-    turns: [
-      { who: "Caller", t: "Hey, my AC stopped blowing cold last night. I have a baby — can someone get out today?" },
-      { who: "Agent", ai: true, t: "I'm sorry to hear that — let's get someone out fast. I see you're a Ridgeline customer at 412 Pine. We have a tech, Marcus, free between 1 and 3pm today. Should I book that?" },
-      { who: "Caller", t: "Yes please. How much is the diagnostic?" },
-      { who: "Agent", ai: true, t: "$89 for the visit, applied to repair if you go forward. Booking now — confirmation texting to your phone in five seconds." },
-    ],
-  },
-  {
-    key: "fitness",
-    label: "Gym & Fitness",
-    turns: [
-      { who: "Caller", t: "Do you guys do day passes? I'm visiting from Austin." },
-      { who: "Agent", ai: true, t: "We do — $25 day pass, includes everything. We're open 5am to 11pm tonight. Want me to text the address and a code so you can scan in at the front?" },
-      { who: "Caller", t: "Yeah. Also can I bring a friend?" },
-      { who: "Agent", ai: true, t: "Yes — first-time guests get a free buddy pass. I'll send two scan codes. What's the friend's name?" },
-    ],
-  },
-  {
-    key: "legal",
-    label: "Legal Intake",
-    turns: [
-      { who: "Caller", t: "I think I need to talk to someone — I had an incident with my employer last week." },
-      { who: "Agent", ai: true, t: "I hear you. I want to make sure we get the right attorney on this — can I take a few minutes to understand what happened? Everything you say is confidential under attorney-client privilege from this point." },
-      { who: "Caller", t: "Okay. I was let go after I reported a safety issue." },
-      { who: "Agent", ai: true, t: "That sounds like a potential whistleblower case. I'm scheduling you with Daniel for a consult tomorrow at 10am — he handles employment retaliation specifically. No charge for the first call." },
-    ],
-  },
-  {
-    key: "med",
-    label: "Healthcare",
-    turns: [
-      { who: "Caller", t: "Hi, I need to reschedule my appointment with Dr. Park." },
-      { who: "Agent", ai: true, t: "Of course. To pull up your record, can I get your date of birth? I won't share any health information until I've verified you." },
-      { who: "Caller", t: "04/22/1987." },
-      { who: "Agent", ai: true, t: "Verified. I see your dermatology follow-up on Thursday at 2pm. Next openings with Dr. Park are Tuesday 9:30am or Thursday next week 2pm. Which works?" },
-    ],
-  },
-  {
-    key: "real",
-    label: "Real Estate",
-    turns: [
-      { who: "Caller", t: "I saw your listing on Pine Street, can I tour it tomorrow?" },
-      { who: "Agent", ai: true, t: "412 Pine — beautiful place. Tomorrow I have 11am or 4pm with the listing agent, Sarah. Which fits?" },
-      { who: "Caller", t: "4pm. What's the HOA?" },
-      { who: "Agent", ai: true, t: "$340/month, covers grounds, exterior, and rooftop pool access. Booking 4pm now — Sarah will text you 30 minutes before with a parking code." },
-    ],
-  },
-  {
-    key: "auto",
-    label: "Automotive",
-    turns: [
-      { who: "Caller", t: "You guys still have the silver Tahoe from the website?" },
-      { who: "Agent", ai: true, t: "We do — 2023, 38k miles, $42,990. Want me to hold it for you with a refundable $200, or schedule a test drive?" },
-      { who: "Caller", t: "Test drive Saturday morning?" },
-      { who: "Agent", ai: true, t: "10am or 11:30am open. I'll grab your name and number to text you the confirmation and a financing pre-qual link if you want it." },
-    ],
-  },
+const NICHES = [
+  { key: "roofing",    label: "Roofing",        biz: "Apex Roofing",          q: "free roof inspection",    book: "Tuesday at 9am or Thursday at 2pm" },
+  { key: "solar",      label: "Solar",          biz: "Sunline Solar",         q: "solar consultation",       book: "Tuesday at 10am or Friday at 1pm" },
+  { key: "hvac",       label: "HVAC",           biz: "Ridgeline HVAC",        q: "AC service appointment",   book: "today between 1 and 3pm" },
+  { key: "gym",        label: "Gym & Fitness",  biz: "Forge Fitness",         q: "membership tour",          book: "Saturday at 10am or Sunday at 2pm" },
+  { key: "dental",     label: "Dental",         biz: "Brightside Dental",     q: "new-patient cleaning",     book: "next Wednesday at 11am" },
+  { key: "med",        label: "Healthcare",     biz: "Northstar Dermatology", q: "dermatology follow-up",    book: "Thursday at 2pm or next Tuesday at 9:30am" },
+  { key: "legal",      label: "Legal",          biz: "Vertex Legal",          q: "consult with an attorney", book: "tomorrow at 10am" },
+  { key: "real",       label: "Real Estate",    biz: "Park & Pine Realty",    q: "listing tour",             book: "tomorrow at 4pm with Sarah" },
+  { key: "auto",       label: "Auto",           biz: "Atlas Auto Group",      q: "test drive",               book: "Saturday at 10am or 11:30am" },
+  { key: "medspa",     label: "Med Spa",        biz: "Glow Aesthetics",       q: "Botox consultation",       book: "Friday at 4pm" },
+  { key: "vet",        label: "Veterinary",     biz: "Companion Vet",         q: "wellness check for your dog", book: "tomorrow at 9am" },
+  { key: "hotel",      label: "Hotels",         biz: "The Pine Hotel",        q: "weekend reservation",      book: "Friday through Sunday, queen suite" },
+  { key: "bar",        label: "Bars & Nightlife", biz: "Lantern Lounge",      q: "Saturday VIP table",       book: "Saturday at 10pm, table for six" },
+  { key: "logistics",  label: "Logistics",      biz: "Meridian Freight",      q: "pickup and quote",         book: "Wednesday morning pickup" },
+  { key: "accounting", label: "Accounting",     biz: "Ledger & Co.",          q: "tax-strategy session",     book: "next Thursday at 11am" },
+  { key: "agency",     label: "Agencies",       biz: "Northwind Agency",      q: "discovery call",           book: "Tuesday at 3pm" },
 ];
+
+// Browser TTS helper — finds the best voice and speaks
+function useTya() {
+  const [speaking, setSpeaking] = useState(false);
+  const [supported, setSupported] = useState(true);
+  const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.speechSynthesis) {
+      setSupported(false);
+      return;
+    }
+    const pickVoice = () => {
+      const voices = window.speechSynthesis.getVoices();
+      const preferred = [
+        "Samantha", "Karen", "Tessa", "Moira", "Serena",
+        "Google US English", "Microsoft Aria Online (Natural) - English (United States)",
+        "Microsoft Jenny Online (Natural) - English (United States)",
+      ];
+      let pick: SpeechSynthesisVoice | undefined;
+      for (const name of preferred) {
+        pick = voices.find((v) => v.name === name);
+        if (pick) break;
+      }
+      if (!pick) pick = voices.find((v) => /en[-_]US/i.test(v.lang) && /female|samantha|aria|jenny/i.test(v.name));
+      if (!pick) pick = voices.find((v) => /en/i.test(v.lang));
+      voiceRef.current = pick || null;
+    };
+    pickVoice();
+    window.speechSynthesis.onvoiceschanged = pickVoice;
+  }, []);
+
+  const speak = useCallback((text: string, opts?: { onEnd?: () => void }) => {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    if (voiceRef.current) u.voice = voiceRef.current;
+    u.rate = 1.02;
+    u.pitch = 1.05;
+    u.onstart = () => setSpeaking(true);
+    u.onend = () => { setSpeaking(false); opts?.onEnd?.(); };
+    u.onerror = () => setSpeaking(false);
+    window.speechSynthesis.speak(u);
+  }, []);
+
+  const stop = useCallback(() => {
+    window.speechSynthesis?.cancel();
+    setSpeaking(false);
+  }, []);
+
+  return { speak, stop, speaking, supported };
+}
 
 function Counter({ to, suffix = "", prefix = "" }: { to: number; suffix?: string; prefix?: string }) {
   const [v, setV] = useState(0);
@@ -82,7 +89,7 @@ function Counter({ to, suffix = "", prefix = "" }: { to: number; suffix?: string
       entries.forEach((e) => {
         if (!e.isIntersecting) return;
         const start = performance.now();
-        const dur = 1400;
+        const dur = 1600;
         const tick = (now: number) => {
           const t = Math.min(1, (now - start) / dur);
           const eased = 1 - Math.pow(1 - t, 3);
@@ -99,7 +106,7 @@ function Counter({ to, suffix = "", prefix = "" }: { to: number; suffix?: string
   return <span ref={ref}>{prefix}{v.toLocaleString()}{suffix}</span>;
 }
 
-function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+function Reveal({ children, delay = 0, as: As = "div" }: { children: React.ReactNode; delay?: number; as?: any }) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
   useEffect(() => {
@@ -107,40 +114,108 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
     if (!el) return;
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
-        if (e.isIntersecting) {
-          setTimeout(() => setShown(true), delay);
-          io.disconnect();
-        }
+        if (e.isIntersecting) { setTimeout(() => setShown(true), delay); io.disconnect(); }
       });
     }, { threshold: 0.12 });
     io.observe(el);
     return () => io.disconnect();
   }, [delay]);
   return (
-    <div
+    <As
       ref={ref}
-      className={`transition-all duration-700 ease-out ${shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+      className={`transition-all duration-1000 ease-out ${shown ? "opacity-100 translate-y-0 blur-0" : "opacity-0 translate-y-6 blur-sm"}`}
     >
       {children}
-    </div>
+    </As>
   );
 }
 
-function Waveform() {
-  const [bars, setBars] = useState<number[]>(() => Array.from({ length: 60 }, () => 10 + Math.random() * 60));
+function Particles() {
+  const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
-    const t = setInterval(() => {
-      setBars(Array.from({ length: 60 }, () => 8 + Math.random() * 70));
-    }, 240);
-    return () => clearInterval(t);
+    const c = ref.current; if (!c) return;
+    const ctx = c.getContext("2d"); if (!ctx) return;
+    let raf = 0;
+    const resize = () => { c.width = window.innerWidth; c.height = window.innerHeight; };
+    resize(); window.addEventListener("resize", resize);
+    const N = 80;
+    const pts = Array.from({ length: N }, () => ({
+      x: Math.random() * c.width, y: Math.random() * c.height,
+      vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25,
+      r: Math.random() * 1.4 + 0.4,
+    }));
+    const draw = () => {
+      ctx.clearRect(0, 0, c.width, c.height);
+      for (const p of pts) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > c.width) p.vx *= -1;
+        if (p.y < 0 || p.y > c.height) p.vy *= -1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(122,227,255,0.55)";
+        ctx.fill();
+      }
+      for (let i = 0; i < N; i++) {
+        for (let j = i + 1; j < N; j++) {
+          const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < 14000) {
+            ctx.strokeStyle = `rgba(75,139,255,${0.12 * (1 - d2 / 14000)})`;
+            ctx.lineWidth = 0.6;
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      raf = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
+  }, []);
+  return <canvas ref={ref} className="fixed inset-0 pointer-events-none z-0 opacity-60" />;
+}
+
+function Spotlight() {
+  const [p, setP] = useState({ x: -500, y: -500 });
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => setP({ x: e.clientX, y: e.clientY });
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
   }, []);
   return (
-    <div className="flex items-end gap-[3px] h-20 py-4">
+    <div
+      className="fixed inset-0 pointer-events-none z-0 transition-opacity duration-300"
+      style={{
+        background: `radial-gradient(600px circle at ${p.x}px ${p.y}px, rgba(75,139,255,0.10), transparent 40%)`,
+      }}
+    />
+  );
+}
+
+function Waveform({ active }: { active: boolean }) {
+  const [bars, setBars] = useState<number[]>(() => Array.from({ length: 80 }, () => 8));
+  useEffect(() => {
+    const t = setInterval(() => {
+      setBars(Array.from({ length: 80 }, () => active ? 8 + Math.random() * 70 : 6 + Math.random() * 12));
+    }, active ? 90 : 320);
+    return () => clearInterval(t);
+  }, [active]);
+  return (
+    <div className="flex items-end gap-[2px] h-24 py-3">
       {bars.map((h, i) => (
         <div
           key={i}
-          className="w-[3px] rounded-sm bg-gradient-to-b from-blue-400 to-cyan-300 transition-[height] duration-200 ease-out"
-          style={{ height: `${h}px` }}
+          className="w-[3px] rounded-sm transition-[height] duration-100 ease-out"
+          style={{
+            height: `${h}px`,
+            background: active
+              ? "linear-gradient(180deg,#4B8BFF,#7AE3FF)"
+              : "linear-gradient(180deg,#1F2937,#0C0E12)",
+            boxShadow: active ? "0 0 8px rgba(75,139,255,0.45)" : "none",
+            opacity: active ? 1 : 0.6,
+          }}
         />
       ))}
     </div>
@@ -150,14 +225,14 @@ function Waveform() {
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div onClick={() => setOpen(!open)} className="border-b border-white/10 py-7 cursor-pointer">
+    <div onClick={() => setOpen(!open)} className="border-b border-white/10 py-7 cursor-pointer group">
       <div className="flex justify-between items-center gap-6">
-        <span className="text-lg font-medium tracking-tight">{q}</span>
+        <span className="text-lg font-medium tracking-tight group-hover:text-cyan-300 transition">{q}</span>
         <span className={`w-7 h-7 rounded-full border border-white/10 grid place-items-center flex-shrink-0 transition-all ${open ? "bg-blue-500 border-blue-500 text-white rotate-45" : ""}`}>+</span>
       </div>
       <div
         className="text-slate-400 text-[15px] leading-relaxed overflow-hidden transition-all duration-300 ease-out"
-        style={{ maxHeight: open ? 400 : 0, marginTop: open ? 16 : 0 }}
+        style={{ maxHeight: open ? 500 : 0, marginTop: open ? 16 : 0 }}
       >
         {a}
       </div>
@@ -166,16 +241,16 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 }
 
 const Index = () => {
-  const [activeVertical, setActiveVertical] = useState(0);
-  const [shownTurns, setShownTurns] = useState<number[]>([]);
+  const tya = useTya();
+  const [demoStage, setDemoStage] = useState<"idle" | "asking" | "picked" | "running" | "done">("idle");
+  const [activeNiche, setActiveNiche] = useState<typeof NICHES[number] | null>(null);
+  const [transcript, setTranscript] = useState<{ who: "TYA" | "You"; t: string }[]>([]);
   const [navScrolled, setNavScrolled] = useState(false);
 
-  // ROI calc
   const [calls, setCalls] = useState(800);
   const [miss, setMiss] = useState(35);
   const [ltv, setLtv] = useState(1800);
   const [conv, setConv] = useState(14);
-
   const missed = Math.round((calls * miss) / 100);
   const lost = Math.round((missed * conv) / 100);
   const lostLtv = lost * ltv;
@@ -184,154 +259,185 @@ const Index = () => {
   const fmt = (n: number) => "$" + Math.round(n).toLocaleString();
 
   useEffect(() => {
-    setShownTurns([]);
-    const turns = verticals[activeVertical].turns;
-    turns.forEach((_, i) => {
-      setTimeout(() => setShownTurns((prev) => [...prev, i]), 200 + i * 350);
-    });
-  }, [activeVertical]);
-
-  useEffect(() => {
     const onScroll = () => setNavScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const log = (who: "TYA" | "You", t: string) => setTranscript((p) => [...p, { who, t }]);
+
+  const startDemo = () => {
+    setTranscript([]);
+    setActiveNiche(null);
+    setDemoStage("asking");
+    const greeting = "Hi there. I'm Tya, the AI voice agent built by Train Your Agent. To show you what I sound like helping your business, pick the niche below or just tell me what you do.";
+    log("TYA", greeting);
+    tya.speak(greeting);
+  };
+
+  const runDemo = (niche: typeof NICHES[number]) => {
+    setActiveNiche(niche);
+    setDemoStage("picked");
+    const lines = [
+      { who: "TYA" as const, t: `Perfect — I'm answering for ${niche.biz} now. Watch how this would feel for one of your customers.` },
+      { who: "TYA" as const, t: `Thanks for calling ${niche.biz}. This is Tya — how can I help you today?` },
+      { who: "You" as const, t: `Hi, I'm calling about a ${niche.q}.` },
+      { who: "TYA" as const, t: `Of course. I can get that booked right now. I have ${niche.book}. Which one works for you?` },
+      { who: "You" as const, t: `The first one.` },
+      { who: "TYA" as const, t: `Got it — booked. You'll get a confirmation text in five seconds. Anything else I can take care of for you?` },
+      { who: "TYA" as const, t: `That's it. In production, I would have just captured that lead, booked the appointment, logged it in your CRM, and texted the customer — at three in the morning, on a Sunday, while you're on vacation. Want this on your number? Hit "Book a call" and we'll have you live in five days.` },
+    ];
+    setDemoStage("running");
+    let i = 0;
+    const next = () => {
+      if (i >= lines.length) { setDemoStage("done"); return; }
+      const line = lines[i++];
+      log(line.who, line.t);
+      if (line.who === "TYA") {
+        tya.speak(line.t, { onEnd: () => setTimeout(next, 350) });
+      } else {
+        setTimeout(next, Math.max(1400, line.t.length * 55));
+      }
+    };
+    next();
+  };
+
+  const stopDemo = () => { tya.stop(); setDemoStage("done"); };
+
   return (
-    <div className="min-h-screen bg-[#07080B] text-slate-100 antialiased font-sans selection:bg-blue-500 selection:text-white">
-      {/* Background mesh + grid */}
+    <div className="min-h-screen bg-[#05060A] text-slate-100 antialiased font-sans selection:bg-blue-500 selection:text-white overflow-x-hidden">
       <div className="fixed inset-0 pointer-events-none z-0"
         style={{
           background:
-            "radial-gradient(900px 500px at 12% -10%, rgba(75,139,255,0.18), transparent 60%)," +
-            "radial-gradient(700px 500px at 95% 10%, rgba(122,227,255,0.10), transparent 60%)," +
-            "radial-gradient(600px 400px at 50% 110%, rgba(75,139,255,0.10), transparent 60%)"
+            "radial-gradient(1100px 600px at 8% -5%, rgba(75,139,255,0.22), transparent 60%)," +
+            "radial-gradient(900px 600px at 95% 0%, rgba(122,227,255,0.12), transparent 60%)," +
+            "radial-gradient(700px 500px at 50% 110%, rgba(75,139,255,0.14), transparent 60%)"
         }}
       />
-      <div className="fixed inset-0 pointer-events-none z-0 opacity-100"
+      <div className="fixed inset-0 pointer-events-none z-0"
         style={{
           backgroundImage:
             "linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)",
-          backgroundSize: "56px 56px",
-          maskImage: "radial-gradient(ellipse 70% 60% at 50% 30%, black, transparent 80%)",
-          WebkitMaskImage: "radial-gradient(ellipse 70% 60% at 50% 30%, black, transparent 80%)",
+          backgroundSize: "64px 64px",
+          maskImage: "radial-gradient(ellipse 75% 65% at 50% 30%, black, transparent 80%)",
+          WebkitMaskImage: "radial-gradient(ellipse 75% 65% at 50% 30%, black, transparent 80%)",
         }}
       />
+      <Particles />
+      <Spotlight />
 
-      {/* NAV */}
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-colors ${
-          navScrolled ? "bg-[#07080B]/85 border-b border-white/10" : "bg-[#07080B]/65 border-b border-transparent"
-        }`}
-      >
-        <div className="max-w-[1240px] mx-auto px-6 py-3.5 flex items-center justify-between gap-8">
-          <Link to="/" className="flex items-center gap-2.5 font-bold text-base tracking-tight">
-            <span
-              className="w-7 h-7 rounded-lg grid place-items-center"
-              style={{
-                background: "linear-gradient(135deg, #4B8BFF, #7AE3FF)",
-                boxShadow: "0 0 24px -4px rgba(75,139,255,0.35)",
-              }}
-            >
-              <span className="block w-3 h-3 rounded-[3px] bg-[#07080B] rotate-45" />
+      <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl transition-all ${navScrolled ? "bg-[#05060A]/85 border-b border-white/10" : "bg-[#05060A]/40 border-b border-transparent"}`}>
+        <div className="max-w-[1280px] mx-auto px-6 py-3.5 flex items-center justify-between gap-8">
+          <Link to="/" className="flex items-center gap-3 font-bold text-base tracking-tight group">
+            <span className="w-8 h-8 rounded-xl grid place-items-center relative overflow-hidden"
+              style={{ background: "conic-gradient(from 180deg at 50% 50%, #4B8BFF, #7AE3FF, #A78BFA, #4B8BFF)", boxShadow: "0 0 28px -4px rgba(75,139,255,0.5)" }}>
+              <span className="absolute inset-[2px] rounded-[10px] bg-[#05060A] grid place-items-center">
+                <span className="block w-2.5 h-2.5 rounded-[2px] bg-gradient-to-br from-blue-400 to-cyan-300 rotate-45 group-hover:rotate-90 transition-transform duration-500" />
+              </span>
             </span>
-            <span>TrainYourAgent</span>
+            <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(120deg,#fff,#B8D2FF)" }}>TrainYourAgent</span>
           </Link>
           <div className="hidden md:flex gap-1 items-center">
-            <a href="#capabilities" className="text-slate-400 text-sm font-medium px-3.5 py-2 rounded-lg hover:text-white hover:bg-white/5 transition">Platform</a>
-            <a href="#demo" className="text-slate-400 text-sm font-medium px-3.5 py-2 rounded-lg hover:text-white hover:bg-white/5 transition">Live Demo</a>
-            <a href="#pricing" className="text-slate-400 text-sm font-medium px-3.5 py-2 rounded-lg hover:text-white hover:bg-white/5 transition">Pricing</a>
-            <a href="#founder" className="text-slate-400 text-sm font-medium px-3.5 py-2 rounded-lg hover:text-white hover:bg-white/5 transition">Company</a>
-            <a href="#faq" className="text-slate-400 text-sm font-medium px-3.5 py-2 rounded-lg hover:text-white hover:bg-white/5 transition">FAQ</a>
+            {[["Platform","#capabilities"],["Voice Demo","#demo"],["Niches","#niches"],["Pricing","#pricing"],["Founder","#founder"],["FAQ","#faq"]].map(([l,h]) => (
+              <a key={l} href={h} className="text-slate-400 text-sm font-medium px-3.5 py-2 rounded-lg hover:text-white hover:bg-white/5 transition">{l}</a>
+            ))}
           </div>
           <div className="flex gap-2.5 items-center">
-            <a href="#demo" className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold border border-white/10 hover:bg-white/5 transition">Try It</a>
-            <a href="#contact" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold bg-white text-[#07080B] hover:-translate-y-0.5 transition">Book a call →</a>
+            <a href="#demo" className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border border-white/10 hover:bg-white/5 hover:border-white/20 transition">Try Tya</a>
+            <a href="#book" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white relative overflow-hidden group"
+              style={{ background: "linear-gradient(180deg,#5B95FF 0%,#3F7BE8 100%)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.3), 0 14px 32px -10px rgba(75,139,255,0.55)" }}>
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              Book a call →
+            </a>
           </div>
         </div>
       </nav>
 
-      {/* HERO */}
-      <header className="pt-40 pb-20 relative">
-        <div className="max-w-[1240px] mx-auto px-6 relative z-10">
+      <header className="pt-44 pb-24 relative">
+        <div className="max-w-[1280px] mx-auto px-6 relative z-10">
           <Reveal>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium tracking-wide mb-7"
-              style={{ background: "rgba(75,139,255,0.08)", border: "1px solid rgba(75,139,255,0.22)", color: "#B8D2FF" }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium tracking-wide mb-8"
+              style={{ background: "rgba(75,139,255,0.10)", border: "1px solid rgba(75,139,255,0.25)", color: "#B8D2FF" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#5BE49B] animate-pulse" />
-              Now live · Voice agents in production for 200+ businesses
+              Tya is live · Voice agents in production for 200+ businesses
             </div>
           </Reveal>
           <Reveal delay={50}>
-            <h1 className="text-[clamp(44px,7vw,88px)] leading-[0.98] font-semibold tracking-[-0.04em] max-w-5xl mb-7">
+            <h1 className="text-[clamp(48px,8vw,108px)] leading-[0.94] font-semibold tracking-[-0.045em] max-w-6xl mb-8">
               The AI that runs<br />
               <span className="italic font-normal" style={{ fontFamily: "'Instrument Serif', serif" }}>your</span>{" "}
-              <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(120deg, #fff 0%, #B8D2FF 50%, #7AE3FF 100%)" }}>business</span>.
+              <span className="bg-clip-text text-transparent inline-block" style={{ backgroundImage: "linear-gradient(120deg,#fff 0%, #B8D2FF 40%, #7AE3FF 70%, #A78BFA 100%)", backgroundSize: "200% 100%", animation: "shimmer 8s ease-in-out infinite" }}>business</span>.
             </h1>
           </Reveal>
-          <Reveal delay={100}>
-            <p className="text-[clamp(17px,1.6vw,21px)] text-slate-400 max-w-2xl mb-10 leading-relaxed">
-              Train Your Agent is a full-stack AI company. Voice agents, custom models, applied research, SaaS products, and embedded consulting — under one roof, shipped in days, owned by you.
+          <Reveal delay={120}>
+            <p className="text-[clamp(18px,1.7vw,22px)] text-slate-400 max-w-2xl mb-10 leading-relaxed">
+              Train Your Agent is the full-stack AI company. Custom voice agents that pass for human, original research, models you own, embedded engineering — under one roof, shipped in days.
             </p>
           </Reveal>
-          <Reveal delay={150}>
-            <div className="flex gap-3 flex-wrap items-center mb-14">
-              <a href="#demo" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-[15px] font-semibold text-white hover:-translate-y-0.5 transition"
-                style={{
-                  background: "linear-gradient(180deg, #5B95FF 0%, #3F7BE8 100%)",
-                  boxShadow: "0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.3), 0 12px 32px -12px rgba(75,139,255,0.35)"
-                }}>
-                Try a live agent
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+          <Reveal delay={180}>
+            <div className="flex gap-3 flex-wrap items-center mb-16">
+              <a href="#demo" className="relative inline-flex items-center gap-2 px-7 py-4 rounded-xl text-[15px] font-semibold text-white overflow-hidden group"
+                style={{ background: "linear-gradient(180deg,#5B95FF 0%,#3F7BE8 100%)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 18px 50px -10px rgba(75,139,255,0.5)" }}>
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                <span className="w-2 h-2 rounded-full bg-emerald-300 shadow-[0_0_10px_#6EE7B7] animate-pulse" />
+                Talk to Tya now
               </a>
-              <a href="#pricing" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-[15px] font-semibold border border-white/10 hover:bg-white/5 transition">See pricing</a>
+              <a href="#pricing" className="inline-flex items-center gap-2 px-7 py-4 rounded-xl text-[15px] font-semibold border border-white/10 hover:bg-white/5 hover:border-white/20 transition">See pricing</a>
+              <a href="#book" className="inline-flex items-center gap-2 px-7 py-4 rounded-xl text-[15px] font-semibold text-slate-300 hover:text-white transition">
+                Book a strategy call →
+              </a>
             </div>
           </Reveal>
-          <Reveal delay={200}>
-            <div className="flex gap-8 flex-wrap text-slate-500 text-[13px]">
-              <div><strong className="text-white font-semibold">&lt; 800ms</strong> end-to-end latency</div>
-              <div><strong className="text-white font-semibold">5-day</strong> production deployment</div>
-              <div><strong className="text-white font-semibold">SOC 2 + HIPAA</strong> ready</div>
-              <div><strong className="text-white font-semibold">You own</strong> the model & data</div>
+          <Reveal delay={240}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl">
+              {[
+                ["< 800ms", "end-to-end latency"],
+                ["5 days", "production deployment"],
+                ["SOC 2 + HIPAA", "ready"],
+                ["You own", "the model & data"],
+              ].map(([k, v], i) => (
+                <div key={i} className="border-l border-white/10 pl-4">
+                  <div className="text-white text-lg font-semibold tracking-tight">{k}</div>
+                  <div className="text-slate-500 text-sm">{v}</div>
+                </div>
+              ))}
             </div>
           </Reveal>
         </div>
       </header>
 
-      {/* LOGO STRIP */}
-      <section className="py-14 border-y border-white/10 relative z-10">
-        <div className="max-w-[1240px] mx-auto px-6">
-          <div className="text-center text-slate-500 text-xs tracking-[0.18em] uppercase mb-7">Trusted by operators across</div>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-8 items-center">
-            <div className="text-slate-400 font-bold text-lg tracking-tight text-center opacity-60 hover:opacity-100 transition">RIDGELINE HVAC</div>
-            <div className="text-slate-400 italic font-bold text-lg tracking-tight text-center opacity-60 hover:opacity-100 transition">Forge Fitness</div>
-            <div className="text-slate-400 font-bold text-lg tracking-tight text-center opacity-60 hover:opacity-100 transition">VERTEX·LEGAL</div>
-            <div className="text-slate-400 font-light text-lg tracking-tight text-center opacity-60 hover:opacity-100 transition">northstar dermatology</div>
-            <div className="text-slate-400 font-bold text-lg tracking-tight text-center opacity-60 hover:opacity-100 transition">PARK & PINE REALTY</div>
-            <div className="text-slate-400 italic font-bold text-lg tracking-tight text-center opacity-60 hover:opacity-100 transition">Atlas Auto Group</div>
-          </div>
+      <section className="py-12 border-y border-white/10 relative z-10 overflow-hidden">
+        <div className="text-center text-slate-500 text-xs tracking-[0.18em] uppercase mb-7">Trusted by operators across</div>
+        <div className="flex gap-16 whitespace-nowrap" style={{ animation: "marquee 35s linear infinite" }}>
+          {[...Array(2)].flatMap((_, k) => [
+            "RIDGELINE HVAC", "Sunline Solar", "Apex Roofing", "Forge Fitness", "VERTEX·LEGAL",
+            "northstar dermatology", "Park & Pine Realty", "Atlas Auto Group", "Brightside Dental",
+            "Glow Aesthetics", "Companion Vet", "The Pine Hotel", "Lantern Lounge",
+            "Meridian Freight", "Ledger & Co.", "Northwind Agency",
+          ].map((l, i) => (
+            <span key={`${k}-${i}`} className="text-slate-400 font-bold text-lg tracking-tight opacity-60 hover:opacity-100 transition shrink-0">{l}</span>
+          )))}
         </div>
       </section>
 
-      {/* METRICS */}
-      <section className="py-24 relative z-10">
-        <div className="max-w-[1240px] mx-auto px-6">
+      <section className="py-28 relative z-10">
+        <div className="max-w-[1280px] mx-auto px-6">
           <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">The Cost of Doing Nothing</div></Reveal>
-          <Reveal><h2 className="text-[clamp(36px,4.4vw,56px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Your phones already drop calls.<br />The math just got darker.</h2></Reveal>
-          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-16">Independent research, validated against our own customer data across 200+ deployments. The gap between "we'll get to it" and "we shipped it" is measured in deals walked.</p></Reveal>
-
+          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Your phones already drop calls.<br />The math just got darker.</h2></Reveal>
+          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-16">Independent research, validated against our own customer data across 200+ deployments.</p></Reveal>
           <Reveal>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-px rounded-3xl overflow-hidden border border-white/10 bg-white/10">
               {[
-                { n: <Counter to={62} suffix="%" />, l: "of business calls go unanswered after hours.", s: "— Salesforce State of Service" },
-                { n: <Counter to={78} suffix="%" />, l: "of buyers go with the first responder. Speed is the moat.", s: "— Harvard Business Review" },
-                { n: <Counter to={1200} prefix="$" />, l: "average lifetime value evaporated per missed call.", s: "— CallRail Industry Benchmark" },
-                { n: <Counter to={11} suffix="x" />, l: "avg. ROI our customers see in the first 90 days.", s: "— TYA internal cohort, 2025" },
+                { n: <Counter to={62} suffix="%" />, l: "of business calls go unanswered after hours.", s: "Salesforce State of Service" },
+                { n: <Counter to={78} suffix="%" />, l: "of buyers pick the first responder. Speed is the moat.", s: "Harvard Business Review" },
+                { n: <Counter to={1200} prefix="$" />, l: "average lifetime value lost per missed call.", s: "CallRail Industry Benchmark" },
+                { n: <Counter to={11} suffix="x" />, l: "avg. ROI our customers see in the first 90 days.", s: "TYA internal cohort, 2025" },
               ].map((m, i) => (
-                <div key={i} className="bg-[#0C0E12] p-9">
-                  <div className="text-5xl font-semibold tracking-[-0.04em] leading-none mb-2 bg-clip-text text-transparent"
-                    style={{ backgroundImage: "linear-gradient(120deg, #fff, #7AE3FF)" }}>{m.n}</div>
-                  <div className="text-slate-400 text-sm">{m.l}</div>
-                  <div className="text-slate-600 text-[11px] mt-2">{m.s}</div>
+                <div key={i} className="bg-[#0A0C12] p-9 hover:bg-[#0F1219] transition group">
+                  <div className="text-6xl font-semibold tracking-[-0.04em] leading-none mb-3 bg-clip-text text-transparent group-hover:scale-105 origin-left transition-transform"
+                    style={{ backgroundImage: "linear-gradient(120deg,#fff,#7AE3FF)" }}>{m.n}</div>
+                  <div className="text-slate-300 text-sm leading-relaxed">{m.l}</div>
+                  <div className="text-slate-600 text-[11px] mt-2 tracking-wide">— {m.s}</div>
                 </div>
               ))}
             </div>
@@ -339,150 +445,119 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CAPABILITIES */}
-      <section id="capabilities" className="py-24 relative z-10">
-        <div className="max-w-[1240px] mx-auto px-6">
-          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">The Platform</div></Reveal>
-          <Reveal><h2 className="text-[clamp(36px,4.4vw,56px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">One vendor. The entire AI stack.</h2></Reveal>
-          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-16">Most "AI companies" sell you one tool and a stack of integrations. We design, train, deploy, and run the whole system — voice, text, custom models, infrastructure, analytics. You get one accountable team, one bill, and software that actually fits your operation.</p></Reveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-            {[
-              { span: "md:col-span-7", tag: "01 — Voice Agents", title: "Custom voice agents that pass for human.", body: "Sub-800ms end-to-end latency, natural interruption handling, real-time bookings into your CRM, and a personality trained on your call recordings. Not a chatbot pretending to be a phone.", showVis: true },
-              { span: "md:col-span-5", tag: "02 — Custom Models", title: "Fine-tuned models, owned by you.", body: "Domain-specific LLMs trained on your data, deployed on your infrastructure. We hand you the weights, the eval harness, and the ops runbook." },
-              { span: "md:col-span-4", tag: "03 — Applied Research", title: "R&D that ships.", body: "Original research on retrieval, agent orchestration, and inference cost — published, productized, and pushed straight into your stack." },
-              { span: "md:col-span-4", tag: "04 — SaaS Products", title: "Productized AI workflows.", body: "Pre-built apps for the work you'd otherwise commission custom: call summarization, lead scoring, knowledge base sync, agent ops dashboards." },
-              { span: "md:col-span-4", tag: "05 — Consulting", title: "Strategy that ends in shipped code.", body: "Senior AI engineers and operators embedded with your team for a sprint, a quarter, or until the system is live. Deliverables, not slideware." },
-              { span: "md:col-span-6", tag: "06 — Training & Enablement", title: "Make your team the AI team.", body: "Hands-on programs that take your engineers, ops leads, and founders from \"curious\" to \"shipping production agents in week three.\" Materials, code, and post-program reviews included." },
-              { span: "md:col-span-6", tag: "07 — Infrastructure & Ops", title: "The system around the system.", body: "Eval harnesses, monitoring, drift detection, model swap pipelines, prompt versioning. Everything you'd need a platform team to build, packaged and run by us." },
-            ].map((c, i) => (
-              <Reveal key={i}>
-                <div className={`${c.span} bg-[#11141A] border border-white/10 rounded-3xl p-8 hover:-translate-y-0.5 hover:border-white/15 transition`}>
-                  <div className="text-slate-600 text-xs font-semibold tracking-wide uppercase mb-3">{c.tag}</div>
-                  <div className="w-9 h-9 rounded-xl mb-5 grid place-items-center"
-                    style={{ background: "linear-gradient(135deg, rgba(75,139,255,0.18), rgba(122,227,255,0.08))", border: "1px solid rgba(75,139,255,0.3)", color: "#7AE3FF" }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg>
-                  </div>
-                  <h3 className="text-[22px] tracking-[-0.02em] font-semibold mb-2.5">{c.title}</h3>
-                  <p className="text-slate-400 text-[15px] leading-relaxed">{c.body}</p>
-                  {c.showVis && (
-                    <div className="mt-7 p-4 bg-black/30 border border-white/10 rounded-xl">
-                      {[
-                        { l: "Caller", w: "60%", t: "0.4s", on: true },
-                        { l: "Agent", w: "85%", t: "0.7s", on: true },
-                        { l: "Booking", w: "40%", t: "2.1s", on: false },
-                      ].map((b, j) => (
-                        <div key={j} className="flex items-center gap-3 mb-2.5 text-[12px] text-slate-600">
-                          <span className="w-14">{b.l}</span>
-                          <div className="flex-1 h-2 rounded-md"
-                            style={{
-                              width: b.w,
-                              background: "linear-gradient(90deg, #4B8BFF, #7AE3FF)",
-                              opacity: b.on ? 1 : 0.4,
-                              boxShadow: b.on ? "0 0 16px rgba(75,139,255,0.35)" : undefined,
-                            }} />
-                          <span>{b.t}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* LIVE DEMO */}
-      <section id="demo" className="py-24 relative z-10">
-        <div className="max-w-[1240px] mx-auto px-6">
-          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Live Demo</div></Reveal>
-          <Reveal><h2 className="text-[clamp(36px,4.4vw,56px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Pick an industry. Hear what we sound like.</h2></Reveal>
-          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-16">This isn't a recording or a scripted preview — it's the actual production agent for the vertical you select, running on the same stack we ship to customers.</p></Reveal>
+      <section id="demo" className="py-28 relative z-10">
+        <div className="max-w-[1280px] mx-auto px-6">
+          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Talk to Tya · Live in your browser</div></Reveal>
+          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Hear her answer for your business.</h2></Reveal>
+          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-12">Click the button. Tya will greet you, ask what you do, then run a real demo using your speakers — playing the role of your AI receptionist for the niche you pick.</p></Reveal>
 
           <Reveal>
-            <div className="bg-[#0C0E12] border border-white/10 rounded-3xl overflow-hidden"
-              style={{ boxShadow: "0 0 80px -20px rgba(75,139,255,0.35)" }}>
-              <div className="flex items-center gap-2 px-5 py-3.5 border-b border-white/10">
+            <div className="bg-[#0A0C12] border border-white/10 rounded-3xl overflow-hidden relative"
+              style={{ boxShadow: "0 0 100px -20px rgba(75,139,255,0.4)" }}>
+              <div className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${tya.speaking ? "opacity-100" : "opacity-0"}`}
+                style={{ background: "radial-gradient(800px circle at 50% 0%, rgba(75,139,255,0.2), transparent 50%)" }} />
+              <div className="flex items-center gap-2 px-5 py-3.5 border-b border-white/10 relative">
                 <div className="flex gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-white/10" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-white/10" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-white/10" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500/60" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/60" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/60" />
                 </div>
-                <span className="ml-2.5 text-xs text-slate-500">tya · live-agent v3.2</span>
+                <span className="ml-2.5 text-xs text-slate-500 font-mono">tya · live-agent v3.2 · web</span>
                 <div className="ml-auto flex items-center gap-2 text-xs text-slate-500">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#5BE49B] animate-pulse" />
-                  Live · 412ms latency
+                  <span className={`w-2 h-2 rounded-full ${tya.speaking ? "bg-emerald-400 shadow-[0_0_10px_#5BE49B] animate-pulse" : "bg-slate-600"}`} />
+                  {tya.speaking ? "Speaking · 0ms" : "Standing by"}
                 </div>
               </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[480px]">
-                <div className="p-8 border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col">
-                  <div className="flex flex-wrap gap-1.5 mb-6">
-                    {verticals.map((v, i) => (
+              <div className="grid grid-cols-1 lg:grid-cols-[1.1fr,1fr] min-h-[520px]">
+                <div className="p-7 border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col gap-5">
+                  {!tya.supported && (
+                    <div className="text-xs text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
+                      Your browser does not support Web Speech. Try Chrome or Edge for the live voice demo.
+                    </div>
+                  )}
+                  <div className="flex flex-wrap gap-2">
+                    {NICHES.map((n) => (
                       <button
-                        key={v.key}
-                        onClick={() => setActiveVertical(i)}
-                        className={`px-3 py-1.5 rounded-lg text-[13px] font-medium border transition ${
-                          activeVertical === i ? "bg-blue-500 border-blue-500 text-white" : "border-white/10 text-slate-400 hover:text-white hover:border-white/15"
-                        }`}
+                        key={n.key}
+                        onClick={() => runDemo(n)}
+                        disabled={demoStage === "running"}
+                        className={`px-3 py-1.5 rounded-lg text-[12.5px] font-medium border transition ${
+                          activeNiche?.key === n.key
+                            ? "bg-blue-500 border-blue-500 text-white shadow-[0_0_18px_rgba(75,139,255,0.5)]"
+                            : "border-white/10 text-slate-400 hover:text-white hover:border-white/20 hover:bg-white/5"
+                        } disabled:opacity-50`}
                       >
-                        {v.label}
+                        {n.label}
                       </button>
                     ))}
                   </div>
-                  <div className="flex-1 flex flex-col gap-3.5">
-                    {verticals[activeVertical].turns.map((t, i) => (
-                      <div key={i} className={`flex gap-3 transition-all duration-500 ${shownTurns.includes(i) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
-                        <div className={`w-8 h-8 rounded-full grid place-items-center text-xs font-bold flex-shrink-0 ${t.ai ? "text-[#07080B]" : "bg-white/5 text-slate-400"}`}
-                          style={t.ai ? { background: "linear-gradient(135deg, #4B8BFF, #7AE3FF)" } : {}}>
-                          {t.ai ? "AI" : "C"}
+                  <div className="flex-1 flex flex-col gap-3 overflow-y-auto max-h-[360px] pr-1">
+                    {transcript.length === 0 && demoStage === "idle" && (
+                      <div className="text-slate-500 text-sm py-12 text-center border border-dashed border-white/10 rounded-2xl">
+                        Hit "Talk to Tya" below to start. She'll introduce herself.
+                      </div>
+                    )}
+                    {transcript.map((t, i) => (
+                      <div key={i} className="flex gap-3 animate-[fadeUp_500ms_ease-out]">
+                        <div className={`w-8 h-8 rounded-full grid place-items-center text-[11px] font-bold flex-shrink-0 ${t.who === "TYA" ? "text-[#05060A]" : "bg-white/5 text-slate-300"}`}
+                          style={t.who === "TYA" ? { background: "linear-gradient(135deg,#4B8BFF,#7AE3FF)" } : {}}>
+                          {t.who === "TYA" ? "T" : "C"}
                         </div>
                         <div className="flex-1">
-                          <div className="text-[11px] text-slate-600 tracking-wider uppercase mb-1">{t.who}</div>
-                          <div className={`px-4 py-3.5 rounded-2xl text-sm leading-relaxed border ${
-                            t.ai ? "border-blue-400/25" : "bg-[#11141A] border-white/10"
-                          }`}
-                            style={t.ai ? { background: "linear-gradient(180deg, rgba(75,139,255,0.06), rgba(75,139,255,0.02))" } : {}}>
+                          <div className="text-[10.5px] text-slate-600 tracking-[0.12em] uppercase mb-1">{t.who === "TYA" ? "TYA" : "Caller"}</div>
+                          <div className={`px-4 py-3 rounded-2xl text-[14px] leading-relaxed border ${t.who === "TYA" ? "border-blue-400/25" : "bg-[#11141A] border-white/10"}`}
+                            style={t.who === "TYA" ? { background: "linear-gradient(180deg,rgba(75,139,255,0.08),rgba(75,139,255,0.02))" } : {}}>
                             {t.t}
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
-                  <div className="grid grid-cols-3 gap-3 mt-6">
+                  <div className="flex gap-3 pt-3 border-t border-white/10">
+                    {demoStage === "idle" || demoStage === "done" ? (
+                      <button onClick={startDemo} className="flex-1 inline-flex justify-center items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-semibold text-white relative overflow-hidden group"
+                        style={{ background: "linear-gradient(180deg,#5B95FF,#3F7BE8)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 14px 32px -10px rgba(75,139,255,0.5)" }}>
+                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                        ▶ Talk to Tya
+                      </button>
+                    ) : (
+                      <button onClick={stopDemo} className="flex-1 inline-flex justify-center items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-semibold border border-white/10 hover:bg-white/5 transition">
+                        ■ Stop demo
+                      </button>
+                    )}
+                    <a href="#book" className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-semibold border border-white/10 hover:bg-white/5 transition">
+                      Get Tya on your number →
+                    </a>
+                  </div>
+                </div>
+                <div className="p-7 flex flex-col gap-5" style={{ background: "rgba(75,139,255,0.04)" }}>
+                  <div className="text-xs text-slate-500 tracking-wider uppercase">Live Audio</div>
+                  <Waveform active={tya.speaking} />
+                  <div className="p-4 bg-black/30 border border-white/10 rounded-xl">
+                    <div className="text-xs text-slate-500 tracking-wider uppercase mb-2.5">Active context</div>
+                    <div className="text-[13px] leading-relaxed text-slate-300 space-y-0.5 font-mono">
+                      <div>· Persona: <span className="text-cyan-300">{activeNiche?.biz || "Awaiting selection"}</span></div>
+                      <div>· Vertical: <span className="text-cyan-300">{activeNiche?.label || "—"}</span></div>
+                      <div>· Stage: <span className="text-cyan-300">{demoStage}</span></div>
+                      <div>· Voice: <span className="text-emerald-400">browser-native (production uses ElevenLabs Turbo)</span></div>
+                      <div>· Latency: <span className="text-emerald-400">{tya.speaking ? "live" : "—"}</span></div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3">
                     {[
-                      { n: "412ms", l: "Avg latency" },
-                      { n: "94%", l: "Calls resolved" },
-                      { n: "+38%", l: "Bookings vs human" },
-                    ].map((s, i) => (
+                      ["412ms", "Avg latency"],
+                      ["94%", "Calls resolved"],
+                      ["+38%", "Bookings vs human"],
+                    ].map(([n, l], i) => (
                       <div key={i} className="p-3.5 bg-black/25 border border-white/10 rounded-xl">
-                        <div className="text-[22px] font-semibold tracking-[-0.02em]">{s.n}</div>
-                        <div className="text-slate-600 text-[11px] uppercase tracking-wide mt-1">{s.l}</div>
+                        <div className="text-xl font-semibold tracking-[-0.02em]">{n}</div>
+                        <div className="text-slate-600 text-[10.5px] uppercase tracking-wide mt-1">{l}</div>
                       </div>
                     ))}
                   </div>
-                </div>
-
-                <div className="p-8" style={{ background: "rgba(75,139,255,0.03)" }}>
-                  <div className="text-xs text-slate-600 tracking-wider uppercase mb-3">Live Audio</div>
-                  <Waveform />
-                  <div className="mt-6 p-4 bg-black/30 border border-white/10 rounded-xl">
-                    <div className="text-xs text-slate-600 tracking-wider uppercase mb-2.5">Active context</div>
-                    <div className="text-[13px] leading-relaxed text-slate-400 space-y-0.5">
-                      <div>· Caller phone: <span className="text-cyan-300">+1 (415) ••• ••72</span></div>
-                      <div>· Match: returning customer, 2 prior tickets</div>
-                      <div>· CRM: Service Titan · Account #4421</div>
-                      <div>· Action queue: <span className="text-emerald-400">booking → 2025-05-14 09:30</span></div>
-                    </div>
+                  <div className="text-[12px] text-slate-500 leading-relaxed">
+                    What you're hearing now uses your browser's built-in voice synthesis. In production we run sub-800ms ElevenLabs Turbo + Deepgram Nova STT on the actual phone line — indistinguishable from a human receptionist.
                   </div>
-                  <a href="#contact" className="mt-6 w-full inline-flex justify-center items-center gap-2 px-6 py-3.5 rounded-xl text-[15px] font-semibold text-white"
-                    style={{
-                      background: "linear-gradient(180deg, #5B95FF 0%, #3F7BE8 100%)",
-                      boxShadow: "0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.3), 0 12px 32px -12px rgba(75,139,255,0.35)"
-                    }}>
-                    Get this on your number →
-                  </a>
                 </div>
               </div>
             </div>
@@ -490,27 +565,80 @@ const Index = () => {
         </div>
       </section>
 
-      {/* TIMELINE */}
-      <section className="py-24 relative z-10">
-        <div className="max-w-[1240px] mx-auto px-6">
-          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">From signed contract to first call answered</div></Reveal>
-          <Reveal><h2 className="text-[clamp(36px,4.4vw,56px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Five days. Not five months.</h2></Reveal>
-          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-16">Enterprise teams ship slowly because their vendors do. We move at the pace of a founding team — because we are one.</p></Reveal>
+      <section id="capabilities" className="py-28 relative z-10">
+        <div className="max-w-[1280px] mx-auto px-6">
+          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">The Platform</div></Reveal>
+          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">One vendor. The entire AI stack.</h2></Reveal>
+          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-16">We design, train, deploy, and run the whole system — voice, text, custom models, infrastructure, analytics. One accountable team, one bill, software that fits your operation.</p></Reveal>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+            {[
+              { span: "md:col-span-7", tag: "01 — Voice Agents",      title: "Custom voice agents that pass for human.", body: "Sub-800ms latency, natural interruption handling, real-time bookings into your CRM, personality trained on your call recordings." },
+              { span: "md:col-span-5", tag: "02 — Custom Models",      title: "Fine-tuned LLMs, owned by you.",            body: "Domain-specific models trained on your data. We hand you the weights, eval harness, and ops runbook." },
+              { span: "md:col-span-4", tag: "03 — Applied Research",   title: "R&D that ships.",                            body: "Original research on retrieval, agent orchestration, inference cost — published, productized, in your stack." },
+              { span: "md:col-span-4", tag: "04 — SaaS Products",      title: "Productized AI workflows.",                  body: "Pre-built apps for call summarization, lead scoring, knowledge base sync, agent ops dashboards." },
+              { span: "md:col-span-4", tag: "05 — Consulting",         title: "Strategy that ends in shipped code.",        body: "Senior AI engineers embedded with your team for a sprint, a quarter, or until the system is live." },
+              { span: "md:col-span-6", tag: "06 — Training",           title: "Make your team the AI team.",                body: "Hands-on programs that take engineers and ops leads from curious to shipping production agents in three weeks." },
+              { span: "md:col-span-6", tag: "07 — Infra & Ops",        title: "The system around the system.",              body: "Eval harnesses, monitoring, drift detection, model swap pipelines, prompt versioning — packaged and run by us." },
+            ].map((c, i) => (
+              <Reveal key={i}>
+                <div className={`${c.span} bg-[#0C0F15] border border-white/10 rounded-3xl p-8 hover:-translate-y-1 hover:border-blue-400/40 transition-all duration-500 relative overflow-hidden group`}>
+                  <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                    style={{ background: "radial-gradient(circle, rgba(75,139,255,0.18), transparent 60%)" }} />
+                  <div className="text-slate-600 text-xs font-semibold tracking-wide uppercase mb-3">{c.tag}</div>
+                  <h3 className="text-[22px] tracking-[-0.02em] font-semibold mb-2.5">{c.title}</h3>
+                  <p className="text-slate-400 text-[15px] leading-relaxed">{c.body}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="niches" className="py-28 relative z-10">
+        <div className="max-w-[1280px] mx-auto px-6">
+          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Verticals We Ship For</div></Reveal>
+          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Built for your business, not generic SaaS.</h2></Reveal>
+          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-12">Click any vertical to hear Tya pitch herself for it.</p></Reveal>
+          <Reveal>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {NICHES.map((n) => (
+                <button key={n.key} onClick={() => { runDemo(n); document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" }); }}
+                  className="group bg-[#0C0F15] border border-white/10 rounded-2xl p-5 text-left hover:border-blue-400/40 hover:-translate-y-0.5 transition-all relative overflow-hidden">
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ background: "linear-gradient(135deg, rgba(75,139,255,0.08), transparent)" }} />
+                  <div className="relative">
+                    <div className="text-xs text-cyan-300/80 mb-1">{n.label}</div>
+                    <div className="text-base font-semibold mb-2">{n.biz}</div>
+                    <div className="text-slate-500 text-[12.5px] leading-relaxed">"{n.q}" booked in seconds.</div>
+                    <div className="text-cyan-300 text-xs mt-3 opacity-0 group-hover:opacity-100 transition-opacity">Hear demo →</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="py-28 relative z-10">
+        <div className="max-w-[1280px] mx-auto px-6">
+          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Signed Contract → First Call Answered</div></Reveal>
+          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Five days. Not five months.</h2></Reveal>
+          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-16">Enterprise vendors ship slowly because their teams do. We move at founder pace.</p></Reveal>
           <Reveal>
             <div className="relative">
               <div className="absolute top-[26px] left-0 right-0 h-px hidden md:block"
-                style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.10) 8%, rgba(255,255,255,0.10) 92%, transparent)" }} />
+                style={{ background: "linear-gradient(90deg, transparent, rgba(122,227,255,0.30) 8%, rgba(122,227,255,0.30) 92%, transparent)" }} />
               <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 {[
-                  { d: "Day 1", t: "Discovery", b: "30-min call. We pull your call recordings, scripts, CRM, and ops docs. By dinner you have a working draft persona." },
-                  { d: "Day 2-3", t: "Training", b: "We fine-tune on your data, wire your CRM and calendar, and run our eval harness against 200+ adversarial scenarios." },
-                  { d: "Day 4", t: "Stress test", b: "Your team calls in from every angle. We patch live. Failure cases become permanent guardrails in your eval set." },
-                  { d: "Day 5", t: "Cutover", b: "Number ports, agent goes live, dashboard ships. We sit on standby for the first 48 hours of production traffic." },
-                  { d: "Day 6+", t: "Optimize", b: "Weekly model refreshes, monthly performance reviews, quarterly product expansion. You compound — we operate." },
+                  { d: "Day 1",   t: "Discovery",   b: "30-min call. We pull recordings, scripts, CRM, ops docs." },
+                  { d: "Day 2-3", t: "Training",    b: "Fine-tune on your data, wire CRM and calendar, run our eval against 200+ scenarios." },
+                  { d: "Day 4",   t: "Stress test", b: "Your team calls in. We patch live. Failure cases become permanent guardrails." },
+                  { d: "Day 5",   t: "Cutover",     b: "Number ports, agent goes live, dashboard ships. We sit standby for 48 hours." },
+                  { d: "Day 6+",  t: "Optimize",    b: "Weekly model refreshes, monthly reviews, quarterly product expansion." },
                 ].map((s, i) => (
                   <div key={i} className="relative md:pt-16">
-                    <div className="hidden md:block absolute top-[18px] left-0 w-4 h-4 rounded-full bg-[#07080B] border-2 border-blue-400"
-                      style={{ boxShadow: "0 0 16px rgba(75,139,255,0.35)" }} />
+                    <div className="hidden md:block absolute top-[18px] left-0 w-4 h-4 rounded-full bg-[#05060A] border-2 border-blue-400"
+                      style={{ boxShadow: "0 0 18px rgba(75,139,255,0.5)" }} />
                     <div className="text-cyan-300 text-xs tracking-wider uppercase font-semibold mb-2">{s.d}</div>
                     <h4 className="text-lg font-semibold mb-1.5">{s.t}</h4>
                     <p className="text-slate-400 text-sm leading-relaxed">{s.b}</p>
@@ -522,41 +650,36 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ROI */}
-      <section className="py-24 relative z-10">
-        <div className="max-w-[1240px] mx-auto px-6">
+      <section className="py-28 relative z-10">
+        <div className="max-w-[1280px] mx-auto px-6">
           <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">ROI Calculator</div></Reveal>
-          <Reveal><h2 className="text-[clamp(36px,4.4vw,56px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Run the math on what missed calls cost you.</h2></Reveal>
-          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-16">Drag the sliders. We'll show you the gap between "we have a receptionist" and "we have an always-on agent that books while everyone sleeps."</p></Reveal>
-
+          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Run the math on missed calls.</h2></Reveal>
+          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-16">Drag the sliders. We'll show you the gap between a receptionist and an always-on agent.</p></Reveal>
           <Reveal>
-            <div className="grid grid-cols-1 md:grid-cols-2 bg-[#11141A] border border-white/10 rounded-3xl overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-2 bg-[#0C0F15] border border-white/10 rounded-3xl overflow-hidden">
               <div className="p-9 border-b md:border-b-0 md:border-r border-white/10 space-y-6">
                 {[
-                  { id: "calls", label: "Monthly inbound calls", value: calls, set: setCalls, min: 100, max: 5000, step: 50, fmt: (v: number) => v.toLocaleString() },
-                  { id: "miss", label: "Current % missed / abandoned", value: miss, set: setMiss, min: 0, max: 80, step: 1, fmt: (v: number) => v + "%" },
-                  { id: "ltv", label: "Average lifetime value of a customer", value: ltv, set: setLtv, min: 100, max: 50000, step: 100, fmt: (v: number) => fmt(v) },
-                  { id: "conv", label: "% of missed calls that would have converted", value: conv, set: setConv, min: 1, max: 40, step: 1, fmt: (v: number) => v + "%" },
+                  { id: "calls", label: "Monthly inbound calls",                value: calls, set: setCalls, min: 100, max: 5000,  step: 50,  fmt: (v: number) => v.toLocaleString() },
+                  { id: "miss",  label: "Current % missed / abandoned",         value: miss,  set: setMiss,  min: 0,   max: 80,    step: 1,   fmt: (v: number) => v + "%" },
+                  { id: "ltv",   label: "Average customer lifetime value",      value: ltv,   set: setLtv,   min: 100, max: 50000, step: 100, fmt: (v: number) => fmt(v) },
+                  { id: "conv",  label: "% missed calls that would convert",    value: conv,  set: setConv,  min: 1,   max: 40,    step: 1,   fmt: (v: number) => v + "%" },
                 ].map((f) => (
                   <div key={f.id}>
                     <div className="flex justify-between text-slate-400 text-[13px] mb-2">
                       <span>{f.label}</span>
                       <strong className="text-white font-semibold">{f.fmt(f.value)}</strong>
                     </div>
-                    <input
-                      type="range" min={f.min} max={f.max} step={f.step} value={f.value}
+                    <input type="range" min={f.min} max={f.max} step={f.step} value={f.value}
                       onChange={(e) => f.set(+e.target.value)}
-                      className="w-full h-1 rounded-md outline-none appearance-none bg-white/10 accent-blue-400"
-                    />
+                      className="w-full h-1 rounded-md outline-none appearance-none bg-white/10 accent-blue-400" />
                   </div>
                 ))}
               </div>
-              <div className="p-9" style={{ background: "linear-gradient(180deg, rgba(75,139,255,0.06), rgba(75,139,255,0.02))" }}>
+              <div className="p-9" style={{ background: "linear-gradient(180deg,rgba(75,139,255,0.08),rgba(75,139,255,0.02))" }}>
                 <h4 className="text-sm text-slate-400 mb-2 font-medium">Annual revenue you're leaving on the table</h4>
-                <div className="text-[56px] font-semibold tracking-[-0.04em] leading-none mb-1 bg-clip-text text-transparent"
-                  style={{ backgroundImage: "linear-gradient(120deg, #fff, #7AE3FF)" }}>{fmt(annual)}</div>
-                <div className="text-slate-600 text-[13px] mb-8">Based on calls captured, conversion rate, and customer lifetime value above.</div>
-
+                <div className="text-[64px] font-semibold tracking-[-0.04em] leading-none mb-1 bg-clip-text text-transparent"
+                  style={{ backgroundImage: "linear-gradient(120deg,#fff,#7AE3FF)" }}>{fmt(annual)}</div>
+                <div className="text-slate-600 text-[13px] mb-8">Based on calls captured × conversion rate × LTV.</div>
                 {[
                   ["Missed calls / month", missed.toLocaleString()],
                   ["Lost would-be customers / month", lost.toLocaleString()],
@@ -577,22 +700,20 @@ const Index = () => {
         </div>
       </section>
 
-      {/* PRICING */}
-      <section id="pricing" className="py-24 relative z-10">
-        <div className="max-w-[1240px] mx-auto px-6">
+      <section id="pricing" className="py-28 relative z-10">
+        <div className="max-w-[1280px] mx-auto px-6">
           <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Pricing</div></Reveal>
-          <Reveal><h2 className="text-[clamp(36px,4.4vw,56px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Real prices. No "Contact Sales" walls.</h2></Reveal>
-          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-16">Most AI vendors hide pricing because their pricing doesn't make sense. Ours does. Pay for what you ship.</p></Reveal>
-
+          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Real prices. No "Contact Sales" walls.</h2></Reveal>
+          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-16">Pay for what you ship.</p></Reveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
-              { name: "Voice Starter", sub: "For solo operators and single-location businesses.", price: "$899", per: "/ month", featured: false, features: ["1 production voice agent, 1 vertical", "Up to 1,000 minutes / month", "CRM + calendar integration (1)", "Standard 9–5 monitoring", "Live in 5 days"], cta: "Start with Starter" },
-              { name: "Voice Pro + Custom Build", sub: "For multi-location businesses scaling agent ops.", price: "$2,400", per: "/ month", featured: true, features: ["3 production agents, multi-vertical", "Up to 8,000 minutes / month", "Custom fine-tune on your data", "Full CRM, calendar, and ticketing wiring", "24/7 monitoring, weekly model refreshes", "Dedicated AI engineer (4 hrs / wk)", "Eval dashboard + monthly performance review"], cta: "Book Pro discovery" },
-              { name: "Full-Stack Platform", sub: "Custom models, embedded research, your own ops team.", price: "$12,500", per: "/ month, starting", featured: false, features: ["Unlimited production agents", "Custom models, you keep the weights", "Applied research sprints", "Embedded engineering pod", "SOC 2 + HIPAA + private VPC deploy", "Quarterly roadmap, exec sponsor", "Team training + enablement included"], cta: "Talk to founders" },
+              { name: "Voice Starter",            sub: "Solo and single-location.",          price: "$899",    per: "/ month",          featured: false, features: ["1 production agent, 1 vertical","1,000 minutes / month","CRM + calendar (1)","Standard 9–5 monitoring","Live in 5 days"], cta: "Start with Starter" },
+              { name: "Voice Pro + Custom Build", sub: "Multi-location, scaling agent ops.", price: "$2,400",  per: "/ month",          featured: true,  features: ["3 agents, multi-vertical","8,000 minutes / month","Custom fine-tune on your data","Full CRM + ticketing","24/7 monitoring, weekly refreshes","Dedicated AI engineer (4 hrs/wk)","Eval dashboard + monthly review"], cta: "Book Pro discovery" },
+              { name: "Full-Stack Platform",      sub: "Custom models, embedded research.",  price: "$12,500", per: "/ month, starting",featured: false, features: ["Unlimited agents","Custom models, you keep weights","Applied research sprints","Embedded engineering pod","SOC 2 + HIPAA + private VPC","Quarterly roadmap + exec sponsor","Team training included"], cta: "Talk to founders" },
             ].map((p, i) => (
               <Reveal key={i}>
-                <div className={`rounded-3xl p-9 relative ${p.featured ? "border-blue-400/40" : "border-white/10"} border bg-[#11141A]`}
-                  style={p.featured ? { background: "linear-gradient(180deg, rgba(75,139,255,0.06), #11141A)" } : {}}>
+                <div className={`rounded-3xl p-9 relative h-full ${p.featured ? "border-blue-400/50" : "border-white/10"} border bg-[#0C0F15] hover:-translate-y-1 transition-all duration-500`}
+                  style={p.featured ? { background: "linear-gradient(180deg,rgba(75,139,255,0.08),#0C0F15)", boxShadow: "0 0 60px -10px rgba(75,139,255,0.4)" } : {}}>
                   {p.featured && <span className="absolute -top-3 left-9 px-2.5 py-1 bg-blue-500 text-white rounded-md text-[11px] font-semibold tracking-wide uppercase">Most chosen</span>}
                   <h3 className="text-lg font-semibold mb-1.5">{p.name}</h3>
                   <div className="text-slate-600 text-sm mb-6">{p.sub}</div>
@@ -608,56 +729,38 @@ const Index = () => {
                       </li>
                     ))}
                   </ul>
-                  <a href="#contact" className={`mt-6 w-full inline-flex justify-center items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition ${
-                    p.featured ? "text-white hover:-translate-y-0.5" : "border border-white/10 hover:bg-white/5"
-                  }`}
-                    style={p.featured ? {
-                      background: "linear-gradient(180deg, #5B95FF, #3F7BE8)",
-                      boxShadow: "0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.3), 0 12px 32px -12px rgba(75,139,255,0.35)"
-                    } : {}}>
+                  <a href="#book" className={`mt-6 w-full inline-flex justify-center items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition relative overflow-hidden group ${p.featured ? "text-white" : "border border-white/10 hover:bg-white/5"}`}
+                    style={p.featured ? { background: "linear-gradient(180deg,#5B95FF,#3F7BE8)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 14px 32px -10px rgba(75,139,255,0.5)" } : {}}>
+                    {p.featured && <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />}
                     {p.cta}
                   </a>
                 </div>
               </Reveal>
             ))}
           </div>
-
-          <Reveal>
-            <div className="mt-6 p-7 rounded-3xl flex items-center justify-between gap-6 flex-wrap"
-              style={{ background: "linear-gradient(120deg, rgba(75,139,255,0.10), rgba(122,227,255,0.04))", border: "1px solid rgba(75,139,255,0.25)" }}>
-              <div>
-                <h4 className="text-lg font-semibold mb-1">Enterprise + government</h4>
-                <p className="text-slate-400 text-sm">Custom contracts, on-prem or private VPC, security review, dedicated SLAs, and procurement-friendly billing.</p>
-              </div>
-              <a href="#contact" className="px-5 py-3 rounded-xl text-sm font-semibold bg-white text-[#07080B] hover:-translate-y-0.5 transition">Request enterprise terms →</a>
-            </div>
-          </Reveal>
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="py-24 relative z-10">
-        <div className="max-w-[1240px] mx-auto px-6">
+      <section className="py-28 relative z-10">
+        <div className="max-w-[1280px] mx-auto px-6">
           <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Operators, not influencers</div></Reveal>
-          <Reveal><h2 className="text-[clamp(36px,4.4vw,56px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">What people running real businesses say.</h2></Reveal>
-          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-16">No paid testimonials. No "thought leaders." Just operators who picked up the phone and we picked it up first.</p></Reveal>
-
+          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-16">What people running real businesses say.</h2></Reveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
-              { metric: "+$412k captured / quarter", q: "We were dropping 40% of after-hours service calls. Three weeks after going live, our agent was booking faster than my best dispatcher. The number didn't lie — it printed money.", n: "Ryan T.", r: "Owner, Ridgeline HVAC · 4 locations", a: "RT" },
-              { metric: "9% → 31% lead-to-tour rate", q: "My front desk loves it. Members get answered at 2am, we book tours that used to die in voicemail, and the receptionist actually has time to be a human in person.", n: "Marisol J.", r: "GM, Forge Fitness · 6 locations", a: "MJ" },
-              { metric: "2.4x intake throughput", q: "We replaced two intake roles with one operator and a TYA agent. The agent is more consistent on PII handling than humans were. Compliance signed off on the eval harness in one meeting.", n: "Daniel P.", r: "Managing Partner, Vertex Legal", a: "DP" },
+              { metric: "+$412k captured / quarter", q: "We were dropping 40% of after-hours service calls. Three weeks later our agent was booking faster than my best dispatcher.", n: "Ryan T.", r: "Owner, Ridgeline HVAC · 4 locations", a: "RT" },
+              { metric: "9% → 31% lead-to-tour",     q: "Members get answered at 2am, we book tours that used to die in voicemail, and the receptionist actually has time to be a human in person.", n: "Marisol J.", r: "GM, Forge Fitness · 6 locations", a: "MJ" },
+              { metric: "2.4x intake throughput",    q: "We replaced two intake roles with one operator and a TYA agent. Compliance signed off on the eval harness in one meeting.",                  n: "Daniel P.", r: "Managing Partner, Vertex Legal", a: "DP" },
             ].map((t, i) => (
               <Reveal key={i}>
-                <div className="bg-[#11141A] border border-white/10 rounded-3xl p-8 flex flex-col gap-6 h-full">
+                <div className="bg-[#0C0F15] border border-white/10 rounded-3xl p-8 flex flex-col gap-6 h-full hover:-translate-y-1 hover:border-emerald-400/30 transition-all duration-500">
                   <span className="self-start inline-flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs font-semibold"
-                    style={{ background: "rgba(91,228,155,0.08)", border: "1px solid rgba(91,228,155,0.25)", color: "#5BE49B" }}>
+                    style={{ background: "rgba(91,228,155,0.10)", border: "1px solid rgba(91,228,155,0.3)", color: "#5BE49B" }}>
                     {t.metric}
                   </span>
                   <p className="text-[17px] leading-snug tracking-[-0.01em]">"{t.q}"</p>
                   <div className="mt-auto flex items-center gap-3 pt-6 border-t border-white/10">
-                    <div className="w-10 h-10 rounded-full grid place-items-center font-semibold text-[#07080B] text-sm"
-                      style={{ background: "linear-gradient(135deg, #4B8BFF, #7AE3FF)" }}>
+                    <div className="w-10 h-10 rounded-full grid place-items-center font-semibold text-[#05060A] text-sm"
+                      style={{ background: "linear-gradient(135deg,#4B8BFF,#7AE3FF)" }}>
                       {t.a}
                     </div>
                     <div>
@@ -672,46 +775,37 @@ const Index = () => {
         </div>
       </section>
 
-      {/* FOUNDER */}
-      <section id="founder" className="py-24 relative z-10">
-        <div className="max-w-[1240px] mx-auto px-6">
+      <section id="founder" className="py-28 relative z-10">
+        <div className="max-w-[1280px] mx-auto px-6">
           <Reveal>
             <div className="grid grid-cols-1 md:grid-cols-[1fr,1.4fr] gap-14 items-center">
               <div className="aspect-[4/5] rounded-3xl border border-white/10 relative overflow-hidden flex items-end p-7"
-                style={{
-                  background: "radial-gradient(ellipse at 30% 20%, rgba(75,139,255,0.4), transparent 60%), linear-gradient(180deg, #1A1F2C, #0C0E12)",
-                }}>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-[140px] font-bold tracking-[-0.06em] bg-clip-text text-transparent pointer-events-none"
-                  style={{ backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.02))" }}>AM</div>
+                style={{ background: "radial-gradient(ellipse at 30% 20%, rgba(75,139,255,0.45), transparent 60%), linear-gradient(180deg,#1A1F2C,#0C0E12)" }}>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-[160px] font-bold tracking-[-0.06em] bg-clip-text text-transparent pointer-events-none"
+                  style={{ backgroundImage: "linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0.02))" }}>AM</div>
                 <div className="relative z-10 px-3.5 py-2 bg-black/50 backdrop-blur border border-white/10 rounded-full text-xs text-slate-400">
                   Alexander Mills · Founder & CEO
                 </div>
               </div>
               <div>
                 <div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Why we exist</div>
-                <h3 className="text-4xl tracking-[-0.03em] font-semibold mb-5 leading-tight">Most AI vendors will sell you a tool. We'll sell you the outcome.</h3>
+                <h3 className="text-[clamp(28px,3.4vw,44px)] tracking-[-0.03em] font-semibold mb-5 leading-tight">Most AI vendors will sell you a tool. We'll sell you the outcome.</h3>
                 <p className="text-slate-400 text-base leading-relaxed mb-4">
-                  Train Your Agent was started because the gap between "demo-good" AI and "production-good" AI is enormous — and almost nobody is willing to cross it for a regional HVAC company, a six-location gym, or a mid-market law firm. Big consultancies don't ship code. AI startups ship features, not systems.
+                  Train Your Agent was started because the gap between "demo-good" AI and "production-good" AI is enormous — and almost nobody is willing to cross it for a regional HVAC company, a solar installer, or a mid-market law firm.
                 </p>
                 <p className="text-slate-400 text-base leading-relaxed mb-4">
-                  We're a full-stack team — research, engineering, design, ops — building the AI infrastructure for businesses that don't have a "Head of AI" and don't need one. We do the work. You get the system.
+                  We're a full-stack team building the AI infrastructure for businesses that don't have a "Head of AI" and don't need one. We do the work. You get the system.
                 </p>
                 <p className="italic text-2xl text-white mt-6" style={{ fontFamily: "'Instrument Serif', serif" }}>
                   "Software is how AI ships. We ship the software."
                 </p>
                 <div className="grid grid-cols-3 gap-8 mt-7 pt-7 border-t border-white/10">
-                  <div>
-                    <div className="text-[28px] font-semibold tracking-[-0.03em]">200+</div>
-                    <div className="text-slate-600 text-xs">Production deployments</div>
-                  </div>
-                  <div>
-                    <div className="text-[28px] font-semibold tracking-[-0.03em]">12</div>
-                    <div className="text-slate-600 text-xs">Verticals shipped</div>
-                  </div>
-                  <div>
-                    <div className="text-[28px] font-semibold tracking-[-0.03em]">99.94%</div>
-                    <div className="text-slate-600 text-xs">Uptime, trailing 12mo</div>
-                  </div>
+                  {[["200+","Production deployments"],["16","Verticals shipped"],["99.94%","Uptime, trailing 12mo"]].map(([n,l],i) => (
+                    <div key={i}>
+                      <div className="text-[28px] font-semibold tracking-[-0.03em] bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(120deg,#fff,#7AE3FF)" }}>{n}</div>
+                      <div className="text-slate-600 text-xs">{l}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -719,75 +813,106 @@ const Index = () => {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section id="faq" className="py-24 relative z-10">
-        <div className="max-w-[1240px] mx-auto px-6">
+      <section id="book" className="py-28 relative z-10">
+        <div className="max-w-[1280px] mx-auto px-6">
+          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Book your discovery call</div></Reveal>
+          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Pick a time. Get a working agent by Friday.</h2></Reveal>
+          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-12">Two ways to start: book a 30-minute call with the founders, or drop your details and we'll reach out.</p></Reveal>
+          <div className="grid grid-cols-1 lg:grid-cols-[1.5fr,1fr] gap-6">
+            <Reveal>
+              <div className="bg-[#0C0F15] border border-white/10 rounded-3xl p-3 overflow-hidden h-full"
+                style={{ boxShadow: "0 0 60px -10px rgba(75,139,255,0.3)" }}>
+                <div className="px-5 py-3 flex items-center justify-between">
+                  <div className="text-sm font-semibold">Schedule via Cal.com</div>
+                  <a href="https://cal.com/trainyouragent" target="_blank" rel="noreferrer" className="text-xs text-cyan-300 hover:text-cyan-200">Open in new tab ↗</a>
+                </div>
+                <iframe
+                  src="https://cal.com/trainyouragent?embed=true&theme=dark&hideEventTypeDetails=false"
+                  title="Book a call with Train Your Agent"
+                  className="w-full rounded-2xl bg-white/5"
+                  style={{ height: 720, border: "1px solid rgba(255,255,255,0.08)" }}
+                />
+              </div>
+            </Reveal>
+            <Reveal>
+              <div className="bg-[#0C0F15] border border-white/10 rounded-3xl p-3 overflow-hidden h-full">
+                <div className="px-5 py-3 flex items-center justify-between">
+                  <div className="text-sm font-semibold">Or get in touch</div>
+                  <span className="text-xs text-slate-500">We respond within an hour</span>
+                </div>
+                <iframe
+                  src="https://airtable.com/embed/appREPLACEME/shrREPLACEME?backgroundColor=blue"
+                  title="Get started with Train Your Agent"
+                  className="w-full rounded-2xl bg-white/5"
+                  style={{ height: 720, border: "1px solid rgba(255,255,255,0.08)" }}
+                />
+                <div className="px-5 py-3 text-[11px] text-slate-600">If the form doesn't load, email <span className="text-cyan-300">hello@trainyouragent.com</span> — we'll set you up directly.</div>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" className="py-28 relative z-10">
+        <div className="max-w-[1280px] mx-auto px-6">
           <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4 text-center">FAQ</div></Reveal>
-          <Reveal><h2 className="text-[clamp(36px,4.4vw,56px)] leading-[1.05] tracking-[-0.03em] font-semibold mb-14 text-center max-w-3xl mx-auto">The questions we get on every discovery call.</h2></Reveal>
+          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold mb-14 text-center max-w-3xl mx-auto">The questions we get on every discovery call.</h2></Reveal>
           <div className="max-w-3xl mx-auto">
             {[
-              { q: "What happens when the AI doesn't know an answer?", a: "It either escalates with full call context to a human (we wire the routing), captures the question for follow-up by your team, or in regulated verticals, refuses cleanly and books a human callback. Every \"I don't know\" enters the eval set and is fixed in the next weekly refresh." },
-              { q: "Do we have to change phone numbers?", a: "No. We port your existing number or sit in front of it via SIP routing. Your customers dial the number they always dialed." },
-              { q: "How is this different from Retell, Vapi, or Voiceflow?", a: "Those are platforms — DIY toolkits. We're the team. We handle the build, training, deployment, monitoring, and weekly improvement so your operations team never opens a flow editor. If you want a tool, use one of them. If you want the outcome, work with us." },
-              { q: "Who owns the model and the data?", a: "You do. On Pro, you license the fine-tune. On Full-Stack Platform, we hand you the weights, the training data export, and the ops runbook. Your data is never used to train other customers' models." },
-              { q: "What's the SLA?", a: "99.9% uptime on Voice Pro and above, with credits if we miss. We're at 99.94% trailing 12 months across all production traffic." },
-              { q: "HIPAA, SOC 2, what's the security story?", a: "SOC 2 Type II in progress, HIPAA-ready architecture today. Private VPC deploys available on Full-Stack Platform. We can sit through your security review with our security lead — bring the questionnaire." },
-              { q: "What if we want to leave?", a: "Month-to-month after the initial 90-day commit. Full data export on request, no claw-backs, no destruction theater." },
+              { q: "What if Tya doesn't know an answer?", a: "She escalates with full call context to your team, captures the question for follow-up, or in regulated verticals refuses cleanly and books a human callback." },
+              { q: "Do we change phone numbers?", a: "No. We port your existing number or sit in front via SIP routing. Customers dial the number they always dialed." },
+              { q: "How is this different from Retell, Vapi, Voiceflow?", a: "Those are platforms — DIY toolkits. We're the team. We handle build, training, deployment, monitoring, and weekly improvement." },
+              { q: "Who owns the model and data?", a: "You do. On Pro you license the fine-tune. On Full-Stack we hand you the weights, training data export, and ops runbook." },
+              { q: "What's the SLA?", a: "99.9% uptime on Voice Pro and above with credits if we miss. We're at 99.94% trailing 12 months." },
+              { q: "HIPAA, SOC 2 — security?", a: "SOC 2 Type II in progress, HIPAA-ready architecture today. Private VPC deploys on Full-Stack." },
+              { q: "What if we want to leave?", a: "Month-to-month after the initial 90-day commit. Full data export on request, no claw-backs." },
             ].map((f, i) => <FAQItem key={i} q={f.q} a={f.a} />)}
           </div>
         </div>
       </section>
 
-      {/* FINAL CTA */}
-      <section id="contact" className="pt-24 pb-32 text-center relative z-10"
-        style={{ background: "radial-gradient(800px 400px at 50% 100%, rgba(75,139,255,0.18), transparent 60%)" }}>
-        <div className="max-w-[1240px] mx-auto px-6">
+      <section className="pt-28 pb-36 text-center relative z-10"
+        style={{ background: "radial-gradient(900px 460px at 50% 100%, rgba(75,139,255,0.22), transparent 60%)" }}>
+        <div className="max-w-[1280px] mx-auto px-6">
           <Reveal>
-            <h2 className="text-[clamp(40px,5vw,72px)] tracking-[-0.04em] leading-[1.02] font-semibold mb-5">
+            <h2 className="text-[clamp(44px,5.5vw,84px)] tracking-[-0.04em] leading-[1.02] font-semibold mb-5">
               Stop missing calls.<br />
               Start <span className="italic font-normal" style={{ fontFamily: "'Instrument Serif', serif" }}>compounding</span>.
             </h2>
           </Reveal>
-          <Reveal>
-            <p className="text-lg text-slate-400 max-w-xl mx-auto mb-10">
-              A 30-minute call gets you a working agent demo trained on your business by Friday. Whether you keep it is up to you.
-            </p>
-          </Reveal>
+          <Reveal><p className="text-lg text-slate-400 max-w-xl mx-auto mb-10">A 30-minute call gets you a working agent demo trained on your business by Friday.</p></Reveal>
           <Reveal>
             <div className="flex gap-3 justify-center flex-wrap">
-              <a href="https://cal.com/trainyouragent" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-[15px] font-semibold text-white hover:-translate-y-0.5 transition"
-                style={{
-                  background: "linear-gradient(180deg, #5B95FF 0%, #3F7BE8 100%)",
-                  boxShadow: "0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.3), 0 12px 32px -12px rgba(75,139,255,0.35)"
-                }}>
+              <a href="#book" className="relative inline-flex items-center gap-2 px-7 py-4 rounded-xl text-[15px] font-semibold text-white overflow-hidden group"
+                style={{ background: "linear-gradient(180deg,#5B95FF 0%,#3F7BE8 100%)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 18px 50px -10px rgba(75,139,255,0.5)" }}>
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 Book a discovery call →
               </a>
-              <a href="#demo" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-[15px] font-semibold border border-white/10 hover:bg-white/5 transition">
-                Try the live agent
-              </a>
+              <a href="#demo" className="inline-flex items-center gap-2 px-7 py-4 rounded-xl text-[15px] font-semibold border border-white/10 hover:bg-white/5 transition">Talk to Tya first</a>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer className="border-t border-white/10 pt-16 pb-10 mt-24 relative z-10">
-        <div className="max-w-[1240px] mx-auto px-6">
+        <div className="max-w-[1280px] mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-[1.4fr,1fr,1fr,1fr] gap-10 mb-14">
             <div>
-              <Link to="/" className="flex items-center gap-2.5 font-bold text-base tracking-tight mb-4">
-                <span className="w-7 h-7 rounded-lg grid place-items-center"
-                  style={{ background: "linear-gradient(135deg, #4B8BFF, #7AE3FF)", boxShadow: "0 0 24px -4px rgba(75,139,255,0.35)" }}>
-                  <span className="block w-3 h-3 rounded-[3px] bg-[#07080B] rotate-45" />
+              <Link to="/" className="flex items-center gap-3 font-bold text-base tracking-tight mb-4">
+                <span className="w-8 h-8 rounded-xl grid place-items-center relative overflow-hidden"
+                  style={{ background: "conic-gradient(from 180deg at 50% 50%, #4B8BFF, #7AE3FF, #A78BFA, #4B8BFF)", boxShadow: "0 0 28px -4px rgba(75,139,255,0.5)" }}>
+                  <span className="absolute inset-[2px] rounded-[10px] bg-[#05060A] grid place-items-center">
+                    <span className="block w-2.5 h-2.5 rounded-[2px] bg-gradient-to-br from-blue-400 to-cyan-300 rotate-45" />
+                  </span>
                 </span>
                 <span>TrainYourAgent</span>
               </Link>
               <p className="text-slate-400 text-sm max-w-xs leading-relaxed">The full-stack AI company. We build, train, and run the systems your business needs to stop missing the future.</p>
             </div>
             {[
-              { h: "Platform", links: [["#capabilities", "Voice Agents"], ["#capabilities", "Custom Models"], ["#capabilities", "SaaS Products"], ["#capabilities", "Consulting"], ["#capabilities", "Training"]] },
-              { h: "Company", links: [["#founder", "About"], ["#contact", "Careers"], ["#", "Customer stories"], ["#", "Research"], ["#contact", "Contact"]] },
-              { h: "Legal", links: [["#", "Privacy"], ["#", "Terms"], ["#", "Security"], ["#", "DPA"], ["#", "SOC 2 / HIPAA"]] },
+              { h: "Platform", links: [["#capabilities","Voice Agents"],["#capabilities","Custom Models"],["#capabilities","SaaS Products"],["#capabilities","Consulting"],["#capabilities","Training"]] },
+              { h: "Company",  links: [["#founder","About"],["#book","Careers"],["#niches","Niches"],["#","Research"],["#book","Contact"]] },
+              { h: "Legal",    links: [["#","Privacy"],["#","Terms"],["#","Security"],["#","DPA"],["#","SOC 2 / HIPAA"]] },
             ].map((c, i) => (
               <div key={i}>
                 <h5 className="text-sm font-semibold mb-4">{c.h}</h5>
@@ -803,6 +928,12 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      <style>{`
+        @keyframes shimmer { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+      `}</style>
     </div>
   );
 };
