@@ -152,7 +152,7 @@ function Particles() {
         if (p.y < 0 || p.y > c.height) p.vy *= -1;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(122,227,255,0.55)";
+        ctx.fillStyle = "rgba(26,213,230,0.55)";
         ctx.fill();
       }
       for (let i = 0; i < N; i++) {
@@ -160,7 +160,7 @@ function Particles() {
           const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
           const d2 = dx * dx + dy * dy;
           if (d2 < 14000) {
-            ctx.strokeStyle = `rgba(75,139,255,${0.12 * (1 - d2 / 14000)})`;
+            ctx.strokeStyle = `rgba(82,165,255,${0.12 * (1 - d2 / 14000)})`;
             ctx.lineWidth = 0.6;
             ctx.beginPath();
             ctx.moveTo(pts[i].x, pts[i].y);
@@ -188,7 +188,7 @@ function Spotlight() {
     <div
       className="fixed inset-0 pointer-events-none z-0 transition-opacity duration-300"
       style={{
-        background: `radial-gradient(600px circle at ${p.x}px ${p.y}px, rgba(75,139,255,0.10), transparent 40%)`,
+        background: `radial-gradient(600px circle at ${p.x}px ${p.y}px, rgba(82,165,255,0.10), transparent 40%)`,
       }}
     />
   );
@@ -211,9 +211,9 @@ function Waveform({ active }: { active: boolean }) {
           style={{
             height: `${h}px`,
             background: active
-              ? "linear-gradient(180deg,#4B8BFF,#7AE3FF)"
+              ? "linear-gradient(180deg,#52A5FF,#1AD5E6)"
               : "linear-gradient(180deg,#1F2937,#0C0E12)",
-            boxShadow: active ? "0 0 8px rgba(75,139,255,0.45)" : "none",
+            boxShadow: active ? "0 0 8px rgba(82,165,255,0.45)" : "none",
             opacity: active ? 1 : 0.6,
           }}
         />
@@ -305,13 +305,13 @@ const Index = () => {
   const stopDemo = () => { tya.stop(); setDemoStage("done"); };
 
   return (
-    <div className="min-h-screen bg-[#05060A] text-slate-100 antialiased font-sans selection:bg-blue-500 selection:text-white overflow-x-hidden">
+    <div className="min-h-screen bg-[#080D17] text-slate-100 antialiased font-sans selection:bg-blue-500 selection:text-white overflow-x-hidden">
       <div className="fixed inset-0 pointer-events-none z-0"
         style={{
           background:
-            "radial-gradient(1100px 600px at 8% -5%, rgba(75,139,255,0.22), transparent 60%)," +
-            "radial-gradient(900px 600px at 95% 0%, rgba(122,227,255,0.12), transparent 60%)," +
-            "radial-gradient(700px 500px at 50% 110%, rgba(75,139,255,0.14), transparent 60%)"
+            "radial-gradient(1100px 600px at 8% -5%, rgba(82,165,255,0.22), transparent 60%)," +
+            "radial-gradient(900px 600px at 95% 0%, rgba(26,213,230,0.12), transparent 60%)," +
+            "radial-gradient(700px 500px at 50% 110%, rgba(82,165,255,0.14), transparent 60%)"
         }}
       />
       <div className="fixed inset-0 pointer-events-none z-0"
@@ -326,14 +326,12 @@ const Index = () => {
       <Particles />
       <Spotlight />
 
-      <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl transition-all ${navScrolled ? "bg-[#05060A]/85 border-b border-white/10" : "bg-[#05060A]/40 border-b border-transparent"}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl transition-all ${navScrolled ? "bg-[#080D17]/85 border-b border-white/10" : "bg-[#080D17]/40 border-b border-transparent"}`}>
         <div className="max-w-[1280px] mx-auto px-6 py-3.5 flex items-center justify-between gap-8">
           <Link to="/" className="flex items-center gap-3 font-bold text-base tracking-tight group">
-            <span className="w-8 h-8 rounded-xl grid place-items-center relative overflow-hidden"
-              style={{ background: "conic-gradient(from 180deg at 50% 50%, #4B8BFF, #7AE3FF, #A78BFA, #4B8BFF)", boxShadow: "0 0 28px -4px rgba(75,139,255,0.5)" }}>
-              <span className="absolute inset-[2px] rounded-[10px] bg-[#05060A] grid place-items-center">
-                <span className="block w-2.5 h-2.5 rounded-[2px] bg-gradient-to-br from-blue-400 to-cyan-300 rotate-45 group-hover:rotate-90 transition-transform duration-500" />
-              </span>
+            <span className="relative w-9 h-9 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <span className="absolute inset-0 rounded-full blur-xl opacity-60 group-hover:opacity-100 transition-opacity" style={{ background: "rgba(26,213,230,0.5)" }} />
+              <img src="https://trainyouragent.com/assets/logo-BQrpRIpl.png" alt="TrainYourAgent" className="relative w-8 h-8 object-contain drop-shadow-[0_0_8px_rgba(26,213,230,0.5)]" />
             </span>
             <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(120deg,#fff,#B8D2FF)" }}>TrainYourAgent</span>
           </Link>
@@ -345,7 +343,7 @@ const Index = () => {
           <div className="flex gap-2.5 items-center">
             <a href="#demo" className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border border-white/10 hover:bg-white/5 hover:border-white/20 transition">Try Tya</a>
             <a href="#book" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white relative overflow-hidden group"
-              style={{ background: "linear-gradient(180deg,#5B95FF 0%,#3F7BE8 100%)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.3), 0 14px 32px -10px rgba(75,139,255,0.55)" }}>
+              style={{ background: "linear-gradient(180deg,#52A5FF 0%,#0DA2E7 100%)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.3), 0 14px 32px -10px rgba(82,165,255,0.55)" }}>
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               Book a call →
             </a>
@@ -357,7 +355,7 @@ const Index = () => {
         <div className="max-w-[1280px] mx-auto px-6 relative z-10">
           <Reveal>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium tracking-wide mb-8"
-              style={{ background: "rgba(75,139,255,0.10)", border: "1px solid rgba(75,139,255,0.25)", color: "#B8D2FF" }}>
+              style={{ background: "rgba(82,165,255,0.10)", border: "1px solid rgba(82,165,255,0.25)", color: "#B8D2FF" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#5BE49B] animate-pulse" />
               Tya is live · Voice agents in production for 200+ businesses
             </div>
@@ -366,7 +364,7 @@ const Index = () => {
             <h1 className="text-[clamp(48px,8vw,108px)] leading-[0.94] font-semibold tracking-[-0.045em] max-w-6xl mb-8">
               The AI that runs<br />
               <span className="italic font-normal" style={{ fontFamily: "'Instrument Serif', serif" }}>your</span>{" "}
-              <span className="bg-clip-text text-transparent inline-block" style={{ backgroundImage: "linear-gradient(120deg,#fff 0%, #B8D2FF 40%, #7AE3FF 70%, #A78BFA 100%)", backgroundSize: "200% 100%", animation: "shimmer 8s ease-in-out infinite" }}>business</span>.
+              <span className="bg-clip-text text-transparent inline-block" style={{ backgroundImage: "linear-gradient(120deg,#fff 0%, #B8D2FF 40%, #1AD5E6 70%, #A78BFA 100%)", backgroundSize: "200% 100%", animation: "shimmer 8s ease-in-out infinite" }}>business</span>.
             </h1>
           </Reveal>
           <Reveal delay={120}>
@@ -377,7 +375,7 @@ const Index = () => {
           <Reveal delay={180}>
             <div className="flex gap-3 flex-wrap items-center mb-16">
               <a href="#demo" className="relative inline-flex items-center gap-2 px-7 py-4 rounded-xl text-[15px] font-semibold text-white overflow-hidden group"
-                style={{ background: "linear-gradient(180deg,#5B95FF 0%,#3F7BE8 100%)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 18px 50px -10px rgba(75,139,255,0.5)" }}>
+                style={{ background: "linear-gradient(180deg,#52A5FF 0%,#0DA2E7 100%)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 18px 50px -10px rgba(82,165,255,0.5)" }}>
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 <span className="w-2 h-2 rounded-full bg-emerald-300 shadow-[0_0_10px_#6EE7B7] animate-pulse" />
                 Talk to Tya now
@@ -433,9 +431,9 @@ const Index = () => {
                 { n: <Counter to={1200} prefix="$" />, l: "average lifetime value lost per missed call.", s: "CallRail Industry Benchmark" },
                 { n: <Counter to={11} suffix="x" />, l: "avg. ROI our customers see in the first 90 days.", s: "TYA internal cohort, 2025" },
               ].map((m, i) => (
-                <div key={i} className="bg-[#0A0C12] p-9 hover:bg-[#0F1219] transition group">
+                <div key={i} className="bg-[#0A1020] p-9 hover:bg-[#0F1219] transition group">
                   <div className="text-6xl font-semibold tracking-[-0.04em] leading-none mb-3 bg-clip-text text-transparent group-hover:scale-105 origin-left transition-transform"
-                    style={{ backgroundImage: "linear-gradient(120deg,#fff,#7AE3FF)" }}>{m.n}</div>
+                    style={{ backgroundImage: "linear-gradient(120deg,#fff,#1AD5E6)" }}>{m.n}</div>
                   <div className="text-slate-300 text-sm leading-relaxed">{m.l}</div>
                   <div className="text-slate-600 text-[11px] mt-2 tracking-wide">— {m.s}</div>
                 </div>
@@ -452,10 +450,10 @@ const Index = () => {
           <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-12">Click the button. Tya will greet you, ask what you do, then run a real demo using your speakers — playing the role of your AI receptionist for the niche you pick.</p></Reveal>
 
           <Reveal>
-            <div className="bg-[#0A0C12] border border-white/10 rounded-3xl overflow-hidden relative"
-              style={{ boxShadow: "0 0 100px -20px rgba(75,139,255,0.4)" }}>
+            <div className="bg-[#0A1020] border border-white/10 rounded-3xl overflow-hidden relative"
+              style={{ boxShadow: "0 0 100px -20px rgba(82,165,255,0.4)" }}>
               <div className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${tya.speaking ? "opacity-100" : "opacity-0"}`}
-                style={{ background: "radial-gradient(800px circle at 50% 0%, rgba(75,139,255,0.2), transparent 50%)" }} />
+                style={{ background: "radial-gradient(800px circle at 50% 0%, rgba(82,165,255,0.2), transparent 50%)" }} />
               <div className="flex items-center gap-2 px-5 py-3.5 border-b border-white/10 relative">
                 <div className="flex gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-rose-500/60" />
@@ -483,7 +481,7 @@ const Index = () => {
                         disabled={demoStage === "running"}
                         className={`px-3 py-1.5 rounded-lg text-[12.5px] font-medium border transition ${
                           activeNiche?.key === n.key
-                            ? "bg-blue-500 border-blue-500 text-white shadow-[0_0_18px_rgba(75,139,255,0.5)]"
+                            ? "bg-blue-500 border-blue-500 text-white shadow-[0_0_18px_rgba(82,165,255,0.5)]"
                             : "border-white/10 text-slate-400 hover:text-white hover:border-white/20 hover:bg-white/5"
                         } disabled:opacity-50`}
                       >
@@ -499,14 +497,14 @@ const Index = () => {
                     )}
                     {transcript.map((t, i) => (
                       <div key={i} className="flex gap-3 animate-[fadeUp_500ms_ease-out]">
-                        <div className={`w-8 h-8 rounded-full grid place-items-center text-[11px] font-bold flex-shrink-0 ${t.who === "TYA" ? "text-[#05060A]" : "bg-white/5 text-slate-300"}`}
-                          style={t.who === "TYA" ? { background: "linear-gradient(135deg,#4B8BFF,#7AE3FF)" } : {}}>
+                        <div className={`w-8 h-8 rounded-full grid place-items-center text-[11px] font-bold flex-shrink-0 ${t.who === "TYA" ? "text-[#080D17]" : "bg-white/5 text-slate-300"}`}
+                          style={t.who === "TYA" ? { background: "linear-gradient(135deg,#52A5FF,#1AD5E6)" } : {}}>
                           {t.who === "TYA" ? "T" : "C"}
                         </div>
                         <div className="flex-1">
                           <div className="text-[10.5px] text-slate-600 tracking-[0.12em] uppercase mb-1">{t.who === "TYA" ? "TYA" : "Caller"}</div>
                           <div className={`px-4 py-3 rounded-2xl text-[14px] leading-relaxed border ${t.who === "TYA" ? "border-blue-400/25" : "bg-[#11141A] border-white/10"}`}
-                            style={t.who === "TYA" ? { background: "linear-gradient(180deg,rgba(75,139,255,0.08),rgba(75,139,255,0.02))" } : {}}>
+                            style={t.who === "TYA" ? { background: "linear-gradient(180deg,rgba(82,165,255,0.08),rgba(82,165,255,0.02))" } : {}}>
                             {t.t}
                           </div>
                         </div>
@@ -516,7 +514,7 @@ const Index = () => {
                   <div className="flex gap-3 pt-3 border-t border-white/10">
                     {demoStage === "idle" || demoStage === "done" ? (
                       <button onClick={startDemo} className="flex-1 inline-flex justify-center items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-semibold text-white relative overflow-hidden group"
-                        style={{ background: "linear-gradient(180deg,#5B95FF,#3F7BE8)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 14px 32px -10px rgba(75,139,255,0.5)" }}>
+                        style={{ background: "linear-gradient(180deg,#52A5FF,#0DA2E7)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 14px 32px -10px rgba(82,165,255,0.5)" }}>
                         <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                         ▶ Talk to Tya
                       </button>
@@ -530,7 +528,7 @@ const Index = () => {
                     </a>
                   </div>
                 </div>
-                <div className="p-7 flex flex-col gap-5" style={{ background: "rgba(75,139,255,0.04)" }}>
+                <div className="p-7 flex flex-col gap-5" style={{ background: "rgba(82,165,255,0.04)" }}>
                   <div className="text-xs text-slate-500 tracking-wider uppercase">Live Audio</div>
                   <Waveform active={tya.speaking} />
                   <div className="p-4 bg-black/30 border border-white/10 rounded-xl">
@@ -581,9 +579,9 @@ const Index = () => {
               { span: "md:col-span-6", tag: "07 — Infra & Ops",        title: "The system around the system.",              body: "Eval harnesses, monitoring, drift detection, model swap pipelines, prompt versioning — packaged and run by us." },
             ].map((c, i) => (
               <Reveal key={i}>
-                <div className={`${c.span} bg-[#0C0F15] border border-white/10 rounded-3xl p-8 hover:-translate-y-1 hover:border-blue-400/40 transition-all duration-500 relative overflow-hidden group`}>
+                <div className={`${c.span} bg-[#0C1426] border border-white/10 rounded-3xl p-8 hover:-translate-y-1 hover:border-blue-400/40 transition-all duration-500 relative overflow-hidden group`}>
                   <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                    style={{ background: "radial-gradient(circle, rgba(75,139,255,0.18), transparent 60%)" }} />
+                    style={{ background: "radial-gradient(circle, rgba(82,165,255,0.18), transparent 60%)" }} />
                   <div className="text-slate-600 text-xs font-semibold tracking-wide uppercase mb-3">{c.tag}</div>
                   <h3 className="text-[22px] tracking-[-0.02em] font-semibold mb-2.5">{c.title}</h3>
                   <p className="text-slate-400 text-[15px] leading-relaxed">{c.body}</p>
@@ -603,9 +601,9 @@ const Index = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {NICHES.map((n) => (
                 <button key={n.key} onClick={() => { runDemo(n); document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" }); }}
-                  className="group bg-[#0C0F15] border border-white/10 rounded-2xl p-5 text-left hover:border-blue-400/40 hover:-translate-y-0.5 transition-all relative overflow-hidden">
+                  className="group bg-[#0C1426] border border-white/10 rounded-2xl p-5 text-left hover:border-blue-400/40 hover:-translate-y-0.5 transition-all relative overflow-hidden">
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ background: "linear-gradient(135deg, rgba(75,139,255,0.08), transparent)" }} />
+                    style={{ background: "linear-gradient(135deg, rgba(82,165,255,0.08), transparent)" }} />
                   <div className="relative">
                     <div className="text-xs text-cyan-300/80 mb-1">{n.label}</div>
                     <div className="text-base font-semibold mb-2">{n.biz}</div>
@@ -627,7 +625,7 @@ const Index = () => {
           <Reveal>
             <div className="relative">
               <div className="absolute top-[26px] left-0 right-0 h-px hidden md:block"
-                style={{ background: "linear-gradient(90deg, transparent, rgba(122,227,255,0.30) 8%, rgba(122,227,255,0.30) 92%, transparent)" }} />
+                style={{ background: "linear-gradient(90deg, transparent, rgba(26,213,230,0.30) 8%, rgba(26,213,230,0.30) 92%, transparent)" }} />
               <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 {[
                   { d: "Day 1",   t: "Discovery",   b: "30-min call. We pull recordings, scripts, CRM, ops docs." },
@@ -637,8 +635,8 @@ const Index = () => {
                   { d: "Day 6+",  t: "Optimize",    b: "Weekly model refreshes, monthly reviews, quarterly product expansion." },
                 ].map((s, i) => (
                   <div key={i} className="relative md:pt-16">
-                    <div className="hidden md:block absolute top-[18px] left-0 w-4 h-4 rounded-full bg-[#05060A] border-2 border-blue-400"
-                      style={{ boxShadow: "0 0 18px rgba(75,139,255,0.5)" }} />
+                    <div className="hidden md:block absolute top-[18px] left-0 w-4 h-4 rounded-full bg-[#080D17] border-2 border-blue-400"
+                      style={{ boxShadow: "0 0 18px rgba(82,165,255,0.5)" }} />
                     <div className="text-cyan-300 text-xs tracking-wider uppercase font-semibold mb-2">{s.d}</div>
                     <h4 className="text-lg font-semibold mb-1.5">{s.t}</h4>
                     <p className="text-slate-400 text-sm leading-relaxed">{s.b}</p>
@@ -656,7 +654,7 @@ const Index = () => {
           <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Run the math on missed calls.</h2></Reveal>
           <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-16">Drag the sliders. We'll show you the gap between a receptionist and an always-on agent.</p></Reveal>
           <Reveal>
-            <div className="grid grid-cols-1 md:grid-cols-2 bg-[#0C0F15] border border-white/10 rounded-3xl overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-2 bg-[#0C1426] border border-white/10 rounded-3xl overflow-hidden">
               <div className="p-9 border-b md:border-b-0 md:border-r border-white/10 space-y-6">
                 {[
                   { id: "calls", label: "Monthly inbound calls",                value: calls, set: setCalls, min: 100, max: 5000,  step: 50,  fmt: (v: number) => v.toLocaleString() },
@@ -675,10 +673,10 @@ const Index = () => {
                   </div>
                 ))}
               </div>
-              <div className="p-9" style={{ background: "linear-gradient(180deg,rgba(75,139,255,0.08),rgba(75,139,255,0.02))" }}>
+              <div className="p-9" style={{ background: "linear-gradient(180deg,rgba(82,165,255,0.08),rgba(82,165,255,0.02))" }}>
                 <h4 className="text-sm text-slate-400 mb-2 font-medium">Annual revenue you're leaving on the table</h4>
                 <div className="text-[64px] font-semibold tracking-[-0.04em] leading-none mb-1 bg-clip-text text-transparent"
-                  style={{ backgroundImage: "linear-gradient(120deg,#fff,#7AE3FF)" }}>{fmt(annual)}</div>
+                  style={{ backgroundImage: "linear-gradient(120deg,#fff,#1AD5E6)" }}>{fmt(annual)}</div>
                 <div className="text-slate-600 text-[13px] mb-8">Based on calls captured × conversion rate × LTV.</div>
                 {[
                   ["Missed calls / month", missed.toLocaleString()],
@@ -712,8 +710,8 @@ const Index = () => {
               { name: "Full-Stack Platform",      sub: "Custom models, embedded research.",  price: "$12,500", per: "/ month, starting",featured: false, features: ["Unlimited agents","Custom models, you keep weights","Applied research sprints","Embedded engineering pod","SOC 2 + HIPAA + private VPC","Quarterly roadmap + exec sponsor","Team training included"], cta: "Talk to founders" },
             ].map((p, i) => (
               <Reveal key={i}>
-                <div className={`rounded-3xl p-9 relative h-full ${p.featured ? "border-blue-400/50" : "border-white/10"} border bg-[#0C0F15] hover:-translate-y-1 transition-all duration-500`}
-                  style={p.featured ? { background: "linear-gradient(180deg,rgba(75,139,255,0.08),#0C0F15)", boxShadow: "0 0 60px -10px rgba(75,139,255,0.4)" } : {}}>
+                <div className={`rounded-3xl p-9 relative h-full ${p.featured ? "border-blue-400/50" : "border-white/10"} border bg-[#0C1426] hover:-translate-y-1 transition-all duration-500`}
+                  style={p.featured ? { background: "linear-gradient(180deg,rgba(82,165,255,0.08),#0C1426)", boxShadow: "0 0 60px -10px rgba(82,165,255,0.4)" } : {}}>
                   {p.featured && <span className="absolute -top-3 left-9 px-2.5 py-1 bg-blue-500 text-white rounded-md text-[11px] font-semibold tracking-wide uppercase">Most chosen</span>}
                   <h3 className="text-lg font-semibold mb-1.5">{p.name}</h3>
                   <div className="text-slate-600 text-sm mb-6">{p.sub}</div>
@@ -730,7 +728,7 @@ const Index = () => {
                     ))}
                   </ul>
                   <a href="#book" className={`mt-6 w-full inline-flex justify-center items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold transition relative overflow-hidden group ${p.featured ? "text-white" : "border border-white/10 hover:bg-white/5"}`}
-                    style={p.featured ? { background: "linear-gradient(180deg,#5B95FF,#3F7BE8)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 14px 32px -10px rgba(75,139,255,0.5)" } : {}}>
+                    style={p.featured ? { background: "linear-gradient(180deg,#52A5FF,#0DA2E7)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 14px 32px -10px rgba(82,165,255,0.5)" } : {}}>
                     {p.featured && <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />}
                     {p.cta}
                   </a>
@@ -752,15 +750,15 @@ const Index = () => {
               { metric: "2.4x intake throughput",    q: "We replaced two intake roles with one operator and a TYA agent. Compliance signed off on the eval harness in one meeting.",                  n: "Daniel P.", r: "Managing Partner, Vertex Legal", a: "DP" },
             ].map((t, i) => (
               <Reveal key={i}>
-                <div className="bg-[#0C0F15] border border-white/10 rounded-3xl p-8 flex flex-col gap-6 h-full hover:-translate-y-1 hover:border-emerald-400/30 transition-all duration-500">
+                <div className="bg-[#0C1426] border border-white/10 rounded-3xl p-8 flex flex-col gap-6 h-full hover:-translate-y-1 hover:border-emerald-400/30 transition-all duration-500">
                   <span className="self-start inline-flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs font-semibold"
                     style={{ background: "rgba(91,228,155,0.10)", border: "1px solid rgba(91,228,155,0.3)", color: "#5BE49B" }}>
                     {t.metric}
                   </span>
                   <p className="text-[17px] leading-snug tracking-[-0.01em]">"{t.q}"</p>
                   <div className="mt-auto flex items-center gap-3 pt-6 border-t border-white/10">
-                    <div className="w-10 h-10 rounded-full grid place-items-center font-semibold text-[#05060A] text-sm"
-                      style={{ background: "linear-gradient(135deg,#4B8BFF,#7AE3FF)" }}>
+                    <div className="w-10 h-10 rounded-full grid place-items-center font-semibold text-[#080D17] text-sm"
+                      style={{ background: "linear-gradient(135deg,#52A5FF,#1AD5E6)" }}>
                       {t.a}
                     </div>
                     <div>
@@ -780,7 +778,7 @@ const Index = () => {
           <Reveal>
             <div className="grid grid-cols-1 md:grid-cols-[1fr,1.4fr] gap-14 items-center">
               <div className="aspect-[4/5] rounded-3xl border border-white/10 relative overflow-hidden flex items-end p-7"
-                style={{ background: "radial-gradient(ellipse at 30% 20%, rgba(75,139,255,0.45), transparent 60%), linear-gradient(180deg,#1A1F2C,#0C0E12)" }}>
+                style={{ background: "radial-gradient(ellipse at 30% 20%, rgba(82,165,255,0.45), transparent 60%), linear-gradient(180deg,#1A1F2C,#0C0E12)" }}>
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-[160px] font-bold tracking-[-0.06em] bg-clip-text text-transparent pointer-events-none"
                   style={{ backgroundImage: "linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0.02))" }}>AM</div>
                 <div className="relative z-10 px-3.5 py-2 bg-black/50 backdrop-blur border border-white/10 rounded-full text-xs text-slate-400">
@@ -802,7 +800,7 @@ const Index = () => {
                 <div className="grid grid-cols-3 gap-8 mt-7 pt-7 border-t border-white/10">
                   {[["200+","Production deployments"],["16","Verticals shipped"],["99.94%","Uptime, trailing 12mo"]].map(([n,l],i) => (
                     <div key={i}>
-                      <div className="text-[28px] font-semibold tracking-[-0.03em] bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(120deg,#fff,#7AE3FF)" }}>{n}</div>
+                      <div className="text-[28px] font-semibold tracking-[-0.03em] bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(120deg,#fff,#1AD5E6)" }}>{n}</div>
                       <div className="text-slate-600 text-xs">{l}</div>
                     </div>
                   ))}
@@ -820,8 +818,8 @@ const Index = () => {
           <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-12">Two ways to start: book a 30-minute call with the founders, or drop your details and we'll reach out.</p></Reveal>
           <div className="grid grid-cols-1 lg:grid-cols-[1.5fr,1fr] gap-6">
             <Reveal>
-              <div className="bg-[#0C0F15] border border-white/10 rounded-3xl p-3 overflow-hidden h-full"
-                style={{ boxShadow: "0 0 60px -10px rgba(75,139,255,0.3)" }}>
+              <div className="bg-[#0C1426] border border-white/10 rounded-3xl p-3 overflow-hidden h-full"
+                style={{ boxShadow: "0 0 60px -10px rgba(82,165,255,0.3)" }}>
                 <div className="px-5 py-3 flex items-center justify-between">
                   <div className="text-sm font-semibold">Schedule via Cal.com</div>
                   <a href="https://cal.com/trainyouragent" target="_blank" rel="noreferrer" className="text-xs text-cyan-300 hover:text-cyan-200">Open in new tab ↗</a>
@@ -835,7 +833,7 @@ const Index = () => {
               </div>
             </Reveal>
             <Reveal>
-              <div className="bg-[#0C0F15] border border-white/10 rounded-3xl p-3 overflow-hidden h-full">
+              <div className="bg-[#0C1426] border border-white/10 rounded-3xl p-3 overflow-hidden h-full">
                 <div className="px-5 py-3 flex items-center justify-between">
                   <div className="text-sm font-semibold">Or get in touch</div>
                   <span className="text-xs text-slate-500">We respond within an hour</span>
@@ -872,7 +870,7 @@ const Index = () => {
       </section>
 
       <section className="pt-28 pb-36 text-center relative z-10"
-        style={{ background: "radial-gradient(900px 460px at 50% 100%, rgba(75,139,255,0.22), transparent 60%)" }}>
+        style={{ background: "radial-gradient(900px 460px at 50% 100%, rgba(82,165,255,0.22), transparent 60%)" }}>
         <div className="max-w-[1280px] mx-auto px-6">
           <Reveal>
             <h2 className="text-[clamp(44px,5.5vw,84px)] tracking-[-0.04em] leading-[1.02] font-semibold mb-5">
@@ -884,7 +882,7 @@ const Index = () => {
           <Reveal>
             <div className="flex gap-3 justify-center flex-wrap">
               <a href="#book" className="relative inline-flex items-center gap-2 px-7 py-4 rounded-xl text-[15px] font-semibold text-white overflow-hidden group"
-                style={{ background: "linear-gradient(180deg,#5B95FF 0%,#3F7BE8 100%)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 18px 50px -10px rgba(75,139,255,0.5)" }}>
+                style={{ background: "linear-gradient(180deg,#52A5FF 0%,#0DA2E7 100%)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 18px 50px -10px rgba(82,165,255,0.5)" }}>
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 Book a discovery call →
               </a>
@@ -899,11 +897,9 @@ const Index = () => {
           <div className="grid grid-cols-2 md:grid-cols-[1.4fr,1fr,1fr,1fr] gap-10 mb-14">
             <div>
               <Link to="/" className="flex items-center gap-3 font-bold text-base tracking-tight mb-4">
-                <span className="w-8 h-8 rounded-xl grid place-items-center relative overflow-hidden"
-                  style={{ background: "conic-gradient(from 180deg at 50% 50%, #4B8BFF, #7AE3FF, #A78BFA, #4B8BFF)", boxShadow: "0 0 28px -4px rgba(75,139,255,0.5)" }}>
-                  <span className="absolute inset-[2px] rounded-[10px] bg-[#05060A] grid place-items-center">
-                    <span className="block w-2.5 h-2.5 rounded-[2px] bg-gradient-to-br from-blue-400 to-cyan-300 rotate-45" />
-                  </span>
+                <span className="relative w-9 h-9 flex items-center justify-center">
+                  <span className="absolute inset-0 rounded-full blur-xl opacity-60" style={{ background: "rgba(26,213,230,0.5)" }} />
+                  <img src="https://trainyouragent.com/assets/logo-BQrpRIpl.png" alt="TrainYourAgent" className="relative w-8 h-8 object-contain drop-shadow-[0_0_8px_rgba(26,213,230,0.5)]" />
                 </span>
                 <span>TrainYourAgent</span>
               </Link>
