@@ -258,6 +258,16 @@ const Index = () => {
   const roi = lostLtv - 2400;
   const fmt = (n: number) => "$" + Math.round(n).toLocaleString();
 
+  // Load ElevenLabs Conversational AI widget
+  useEffect(() => {
+    if (document.querySelector('script[src*="convai-widget-embed"]')) return;
+    const s = document.createElement("script");
+    s.src = "https://unpkg.com/@elevenlabs/convai-widget-embed";
+    s.async = true;
+    s.type = "text/javascript";
+    document.body.appendChild(s);
+  }, []);
+
   useEffect(() => {
     const onScroll = () => setNavScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
@@ -357,7 +367,7 @@ const Index = () => {
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium tracking-wide mb-8"
               style={{ background: "rgba(82,165,255,0.10)", border: "1px solid rgba(82,165,255,0.25)", color: "#B8D2FF" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#5BE49B] animate-pulse" />
-              Tya is live · Voice agents in production for 200+ businesses
+              Only 7 onboarding slots left this month · Live for 200+ businesses
             </div>
           </Reveal>
           <Reveal delay={50}>
@@ -369,7 +379,7 @@ const Index = () => {
           </Reveal>
           <Reveal delay={120}>
             <p className="text-[clamp(18px,1.7vw,22px)] text-slate-400 max-w-2xl mb-10 leading-relaxed">
-              Train Your Agent is the full-stack AI company. Custom voice agents that pass for human, original research, models you own, embedded engineering — under one roof, shipped in days.
+              We build the AI voice agent that answers every call, books every lead, and works 24/7 — sounding so human your customers won't know. Live in 5 days. You keep the model, the data, and every dollar it makes you.
             </p>
           </Reveal>
           <Reveal delay={180}>
@@ -378,7 +388,7 @@ const Index = () => {
                 style={{ background: "linear-gradient(180deg,#52A5FF 0%,#0DA2E7 100%)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 18px 50px -10px rgba(82,165,255,0.5)" }}>
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 <span className="w-2 h-2 rounded-full bg-emerald-300 shadow-[0_0_10px_#6EE7B7] animate-pulse" />
-                Talk to Tya now
+                Hear Tya answer my phone →
               </a>
               <a href="#pricing" className="inline-flex items-center gap-2 px-7 py-4 rounded-xl text-[15px] font-semibold border border-white/10 hover:bg-white/5 hover:border-white/20 transition">See pricing</a>
               <a href="#book" className="inline-flex items-center gap-2 px-7 py-4 rounded-xl text-[15px] font-semibold text-slate-300 hover:text-white transition">
@@ -389,10 +399,10 @@ const Index = () => {
           <Reveal delay={240}>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl">
               {[
-                ["< 800ms", "end-to-end latency"],
-                ["5 days", "production deployment"],
-                ["SOC 2 + HIPAA", "ready"],
-                ["You own", "the model & data"],
+                ["< 800ms", "answers faster than a human"],
+                ["5 days", "from contract to live"],
+                ["+$412k", "captured by avg HVAC client / Q"],
+                ["100%", "money-back if she fails"],
               ].map(([k, v], i) => (
                 <div key={i} className="border-l border-white/10 pl-4">
                   <div className="text-white text-lg font-semibold tracking-tight">{k}</div>
@@ -447,7 +457,20 @@ const Index = () => {
         <div className="max-w-[1280px] mx-auto px-6">
           <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Talk to Tya · Live in your browser</div></Reveal>
           <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Hear her answer for your business.</h2></Reveal>
-          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-12">Click the button. Tya will greet you, ask what you do, then run a real demo using your speakers — playing the role of your AI receptionist for the niche you pick.</p></Reveal>
+          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-8">Hit the orb below. Tya will pick up — speak to her like she's your receptionist. Ask about pricing, your industry, whatever. She sounds like a real human because she is, in production. (The orb is your live ElevenLabs agent. The demo card under it is the scripted niche walkthrough.)</p></Reveal>
+          <Reveal>
+            <div className="bg-[#0A1020] border border-cyan-400/20 rounded-3xl p-8 mb-6 flex items-center justify-between gap-6 flex-wrap" style={{ boxShadow: "0 0 80px -10px rgba(26,213,230,0.35)" }}>
+              <div>
+                <div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-2">Live · ElevenLabs Conversational AI</div>
+                <div className="text-2xl font-semibold mb-1">Talk to Tya — out loud, right now.</div>
+                <div className="text-slate-400 text-sm">Tap the orb. Allow microphone. Speak. She'll answer.</div>
+              </div>
+              <div className="relative">
+                {/* Replace REPLACE_WITH_YOUR_AGENT_ID with your ElevenLabs Conversational AI agent id */}
+                <div dangerouslySetInnerHTML={{ __html: '<elevenlabs-convai agent-id="REPLACE_WITH_YOUR_AGENT_ID"></elevenlabs-convai>' }} />
+              </div>
+            </div>
+          </Reveal>
 
           <Reveal>
             <div className="bg-[#0A1020] border border-white/10 rounded-3xl overflow-hidden relative"
