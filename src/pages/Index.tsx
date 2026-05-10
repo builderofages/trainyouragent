@@ -367,7 +367,7 @@ const Index = () => {
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium tracking-wide mb-8"
               style={{ background: "rgba(82,165,255,0.10)", border: "1px solid rgba(82,165,255,0.25)", color: "#B8D2FF" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#5BE49B] animate-pulse" />
-              Only 7 onboarding slots left this month · Live for 200+ businesses
+              The Everything AI Company · Voice · Models · Software · Research · Consulting
             </div>
           </Reveal>
           <Reveal delay={50}>
@@ -379,7 +379,7 @@ const Index = () => {
           </Reveal>
           <Reveal delay={120}>
             <p className="text-[clamp(18px,1.7vw,22px)] text-slate-400 max-w-2xl mb-10 leading-relaxed">
-              We build the AI voice agent that answers every call, books every lead, and works 24/7 — sounding so human your customers won't know. Live in 5 days. You keep the model, the data, and every dollar it makes you.
+              Train Your Agent is the everything AI company. We design, train, deploy, and run the entire AI stack for your business — voice agents, custom models, applied research, SaaS, training, embedded engineering. One team. One bill. Your name on the model. Live in 5 days.
             </p>
           </Reveal>
           <Reveal delay={180}>
@@ -455,18 +455,18 @@ const Index = () => {
 
       <section id="demo" className="py-28 relative z-10">
         <div className="max-w-[1280px] mx-auto px-6">
-          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Talk to Tya · Live in your browser</div></Reveal>
-          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Hear her answer for your business.</h2></Reveal>
+          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">The Everything AI Demo · Live in your browser</div></Reveal>
+          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Hear what we build for your business.</h2></Reveal>
           <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-8">Hit the orb below. Tya will pick up — speak to her like she's your receptionist. Ask about pricing, your industry, whatever. She sounds like a real human because she is, in production. (The orb is your live ElevenLabs agent. The demo card under it is the scripted niche walkthrough.)</p></Reveal>
           <Reveal>
             <div className="bg-[#0A1020] border border-cyan-400/20 rounded-3xl p-8 mb-6 flex items-center justify-between gap-6 flex-wrap" style={{ boxShadow: "0 0 80px -10px rgba(26,213,230,0.35)" }}>
               <div>
                 <div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-2">Live · ElevenLabs Conversational AI</div>
                 <div className="text-2xl font-semibold mb-1">Talk to Tya — out loud, right now.</div>
-                <div className="text-slate-400 text-sm">Tap the orb. Allow microphone. Speak. She'll answer.</div>
+                <div className="text-slate-400 text-sm">Tap the orb. Allow mic. Speak. Tya picks up — voice is one of the things we ship.</div>
               </div>
               <div className="relative">
-                {/* Replace REPLACE_WITH_YOUR_AGENT_ID with your ElevenLabs Conversational AI agent id */}
+                {/* Replace agent_5801k8nhs68yfyb8m0px86cdp6fc with your ElevenLabs Conversational AI agent id */}
                 <div dangerouslySetInnerHTML={{ __html: '<elevenlabs-convai agent-id="REPLACE_WITH_YOUR_AGENT_ID"></elevenlabs-convai>' }} />
               </div>
             </div>
@@ -617,9 +617,9 @@ const Index = () => {
 
       <section id="niches" className="py-28 relative z-10">
         <div className="max-w-[1280px] mx-auto px-6">
-          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Verticals We Ship For</div></Reveal>
-          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Built for your business, not generic SaaS.</h2></Reveal>
-          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-12">Click any vertical to hear Tya pitch herself for it.</p></Reveal>
+          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Verticals × Capabilities — what we build</div></Reveal>
+          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">From a voice agent to a full AI ops team — for any business.</h2></Reveal>
+          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-12">Click any vertical to hear Tya pitch herself. Then talk to us about everything else we ship for it.</p></Reveal>
           <Reveal>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {NICHES.map((n) => (
@@ -897,7 +897,7 @@ const Index = () => {
         <div className="max-w-[1280px] mx-auto px-6">
           <Reveal>
             <h2 className="text-[clamp(44px,5.5vw,84px)] tracking-[-0.04em] leading-[1.02] font-semibold mb-5">
-              Stop missing calls.<br />
+              Stop running your business on yesterday.<br />
               Start <span className="italic font-normal" style={{ fontFamily: "'Instrument Serif', serif" }}>compounding</span>.
             </h2>
           </Reveal>
@@ -926,7 +926,7 @@ const Index = () => {
                 </span>
                 <span>TrainYourAgent</span>
               </Link>
-              <p className="text-slate-400 text-sm max-w-xs leading-relaxed">The full-stack AI company. We build, train, and run the systems your business needs to stop missing the future.</p>
+              <p className="text-slate-400 text-sm max-w-xs leading-relaxed">The everything AI company. Voice. Models. Software. Research. Consulting. Training. Whatever your business needs to stop missing the future.</p>
             </div>
             {[
               { h: "Platform", links: [["#capabilities","Voice Agents"],["#capabilities","Custom Models"],["#capabilities","SaaS Products"],["#capabilities","Consulting"],["#capabilities","Training"]] },
