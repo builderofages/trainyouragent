@@ -9,22 +9,22 @@ import { Link } from "react-router-dom";
  */
 
 const NICHES = [
-  { key: "roofing",    label: "Roofing",        biz: "Apex Roofing",          q: "free roof inspection",    book: "Tuesday at 9am or Thursday at 2pm" },
-  { key: "solar",      label: "Solar",          biz: "Sunline Solar",         q: "solar consultation",       book: "Tuesday at 10am or Friday at 1pm" },
-  { key: "hvac",       label: "HVAC",           biz: "Ridgeline HVAC",        q: "AC service appointment",   book: "today between 1 and 3pm" },
-  { key: "gym",        label: "Gym & Fitness",  biz: "Forge Fitness",         q: "membership tour",          book: "Saturday at 10am or Sunday at 2pm" },
-  { key: "dental",     label: "Dental",         biz: "Brightside Dental",     q: "new-patient cleaning",     book: "next Wednesday at 11am" },
-  { key: "med",        label: "Healthcare",     biz: "Northstar Dermatology", q: "dermatology follow-up",    book: "Thursday at 2pm or next Tuesday at 9:30am" },
-  { key: "legal",      label: "Legal",          biz: "Vertex Legal",          q: "consult with an attorney", book: "tomorrow at 10am" },
-  { key: "real",       label: "Real Estate",    biz: "Park & Pine Realty",    q: "listing tour",             book: "tomorrow at 4pm with Sarah" },
-  { key: "auto",       label: "Auto",           biz: "Atlas Auto Group",      q: "test drive",               book: "Saturday at 10am or 11:30am" },
-  { key: "medspa",     label: "Med Spa",        biz: "Glow Aesthetics",       q: "Botox consultation",       book: "Friday at 4pm" },
-  { key: "vet",        label: "Veterinary",     biz: "Companion Vet",         q: "wellness check for your dog", book: "tomorrow at 9am" },
-  { key: "hotel",      label: "Hotels",         biz: "The Pine Hotel",        q: "weekend reservation",      book: "Friday through Sunday, queen suite" },
-  { key: "bar",        label: "Bars & Nightlife", biz: "Lantern Lounge",      q: "Saturday VIP table",       book: "Saturday at 10pm, table for six" },
-  { key: "logistics",  label: "Logistics",      biz: "Meridian Freight",      q: "pickup and quote",         book: "Wednesday morning pickup" },
-  { key: "accounting", label: "Accounting",     biz: "Ledger & Co.",          q: "tax-strategy session",     book: "next Thursday at 11am" },
-  { key: "agency",     label: "Agencies",       biz: "Northwind Agency",      q: "discovery call",           book: "Tuesday at 3pm" },
+  { key: "roofing",    path: "/roofing",         label: "Roofing",        biz: "Apex Roofing",          q: "free roof inspection",    book: "Tuesday at 9am or Thursday at 2pm" },
+  { key: "solar",      path: "/solar",           label: "Solar",          biz: "Sunline Solar",         q: "solar consultation",       book: "Tuesday at 10am or Friday at 1pm" },
+  { key: "hvac",       path: "/hvac",            label: "HVAC",           biz: "Ridgeline HVAC",        q: "AC service appointment",   book: "today between 1 and 3pm" },
+  { key: "gym",        path: "/gym",             label: "Gym & Fitness",  biz: "Forge Fitness",         q: "membership tour",          book: "Saturday at 10am or Sunday at 2pm" },
+  { key: "dental",     path: "/healthcare",      label: "Dental",         biz: "Brightside Dental",     q: "new-patient cleaning",     book: "next Wednesday at 11am" },
+  { key: "med",        path: "/healthcare",      label: "Healthcare",     biz: "Northstar Dermatology", q: "dermatology follow-up",    book: "Thursday at 2pm or next Tuesday at 9:30am" },
+  { key: "legal",      path: "/legal",           label: "Legal",          biz: "Vertex Legal",          q: "consult with an attorney", book: "tomorrow at 10am" },
+  { key: "real",       path: "/real-estate",     label: "Real Estate",    biz: "Park & Pine Realty",    q: "listing tour",             book: "tomorrow at 4pm with Sarah" },
+  { key: "auto",       path: "/automotive",      label: "Auto",           biz: "Atlas Auto Group",      q: "test drive",               book: "Saturday at 10am or 11:30am" },
+  { key: "medspa",     path: "/spas",            label: "Med Spa",        biz: "Glow Aesthetics",       q: "Botox consultation",       book: "Friday at 4pm" },
+  { key: "vet",        path: "/healthcare",      label: "Veterinary",     biz: "Companion Vet",         q: "wellness check for your dog", book: "tomorrow at 9am" },
+  { key: "hotel",      path: "/hotels",          label: "Hotels",         biz: "The Pine Hotel",        q: "weekend reservation",      book: "Friday through Sunday, queen suite" },
+  { key: "bar",        path: "/bars-nightclubs", label: "Bars & Nightlife", biz: "Lantern Lounge",      q: "Saturday VIP table",       book: "Saturday at 10pm, table for six" },
+  { key: "logistics",  path: "/logistics",       label: "Logistics",      biz: "Meridian Freight",      q: "pickup and quote",         book: "Wednesday morning pickup" },
+  { key: "accounting", path: "/accounting",      label: "Accounting",     biz: "Ledger & Co.",          q: "tax-strategy session",     book: "next Thursday at 11am" },
+  { key: "agency",     path: "/solutions",       label: "Agencies",       biz: "Northwind Agency",      q: "discovery call",           book: "Tuesday at 3pm" },
 ];
 
 // Browser TTS helper — finds the best voice and speaks
@@ -108,14 +108,12 @@ function Counter({ to, suffix = "", prefix = "" }: { to: number; suffix?: string
   return <span ref={ref}>{prefix}{v.toLocaleString()}{suffix}</span>;
 }
 
-function Reveal({ children, delay = 0, as: As = "div" }: { children: React.ReactNode; delay?: number; as?: any }) {
+function Reveal({ children, delay = 0, as: As = "div", className = "" }: { children: React.ReactNode; delay?: number; as?: any; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    // If already in viewport on mount (above-the-fold content), reveal immediately —
-    // IntersectionObserver in some Chromium builds skips initial intersection callbacks.
     const rect = el.getBoundingClientRect();
     const inView = rect.top < (window.innerHeight || 0) && rect.bottom > 0;
     if (inView) { setTimeout(() => setShown(true), delay); return; }
@@ -125,14 +123,13 @@ function Reveal({ children, delay = 0, as: As = "div" }: { children: React.React
       });
     }, { threshold: 0.12, rootMargin: "0px 0px -10% 0px" });
     io.observe(el);
-    // Hard safety net — never leave content hidden longer than 1.5s no matter what.
     const safety = setTimeout(() => { setShown(true); io.disconnect(); }, 1500);
     return () => { io.disconnect(); clearTimeout(safety); };
   }, [delay]);
   return (
     <As
       ref={ref}
-      className={`transition-all duration-1000 ease-out ${shown ? "opacity-100 translate-y-0 blur-0" : "opacity-0 translate-y-6 blur-sm"}`}
+      className={`transition-all duration-1000 ease-out ${shown ? "opacity-100 translate-y-0 blur-0" : "opacity-0 translate-y-6 blur-sm"} ${className}`}
     >
       {children}
     </As>
@@ -460,6 +457,51 @@ const Index = () => {
     }
   }, []);
 
+  // SEO + branding: title, description, theme color, favicon, JSON-LD Organization schema.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.title = "Train Your Agent — The Everything AI Company";
+    document.documentElement.lang = "en";
+    const setMeta = (sel: string, attr: string, val: string) => {
+      let el = document.head.querySelector(sel) as HTMLMetaElement | HTMLLinkElement | null;
+      if (!el) { el = document.createElement(sel.includes('link') ? 'link' : 'meta') as any; document.head.appendChild(el); }
+      const [a, v] = sel.replace(/[\[\]"']/g, '').split('=');
+      if (a) (el as any).setAttribute(a, v);
+      (el as any).setAttribute(attr, val);
+    };
+    setMeta('meta[name="description"]', 'content', "The Everything AI Company. We design, train, deploy, and run the entire AI stack — voice agents, chatbots, ads, SEO, web, custom models — for businesses and consumers. One vendor. Live in 5 days.");
+    setMeta('meta[name="theme-color"]', 'content', "#080D17");
+    setMeta('meta[property="og:title"]', 'content', "Train Your Agent — The Everything AI Company");
+    setMeta('meta[property="og:description"]', 'content', "Voice, chatbots, ads, SEO, web, custom models — built, deployed, and run by us. Live in 5 days.");
+    setMeta('meta[name="twitter:title"]', 'content', "Train Your Agent — The Everything AI Company");
+    setMeta('meta[name="twitter:description"]', 'content', "Voice, chatbots, ads, SEO, web, custom models — built, deployed, and run by us. Live in 5 days.");
+    // Favicon — inline SVG matching the brand mark
+    const favSvg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><defs><linearGradient id='g' x1='0' y1='0' x2='40' y2='40' gradientUnits='userSpaceOnUse'><stop offset='0%' stop-color='%231AD5E6'/><stop offset='55%' stop-color='%2352A5FF'/><stop offset='100%' stop-color='%230DA2E7'/></linearGradient></defs><rect x='2' y='2' width='36' height='36' rx='10' fill='%23080D17' stroke='url(%23g)' stroke-width='2'/><path d='M20 9 L30.5 30 L25.6 30 L23.6 26 L16.4 26 L14.4 30 L9.5 30 Z M17.7 22 L22.3 22 L20 17 Z' fill='url(%23g)'/></svg>`;
+    let fav = document.head.querySelector('link[rel="icon"]') as HTMLLinkElement | null;
+    if (!fav) { fav = document.createElement('link'); fav.rel = 'icon'; document.head.appendChild(fav); }
+    fav.type = 'image/svg+xml';
+    fav.href = `data:image/svg+xml,${favSvg}`;
+    // JSON-LD Organization
+    if (!document.getElementById('tya-jsonld')) {
+      const ld = document.createElement('script');
+      ld.id = 'tya-jsonld';
+      ld.type = 'application/ld+json';
+      ld.text = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "TrainYourAgent",
+        "alternateName": "Train Your Agent",
+        "url": "https://trainyouragent.com",
+        "email": "hello@trainyouragent.com",
+        "description": "The Everything AI Company. Voice agents, chatbots, ads, SEO, web, custom models — for businesses and consumers.",
+        "founder": { "@type": "Person", "name": "Alexander Mills" },
+        "areaServed": "Worldwide",
+        "sameAs": ["https://github.com/builderofages/trainyouragent"]
+      });
+      document.head.appendChild(ld);
+    }
+  }, []);
+
   const log = (who: "TYA" | "You", t: string) => setTranscript((p) => [...p, { who, t }]);
 
   const startDemo = () => {
@@ -530,9 +572,7 @@ const Index = () => {
         <div className="absolute -bottom-1/3 left-1/4 w-[60vw] h-[60vw] rounded-full opacity-35"
           style={{ background: "radial-gradient(circle, rgba(167,139,250,0.30), transparent 60%)", animation: "blobC 32s ease-in-out infinite alternate", filter: "blur(60px)" }} />
       </div>
-      <Particles />
       <Spotlight />
-      <LiveTicker />
 
       {/* NAV */}
       <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl transition-all ${navScrolled ? "bg-[#080D17]/85 border-b border-white/10" : "bg-[#080D17]/40 border-b border-transparent"}`}>
@@ -660,126 +700,12 @@ const Index = () => {
       </section>
 
       {/* VOICE DEMO */}
-      <section id="demo" className="py-28 relative z-10">
+      <section id="demo" className="py-24 relative z-10">
         <div className="max-w-[1280px] mx-auto px-6">
-          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Talk to Tya · Live in your browser</div></Reveal>
-          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Hear her answer for your business.</h2></Reveal>
-          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-12">Click the button. Tya will greet you, ask what you do, then run a real demo using your speakers — playing the role of your AI receptionist for the niche you pick.</p></Reveal>
+          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Live demo · ElevenLabs voice agent</div></Reveal>
+          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Talk to a real Tya, right now.</h2></Reveal>
+          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-10">The mic widget in the bottom-right is the actual production stack — same voice, same latency, same tooling we'd deploy on your phone line. Click it, talk to it like a customer would.</p></Reveal>
 
-          <Reveal>
-            <div className="bg-[#0A1020] border border-white/10 rounded-3xl overflow-hidden relative"
-              style={{ boxShadow: "0 0 100px -20px rgba(82,165,255,0.4)" }}>
-              {/* glow ring while speaking */}
-              <div className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${tya.speaking ? "opacity-100" : "opacity-0"}`}
-                style={{ background: "radial-gradient(800px circle at 50% 0%, rgba(82,165,255,0.2), transparent 50%)" }} />
-              <div className="flex items-center gap-2 px-5 py-3.5 border-b border-white/10 relative">
-                <div className="flex gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500/60" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/60" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/60" />
-                </div>
-                <span className="ml-2.5 text-xs text-slate-500 font-mono">tya · live-agent v3.2 · web</span>
-                <div className="ml-auto flex items-center gap-2 text-xs text-slate-500">
-                  <span className={`w-2 h-2 rounded-full ${tya.speaking ? "bg-emerald-400 shadow-[0_0_10px_#5BE49B] animate-pulse" : "bg-slate-600"}`} />
-                  {tya.speaking ? "Speaking · 0ms" : "Standing by"}
-                </div>
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-[1.1fr,1fr] min-h-[520px]">
-                {/* Left: niches + transcript */}
-                <div className="p-7 border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col gap-5">
-                  {!tya.supported && (
-                    <div className="text-xs text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
-                      Your browser does not support Web Speech. Try Chrome or Edge for the live voice demo.
-                    </div>
-                  )}
-                  <div className="flex flex-wrap gap-2">
-                    {NICHES.map((n) => (
-                      <button
-                        key={n.key}
-                        onClick={() => runDemo(n)}
-                        disabled={demoStage === "running"}
-                        className={`px-3 py-1.5 rounded-lg text-[12.5px] font-medium border transition ${
-                          activeNiche?.key === n.key
-                            ? "bg-blue-500 border-blue-500 text-white shadow-[0_0_18px_rgba(82,165,255,0.5)]"
-                            : "border-white/10 text-slate-400 hover:text-white hover:border-white/20 hover:bg-white/5"
-                        } disabled:opacity-50`}
-                      >
-                        {n.label}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="flex-1 flex flex-col gap-3 overflow-y-auto max-h-[360px] pr-1">
-                    {transcript.length === 0 && demoStage === "idle" && (
-                      <div className="text-slate-500 text-sm py-12 text-center border border-dashed border-white/10 rounded-2xl">
-                        Hit "Talk to Tya" below to start. She'll introduce herself.
-                      </div>
-                    )}
-                    {transcript.map((t, i) => (
-                      <div key={i} className="flex gap-3 animate-[fadeUp_500ms_ease-out]">
-                        <div className={`w-8 h-8 rounded-full grid place-items-center text-[11px] font-bold flex-shrink-0 ${t.who === "TYA" ? "text-[#080D17]" : "bg-white/5 text-slate-300"}`}
-                          style={t.who === "TYA" ? { background: "linear-gradient(135deg,#52A5FF,#1AD5E6)" } : {}}>
-                          {t.who === "TYA" ? "T" : "C"}
-                        </div>
-                        <div className="flex-1">
-                          <div className="text-[10.5px] text-slate-600 tracking-[0.12em] uppercase mb-1">{t.who === "TYA" ? "TYA" : "Caller"}</div>
-                          <div className={`px-4 py-3 rounded-2xl text-[14px] leading-relaxed border ${t.who === "TYA" ? "border-blue-400/25" : "bg-[#11141A] border-white/10"}`}
-                            style={t.who === "TYA" ? { background: "linear-gradient(180deg,rgba(82,165,255,0.08),rgba(82,165,255,0.02))" } : {}}>
-                            {t.t}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex gap-3 pt-3 border-t border-white/10">
-                    {demoStage === "idle" || demoStage === "done" ? (
-                      <button onClick={startDemo} className="flex-1 inline-flex justify-center items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-semibold text-white relative overflow-hidden group"
-                        style={{ background: "linear-gradient(180deg,#52A5FF,#0DA2E7)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 14px 32px -10px rgba(82,165,255,0.5)" }}>
-                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                        ▶ Talk to Tya
-                      </button>
-                    ) : (
-                      <button onClick={stopDemo} className="flex-1 inline-flex justify-center items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-semibold border border-white/10 hover:bg-white/5 transition">
-                        ■ Stop demo
-                      </button>
-                    )}
-                    <a href="#book" className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-semibold border border-white/10 hover:bg-white/5 transition">
-                      Get Tya on your number →
-                    </a>
-                  </div>
-                </div>
-                {/* Right: visualizer */}
-                <div className="p-7 flex flex-col gap-5" style={{ background: "rgba(82,165,255,0.04)" }}>
-                  <div className="text-xs text-slate-500 tracking-wider uppercase">Live Audio</div>
-                  <Waveform active={tya.speaking} />
-                  <div className="p-4 bg-black/30 border border-white/10 rounded-xl">
-                    <div className="text-xs text-slate-500 tracking-wider uppercase mb-2.5">Active context</div>
-                    <div className="text-[13px] leading-relaxed text-slate-300 space-y-0.5 font-mono">
-                      <div>· Persona: <span className="text-cyan-300">{activeNiche?.biz || "Awaiting selection"}</span></div>
-                      <div>· Vertical: <span className="text-cyan-300">{activeNiche?.label || "—"}</span></div>
-                      <div>· Stage: <span className="text-cyan-300">{demoStage}</span></div>
-                      <div>· Voice: <span className="text-emerald-400">browser-native (production uses ElevenLabs Turbo)</span></div>
-                      <div>· Latency: <span className="text-emerald-400">{tya.speaking ? "live" : "—"}</span></div>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-3 gap-3">
-                    {[
-                      ["412ms", "Avg latency"],
-                      ["94%", "Calls resolved"],
-                      ["+38%", "Bookings vs human"],
-                    ].map(([n, l], i) => (
-                      <div key={i} className="p-3.5 bg-black/25 border border-white/10 rounded-xl">
-                        <div className="text-xl font-semibold tracking-[-0.02em]">{n}</div>
-                        <div className="text-slate-600 text-[10.5px] uppercase tracking-wide mt-1">{l}</div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="text-[12px] text-slate-500 leading-relaxed">
-                    What you're hearing now uses your browser's built-in voice synthesis. In production we run sub-800ms ElevenLabs Turbo + Deepgram Nova STT on the actual phone line — indistinguishable from a human receptionist.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Reveal>
 
           {/* REAL CONVERSATIONAL TYA — ElevenLabs Convai widget (live agent) */}
           <Reveal>
@@ -820,8 +746,8 @@ const Index = () => {
               { span: "md:col-span-6", tag: "06 — Training",           title: "Make your team the AI team.",                body: "Hands-on programs that take engineers and ops leads from curious to shipping production agents in three weeks." },
               { span: "md:col-span-6", tag: "07 — Infra & Ops",        title: "The system around the system.",              body: "Eval harnesses, monitoring, drift detection, model swap pipelines, prompt versioning — packaged and run by us." },
             ].map((c, i) => (
-              <Reveal key={i}>
-                <div className={`${c.span} bg-[#0C1426] border border-white/10 rounded-3xl p-8 hover:-translate-y-1 hover:border-blue-400/40 transition-all duration-500 relative overflow-hidden group`}>
+              <Reveal key={i} className={c.span}>
+                <div className="bg-[#0C1426] border border-white/10 rounded-3xl p-8 hover:-translate-y-1 hover:border-blue-400/40 transition-all duration-500 relative overflow-hidden group h-full">
                   <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"
                     style={{ background: "radial-gradient(circle, rgba(82,165,255,0.18), transparent 60%)" }} />
                   <div className="text-slate-600 text-xs font-semibold tracking-wide uppercase mb-3">{c.tag}</div>
@@ -884,8 +810,8 @@ const Index = () => {
                 items: ["Personal AI assistants", "Done-for-you automations", "Custom GPT builds", "AI coaching + skill training", "AI-powered side hustles", "Faceless YouTube / TikTok systems", "Personal CRM + life ops"],
               },
             ].map((c, i) => (
-              <Reveal key={i}>
-                <div className={`${c.span} bg-[#0C1426] border border-white/10 rounded-3xl p-7 md:p-8 hover:-translate-y-1 hover:border-blue-400/40 transition-all duration-500 relative overflow-hidden group h-full`}>
+              <Reveal key={i} className={c.span}>
+                <div className="bg-[#0C1426] border border-white/10 rounded-3xl p-7 md:p-8 hover:-translate-y-1 hover:border-blue-400/40 transition-all duration-500 relative overflow-hidden group h-full">
                   <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"
                     style={{ background: "radial-gradient(circle, rgba(82,165,255,0.20), transparent 60%)" }} />
                   <div className="flex items-start justify-between mb-4 relative">
@@ -988,21 +914,21 @@ const Index = () => {
         <div className="max-w-[1280px] mx-auto px-6">
           <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Verticals We Ship For</div></Reveal>
           <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Built for your business, not generic SaaS.</h2></Reveal>
-          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-12">Click any vertical to hear Tya pitch herself for it.</p></Reveal>
+          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-12">Click any vertical for the full landing page — pricing, demo scripts, integration notes.</p></Reveal>
           <Reveal>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {NICHES.map((n) => (
-                <button key={n.key} onClick={() => { runDemo(n); document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" }); }}
+                <Link key={n.key} to={n.path}
                   className="group bg-[#0C1426] border border-white/10 rounded-2xl p-5 text-left hover:border-blue-400/40 hover:-translate-y-0.5 transition-all relative overflow-hidden">
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
                     style={{ background: "linear-gradient(135deg, rgba(82,165,255,0.08), transparent)" }} />
                   <div className="relative">
                     <div className="text-xs text-cyan-300/80 mb-1">{n.label}</div>
                     <div className="text-base font-semibold mb-2">{n.biz}</div>
-                    <div className="text-slate-500 text-[12.5px] leading-relaxed">"{n.q}" booked in seconds.</div>
-                    <div className="text-cyan-300 text-xs mt-3 opacity-0 group-hover:opacity-100 transition-opacity">Hear demo →</div>
+                    <div className="text-slate-400 text-[12.5px] leading-relaxed">"{n.q}" booked in seconds.</div>
+                    <div className="text-cyan-300 text-xs mt-3 opacity-0 group-hover:opacity-100 transition-opacity">See {n.label} page →</div>
                   </div>
-                </button>
+                </Link>
               ))}
             </div>
           </Reveal>
@@ -1134,37 +1060,23 @@ const Index = () => {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="py-28 relative z-10">
+      {/* CASE STUDIES — early-stage honesty */}
+      <section className="py-24 relative z-10">
         <div className="max-w-[1280px] mx-auto px-6">
-          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Operators, not influencers</div></Reveal>
-          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-16">What people running real businesses say.</h2></Reveal>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              { metric: "+$412k captured / quarter", q: "We were dropping 40% of after-hours service calls. Three weeks later our agent was booking faster than my best dispatcher.", n: "Ryan T.", r: "Owner, Ridgeline HVAC · 4 locations", a: "RT" },
-              { metric: "9% → 31% lead-to-tour",     q: "Members get answered at 2am, we book tours that used to die in voicemail, and the receptionist actually has time to be a human in person.", n: "Marisol J.", r: "GM, Forge Fitness · 6 locations", a: "MJ" },
-              { metric: "2.4x intake throughput",    q: "We replaced two intake roles with one operator and a TYA agent. Compliance signed off on the eval harness in one meeting.",                  n: "Daniel P.", r: "Managing Partner, Vertex Legal", a: "DP" },
-            ].map((t, i) => (
-              <Reveal key={i}>
-                <div className="bg-[#0C1426] border border-white/10 rounded-3xl p-8 flex flex-col gap-6 h-full hover:-translate-y-1 hover:border-emerald-400/30 transition-all duration-500">
-                  <span className="self-start inline-flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs font-semibold"
-                    style={{ background: "rgba(91,228,155,0.10)", border: "1px solid rgba(91,228,155,0.3)", color: "#5BE49B" }}>
-                    {t.metric}
-                  </span>
-                  <p className="text-[17px] leading-snug tracking-[-0.01em]">"{t.q}"</p>
-                  <div className="mt-auto flex items-center gap-3 pt-6 border-t border-white/10">
-                    <div className="w-10 h-10 rounded-full grid place-items-center font-semibold text-[#080D17] text-sm"
-                      style={{ background: "linear-gradient(135deg,#52A5FF,#1AD5E6)" }}>
-                      {t.a}
-                    </div>
-                    <div>
-                      <div className="font-semibold text-sm">{t.n}</div>
-                      <div className="text-slate-600 text-[13px]">{t.r}</div>
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
+          <div className="rounded-3xl border border-cyan-400/20 p-10 md:p-14 relative overflow-hidden text-center"
+            style={{ background: "linear-gradient(135deg, rgba(26,213,230,0.06), rgba(82,165,255,0.04))" }}>
+            <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full opacity-30"
+              style={{ background: "radial-gradient(circle, rgba(26,213,230,0.30), transparent 60%)" }} />
+            <div className="relative">
+              <div className="text-cyan-300 text-[11px] tracking-[0.18em] uppercase font-semibold mb-3">Early customers</div>
+              <h2 className="text-[clamp(28px,3.4vw,44px)] tracking-[-0.03em] font-semibold mb-4 max-w-3xl mx-auto">Real names, real outcomes — published as customers approve.</h2>
+              <p className="text-slate-400 text-[16px] max-w-2xl mx-auto leading-relaxed mb-8">
+                We're a young company. Instead of stock photos and made-up quotes, we'd rather tell you who's actually live and let you talk to them directly. Email <a href="mailto:hello@trainyouragent.com?subject=Reference%20customer%20intro" className="text-cyan-300 hover:text-white">hello@trainyouragent.com</a> and we'll connect you with a current operator in your vertical.
+              </p>
+              <a href="mailto:hello@trainyouragent.com?subject=Reference%20customer%20intro" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold border border-white/15 hover:bg-white/5 transition">
+                Request a reference call →
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -1208,46 +1120,40 @@ const Index = () => {
         </div>
       </section>
 
-      {/* BOOK + AIRTABLE */}
+      {/* BOOK */}
       <section id="book" className="py-28 relative z-10">
-        <div className="max-w-[1280px] mx-auto px-6">
-          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Book your discovery call</div></Reveal>
-          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold max-w-3xl mb-5">Pick a time. Get a working agent by Friday.</h2></Reveal>
-          <Reveal><p className="text-lg text-slate-400 max-w-2xl mb-12">Two ways to start: book a 30-minute call with the founders, or drop your details and we'll reach out.</p></Reveal>
-          <div className="grid grid-cols-1 lg:grid-cols-[1.5fr,1fr] gap-6">
-            {/* Cal embed */}
-            <Reveal>
-              <div className="bg-[#0C1426] border border-white/10 rounded-3xl p-3 overflow-hidden h-full"
-                style={{ boxShadow: "0 0 60px -10px rgba(82,165,255,0.3)" }}>
-                <div className="px-5 py-3 flex items-center justify-between">
-                  <div className="text-sm font-semibold">Schedule via Cal.com</div>
-                  <a href="https://cal.com/trainyouragent" target="_blank" rel="noreferrer" className="text-xs text-cyan-300 hover:text-cyan-200">Open in new tab ↗</a>
+        <div className="max-w-[980px] mx-auto px-6 text-center">
+          <Reveal><div className="text-cyan-300 text-xs tracking-[0.18em] uppercase font-semibold mb-4">Get started</div></Reveal>
+          <Reveal><h2 className="text-[clamp(38px,4.6vw,60px)] leading-[1.05] tracking-[-0.03em] font-semibold mb-6">Talk to the founder. Live in 5 days.</h2></Reveal>
+          <Reveal><p className="text-lg text-slate-400 max-w-2xl mx-auto mb-10">30 minutes with Alexander Mills. We'll scope the agent, the integrations, and the timeline before you spend a dollar.</p></Reveal>
+          <Reveal>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+              <a href="mailto:hello@trainyouragent.com?subject=Book%20a%20discovery%20call&body=Hi%20Alexander%2C%0A%0AI%27d%20like%20to%20book%20a%20discovery%20call.%20Quick%20context%3A%0A%0ABusiness%3A%0AVertical%3A%0AWhat%20I%27m%20trying%20to%20automate%3A%0APreferred%20time%3A%0A%0AThanks." className="relative inline-flex items-center gap-2 px-8 py-4 rounded-xl text-[15px] font-semibold text-white overflow-hidden group"
+                style={{ background: "linear-gradient(180deg,#52A5FF 0%,#0DA2E7 100%)", boxShadow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.32), 0 18px 50px -10px rgba(82,165,255,0.5)" }}>
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                <span className="w-2 h-2 rounded-full bg-emerald-300 shadow-[0_0_10px_#6EE7B7] animate-pulse" />
+                Email founder · hello@trainyouragent.com
+              </a>
+              <a href="#demo" className="inline-flex items-center gap-2 px-7 py-4 rounded-xl text-[15px] font-semibold border border-white/15 hover:bg-white/5 hover:border-white/25 transition">
+                Or talk to Tya first ↘
+              </a>
+            </div>
+          </Reveal>
+          <Reveal>
+            <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 text-left max-w-3xl mx-auto">
+              {[
+                ["Discovery", "30-min Zoom. We'll watch a real call from your business and scope the agent."],
+                ["Build week", "We train, integrate, and stress-test on your number. You sign off on a live call."],
+                ["Live", "Number ports, agent goes live, dashboard ships. We sit standby for 48 hours."],
+              ].map(([t, b], i) => (
+                <div key={i} className="p-5 rounded-2xl border border-white/10 bg-[#0C1426]/60">
+                  <div className="text-cyan-300 text-[11px] tracking-[0.18em] uppercase font-semibold mb-2">Step {i + 1}</div>
+                  <div className="text-base font-semibold mb-1.5">{t}</div>
+                  <div className="text-slate-400 text-[13.5px] leading-relaxed">{b}</div>
                 </div>
-                <iframe
-                  src="https://cal.com/trainyouragent?embed=true&theme=dark&hideEventTypeDetails=false"
-                  title="Book a call with Train Your Agent"
-                  className="w-full rounded-2xl bg-white/5"
-                  style={{ height: 720, border: "1px solid rgba(255,255,255,0.08)" }}
-                />
-              </div>
-            </Reveal>
-            {/* Airtable form */}
-            <Reveal>
-              <div className="bg-[#0C1426] border border-white/10 rounded-3xl p-3 overflow-hidden h-full">
-                <div className="px-5 py-3 flex items-center justify-between">
-                  <div className="text-sm font-semibold">Or get in touch</div>
-                  <span className="text-xs text-slate-500">We respond within an hour</span>
-                </div>
-                <iframe
-                  src="https://airtable.com/embed/appREPLACEME/shrREPLACEME?backgroundColor=blue"
-                  title="Get started with Train Your Agent"
-                  className="w-full rounded-2xl bg-white/5"
-                  style={{ height: 720, border: "1px solid rgba(255,255,255,0.08)" }}
-                />
-                <div className="px-5 py-3 text-[11px] text-slate-600">If the form doesn't load, email <span className="text-cyan-300">hello@trainyouragent.com</span> — we'll set you up directly.</div>
-              </div>
-            </Reveal>
-          </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -1318,9 +1224,9 @@ const Index = () => {
               </div>
             ))}
           </div>
-          <div className="flex justify-between pt-8 border-t border-white/10 text-slate-600 text-[13px] flex-wrap gap-4">
+          <div className="flex justify-between pt-8 border-t border-white/10 text-slate-500 text-[13px] flex-wrap gap-4">
             <div>© 2026 TrainYourAgent, Inc. Built in Florida.</div>
-            <div>hello@trainyouragent.com · +1 (415) ••• ••72</div>
+            <div><a href="mailto:hello@trainyouragent.com" className="hover:text-cyan-300 transition">hello@trainyouragent.com</a></div>
           </div>
         </div>
       </footer>
