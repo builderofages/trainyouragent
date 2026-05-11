@@ -114,13 +114,20 @@ function Reveal({ children, delay = 0, as: As = "div" }: { children: React.React
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // If already in viewport on mount (above-the-fold content), reveal immediately —
+    // IntersectionObserver in some Chromium builds skips initial intersection callbacks.
+    const rect = el.getBoundingClientRect();
+    const inView = rect.top < (window.innerHeight || 0) && rect.bottom > 0;
+    if (inView) { setTimeout(() => setShown(true), delay); return; }
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
         if (e.isIntersecting) { setTimeout(() => setShown(true), delay); io.disconnect(); }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.12, rootMargin: "0px 0px -10% 0px" });
     io.observe(el);
-    return () => io.disconnect();
+    // Hard safety net — never leave content hidden longer than 1.5s no matter what.
+    const safety = setTimeout(() => { setShown(true); io.disconnect(); }, 1500);
+    return () => { io.disconnect(); clearTimeout(safety); };
   }, [delay]);
   return (
     <As
