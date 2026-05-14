@@ -80,7 +80,7 @@ const DemoVideo = () => {
             {[
               { h: "What you'll see", b: "Live inbound call → qualification → booking → CRM write → SMS confirmation. End-to-end." },
               { h: "Run by", b: "Real production stack — Twilio, Claude/GPT routing, Deepgram, ElevenLabs. Same setup we'd ship for you." },
-              { h: "After watching", b: "Book a 30-min build call. We'll show you the same flow built for YOUR business, live." },
+              { h: "After watching", b: "Book a 30-min build call. We'll show you the same flow built for YOUR business, live, in front of you." },
             ].map((c, i) => (
               <div key={i} className="rounded-2xl bg-[#F6FAFE] border border-slate-200 p-6">
                 <div className="text-[14px] font-semibold text-[#042C53] mb-2">{c.h}</div>
