@@ -30,6 +30,7 @@ import SolutionConfigurator from "./pages/SolutionConfigurator";
 import Contact from "./pages/Contact";
 import DemoVideo from "./pages/DemoVideo";
 import NotFound from "./pages/NotFound";
+import AiChat from "@/components/AiChat";
 
 const queryClient = new QueryClient();
 
@@ -83,7 +84,8 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
+                <AiChat />
+        </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
