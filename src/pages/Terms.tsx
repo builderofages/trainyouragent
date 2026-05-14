@@ -1,292 +1,111 @@
-import { motion } from "framer-motion";
-import Header from "@/components/Header";
-import Footer from "@/components/FooterEnhanced";
-import { GlassCard } from "@/components/enhanced/GlassCard";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+const CAL_URL = "https://cal.com/trainyouragent/30min";
+
+function BrainLogo({ size = 40 }: { size?: number }) {
+  return (
+    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size }} aria-hidden="true">
+      <svg viewBox="0 0 64 64" style={{ width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" fill="#E6F1FB" />
+        <g fill="#0C447C">
+          <circle cx="20" cy="27" r="7.5" />
+          <circle cx="32" cy="21" r="8.5" />
+          <circle cx="44" cy="27" r="7.5" />
+          <circle cx="24" cy="40" r="7" />
+          <circle cx="40" cy="40" r="7" />
+          <rect x="29" y="44" width="6" height="11" rx="1.5" />
+        </g>
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#185FA5" strokeWidth="1.5" />
+      </svg>
+    </span>
+  );
+}
+
+const SECTIONS: Array<{ h: string; b: string }> = [
+  { h: "1. Acceptance", b: "By using TrainYourAgent's website, dashboard, agents, or any related service, you agree to these Terms of Service ('Terms'). If you don't agree, don't use the service. If you're using the service for an organization, you represent that you have authority to bind that organization to these Terms." },
+  { h: "2. The service", b: "TrainYourAgent builds, configures, and operates AI voice and messaging agents on behalf of customers. The agent answers your business's calls and messages, follows the scripts and integrations you configure, and routes outcomes to the CRM and calendaring tools you connect. Specific capabilities, limits, and SLAs are described in your order form or written agreement." },
+  { h: "3. Your account", b: "You're responsible for keeping login credentials secure, configuring your agent accurately, and ensuring the people on your team who use the dashboard are authorized. You're responsible for the legality of the calls and messages your agent makes — e.g., compliance with TCPA, state recording-consent laws, and applicable do-not-call lists." },
+  { h: "4. Acceptable use", b: "You will not use the service to: (a) impersonate a person without disclosure where required by law, (b) make calls to numbers on a do-not-call list, (c) generate or transmit unlawful, defamatory, or harassing content, (d) infringe intellectual property, (e) attempt to reverse-engineer the service, or (f) resell or sublicense the service without our written consent." },
+  { h: "5. Fees and payment", b: "Pricing is set in your order form. Subscriptions auto-renew until cancelled. Usage overages are billed monthly. All fees are non-refundable except as required by law or as stated in your order form. We may change pricing for new terms with 30 days' notice; current customers' pricing is locked for the duration of any prepaid term." },
+  { h: "6. Customer data and intellectual property", b: "You own your data, your agent's configurations, your scripts, and your customer records. We own our platform, infrastructure, and the underlying models we license. You grant us a limited license to process your data solely to deliver the service. We do not train AI models on your data." },
+  { h: "7. Confidentiality", b: "Each party agrees to protect the other's non-public business information with the same care it gives its own confidential information, and to use it only as necessary to perform under these Terms. This obligation survives termination." },
+  { h: "8. Warranties and disclaimer", b: "We warrant that we'll provide the service with commercially reasonable care and skill. EXCEPT AS EXPRESSLY STATED, THE SERVICE IS PROVIDED 'AS IS' AND WE DISCLAIM ALL OTHER WARRANTIES, EXPRESS OR IMPLIED, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. AI agents can make mistakes; you remain responsible for any decision a human would otherwise make." },
+  { h: "9. Limitation of liability", b: "TO THE MAXIMUM EXTENT PERMITTED BY LAW, NEITHER PARTY IS LIABLE FOR INDIRECT, INCIDENTAL, CONSEQUENTIAL, OR SPECIAL DAMAGES, OR FOR LOST PROFITS OR LOST REVENUE. EACH PARTY'S TOTAL LIABILITY UNDER THESE TERMS IS CAPPED AT THE AMOUNTS YOU PAID US IN THE 12 MONTHS BEFORE THE CLAIM. THIS CAP DOES NOT APPLY TO YOUR PAYMENT OBLIGATIONS OR EITHER PARTY'S INDEMNIFICATION OBLIGATIONS." },
+  { h: "10. Indemnification", b: "You'll defend and indemnify us against third-party claims arising from your misuse of the service, violation of law, or breach of these Terms. We'll defend and indemnify you against third-party IP claims that the service itself infringes a US patent, copyright, or trade secret." },
+  { h: "11. Termination", b: "Either party may terminate for convenience with 30 days' written notice (annual contracts continue through the prepaid term). Either party may terminate immediately for the other's material breach if not cured within 15 days of notice. On termination, we export your data and delete our copy within 30 days." },
+  { h: "12. Subprocessors and security", b: "Our current subprocessors and security posture are described on our Security and Privacy pages. We'll notify customers of material subprocessor changes at least 30 days in advance for in-scope environments." },
+  { h: "13. Changes to the Terms", b: "We may update these Terms; if a change is material, we'll email active customers at least 14 days before it takes effect. Continued use after the effective date constitutes acceptance." },
+  { h: "14. Governing law", b: "These Terms are governed by the laws of the State of Florida, USA, without regard to conflict of laws. Disputes are resolved in the state or federal courts located in Hillsborough County, Florida, and the parties consent to that exclusive jurisdiction." },
+  { h: "15. Contact", b: "Questions or notices: legal@trainyouragent.com. TrainYourAgent, Inc., Tampa Bay, Florida, USA." },
+];
 
 const Terms = () => {
-  const sections = [
-    {
-      title: "Agreement to Terms",
-      content: `By accessing or using TrainYourAgent services, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
-      
-These terms apply to all users, including visitors, registered users, and paid subscribers.`,
-    },
-    {
-      title: "Service Description",
-      content: `TrainYourAgent provides AI-powered automation solutions including:
-      
-- Voice agents for call handling and booking
-- Customer service automation
-- Lead qualification and routing
-- Integration with third-party platforms
-- Analytics and reporting tools
-      
-We reserve the right to modify, suspend, or discontinue any aspect of the service at any time.`,
-    },
-    {
-      title: "Voice Demo Terms",
-      content: `Website Voice Demo Feature:
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-When using our live voice demo, you agree to the following:
-
-Demo Purpose:
-- Demos are for evaluation purposes only
-- Intended to demonstrate AI voice capabilities
-- Not a substitute for actual implementation or customer service
-
-Recording and Data:
-- All demo conversations are recorded
-- Voice data may be used for quality assurance and AI training
-- Recordings stored for 30 days, then automatically deleted
-- You explicitly consent to recording by using the demo feature
-
-Access and Availability:
-- Demo access provided at our discretion
-- May be limited based on system capacity or usage patterns
-- No guarantee of continuous availability
-- We reserve the right to restrict or revoke demo access
-
-Prohibited Uses:
-- Do not use the demo for actual business transactions
-- Do not share sensitive personal or business information
-- Do not attempt to exploit or abuse the demo system
-- Do not use the demo for testing malicious inputs
-
-By using the voice demo, you acknowledge these terms and our Privacy Policy regarding voice data handling.`,
-    },
-    {
-      title: "Flexible Pilot Program",
-      content: `Pilot Program Terms:
-
-- Month-to-month billing with no long-term contracts
-- Paid pilot program allows you to test AI agents in your live environment
-- Access to full platform features and support
-- Flexibility to adjust or cancel after proving ROI
-- Scale up when you're ready based on your results
-- Pilot availability subject to capacity and qualification
-
-To discuss pilot program terms, contact sales@trainyouragent.com`,
-    },
-    {
-      title: "Implementation Timeline",
-      content: `Typical implementation ranges from 3-7 business days depending on:
-
-- Number of services/offerings to configure
-- Integration complexity (CRM, scheduling systems)
-- Industry-specific terminology and compliance requirements
-- Response time to training questions and feedback
-
-Timeline estimates provided by our calculator are approximations. Actual timeline confirmed during your strategy session based on your specific needs. Results may vary based on implementation factors, call volume, and business-specific requirements.`,
-    },
-    {
-      title: "Results and Outcomes Disclaimer",
-      content: `IMPORTANT: Results may vary based on implementation, industry, call volume, and business-specific factors. Past performance and pilot program statistics do not guarantee future results.
-
-- Implementation timeline estimates are ranges, not guarantees
-- ROI projections are based on industry averages and pilot data
-- Actual results depend on call volume, agent training, and business factors
-- The 94% pilot conversion rate reflects historical data, not individual guarantees
-- Flexible Pilot Program allows you to test results in your specific business context
-
-No warranties are made regarding specific outcomes, revenue increases, or business results.`,
-    },
-    {
-      title: "User Accounts",
-      content: `To use our services, you must:
-      
-- Provide accurate and complete registration information
-- Maintain the security of your account credentials
-- Notify us immediately of unauthorized access
-- Be at least 18 years old or have parental consent
-      
-You are responsible for all activities under your account.`,
-    },
-    {
-      title: "Acceptable Use Policy",
-      content: `You agree NOT to:
-      
-- Violate any laws or regulations
-- Infringe on intellectual property rights
-- Transmit harmful code or malware
-- Attempt to gain unauthorized access
-- Use the service for fraudulent purposes
-- Harass, abuse, or harm others
-- Scrape or data mine our systems
-      
-Violations may result in immediate account termination.`,
-    },
-    {
-      title: "Payment Terms",
-      content: `For paid subscriptions:
-      
-- Fees are billed in advance on a monthly or annual basis
-- All fees are non-refundable except as required by law
-- You authorize us to charge your payment method
-- Prices may change with 30 days notice
-- Failure to pay may result in service suspension
-      
-See our pricing page for current rates and plans.`,
-    },
-    {
-      title: "Cancellation and Refunds",
-      content: `You may cancel your subscription at any time:
-      
-- Cancellations take effect at the end of the current billing period
-- No refunds for partial months
-- Data may be deleted 30 days after cancellation
-- Annual plans are non-refundable after 30 days
-      
-Contact support@trainyouragent.com to cancel.`,
-    },
-    {
-      title: "Intellectual Property",
-      content: `All content and materials on our platform are owned by TrainYourAgent and protected by:
-      
-- Copyright laws
-- Trademark laws
-- Trade secret laws
-      
-You may not copy, modify, distribute, or reverse engineer our software without written permission.
-      
-You retain ownership of your data and content.`,
-    },
-    {
-      title: "Warranties and Disclaimers",
-      content: `OUR SERVICES ARE PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED.
-      
-We do not guarantee:
-- Uninterrupted or error-free operation
-- Specific results or outcomes
-- Accuracy of AI-generated responses
-- Compatibility with all systems
-      
-We disclaim all implied warranties including merchantability and fitness for a particular purpose.`,
-    },
-    {
-      title: "Limitation of Liability",
-      content: `To the maximum extent permitted by law:
-      
-- We are not liable for indirect, incidental, or consequential damages
-- Our total liability is limited to fees paid in the last 12 months
-- We are not liable for third-party integrations or services
-- You agree to indemnify us against claims arising from your use
-      
-Some jurisdictions do not allow these limitations.`,
-    },
-    {
-      title: "Data Security and Compliance",
-      content: `Platform Security:
-
-- Built on industry-leading infrastructure (VAPI, Apollo.io)
-- Enterprise-grade security practices
-- End-to-end encryption in transit (TLS 1.3)
-- Data storage on SOC 2 Type II certified infrastructure
-- HIPAA-compliant infrastructure for healthcare clients
-
-Individual compliance requirements may vary by industry. Healthcare organizations requiring Business Associate Agreements (BAA) should discuss specific needs during onboarding.`,
-    },
-    {
-      title: "Data and Privacy",
-      content: `Your use of our services is also governed by our Privacy Policy.
-      
-We process data in accordance with:
-- GDPR (for EU users)
-- CCPA (for California users)
-- Other applicable data protection laws
-      
-See our Privacy Policy for detailed information.`,
-    },
-    {
-      title: "Dispute Resolution",
-      content: `In the event of a dispute:
-      
-1. Contact us first at legal@trainyouragent.com
-2. We will attempt good faith negotiations
-3. If unresolved, disputes will be settled by binding arbitration
-4. Arbitration will be conducted by the American Arbitration Association
-5. You waive the right to a jury trial or class action
-      
-Some jurisdictions do not allow arbitration requirements.`,
-    },
-    {
-      title: "Governing Law",
-      content: `These Terms are governed by the laws of the State of Florida, without regard to conflict of law principles.
-      
-Any legal action must be brought in the courts of Florida.`,
-    },
-    {
-      title: "Changes to Terms",
-      content: `We may modify these Terms at any time:
-      
-- Material changes will be notified via email
-- Continued use constitutes acceptance
-- Previous versions will be archived
-      
-Last modified: {new Date().toLocaleDateString()}`,
-    },
-    {
-      title: "Contact Information",
-      content: `For questions about these Terms:
-      
-Email: legal@trainyouragent.com
-Address: TrainYourAgent LLC, Florida, United States
-Phone: Contact via email for inquiries
-      
-Support: support@trainyouragent.com`,
-    },
-  ];
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (!document.getElementById("tya-fonts")) {
+      const l = document.createElement("link");
+      l.id = "tya-fonts";
+      l.rel = "stylesheet";
+      l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
+      document.head.appendChild(l);
+    }
+  }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-
-      <section className="pt-32 pb-16 px-6">
-        <div className="container mx-auto max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
-          >
-            <h1 className="text-5xl md:text-6xl font-black mb-6">
-              Terms of <span className="text-gradient">Service</span>
-            </h1>
-            <p className="text-muted-foreground text-lg">
-              Last Updated: {new Date().toLocaleDateString()}
-            </p>
-            <p className="text-muted-foreground mt-4">
-              Please read these terms carefully before using TrainYourAgent services.
-            </p>
-          </motion.div>
-
-          <div className="space-y-6">
-            {sections.map((section, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <GlassCard className="p-8">
-                  <h2 className="text-2xl font-bold mb-4">{section.title}</h2>
-                  <div className="text-muted-foreground whitespace-pre-line leading-relaxed">
-                    {section.content}
-                  </div>
-                </GlassCard>
-              </motion.div>
-            ))}
+    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+      <nav className="bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5">
+            <BrainLogo size={36} />
+            <span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span>
+          </Link>
+          <div className="hidden md:flex items-center gap-7 text-[14px] text-slate-700">
+            <Link to="/solutions" className="hover:text-[#042C53]">Solutions</Link>
+            <Link to="/security" className="hover:text-[#042C53]">Security</Link>
+            <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
+            <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E]">Book a call</a>
           </div>
-
-          <div className="mt-12 p-6 bg-muted/50 rounded-lg">
-            <p className="text-sm text-muted-foreground text-center">
-              By using TrainYourAgent, you acknowledge that you have read, understood, and agree to
-              be bound by these Terms of Service. If you do not agree to these terms, you must
-              discontinue use of our services immediately.
-            </p>
-          </div>
+          <button className="md:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu">
+            <span className="block w-4 h-px bg-[#042C53] relative" style={{ boxShadow: mobileOpen ? "none" : "0 -5px 0 #042C53, 0 5px 0 #042C53", transform: mobileOpen ? "rotate(45deg)" : "none" }} />
+          </button>
         </div>
-      </section>
+      </nav>
 
-      <Footer />
+      <article className="max-w-3xl mx-auto px-5 sm:px-8 py-16">
+        <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Legal</div>
+        <h1 className="text-[42px] sm:text-[56px] leading-[1.05] tracking-tight font-semibold text-[#042C53] mb-3">Terms of Service</h1>
+        <div className="text-[14px] text-slate-500 mb-10">Last updated: May 13, 2026</div>
+
+        <div className="space-y-8 text-[16px] leading-[1.75] text-slate-700">
+          <p className="italic text-slate-600">These Terms exist so you and we both know what we're signing up for. Plain language where the law lets us; precise legal language where it doesn't.</p>
+          {SECTIONS.map((s, i) => (
+            <div key={i}>
+              <h2 className="text-[22px] font-semibold text-[#042C53] mb-3">{s.h}</h2>
+              <p>{s.b}</p>
+            </div>
+          ))}
+        </div>
+      </article>
+
+      <footer className="border-t border-slate-200 bg-white mt-10">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+          <div className="flex items-center gap-2.5">
+            <BrainLogo size={28} />
+            <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
+            <span className="text-slate-400">— Tampa Bay, FL</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>
+            <Link to="/terms" className="hover:text-[#042C53]">Terms</Link>
+            <Link to="/security" className="hover:text-[#042C53]">Security</Link>
+            <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
+          </div>
+          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
+        </div>
+      </footer>
     </div>
   );
 };
