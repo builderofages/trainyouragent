@@ -1,159 +1,83 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Settings as SettingsIcon, Trash2, ExternalLink } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/FooterEnhanced";
-import { GlassCard } from "@/components/enhanced/GlassCard";
-import { Button } from "@/components/ui/button";
-import { MondayWebhookSetup } from "@/components/MondayWebhookSetup";
-import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+const CAL_URL = "https://cal.com/trainyouragent/30min";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+
+function BrainLogo({ size = 40 }: { size?: number }) {
+  return (
+    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size }} aria-hidden="true">
+      <svg viewBox="0 0 64 64" style={{ width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" fill="#E6F1FB" />
+        <g fill="#0C447C"><circle cx="20" cy="27" r="7.5" /><circle cx="32" cy="21" r="8.5" /><circle cx="44" cy="27" r="7.5" /><circle cx="24" cy="40" r="7" /><circle cx="40" cy="40" r="7" /><rect x="29" y="44" width="6" height="11" rx="1.5" /></g>
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#185FA5" strokeWidth="1.5" />
+      </svg>
+    </span>
+  );
+}
 
 const Settings = () => {
-  const { toast } = useToast();
+  const [navScrolled, setNavScrolled] = useState(false);
+  const [path, setPath] = useState<string | null>(null);
 
-  const webhooks = [
-    {
-      key: "monday_newsletter_webhook",
-      title: "Newsletter Signups",
-      description: "Receive newsletter subscriptions from your homepage",
-    },
-    {
-      key: "monday_hvac_webhook",
-      title: "HVAC Leads",
-      description: "Receive leads from the HVAC niche landing page",
-    },
-    {
-      key: "monday_accounting_webhook",
-      title: "Accounting Leads",
-      description: "Receive leads from the Accounting niche landing page",
-    },
-    {
-      key: "monday_roofing_webhook",
-      title: "Roofing Leads",
-      description: "Receive leads from the Roofing niche landing page",
-    },
-  ];
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (!document.getElementById("tya-fonts")) { const l = document.createElement("link"); l.id = "tya-fonts"; l.rel = "stylesheet"; l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap"; document.head.appendChild(l); }
+    document.title = "Settings — TrainYourAgent";
+    try { setPath(window.localStorage.getItem("tya:pathway")); } catch {}
+  }, []);
+  useEffect(() => { const f = () => setNavScrolled(window.scrollY > 20); window.addEventListener("scroll", f); return () => window.removeEventListener("scroll", f); }, []);
 
-  const handleClearAll = () => {
-    if (confirm("Are you sure you want to clear all webhook configurations?")) {
-      webhooks.forEach((webhook) => {
-        localStorage.removeItem(webhook.key);
-      });
-      toast({
-        title: "All webhooks cleared",
-        description: "You'll need to reconfigure your integrations",
-      });
-      window.location.reload();
-    }
-  };
+  const reset = () => { try { window.localStorage.removeItem("tya:pathway"); setPath(null); } catch {} };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navScrolled ? "bg-white/90 backdrop-blur-xl border-b border-slate-200/60" : "bg-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5"><BrainLogo size={36} /><span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span></Link>
+          <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E] shadow-sm">Book a call</a>
+        </div>
+      </nav>
 
-      <main className="pt-32 pb-20">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-12"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                <SettingsIcon className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-4xl font-bold">Integration Settings</h1>
-                <p className="text-muted-foreground">
-                  Manage your Monday.com CRM integrations
-                </p>
-              </div>
+      <section className="pt-32 pb-20 px-5 sm:px-8">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Settings</div>
+          <h1 className="text-[36px] sm:text-[48px] leading-[1.06] tracking-tight font-semibold text-[#042C53]">
+            Your <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>preferences.</span>
+          </h1>
+          <p className="mt-5 text-[16px] text-slate-700 leading-relaxed">
+            Customer account settings live behind sign-in (coming with v1 dashboard). Below is the lightweight stuff we store in your browser only.
+          </p>
+
+          <div className="mt-10 space-y-4">
+            <div className="rounded-2xl bg-white border border-slate-200 p-6">
+              <div className="text-[12px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2">Pathway personalization</div>
+              <div className="text-[15px] text-[#042C53] mb-2">{path ? `Current: ${path}` : "Not set — visit any vertical or use the configurator to choose a lane."}</div>
+              <div className="text-[13px] text-slate-600 mb-4 leading-relaxed">We remember whether you're a startup, SMB, agency, or ops at scale so vertical pages adapt their hero and CTAs to you. Stored locally in your browser. Reset any time.</div>
+              {path && (
+                <button onClick={reset} className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-semibold hover:bg-[#0A3D6E]">Reset pathway</button>
+              )}
             </div>
-          </motion.div>
 
-          {/* Help Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="mb-8"
-          >
-            <GlassCard className="p-6 bg-primary/5 border-primary/20">
-              <h3 className="font-bold mb-2">How to get your Monday.com webhook URL:</h3>
-              <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
-                <li>Go to your Monday.com board</li>
-                <li>Click "Integrate" in the top right</li>
-                <li>Search for "Webhooks" or "Incoming Webhooks"</li>
-                <li>Create a new webhook with trigger "When a form is submitted"</li>
-                <li>Copy the webhook URL and paste it below</li>
-              </ol>
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-4 gap-2"
-                onClick={() => window.open("https://monday.com/", "_blank")}
-              >
-                Open Monday.com
-                <ExternalLink className="w-4 h-4" />
-              </Button>
-            </GlassCard>
-          </motion.div>
+            <div className="rounded-2xl bg-white border border-slate-200 p-6">
+              <div className="text-[12px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2">Cookies</div>
+              <div className="text-[14px] text-slate-700 leading-relaxed mb-3">We keep cookies to a minimum: session, preference, billing (on Stripe pages only), and privacy-friendly analytics. Full breakdown on the <Link to="/cookie-policy" className="text-[#185FA5] underline">Cookie Policy</Link>.</div>
+            </div>
 
-          {/* Webhook Configurations */}
-          <div className="space-y-6">
-            {webhooks.map((webhook, index) => (
-              <motion.div
-                key={webhook.key}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + index * 0.1 }}
-              >
-                <MondayWebhookSetup
-                  storageKey={webhook.key}
-                  title={webhook.title}
-                  description={webhook.description}
-                />
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Danger Zone */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="mt-12"
-          >
-            <GlassCard className="p-6 border-destructive/20">
-              <h3 className="font-bold text-destructive mb-2">Danger Zone</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Clear all webhook configurations. This action cannot be undone.
-              </p>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={handleClearAll}
-                className="gap-2"
-              >
-                <Trash2 className="w-4 h-4" />
-                Clear All Webhooks
-              </Button>
-            </GlassCard>
-          </motion.div>
-
-          {/* Back to Home */}
-          <div className="text-center mt-12">
-            <Button
-              variant="outline"
-              onClick={() => (window.location.href = "/")}
-            >
-              Back to Home
-            </Button>
+            <div className="rounded-2xl bg-[#F6FAFE] border border-slate-200 p-6">
+              <div className="text-[12px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2">Customer account?</div>
+              <div className="text-[14px] text-slate-700 leading-relaxed mb-4">If you're an active customer and need to update billing, integrations, or escalation rules — email <a className="text-[#185FA5] underline" href="mailto:hello@trainyouragent.com">hello@trainyouragent.com</a> and we'll route you to your engineer.</div>
+            </div>
           </div>
         </div>
-      </main>
+      </section>
 
-      <Footer />
+      <footer className="bg-white border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+          <div className="flex items-center gap-2.5"><BrainLogo size={28} /><span className="font-semibold text-[#042C53]">TrainYourAgent</span></div>
+          <div className="flex items-center gap-6"><Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link><Link to="/terms" className="hover:text-[#042C53]">Terms</Link><Link to="/security" className="hover:text-[#042C53]">Security</Link><a href={LINKEDIN_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">LinkedIn</a></div>
+        </div>
+      </footer>
     </div>
   );
 };
