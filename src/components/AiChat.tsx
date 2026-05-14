@@ -8,7 +8,7 @@ type Msg = { role: "user" | "assistant"; content: string };
 
 const SYSTEM = `You are TrainYourAgent's website assistant. You help visitors understand:
 - TrainYourAgent builds AI voice + messaging agents for SMBs and startups
-- Founders Lane ($0 build · $0.18/min · $25/booking), Operators ($4,950 build · $799/mo), Scale (custom)
+- Founders Lane ($0 build Â· $0.18/min Â· $25/booking), Operators ($4,950 build Â· $799/mo), Scale (custom)
 - 4 yrs in AI, $20K+/mo recurring, 14 verticals supported
 - Founded by Alexander Mills, Tampa Bay
 - BAA per healthcare customer, SOC 2 in evaluation, zero training on customer data
@@ -19,7 +19,7 @@ Be direct, no preamble, no marketing fluff. Give specific numbers when relevant.
 export default function AiChat() {
   const [open, setOpen] = useState(false);
   const [msgs, setMsgs] = useState<Msg[]>([
-    { role: "assistant", content: "Hey — I'm TrainYourAgent's AI. Ask me anything about how this works, what we build, what it costs. I'll be direct." },
+    { role: "assistant", content: "Hey â I'm TrainYourAgent's AI. Ask me anything about how this works, what we build, what it costs. I'll be direct." },
   ]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
@@ -57,7 +57,7 @@ export default function AiChat() {
         });
       }
     } catch {
-      setMsgs((m) => [...m, { role: "assistant", content: "I'm offline right now. Easiest path: book 30 min at cal.com/trainyouragent/30min — Alexander will answer directly." }]);
+      setMsgs((m) => [...m, { role: "assistant", content: "I'm offline right now. Easiest path: book 30 min at cal.com/trainyouragent/30min â Alexander will answer directly." }]);
     } finally {
       setStreaming(false);
     }
@@ -67,7 +67,7 @@ export default function AiChat() {
     <>
       {!open && (
         <button onClick={() => setOpen(true)} aria-label="Chat with our AI"
-                className="fixed bottom-5 right-5 z-[90] w-14 h-14 rounded-full bg-[#042C53] text-white shadow-[0_10px_30px_-8px_rgba(4,44,83,0.5)] hover:bg-[#0A3D6E] transition flex items-center justify-center group"
+                className="fixed bottom-24 right-5 z-[90] w-14 h-14 rounded-full bg-[#042C53] text-white shadow-[0_10px_30px_-8px_rgba(4,44,83,0.5)] hover:bg-[#0A3D6E] transition flex items-center justify-center group"
                 style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
           <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -76,24 +76,24 @@ export default function AiChat() {
         </button>
       )}
       {open && (
-        <div className="fixed bottom-5 right-5 z-[90] w-[min(380px,calc(100vw-2rem))] h-[min(560px,calc(100vh-2rem))] rounded-3xl bg-white border border-slate-200 shadow-[0_30px_80px_-20px_rgba(4,44,83,0.55)] flex flex-col overflow-hidden"
+        <div className="fixed bottom-24 right-5 z-[90] w-[min(380px,calc(100vw-2rem))] h-[min(560px,calc(100vh-2rem))] rounded-3xl bg-white border border-slate-200 shadow-[0_30px_80px_-20px_rgba(4,44,83,0.55)] flex flex-col overflow-hidden"
              style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 bg-[#042C53] text-white">
             <div className="flex items-center gap-2.5">
               <span className="w-2 h-2 rounded-full bg-[#22A36C] animate-pulse" />
               <div>
                 <div className="text-[14px] font-semibold leading-tight">TrainYourAgent AI</div>
-                <div className="text-[11px] text-white/70 leading-tight">Direct answers · No marketing</div>
+                <div className="text-[11px] text-white/70 leading-tight">Direct answers Â· No marketing</div>
               </div>
             </div>
-            <button aria-label="Close" onClick={() => setOpen(false)} className="text-white/70 hover:text-white text-[20px] leading-none">×</button>
+            <button aria-label="Close" onClick={() => setOpen(false)} className="text-white/70 hover:text-white text-[20px] leading-none">Ã</button>
           </div>
 
           <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
             {msgs.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-[14px] leading-relaxed whitespace-pre-wrap ${m.role === "user" ? "bg-[#042C53] text-white rounded-br-md" : "bg-[#F6FAFE] text-[#0B1B2B] border border-slate-200 rounded-bl-md"}`}>
-                  {m.content || (streaming && i === msgs.length - 1 ? "…" : "")}
+                  {m.content || (streaming && i === msgs.length - 1 ? "â¦" : "")}
                 </div>
               </div>
             ))}
@@ -103,14 +103,14 @@ export default function AiChat() {
             <div className="flex gap-2">
               <input value={input} onChange={(e) => setInput(e.target.value)}
                      onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
-                     placeholder="Ask about pricing, builds, integrations…"
+                     placeholder="Ask about pricing, builds, integrationsâ¦"
                      className="flex-1 px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-[14px] focus:outline-none focus:border-[#185FA5]" />
               <button onClick={send} disabled={streaming || !input.trim()}
                       className="px-4 py-2.5 rounded-xl bg-[#042C53] text-white text-[13px] font-semibold hover:bg-[#0A3D6E] disabled:opacity-40">
-                {streaming ? "…" : "Send"}
+                {streaming ? "â¦" : "Send"}
               </button>
             </div>
-            <div className="mt-2 text-[10px] text-slate-500 text-center">Powered by Claude · Answers based on TrainYourAgent docs</div>
+            <div className="mt-2 text-[10px] text-slate-500 text-center">Powered by Claude Â· Answers based on TrainYourAgent docs</div>
           </div>
         </div>
       )}
