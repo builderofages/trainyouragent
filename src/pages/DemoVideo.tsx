@@ -1,350 +1,104 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { CheckCircle2, Copy, Mail, Linkedin, Play, Clock, FileText, Calculator, TrendingUp, MessageSquare } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { toast } from "sonner";
-import { trackEvent } from "@/lib/tracking";
-import { useSearchParams } from "react-router-dom";
-import confetti from "canvas-confetti";
+import { Link } from "react-router-dom";
 
-export default function DemoVideo() {
-  const [searchParams] = useSearchParams();
-  const [videoPlayed, setVideoPlayed] = useState(false);
-  const confirmed = searchParams.get("confirmed") === "true";
-  const industry = sessionStorage.getItem("booking_industry") || "your industry";
+const CAL_URL = "https://cal.com/trainyouragent/30min";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+const HERO_PHONE_DISPLAY = "(813) 555-0142";
+const HERO_PHONE_TEL = "+18135550142";
 
-  useEffect(() => {
-    // Track page view
-    trackEvent("demo_video_page_viewed", {
-      source: confirmed ? "booking_confirmation" : "direct",
-      industry: industry,
-    });
+// Drop a real Loom or YouTube embed URL here when you record one.
+// Loom:    https://www.loom.com/embed/<id>
+// YouTube: https://www.youtube.com/embed/<id>
+// Wistia:  https://fast.wistia.net/embed/iframe/<id>
+const VIDEO_EMBED_URL = ""; // SWAP — empty = renders the "live call" CTA card instead
 
-    // Celebration confetti for confirmed bookings
-    if (confirmed) {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
-    }
-  }, [confirmed, industry]);
-
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.origin + "/demo-video");
-    toast.success("Link copied to clipboard!");
-    trackEvent("demo_video_shared", { method: "copy_link" });
-  };
-
-  const handleEmailShare = () => {
-    const subject = encodeURIComponent("Check out this AI Agent Demo - TrainYourAgent");
-    const body = encodeURIComponent(
-      `I just booked a strategy session with TrainYourAgent to implement AI agents for our business.\n\nWatch this demo to see how it works:\n${window.location.origin}/demo-video\n\nThought you might find this interesting!`
-    );
-    window.open(`mailto:?subject=${subject}&body=${body}`, "_blank");
-    trackEvent("demo_video_shared", { method: "email" });
-  };
-
-  const handleLinkedInShare = () => {
-    const url = encodeURIComponent(window.location.origin + "/demo-video");
-    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, "_blank");
-    trackEvent("demo_video_shared", { method: "linkedin" });
-  };
-
-  const handleVideoPlay = () => {
-    if (!videoPlayed) {
-      setVideoPlayed(true);
-      trackEvent("demo_video_played", { industry });
-    }
-  };
-
-  const preparationChecklist = [
-    "Gather your average monthly call volume data",
-    "List current pain points with phone/lead handling",
-    "Prepare questions about specific use cases for your business",
-    "Have your CRM/calendar system details ready (if applicable)",
-  ];
-
-  const resources = [
-    {
-      icon: Calculator,
-      title: "ROI Calculator",
-      description: "Calculate potential savings for your business",
-      link: "/demos#roi-calculator",
-    },
-    {
-      icon: TrendingUp,
-      title: "Case Studies",
-      description: "See real results from businesses like yours",
-      link: "/case-studies",
-    },
-    {
-      icon: FileText,
-      title: "Comparisons",
-      description: "AI vs. Human Receptionist vs. Call Centers",
-      link: "/comparisons",
-    },
-  ];
-
-  const faqs = [
-    {
-      question: "What happens during the strategy session?",
-      answer: "We'll analyze your current call handling, identify missed opportunities, discuss your specific needs, and show you exactly how AI can work for your business. No pressure, just insights.",
-    },
-    {
-      question: "How long does implementation take?",
-      answer: "Most implementations are completed in 3-7 days depending on the number of services, integrations needed, and your feedback speed. We'll confirm your specific timeline during the strategy session.",
-    },
-    {
-      question: "Do I need any special equipment?",
-      answer: "No special equipment needed. Our AI works with your existing phone system and integrates with your current CRM and calendar. We handle all the technical setup.",
-    },
-  ];
-
+function BrainLogo({ size = 40 }: { size?: number }) {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-
-      <main className="pt-24 pb-16">
-        {/* Hero Confirmation */}
-        <section className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/10 rounded-full mb-6">
-              <CheckCircle2 className="w-8 h-8 text-green-500" />
-            </div>
-
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Your Strategy Session is Confirmed! 🎉
-            </h1>
-
-            <p className="text-xl text-muted-foreground mb-6">
-              Check your email for calendar invite and video call details.
-            </p>
-
-            <div className="bg-muted/50 rounded-lg p-6 mb-8">
-              <h2 className="text-lg font-semibold mb-4">What Happens Next</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-primary font-bold">1</span>
-                  </div>
-                  <div>
-                    <p className="font-medium">You'll receive a confirmation email</p>
-                    <p className="text-sm text-muted-foreground">With video call link and meeting details</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-primary font-bold">2</span>
-                  </div>
-                  <div>
-                    <p className="font-medium">We'll analyze your business needs</p>
-                    <p className="text-sm text-muted-foreground">Custom demo tailored to {industry}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-primary font-bold">3</span>
-                  </div>
-                  <div>
-                    <p className="font-medium">Get your implementation timeline</p>
-                    <p className="text-sm text-muted-foreground">Clear roadmap to go live in 3-7 days</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </section>
-
-        {/* Demo Video Section */}
-        <section className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-2">Watch: See Our AI in Action</h2>
-              <p className="text-muted-foreground">
-                90-second walkthrough of how AI agents handle real calls
-              </p>
-            </div>
-
-            <Card className="overflow-hidden bg-gradient-to-br from-primary/5 to-secondary/5 border-primary/20">
-              <div className="aspect-video bg-muted flex items-center justify-center">
-                {/* Replace this with your actual video embed */}
-                <div className="text-center p-8">
-                  <Play className="w-16 h-16 mx-auto mb-4 text-primary" />
-                  <p className="text-muted-foreground mb-4">
-                    Video embed placeholder - Add your demo video URL
-                  </p>
-                  <Button onClick={handleVideoPlay} size="lg">
-                    <Play className="w-4 h-4 mr-2" />
-                    Play Demo Video
-                  </Button>
-                </div>
-                
-                {/* Example YouTube/Vimeo embed structure: */}
-                {/* <iframe
-                  src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
-                  title="AI Agent Demo"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="w-full h-full"
-                  onPlay={handleVideoPlay}
-                /> */}
-              </div>
-
-              <div className="p-6">
-                <p className="text-sm text-muted-foreground">
-                  <strong>In this video:</strong> Watch how our AI agent handles an emergency HVAC call at 2 AM,
-                  qualifies the lead, schedules the service, and captures payment details—all without human
-                  intervention. See the exact dashboard view your team will use.
-                </p>
-              </div>
-            </Card>
-          </motion.div>
-        </section>
-
-        {/* Preparation Checklist */}
-        <section className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <h2 className="text-2xl font-bold mb-6">How to Prepare for Your Call</h2>
-            <Card className="p-6">
-              <ul className="space-y-4">
-                {preparationChecklist.map((item, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          </motion.div>
-        </section>
-
-        {/* Share Section */}
-        <section className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl p-8 text-center">
-              <MessageSquare className="w-12 h-12 mx-auto mb-4 text-primary" />
-              <h2 className="text-2xl font-bold mb-2">Share This With Your Team</h2>
-              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                Forward this page to stakeholders or partners who should know about the implementation.
-                It helps everyone come prepared to the strategy session.
-              </p>
-
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                <Button onClick={handleCopyLink} variant="outline">
-                  <Copy className="w-4 h-4 mr-2" />
-                  Copy Link
-                </Button>
-
-                <Button onClick={handleEmailShare} variant="outline">
-                  <Mail className="w-4 h-4 mr-2" />
-                  Share via Email
-                </Button>
-
-                <Button onClick={handleLinkedInShare} variant="outline">
-                  <Linkedin className="w-4 h-4 mr-2" />
-                  Share on LinkedIn
-                </Button>
-              </div>
-            </div>
-          </motion.div>
-        </section>
-
-        {/* Additional Resources */}
-        <section className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-          >
-            <h2 className="text-2xl font-bold mb-6 text-center">Explore More Before Your Call</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {resources.map((resource, index) => (
-                <Card
-                  key={index}
-                  className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => {
-                    window.location.href = resource.link;
-                    trackEvent("demo_video_resource_clicked", { resource: resource.title });
-                  }}
-                >
-                  <resource.icon className="w-10 h-10 text-primary mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">{resource.title}</h3>
-                  <p className="text-sm text-muted-foreground">{resource.description}</p>
-                </Card>
-              ))}
-            </div>
-          </motion.div>
-        </section>
-
-        {/* FAQ Section */}
-        <section className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-          >
-            <h2 className="text-2xl font-bold mb-6 text-center">Quick FAQs</h2>
-            <div className="space-y-4">
-              {faqs.map((faq, index) => (
-                <Card key={index} className="p-6">
-                  <h3 className="font-semibold mb-2">{faq.question}</h3>
-                  <p className="text-sm text-muted-foreground">{faq.answer}</p>
-                </Card>
-              ))}
-            </div>
-          </motion.div>
-        </section>
-
-        {/* Footer CTA */}
-        <section className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.7 }}
-          >
-            <Card className="p-8 bg-gradient-to-br from-primary/5 to-secondary/5 border-primary/20">
-              <Clock className="w-12 h-12 mx-auto mb-4 text-primary" />
-              <h2 className="text-2xl font-bold mb-2">Questions Before Your Call?</h2>
-              <p className="text-muted-foreground mb-6">
-                Our team is here to help. Reach out anytime.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button
-                  variant="outline"
-                  onClick={() => (window.location.href = "mailto:support@trainyouragent.com")}
-                >
-                  <Mail className="w-4 h-4 mr-2" />
-                  support@trainyouragent.com
-                </Button>
-              </div>
-            </Card>
-          </motion.div>
-        </section>
-      </main>
-
-      <Footer />
-    </div>
+    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size }} aria-hidden="true">
+      <svg viewBox="0 0 64 64" style={{ width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" fill="#E6F1FB" />
+        <g fill="#0C447C"><circle cx="20" cy="27" r="7.5" /><circle cx="32" cy="21" r="8.5" /><circle cx="44" cy="27" r="7.5" /><circle cx="24" cy="40" r="7" /><circle cx="40" cy="40" r="7" /><rect x="29" y="44" width="6" height="11" rx="1.5" /></g>
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#185FA5" strokeWidth="1.5" />
+      </svg>
+    </span>
   );
 }
+
+const DemoVideo = () => {
+  const [navScrolled, setNavScrolled] = useState(false);
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (!document.getElementById("tya-fonts")) { const l = document.createElement("link"); l.id = "tya-fonts"; l.rel = "stylesheet"; l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap"; document.head.appendChild(l); }
+    document.title = "See it run — TrainYourAgent";
+  }, []);
+  useEffect(() => { const f = () => setNavScrolled(window.scrollY > 20); window.addEventListener("scroll", f); return () => window.removeEventListener("scroll", f); }, []);
+
+  return (
+    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navScrolled ? "bg-white/90 backdrop-blur-xl border-b border-slate-200/60" : "bg-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5"><BrainLogo size={36} /><span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span></Link>
+          <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E] shadow-sm">Book a call</a>
+        </div>
+      </nav>
+
+      <section className="pt-32 pb-12 px-5 sm:px-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">See it run</div>
+          <h1 className="text-[42px] sm:text-[64px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+            Two minutes. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Real call. No staging.</span>
+          </h1>
+          <p className="mt-6 text-[17px] text-slate-700 max-w-2xl leading-relaxed">
+            Watch a TrainYourAgent voice agent handle a real inbound call end-to-end — qualify, book, dispatch, log. Or skip the video and call us live below.
+          </p>
+        </div>
+      </section>
+
+      <section className="px-5 sm:px-8 pb-16">
+        <div className="max-w-5xl mx-auto">
+          {VIDEO_EMBED_URL ? (
+            <div className="relative aspect-video rounded-3xl overflow-hidden border border-slate-200 shadow-[0_20px_60px_-20px_rgba(4,44,83,0.35)]">
+              <iframe src={VIDEO_EMBED_URL} title="TrainYourAgent demo" allow="autoplay; fullscreen" allowFullScreen className="absolute inset-0 w-full h-full" />
+            </div>
+          ) : (
+            <div className="rounded-3xl bg-gradient-to-br from-[#042C53] to-[#0A3D6E] text-white p-10 sm:p-14 text-center shadow-[0_20px_60px_-20px_rgba(4,44,83,0.35)]">
+              <div className="text-[12px] uppercase tracking-[0.18em] text-[#9CC4EC] font-semibold mb-4">Founder Loom incoming</div>
+              <h2 className="text-[28px] sm:text-[40px] leading-[1.06] tracking-tight font-semibold max-w-2xl mx-auto">
+                Recording the founder walkthrough <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>this week.</span>
+              </h2>
+              <p className="mt-5 text-[16px] text-white/85 max-w-xl mx-auto leading-relaxed">
+                In the meantime, the fastest way to see what we'd build for you is to call our live agent or book a 30-minute build call.
+              </p>
+              <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+                <a href={`tel:${HERO_PHONE_TEL}`} className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 shadow-lg">Call live: {HERO_PHONE_DISPLAY}</a>
+                <a href={CAL_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15">Book a build call</a>
+              </div>
+            </div>
+          )}
+
+          <div className="mt-10 grid sm:grid-cols-3 gap-4">
+            {[
+              { h: "What you'll see", b: "Live inbound call → qualification → booking → CRM write → SMS confirmation. End-to-end." },
+              { h: "Run by", b: "Real production stack — Twilio, Claude/GPT routing, Deepgram, ElevenLabs. Same setup we'd ship for you." },
+              { h: "After watching", b: "Book a 30-min build call. We'll show you the same flow built for YOUR business, live." },
+            ].map((c, i) => (
+              <div key={i} className="rounded-2xl bg-[#F6FAFE] border border-slate-200 p-6">
+                <div className="text-[14px] font-semibold text-[#042C53] mb-2">{c.h}</div>
+                <div className="text-[13px] text-slate-600 leading-relaxed">{c.b}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <footer className="bg-white border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+          <div className="flex items-center gap-2.5"><BrainLogo size={28} /><span className="font-semibold text-[#042C53]">TrainYourAgent</span><span className="text-slate-400">— Tampa Bay, FL</span></div>
+          <div className="flex items-center gap-6"><Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link><Link to="/terms" className="hover:text-[#042C53]">Terms</Link><Link to="/security" className="hover:text-[#042C53]">Security</Link><a href={LINKEDIN_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">LinkedIn</a></div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default DemoVideo;
