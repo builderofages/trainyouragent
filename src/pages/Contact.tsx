@@ -1,209 +1,210 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Mail, MapPin, Clock, Phone, Twitter, Instagram, Linkedin, MessageSquare, Send } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/FooterEnhanced";
-import { GlassCard } from "@/components/enhanced/GlassCard";
-import { MagneticButton } from "@/components/enhanced/MagneticButton";
-import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
-import { CustomSolutionsCallout } from "@/components/CustomSolutionsCallout";
-import { FloatingIsland } from "@/components/effects/FloatingIsland";
-import { siteConfig } from "@/config/site";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+const CAL_URL = "https://cal.com/trainyouragent/30min";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+
+function BrainLogo({ size = 40 }: { size?: number }) {
+  return (
+    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size }} aria-hidden="true">
+      <svg viewBox="0 0 64 64" style={{ width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" fill="#E6F1FB" />
+        <g fill="#0C447C">
+          <circle cx="20" cy="27" r="7.5" />
+          <circle cx="32" cy="21" r="8.5" />
+          <circle cx="44" cy="27" r="7.5" />
+          <circle cx="24" cy="40" r="7" />
+          <circle cx="40" cy="40" r="7" />
+          <rect x="29" y="44" width="6" height="11" rx="1.5" />
+        </g>
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#185FA5" strokeWidth="1.5" />
+      </svg>
+    </span>
+  );
+}
+
+const CHANNELS = [
+  {
+    label: "Book a 30-minute build call",
+    sub: "Fastest path. We scope your use case, show a live build, and you leave with a written plan.",
+    cta: "Open Cal.com",
+    href: CAL_URL,
+    accent: true,
+  },
+  {
+    label: "Email the founder",
+    sub: "Reach Alexander directly. Replies within one business day, usually same day.",
+    cta: "hello@trainyouragent.com",
+    href: "mailto:hello@trainyouragent.com",
+  },
+  {
+    label: "LinkedIn DM",
+    sub: "Message Alexander on LinkedIn — DM the word AGENT for a live build walkthrough.",
+    cta: "Open LinkedIn",
+    href: LINKEDIN_URL,
+  },
+  {
+    label: "Enterprise / partnerships",
+    sub: "Procurement, security review, BAA, MSA, or co-selling — route here for the right thread.",
+    cta: "partners@trainyouragent.com",
+    href: "mailto:partners@trainyouragent.com",
+  },
+];
 
 const Contact = () => {
-  const [leadGateOpen, setLeadGateOpen] = useState(false);
+  const [navScrolled, setNavScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [sent, setSent] = useState(false);
 
-  const contactMethods = [
-    {
-      icon: Mail,
-      title: "Email Us",
-      items: [
-        { label: "General Inquiries", value: "support@trainyouragent.com" },
-        { label: "Sales", value: "sales@trainyouragent.com" },
-        { label: "Legal", value: "legal@trainyouragent.com" },
-        { label: "Privacy", value: "privacy@trainyouragent.com" },
-      ]
-    },
-    {
-      icon: MapPin,
-      title: "Location",
-      items: [
-        { label: "Headquarters", value: "TrainYourAgent LLC" },
-        { label: "Based in", value: "Florida, United States" },
-        { label: "Service Area", value: "Nationwide Coverage" },
-        { label: "Operations", value: "Virtual Office" },
-      ]
-    },
-    {
-      icon: Clock,
-      title: "Business Hours",
-      items: [
-        { label: "AI Available", value: "24/7/365" },
-        { label: "Human Support", value: "Mon-Fri" },
-        { label: "Hours", value: "9:00 AM - 5:00 PM EST" },
-        { label: "Response Time", value: "Within 24 hours" },
-      ]
-    },
-  ];
+  useEffect(() => {
+    const onScroll = () => setNavScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-  const socialLinks = [
-    { icon: Twitter, url: siteConfig.socialMedia.twitter, label: "Twitter" },
-    { icon: Instagram, url: siteConfig.socialMedia.instagram, label: "Instagram" },
-    { icon: Linkedin, url: siteConfig.socialMedia.linkedin, label: "LinkedIn" },
-  ];
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (!document.getElementById("tya-fonts")) {
+      const l = document.createElement("link");
+      l.id = "tya-fonts";
+      l.rel = "stylesheet";
+      l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
+      document.head.appendChild(l);
+    }
+  }, []);
 
-  const faqs = [
-    {
-      question: "When will I hear back?",
-      answer: "We respond to all inquiries within 24 hours during business days. For urgent matters, use our live chat or call our AI receptionist for immediate assistance."
-    },
-    {
-      question: "What's the best way to reach you?",
-      answer: "For strategy sessions and sales inquiries, use the 'Get Your Free Strategy Session' button. For general questions, email support@trainyouragent.com. For immediate assistance, use our live chat in the bottom-right corner."
-    },
-    {
-      question: "Do you offer phone consultations?",
-      answer: "Yes! Our AI voice agent is available 24/7. For human consultation, book a free strategy session and we'll discuss your needs in detail."
-    },
-  ];
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // No backend wired yet — direct user to email so nothing is lost.
+    const form = e.currentTarget as HTMLFormElement;
+    const data = new FormData(form);
+    const name = String(data.get("name") || "");
+    const company = String(data.get("company") || "");
+    const email = String(data.get("email") || "");
+    const phone = String(data.get("phone") || "");
+    const use = String(data.get("use") || "");
+    const body = `Name: ${name}%0D%0ACompany: ${company}%0D%0AEmail: ${email}%0D%0APhone: ${phone}%0D%0A%0D%0AUse case:%0D%0A${use}`;
+    window.location.href = `mailto:hello@trainyouragent.com?subject=Build%20request%20from%20${encodeURIComponent(name || "site")}&body=${body}`;
+    setSent(true);
+  };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-
-      {/* Hero Section */}
-      <section className="pt-32 pb-20">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
-              <MessageSquare className="w-4 h-4 text-primary" />
-              <span className="text-sm font-semibold text-primary">Get in Touch</span>
-            </div>
-            <h1 className="text-hero mb-6">
-              Let's Talk About <span className="text-gradient-premium">Your Growth</span>
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Have questions? Ready to transform your business with AI? We're here to help. Reach out and let's discuss how we can help you capture more revenue.
-            </p>
-          </motion.div>
-
-          {/* Contact Methods Grid */}
-          <div className="grid md:grid-cols-3 gap-8 mb-20">
-            {contactMethods.map((method, index) => (
-              <FloatingIsland key={index} delay={index * 0.1} intensity="low">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <GlassCard className="p-8 h-full hover-lift border-gradient">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-premium flex items-center justify-center mb-6 shadow-glow-sm">
-                      <method.icon className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-black mb-6 text-gradient-premium">{method.title}</h3>
-                    <div className="space-y-4">
-                      {method.items.map((item, i) => (
-                        <div key={i}>
-                          <p className="text-xs text-muted-foreground font-semibold mb-1">{item.label}</p>
-                          <p className="text-sm font-bold text-foreground">{item.value}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </GlassCard>
-                </motion.div>
-              </FloatingIsland>
-            ))}
+    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navScrolled ? "bg-white/95 backdrop-blur-md border-b border-slate-200" : "bg-white border-b border-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5">
+            <BrainLogo size={36} />
+            <span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span>
+          </Link>
+          <div className="hidden md:flex items-center gap-7 text-[14px] text-slate-700">
+            <Link to="/solutions" className="hover:text-[#042C53] transition">Solutions</Link>
+            <Link to="/technology" className="hover:text-[#042C53] transition">Technology</Link>
+            <Link to="/security" className="hover:text-[#042C53] transition">Security</Link>
+            <Link to="/pricing" className="hover:text-[#042C53] transition">Pricing</Link>
+            <Link to="/about" className="hover:text-[#042C53] transition">About</Link>
+            <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E] transition shadow-sm">Book a call</a>
           </div>
+          <button className="md:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu">
+            <span className="block w-4 h-px bg-[#042C53] relative" style={{ boxShadow: mobileOpen ? "none" : "0 -5px 0 #042C53, 0 5px 0 #042C53", transform: mobileOpen ? "rotate(45deg)" : "none" }} />
+          </button>
+        </div>
+        {mobileOpen && (
+          <div className="md:hidden border-t border-slate-200 bg-white">
+            <div className="px-5 py-4 flex flex-col gap-3 text-[15px]">
+              <Link to="/solutions" onClick={() => setMobileOpen(false)}>Solutions</Link>
+              <Link to="/technology" onClick={() => setMobileOpen(false)}>Technology</Link>
+              <Link to="/security" onClick={() => setMobileOpen(false)}>Security</Link>
+              <Link to="/pricing" onClick={() => setMobileOpen(false)}>Pricing</Link>
+              <Link to="/about" onClick={() => setMobileOpen(false)}>About</Link>
+              <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[14px] font-medium text-center">Book a call</a>
+            </div>
+          </div>
+        )}
+      </nav>
 
-          {/* Primary CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="glass-card p-12 rounded-3xl text-center mb-20"
-          >
-            <Send className="w-20 h-20 text-primary mx-auto mb-6" />
-            <h2 className="text-4xl font-black mb-4">
-              Ready to <span className="text-gradient-premium">Get Started?</span>
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Book your free strategy session and discover how AI can transform your business operations within 3-7 days.
-            </p>
-            <MagneticButton
-              size="lg"
-              className="rounded-full bg-gradient-premium shadow-premium hover:shadow-glow-intense text-lg px-8"
-              onClick={() => setLeadGateOpen(true)}
-              strength={25}
+      <section className="pt-28 pb-12 px-5 sm:px-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Contact</div>
+          <h1 className="text-[42px] sm:text-[64px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+            Talk to the people who <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>build</span> it.
+          </h1>
+          <p className="mt-5 text-[18px] text-slate-600 max-w-2xl leading-relaxed">
+            No SDRs. No qualifying form mazes. You get the founder and the engineer who's going to put the agent live for you.
+          </p>
+        </div>
+      </section>
+
+      <section className="px-5 sm:px-8 pb-12">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-4">
+          {CHANNELS.map((c, i) => (
+            <a
+              key={i}
+              href={c.href}
+              target={c.href.startsWith("http") ? "_blank" : undefined}
+              rel={c.href.startsWith("http") ? "noopener" : undefined}
+              className={`group block rounded-2xl p-7 border transition ${c.accent ? "bg-[#042C53] text-white border-[#042C53] hover:bg-[#0A3D6E]" : "bg-white border-slate-200 hover:border-[#185FA5] hover:shadow-sm"}`}
             >
-              <MessageSquare className="w-6 h-6 mr-3" />
-              Get Your Free Strategy Session
-            </MagneticButton>
-          </motion.div>
-
-          {/* Social Media */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="text-center mb-20"
-          >
-            <h3 className="text-2xl font-black mb-6">Connect With Us</h3>
-            <div className="flex gap-4 justify-center">
-              {socialLinks.map((social, index) => (
-                <MagneticButton
-                  key={index}
-                  variant="outline"
-                  size="lg"
-                  className="rounded-full border-gradient w-16 h-16 p-0"
-                  onClick={() => window.open(social.url, '_blank')}
-                  strength={20}
-                >
-                  <social.icon className="w-6 h-6" />
-                </MagneticButton>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* FAQ */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <h3 className="text-3xl font-black mb-8 text-center">
-              Common <span className="text-gradient-premium">Questions</span>
-            </h3>
-            <div className="grid md:grid-cols-3 gap-6">
-              {faqs.map((faq, index) => (
-                <FloatingIsland key={index} delay={0.6 + index * 0.1} intensity="low">
-                  <GlassCard className="p-6 h-full hover-lift border-gradient">
-                    <h4 className="font-black text-lg mb-3 text-primary">{faq.question}</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{faq.answer}</p>
-                  </GlassCard>
-                </FloatingIsland>
-              ))}
-            </div>
-          </motion.div>
+              <div className={`text-[13px] uppercase tracking-[0.12em] font-semibold mb-2 ${c.accent ? "text-[#9CC4EC]" : "text-[#185FA5]"}`}>{c.label}</div>
+              <div className={`text-[16px] leading-relaxed mb-5 ${c.accent ? "text-white/90" : "text-slate-700"}`}>{c.sub}</div>
+              <div className={`text-[14px] font-medium inline-flex items-center gap-2 ${c.accent ? "text-white" : "text-[#042C53]"}`}>
+                {c.cta}
+                <span className="transition-transform group-hover:translate-x-1">&rarr;</span>
+              </div>
+            </a>
+          ))}
         </div>
       </section>
 
-      {/* Custom Solutions Info */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-6 max-w-2xl">
-          <CustomSolutionsCallout 
-            variant="compact"
-            onContactClick={() => setLeadGateOpen(true)}
-          />
+      <section className="px-5 sm:px-8 pb-20">
+        <div className="max-w-5xl mx-auto bg-[#F6FAFE] border border-slate-200 rounded-2xl p-7 sm:p-10">
+          <div className="grid md:grid-cols-2 gap-10">
+            <div>
+              <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Send a build request</div>
+              <h2 className="text-[26px] sm:text-[32px] leading-tight font-semibold text-[#042C53] mb-4">
+                Tell us what you'd put on autopilot first.
+              </h2>
+              <p className="text-[15px] text-slate-700 leading-relaxed mb-6">
+                We read every one. If we can build it well, you'll get a Loom back showing the build before you book a call. If we can't, we'll tell you and point you somewhere honest.
+              </p>
+              <div className="text-[13px] text-slate-600 space-y-2">
+                <div><span className="font-semibold text-[#042C53]">Headquarters.</span> Tampa Bay, Florida.</div>
+                <div><span className="font-semibold text-[#042C53]">Hours.</span> Mon–Fri, 8am–7pm ET. After hours via email; we triage every morning.</div>
+                <div><span className="font-semibold text-[#042C53]">Response.</span> Same business day for new builds. Within 1 hour for active customers in business hours.</div>
+              </div>
+            </div>
+            <form onSubmit={onSubmit} className="flex flex-col gap-3">
+              <input name="name" required placeholder="Your name" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5]" />
+              <input name="company" placeholder="Company (optional)" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5]" />
+              <input name="email" type="email" required placeholder="Work email" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5]" />
+              <input name="phone" placeholder="Phone (optional)" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5]" />
+              <textarea name="use" required rows={5} placeholder="What do you want the agent to do? E.g. 'Answer after-hours calls and book appointments into ServiceTitan.'" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5] resize-none" />
+              <button type="submit" className="mt-2 px-5 py-3 rounded-full bg-[#042C53] text-white text-[14px] font-medium hover:bg-[#0A3D6E] transition">
+                {sent ? "Opening your email…" : "Send build request"}
+              </button>
+              <div className="text-[11px] text-slate-500 leading-relaxed mt-1">
+                By submitting you agree to our <Link to="/privacy" className="underline">privacy policy</Link>. We don't share your details with anyone outside the team building your agent.
+              </div>
+            </form>
+          </div>
         </div>
       </section>
 
-      <StrategySessionLeadGate open={leadGateOpen} onOpenChange={setLeadGateOpen} />
-
-      <Footer />
+      <footer className="border-t border-slate-200 bg-white">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+          <div className="flex items-center gap-2.5">
+            <BrainLogo size={28} />
+            <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
+            <span className="text-slate-400">— Tampa Bay, FL</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>
+            <Link to="/terms" className="hover:text-[#042C53]">Terms</Link>
+            <Link to="/security" className="hover:text-[#042C53]">Security</Link>
+            <a href={CAL_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">Book a call</a>
+          </div>
+          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
+        </div>
+      </footer>
     </div>
   );
 };
