@@ -1,213 +1,164 @@
-import { motion } from "framer-motion";
-import Header from "@/components/Header";
-import Footer from "@/components/FooterEnhanced";
-import { GlassCard } from "@/components/enhanced/GlassCard";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+const CAL_URL = "https://cal.com/trainyouragent/30min";
+
+function BrainLogo({ size = 40 }: { size?: number }) {
+  return (
+    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size }} aria-hidden="true">
+      <svg viewBox="0 0 64 64" style={{ width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" fill="#E6F1FB" />
+        <g fill="#0C447C">
+          <circle cx="20" cy="27" r="7.5" />
+          <circle cx="32" cy="21" r="8.5" />
+          <circle cx="44" cy="27" r="7.5" />
+          <circle cx="24" cy="40" r="7" />
+          <circle cx="40" cy="40" r="7" />
+          <rect x="29" y="44" width="6" height="11" rx="1.5" />
+        </g>
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#185FA5" strokeWidth="1.5" />
+      </svg>
+    </span>
+  );
+}
 
 const Privacy = () => {
-  const sections = [
-    {
-      title: "Information We Collect",
-      content: `We collect information you provide directly to us, including:
-      
-- Name, email address, phone number, and company information
-- Payment and billing information
-- Communications with our support team
-- Usage data and analytics
-- Device and browser information`,
-    },
-    {
-      title: "How We Use Your Information",
-      content: `We use the information we collect to:
-      
-- Provide, maintain, and improve our services
-- Process transactions and send related information
-- Send technical notices and support messages
-- Respond to your comments and questions
-- Analyze usage patterns and optimize performance
-- Protect against fraudulent or illegal activity`,
-    },
-    {
-      title: "Data Sharing and Disclosure",
-      content: `We do not sell your personal information. We may share your information with:
-      
-- Service providers who assist in our operations
-- Professional advisors (lawyers, accountants)
-- Law enforcement when required by law
-- In connection with a merger or acquisition (with notice)
-      
-All third-party service providers are contractually obligated to protect your data.`,
-    },
-    {
-      title: "HIPAA Compliance for Healthcare Clients",
-      content: `Healthcare-Specific Requirements:
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-Our platform infrastructure (VAPI.ai) is HIPAA-compliant and maintains appropriate safeguards for protected health information (PHI). Healthcare organizations requiring Business Associate Agreements (BAA) should contact legal@trainyouragent.com during onboarding.
-
-Key Points:
-- Not all features may be HIPAA-compliant by default
-- Healthcare clients must follow configuration guidelines provided during implementation
-- Specific HIPAA controls can be enabled upon request
-- Regular security audits ensure ongoing compliance
-- Staff training provided for PHI handling procedures
-
-Contact privacy@trainyouragent.com for detailed HIPAA compliance documentation.`,
-    },
-    {
-      title: "Voice Demo Recording and Microphone Usage",
-      content: `When you use our live voice demo feature, the following applies:
-
-Microphone Access and Recording:
-- Your browser will request microphone permission to enable voice interaction
-- Voice data is temporarily processed by VAPI.ai (our AI voice infrastructure provider)
-- Demo conversations are recorded for quality assurance and AI training purposes
-- Recordings are stored for 30 days, then automatically deleted
-- Voice data is used solely to demonstrate AI capabilities and improve our services
-
-Data Processing:
-- VAPI.ai complies with GDPR, CCPA, and SOC 2 Type II standards
-- Voice data is encrypted in transit and at rest
-- No voice data is sold to third parties
-- You may request deletion of your demo recording at privacy@trainyouragent.com
-
-Consent:
-- By submitting the voice demo form and using the demo, you explicitly consent to voice recording
-- You can decline by not using the voice demo feature
-- Microphone access can be revoked in your browser settings at any time
-
-For questions about voice data handling, contact privacy@trainyouragent.com`,
-    },
-    {
-      title: "Data Security",
-      content: `We implement industry-standard security measures including:
-      
-- End-to-end encryption in transit (TLS 1.3)
-- Data storage on SOC 2 Type II certified infrastructure  
-- Regular security audits by third-party partners
-- Role-based access controls
-- Secure data centers with 24/7 monitoring
-- Employee training on data protection
-      
-While we implement enterprise-grade security practices, no method of transmission over the Internet is 100% secure. Individual compliance requirements may vary by industry.`,
-    },
-    {
-      title: "Your Rights (GDPR & CCPA)",
-      content: `You have the right to:
-      
-- Access your personal data
-- Correct inaccurate data
-- Request deletion of your data
-- Object to processing of your data
-- Data portability
-- Withdraw consent at any time
-      
-To exercise these rights, contact us at privacy@trainyouragent.com`,
-    },
-    {
-      title: "Cookies and Tracking",
-      content: `We use cookies and similar technologies for:
-      
-- Essential website functionality
-- Analytics and performance monitoring
-- Marketing and advertising (with your consent)
-      
-You can control cookie preferences through your browser settings.`,
-    },
-    {
-      title: "Data Retention",
-      content: `We retain your personal information for as long as:
-      
-- Your account is active
-- Necessary to provide services
-- Required by law or for legitimate business purposes
-      
-When data is no longer needed, we securely delete or anonymize it.`,
-    },
-    {
-      title: "Children's Privacy",
-      content: `Our services are not directed to individuals under 18. We do not knowingly collect personal information from children. If you believe we have collected information from a child, please contact us immediately.`,
-    },
-    {
-      title: "International Data Transfers",
-      content: `Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place through:
-      
-- Standard contractual clauses
-- Privacy Shield certification (where applicable)
-- Consent for specific transfers`,
-    },
-    {
-      title: "Changes to This Policy",
-      content: `We may update this Privacy Policy from time to time. We will notify you of significant changes via:
-      
-- Email notification
-- Prominent notice on our website
-- In-app notifications
-      
-Your continued use of our services after changes constitutes acceptance.`,
-    },
-    {
-      title: "Contact Us",
-      content: `For privacy-related questions or concerns:
-      
-Email: privacy@trainyouragent.com
-Address: TrainYourAgent LLC, Florida, United States
-Phone: Contact via email for inquiries
-      
-Data Protection Officer: [If applicable]`,
-    },
-  ];
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (!document.getElementById("tya-fonts")) {
+      const l = document.createElement("link");
+      l.id = "tya-fonts";
+      l.rel = "stylesheet";
+      l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
+      document.head.appendChild(l);
+    }
+  }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+      <nav className="bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5">
+            <BrainLogo size={36} />
+            <span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span>
+          </Link>
+          <div className="hidden md:flex items-center gap-7 text-[14px] text-slate-700">
+            <Link to="/solutions" className="hover:text-[#042C53]">Solutions</Link>
+            <Link to="/security" className="hover:text-[#042C53]">Security</Link>
+            <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
+            <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E]">Book a call</a>
+          </div>
+          <button className="md:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu">
+            <span className="block w-4 h-px bg-[#042C53] relative" style={{ boxShadow: mobileOpen ? "none" : "0 -5px 0 #042C53, 0 5px 0 #042C53", transform: mobileOpen ? "rotate(45deg)" : "none" }} />
+          </button>
+        </div>
+      </nav>
 
-      <section className="pt-32 pb-16 px-6">
-        <div className="container mx-auto max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
-          >
-            <h1 className="text-5xl md:text-6xl font-black mb-6">
-              Privacy <span className="text-gradient">Policy</span>
-            </h1>
-            <p className="text-muted-foreground text-lg">
-              Last Updated: {new Date().toLocaleDateString()}
-            </p>
-            <p className="text-muted-foreground mt-4">
-              At TrainYourAgent, we take your privacy seriously. This policy explains how we
-              collect, use, and protect your personal information.
-            </p>
-          </motion.div>
+      <article className="max-w-3xl mx-auto px-5 sm:px-8 py-16 prose-content">
+        <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Legal</div>
+        <h1 className="text-[42px] sm:text-[56px] leading-[1.05] tracking-tight font-semibold text-[#042C53] mb-3">Privacy Policy</h1>
+        <div className="text-[14px] text-slate-500 mb-10">Last updated: May 13, 2026</div>
 
-          <div className="space-y-6">
-            {sections.map((section, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <GlassCard className="p-8">
-                  <h2 className="text-2xl font-bold mb-4">{section.title}</h2>
-                  <div className="text-muted-foreground whitespace-pre-line leading-relaxed">
-                    {section.content}
-                  </div>
-                </GlassCard>
-              </motion.div>
-            ))}
+        <div className="space-y-10 text-[16px] leading-[1.75] text-slate-700">
+          <p>
+            TrainYourAgent, Inc. ("TrainYourAgent," "we," "us") builds and operates AI voice and messaging agents for businesses. This policy explains what personal data we collect, how we use it, and the choices you have. We wrote it in plain English. If anything is unclear, email <a className="text-[#185FA5] underline" href="mailto:privacy@trainyouragent.com">privacy@trainyouragent.com</a>.
+          </p>
+
+          <div>
+            <h2 className="text-[22px] font-semibold text-[#042C53] mb-3">1. Who this applies to</h2>
+            <p>
+              This policy covers visitors to trainyouragent.com, prospects who contact us, customers of our platform, and end users whose calls or messages are handled by a TrainYourAgent agent that one of our customers deploys.
+            </p>
           </div>
 
-          <div className="mt-12 text-center">
-            <p className="text-sm text-muted-foreground">
-              This policy is effective as of {new Date().toLocaleDateString()} and will remain in
-              effect except with respect to any changes in its provisions in the future, which will
-              be in effect immediately after being posted on this page.
-            </p>
+          <div>
+            <h2 className="text-[22px] font-semibold text-[#042C53] mb-3">2. What we collect</h2>
+            <p className="mb-3"><strong className="text-[#042C53]">From website visitors:</strong> IP address, browser type, pages viewed, referring URL, and (if you submit a form) name, email, company, and phone.</p>
+            <p className="mb-3"><strong className="text-[#042C53]">From customers:</strong> account email, billing details (processed by Stripe — we never see your full card number), agent configurations, business phone numbers, and integration credentials you authorize.</p>
+            <p><strong className="text-[#042C53]">From end users (people calling a customer's agent):</strong> phone number, call audio, transcript, and any data the caller provides during the conversation (e.g., name, appointment time, address). This data is collected on behalf of our customer, who is the controller. We act as a processor.</p>
+          </div>
+
+          <div>
+            <h2 className="text-[22px] font-semibold text-[#042C53] mb-3">3. How we use it</h2>
+            <p>We use personal data to operate the service, route calls, generate transcripts, sync with the integrations you authorize, bill correctly, prevent abuse, comply with the law, and improve product reliability. We do not sell personal data. We do not use customer or end-user data to train AI models — ours or anyone else's.</p>
+          </div>
+
+          <div>
+            <h2 className="text-[22px] font-semibold text-[#042C53] mb-3">4. Who we share it with</h2>
+            <p className="mb-3">We share data only with subprocessors that need it to deliver the service. Our current subprocessors include:</p>
+            <ul className="list-disc pl-6 space-y-1.5">
+              <li><strong>AWS</strong> — hosting and storage (us-east-1)</li>
+              <li><strong>Twilio</strong> — voice routing and SMS</li>
+              <li><strong>Anthropic</strong> — language model inference (zero-retention endpoint)</li>
+              <li><strong>OpenAI</strong> — fallback inference (zero-retention endpoint)</li>
+              <li><strong>ElevenLabs / Cartesia / Deepgram</strong> — speech synthesis and transcription</li>
+              <li><strong>Stripe</strong> — billing</li>
+              <li><strong>Vanta / Drata</strong> — compliance monitoring</li>
+              <li><strong>Vercel</strong> — marketing site hosting</li>
+            </ul>
+            <p className="mt-3">Each subprocessor signs a DPA with us and is reviewed annually. The full current list is at <a className="text-[#185FA5] underline" href="mailto:privacy@trainyouragent.com">privacy@trainyouragent.com</a> on request.</p>
+          </div>
+
+          <div>
+            <h2 className="text-[22px] font-semibold text-[#042C53] mb-3">5. Retention</h2>
+            <p>Audio: 30 days by default, then deleted. Transcripts: 90 days by default, configurable. Account records and billing: retained while you have an active account plus the period required by law (typically 7 years for tax records). On termination, we export your data to you and delete our copy within 30 days.</p>
+          </div>
+
+          <div>
+            <h2 className="text-[22px] font-semibold text-[#042C53] mb-3">6. Your rights</h2>
+            <p>If you're in the EU, UK, California, or another jurisdiction with a comprehensive privacy law, you have the right to access, correct, delete, and port your personal data, and to object to certain processing. To exercise any of these rights, email <a className="text-[#185FA5] underline" href="mailto:privacy@trainyouragent.com">privacy@trainyouragent.com</a>. We respond within 30 days. For data we hold as a processor on behalf of a customer, we'll forward your request to the customer (the controller).</p>
+          </div>
+
+          <div>
+            <h2 className="text-[22px] font-semibold text-[#042C53] mb-3">7. Cookies</h2>
+            <p>We use a small set of essential cookies for site functionality and analytics (privacy-friendly: Plausible or equivalent — no Google Analytics). Details on the <Link to="/cookie-policy" className="text-[#185FA5] underline">Cookie Policy</Link> page.</p>
+          </div>
+
+          <div>
+            <h2 className="text-[22px] font-semibold text-[#042C53] mb-3">8. Security</h2>
+            <p>See our <Link to="/security" className="text-[#185FA5] underline">Security page</Link> for the full posture: encryption, access controls, hosting region, incident response, and ongoing compliance work. No system is perfectly secure; if we discover a breach affecting you, we'll notify within 24 hours of confirmation.</p>
+          </div>
+
+          <div>
+            <h2 className="text-[22px] font-semibold text-[#042C53] mb-3">9. International transfers</h2>
+            <p>Customer data is stored in AWS us-east-1 by default. If you're an EU customer, we use Standard Contractual Clauses and offer an EU hosting region on request.</p>
+          </div>
+
+          <div>
+            <h2 className="text-[22px] font-semibold text-[#042C53] mb-3">10. Children</h2>
+            <p>Our service is not directed at anyone under 18. We don't knowingly collect data from minors. If you believe a minor has provided us data, email <a className="text-[#185FA5] underline" href="mailto:privacy@trainyouragent.com">privacy@trainyouragent.com</a> and we'll delete it.</p>
+          </div>
+
+          <div>
+            <h2 className="text-[22px] font-semibold text-[#042C53] mb-3">11. Changes</h2>
+            <p>We'll post the new version here and update the "Last updated" date. Material changes get an email to active customers at least 14 days before they take effect.</p>
+          </div>
+
+          <div>
+            <h2 className="text-[22px] font-semibold text-[#042C53] mb-3">12. Contact</h2>
+            <p>TrainYourAgent, Inc.<br />Tampa Bay, Florida, USA<br /><a className="text-[#185FA5] underline" href="mailto:privacy@trainyouragent.com">privacy@trainyouragent.com</a></p>
           </div>
         </div>
-      </section>
+      </article>
 
-      <Footer />
+      <footer className="border-t border-slate-200 bg-white mt-10">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+          <div className="flex items-center gap-2.5">
+            <BrainLogo size={28} />
+            <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
+            <span className="text-slate-400">— Tampa Bay, FL</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>
+            <Link to="/terms" className="hover:text-[#042C53]">Terms</Link>
+            <Link to="/security" className="hover:text-[#042C53]">Security</Link>
+            <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
+          </div>
+          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
+        </div>
+      </footer>
     </div>
   );
 };
