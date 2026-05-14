@@ -1,201 +1,109 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Linkedin, Mail, Award, Briefcase, GraduationCap, Sparkles } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/FooterEnhanced";
-import { GlassCard } from "@/components/enhanced/GlassCard";
-import { MagneticButton } from "@/components/enhanced/MagneticButton";
-import { StrategySessionLeadGate } from "@/components/conversion/StrategySessionLeadGate";
-import { FloatingIsland } from "@/components/effects/FloatingIsland";
-import { use3DCard } from "@/hooks/use3DCard";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-const teamMembers = [
-  {
-    name: "Alexander",
-    role: "Founder & CEO",
-    expertise: ["AI Strategy", "Business Transformation", "American Innovation"],
-    bio: "Spent most of adult life across B2B/B2C markets. Former Head Executive at major SMMA leading 10+ departments with 1,000+ employees, helping brands achieve millions in sales. Leads non-profit training service dogs. Early AI adopter and ChatGPT beta tester. Founded TrainYourAgent to help American businesses harness AI for sustainable growth while proving automation elevates employees rather than replacing them.",
-    linkedin: "https://www.linkedin.com/in/alexander-trainyouragent",
-    email: "alexander@trainyouragent.com",
-    avatar: "A",
-    gradient: "from-primary to-accent"
-  },
-  {
-    name: "Jess",
-    role: "CRM & Operations Lead",
-    expertise: ["Salesforce CRM", "Customer Experience", "Brand Management"],
-    bio: "5+ years at Fortune 500 communications company (billions in revenue) leading brand management and high-level customer experience. Expert in Salesforce optimization, lead scoring, and conversion funnels. Also serves as Creative Director for brand assets and UI/UX. Brings Fortune 500 methodology to SMB automation.",
-    linkedin: "#",
-    email: "jess@trainyouragent.com",
-    avatar: "J",
-    gradient: "from-accent to-primary"
-  },
-  {
-    name: "Daniel",
-    role: "Head of Sales",
-    expertise: ["Strategic Sales", "AI Integration", "Economic Markets"],
-    bio: "5+ years across multiple B2B/B2C markets. Built automated system generating $60K+/month. Specializes in economic markets, strategic sales methodology, and client psychology. Focused on AI space integration across all niches, delivering turn-key systems that help businesses understand AI as optimization tool rather than replacement.",
-    linkedin: "#",
-    email: "daniel@trainyouragent.com",
-    avatar: "D",
-    gradient: "from-primary to-ultra-blue"
-  },
-  {
-    name: "David",
-    role: "Head of Development / CTO",
-    expertise: ["AI/ML Integration", "Full-Stack Development", "Prompt Engineering"],
-    bio: "10+ years building games, enterprise websites, SaaS platforms, and AI applications. Deep expertise in AI/ML integration, prompt engineering, and LLM orchestration. Leads 5-person dev team with diverse backgrounds. Shares Alexander's passion for ethical AI that elevates human capabilities. Ensures every solution is built with security, scalability, and reliability at core.",
-    linkedin: "#",
-    email: "david@trainyouragent.com",
-    avatar: "D",
-    gradient: "from-deep-blue to-primary"
-  }
-];
+const CAL_URL = "https://cal.com/trainyouragent/30min";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+
+function BrainLogo({ size = 40 }: { size?: number }) {
+  return (
+    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size }} aria-hidden="true">
+      <svg viewBox="0 0 64 64" style={{ width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" fill="#E6F1FB" />
+        <g fill="#0C447C">
+          <circle cx="20" cy="27" r="7.5" /><circle cx="32" cy="21" r="8.5" /><circle cx="44" cy="27" r="7.5" />
+          <circle cx="24" cy="40" r="7" /><circle cx="40" cy="40" r="7" /><rect x="29" y="44" width="6" height="11" rx="1.5" />
+        </g>
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#185FA5" strokeWidth="1.5" />
+      </svg>
+    </span>
+  );
+}
 
 const Team = () => {
-  const [leadGateOpen, setLeadGateOpen] = useState(false);
+  const [navScrolled, setNavScrolled] = useState(false);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (!document.getElementById("tya-fonts")) {
+      const l = document.createElement("link");
+      l.id = "tya-fonts"; l.rel = "stylesheet";
+      l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
+      document.head.appendChild(l);
+    }
+    document.title = "Team — TrainYourAgent";
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => setNavScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navScrolled ? "bg-white/90 backdrop-blur-xl border-b border-slate-200/60" : "bg-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5"><BrainLogo size={36} /><span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span></Link>
+          <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E] shadow-sm">Book a call</a>
+        </div>
+      </nav>
 
-      <section className="pt-32 pb-20">
-        <div className="container mx-auto px-4 max-w-6xl">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-sm font-semibold text-primary">Meet the Team</span>
-            </div>
-            <h1 className="text-hero mb-6">
-              Building the Future of <span className="text-gradient-premium">Business Automation</span>
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              We're a team of AI researchers, industry veterans, and automation experts on a mission to make enterprise-grade AI accessible to every business.
-            </p>
-          </motion.div>
-
-          {/* Team Members Grid */}
-          <div className="grid md:grid-cols-2 gap-8 mb-20">
-            {teamMembers.map((member, index) => {
-              const { ref, style, onMouseMove, onMouseLeave } = use3DCard(8);
-              
-              return (
-                <FloatingIsland key={index} delay={index * 0.1} intensity="low">
-                  <motion.div
-                    ref={ref as any}
-                    style={style}
-                    onMouseMove={onMouseMove}
-                    onMouseLeave={onMouseLeave}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="perspective-1000"
-                  >
-                    <GlassCard className="p-8 hover-lift-intense h-full border-gradient relative overflow-hidden group">
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-premium opacity-0 group-hover:opacity-5 transition-opacity duration-500"
-                      />
-                      
-                      <div className="flex items-start gap-6 relative z-10">
-                        {/* Avatar */}
-                        <motion.div 
-                          className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${member.gradient} flex items-center justify-center flex-shrink-0 shadow-glow-sm`}
-                          whileHover={{ scale: 1.1, rotate: 5 }}
-                          transition={{ type: "spring", stiffness: 300 }}
-                        >
-                          <span className="text-3xl font-black text-white">{member.avatar}</span>
-                        </motion.div>
-
-                        {/* Content */}
-                        <div className="flex-1">
-                          <h3 className="text-2xl font-black mb-1 text-gradient-premium">{member.name}</h3>
-                          <p className="text-primary font-bold mb-4">{member.role}</p>
-                          
-                          {/* Expertise Tags */}
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            {member.expertise.map((skill, i) => (
-                              <motion.span
-                                key={i}
-                                whileHover={{ scale: 1.1 }}
-                                className="px-3 py-1 text-xs font-bold rounded-full bg-primary/10 text-primary border border-primary/20 shadow-glow-sm"
-                              >
-                                {skill}
-                              </motion.span>
-                            ))}
-                          </div>
-
-                          {/* Bio */}
-                          <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-                            {member.bio}
-                          </p>
-
-                          {/* Contact */}
-                          <div className="flex gap-3">
-                            <MagneticButton
-                              variant="outline"
-                              size="sm"
-                              className="rounded-full border-gradient"
-                              onClick={() => window.open(member.linkedin, '_blank')}
-                              strength={20}
-                            >
-                              <Linkedin className="w-4 h-4" />
-                            </MagneticButton>
-                            <MagneticButton
-                              variant="outline"
-                              size="sm"
-                              className="rounded-full border-gradient"
-                              onClick={() => window.location.href = `mailto:${member.email}`}
-                              strength={20}
-                            >
-                              <Mail className="w-4 h-4" />
-                            </MagneticButton>
-                          </div>
-                        </div>
-                      </div>
-                    </GlassCard>
-                  </motion.div>
-                </FloatingIsland>
-              );
-            })}
-          </div>
-
-          {/* Join Us Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="glass-card p-12 rounded-3xl text-center"
-          >
-            <Briefcase className="w-20 h-20 text-primary mx-auto mb-6" />
-            <h2 className="text-4xl font-black mb-4">
-              Join Our <span className="text-gradient-premium">Growing Team</span>
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              We're always looking for talented people who are passionate about AI and helping small businesses succeed. If you're interested in joining our mission, we'd love to hear from you.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <MagneticButton
-                variant="outline"
-                className="rounded-full border-gradient"
-                onClick={() => window.location.href = 'mailto:careers@trainyouragent.com'}
-                strength={25}
-              >
-                <Mail className="w-5 h-5 mr-2" />
-                careers@trainyouragent.com
-              </MagneticButton>
-            </div>
-          </motion.div>
+      <section className="pt-32 pb-12 px-5 sm:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Team</div>
+          <h1 className="text-[42px] sm:text-[64px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+            Lean by design. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>The builder you hire is the builder who ships.</span>
+          </h1>
+          <p className="mt-6 text-[17px] text-slate-700 max-w-2xl leading-relaxed">
+            No sales engineers handing you off to delivery. No account-management theater. The person who scopes your agent is the person who builds it. The person who builds it is the person who tunes it weekly.
+          </p>
         </div>
       </section>
 
-      <StrategySessionLeadGate open={leadGateOpen} onOpenChange={setLeadGateOpen} />
+      <section className="px-5 sm:px-8 pb-20">
+        <div className="max-w-4xl mx-auto rounded-3xl bg-[#F6FAFE] border border-slate-200 p-8 sm:p-10 grid md:grid-cols-[200px_1fr] gap-8 items-start">
+          <div className="flex flex-col gap-3">
+            <div className="aspect-square rounded-2xl bg-gradient-to-br from-[#E6F1FB] to-[#DCEBFA] border border-slate-200 flex items-center justify-center">
+              <BrainLogo size={120} />
+            </div>
+            <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="text-[13px] text-[#042C53] underline decoration-[#185FA5]/40 hover:decoration-[#185FA5]">LinkedIn →</a>
+          </div>
+          <div>
+            <div className="text-[12px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-1">Founder</div>
+            <div className="text-[28px] font-semibold text-[#042C53]">Alexander Mills</div>
+            <div className="text-[14px] text-slate-600 mb-5">Tampa Bay, FL · 4 years deep in AI · 300+ builds shipped</div>
+            <div className="text-[15px] text-slate-700 leading-[1.75] space-y-3">
+              <p>Started building at fifteen — operations to industrial welding to robotic engineering to running a trading community to LA SMMA work with celebrities to founding EndCreations in gaming infrastructure.</p>
+              <p>Now: TrainYourAgent and a portfolio of ventures running in parallel — Telegram clients with CNNCT, content engines, token launches, gamified products. Same operating philosophy across all of them: ship the thing, watch what works, double down.</p>
+              <p>Four years deep in AI — through every major model shift since 2022. Builds the things he wants to exist, ships them faster than anyone you've met.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <Footer />
+      <section className="px-5 sm:px-8 py-20 bg-[#F6FAFE] border-y border-slate-200/70">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Hiring</div>
+          <h2 className="text-[28px] sm:text-[40px] leading-tight font-semibold text-[#042C53] mb-4">
+            Want to build the AI <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>that runs every business?</span>
+          </h2>
+          <p className="text-[15px] text-slate-700 max-w-xl mx-auto leading-relaxed mb-6">
+            We hire builders who ship. Heavy engineering bias, light meeting calendar, full ownership of customer outcomes. Email us with what you've shipped — not your resume.
+          </p>
+          <a href="mailto:careers@trainyouragent.com" className="inline-block px-6 py-3 rounded-full bg-[#042C53] text-white text-[14px] font-semibold hover:bg-[#0A3D6E] shadow">careers@trainyouragent.com</a>
+        </div>
+      </section>
+
+      <footer className="bg-white border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+          <div className="flex items-center gap-2.5"><BrainLogo size={28} /><span className="font-semibold text-[#042C53]">TrainYourAgent</span><span className="text-slate-400">— Tampa Bay, FL</span></div>
+          <div className="flex items-center gap-6">
+            <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>
+            <Link to="/terms" className="hover:text-[#042C53]">Terms</Link>
+            <Link to="/security" className="hover:text-[#042C53]">Security</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
