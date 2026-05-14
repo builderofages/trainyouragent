@@ -1,275 +1,77 @@
-import { motion } from "framer-motion";
-import { useState } from "react";
-import { 
-  Briefcase, Calculator, Phone, FileText, Users, TrendingUp, 
-  Target, DollarSign, Clock, CheckCircle, ExternalLink, Copy,
-  Presentation, ArrowRight, Sparkles, Shield, Calendar
-} from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/FooterEnhanced";
-import { GlassCard } from "@/components/enhanced/GlassCard";
-import { MagneticButton } from "@/components/enhanced/MagneticButton";
-import { toast } from "sonner";
-import { siteConfig } from "@/config/site";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+const CAL_URL = "https://cal.com/trainyouragent/30min";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+
+function BrainLogo({ size = 40 }: { size?: number }) {
+  return (
+    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size }} aria-hidden="true">
+      <svg viewBox="0 0 64 64" style={{ width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" fill="#E6F1FB" />
+        <g fill="#0C447C"><circle cx="20" cy="27" r="7.5" /><circle cx="32" cy="21" r="8.5" /><circle cx="44" cy="27" r="7.5" /><circle cx="24" cy="40" r="7" /><circle cx="40" cy="40" r="7" /><rect x="29" y="44" width="6" height="11" rx="1.5" /></g>
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#185FA5" strokeWidth="1.5" />
+      </svg>
+    </span>
+  );
+}
 
 const SalesToolkit = () => {
-  const [presentationMode, setPresentationMode] = useState(false);
-
-  const industries = [
-    { name: "HVAC", url: "/hvac", color: "from-blue-500 to-cyan-500" },
-    { name: "Accounting", url: "/accounting", color: "from-emerald-500 to-green-500" },
-    { name: "Roofing", url: "/roofing", color: "from-orange-500 to-red-500" },
-    { name: "Legal", url: "/legal", color: "from-blue-600 to-indigo-500" },
-    { name: "Healthcare", url: "/healthcare", color: "from-cyan-500 to-teal-500" },
-    { name: "Logistics", url: "/logistics", color: "from-blue-600 to-sky-500" },
-    { name: "Restaurants", url: "/restaurants", color: "from-yellow-500 to-orange-500" },
-    { name: "Bars & Nightclubs", url: "/bars-nightclubs", color: "from-purple-500 to-pink-500" },
-  ];
-
-  const talkingPoints = {
-    painPoints: [
-      "62% of leads call competitors when you miss their first call",
-      "$50K+ average annual loss from missed after-hours calls",
-      "15+ hours/week wasted on unqualified prospect calls",
-      "78% of customers expect immediate response, even after hours"
-    ],
-    solutions: [
-      "24/7 AI availability captures EVERY lead, even at 2am",
-      "Automatic lead qualification saves 15+ hours/week",
-      "CRM integration eliminates manual data entry",
-      "ROI typically seen within 14-30 days"
-    ],
-    objectionHandlers: [
-      {
-        objection: "\"We already have a receptionist\"",
-        response: "Great! Our AI works alongside your team, handling after-hours calls, overflow, and repetitive qualification questions so your receptionist can focus on higher-value tasks."
-      },
-      {
-        objection: "\"How do I know AI won't sound robotic?\"",
-        response: "Our AI uses ElevenLabs voice synthesis—the same technology used by Fortune 500 companies. Let me play you a demo call right now. Most people can't tell it's AI."
-      },
-      {
-        objection: "\"What if it makes a mistake?\"",
-        response: "The AI is programmed with escalation protocols. For complex scenarios, it smoothly transfers to your team with full context. Plus, you review and approve all responses before going live."
-      },
-      {
-        objection: "\"Seems expensive\"",
-        response: "Let's use our ROI calculator. How many calls do you typically miss per week? [Calculate] See? You're losing $X monthly right now. Our solution pays for itself in less than 30 days."
-      }
-    ]
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast.success("Copied to clipboard!");
-  };
+  const [navScrolled, setNavScrolled] = useState(false);
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (!document.getElementById("tya-fonts")) { const l = document.createElement("link"); l.id = "tya-fonts"; l.rel = "stylesheet"; l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap"; document.head.appendChild(l); }
+    document.title = "Sales Toolkit — TrainYourAgent";
+  }, []);
+  useEffect(() => { const f = () => setNavScrolled(window.scrollY > 20); window.addEventListener("scroll", f); return () => window.removeEventListener("scroll", f); }, []);
 
   return (
-    <div className={`min-h-screen bg-background ${presentationMode ? 'text-xl' : ''}`}>
-      <Header />
+    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navScrolled ? "bg-white/90 backdrop-blur-xl border-b border-slate-200/60" : "bg-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5"><BrainLogo size={36} /><span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span></Link>
+          <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E] shadow-sm">Book a call</a>
+        </div>
+      </nav>
 
-      <section className="pt-32 pb-20">
-        <div className="container mx-auto px-4">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6">
-              <Briefcase className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium">Sales Team Resources</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Sales Toolkit</h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6">
-              Everything you need to close deals faster
-            </p>
-
-            <MagneticButton
-              variant={presentationMode ? "default" : "outline"}
-              onClick={() => setPresentationMode(!presentationMode)}
-              className="gap-2"
-            >
-              <Presentation className="w-5 h-5" />
-              {presentationMode ? "Exit" : "Enable"} Presentation Mode
-            </MagneticButton>
-          </motion.div>
-
-          {/* Quick Links to Landing Pages */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-12"
-          >
-            <GlassCard className="p-8">
-              <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                <ExternalLink className="w-6 h-6 text-primary" />
-                Industry Landing Pages
-              </h2>
-              <div className="grid md:grid-cols-4 gap-4">
-                {industries.map((industry) => (
-                  <a
-                    key={industry.name}
-                    href={industry.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group"
-                  >
-                    <GlassCard className="p-4 hover-lift text-center">
-                      <div className={`w-12 h-12 rounded-full bg-gradient-to-r ${industry.color} mx-auto mb-3 flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                        <ExternalLink className="w-6 h-6 text-white" />
-                      </div>
-                      <div className="font-semibold">{industry.name}</div>
-                    </GlassCard>
-                  </a>
-                ))}
+      <section className="pt-32 pb-20 px-5 sm:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Sales Toolkit</div>
+          <h1 className="text-[42px] sm:text-[60px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+            Selling AI inside your company? <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Use ours.</span>
+          </h1>
+          <p className="mt-6 text-[17px] text-slate-700 leading-relaxed">
+            Champion materials, security packs, ROI calculators, and internal-pitch decks for the buyer who has to convince their leadership. Email <a className="text-[#185FA5] underline" href="mailto:hello@trainyouragent.com">hello@trainyouragent.com</a> with your role and we'll send the version that lands for your stakeholders.
+          </p>
+          <div className="mt-10 grid md:grid-cols-2 gap-4">
+            {[
+              { h: "Champion one-pager",    b: "What to send to your CFO / COO / CIO. Three pages, plain English, no jargon." },
+              { h: "Security questionnaire",b: "We've answered the standard SIG-Lite, CAIQ, and Vendor Risk Assessment Questionnaire. Send us yours and we'll auto-fill." },
+              { h: "ROI model",              b: "Spreadsheet with your numbers, our numbers, and a payback calc. Customizable by vertical." },
+              { h: "Internal-pitch deck",    b: "Ten slides you can re-skin and present to your leadership. Battle-tested against board pushback." },
+            ].map((x, i) => (
+              <div key={i} className="rounded-2xl bg-white border border-slate-200 p-6 hover:border-[#185FA5] transition">
+                <div className="text-[16px] font-semibold text-[#042C53] mb-2">{x.h}</div>
+                <div className="text-[14px] text-slate-600 leading-relaxed">{x.b}</div>
               </div>
-            </GlassCard>
-          </motion.div>
-
-          {/* Talking Points */}
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <GlassCard className="p-8 h-full">
-                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                  <Target className="w-6 h-6 text-destructive" />
-                  Pain Points (Start Here)
-                </h2>
-                <ul className="space-y-4">
-                  {talkingPoints.painPoints.map((point, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-xs font-bold text-destructive">{index + 1}</span>
-                      </div>
-                      <div>
-                        <p className="text-muted-foreground">{point}</p>
-                        <button
-                          onClick={() => copyToClipboard(point)}
-                          className="text-xs text-primary hover:underline mt-1 flex items-center gap-1"
-                        >
-                          <Copy className="w-3 h-3" />
-                          Copy
-                        </button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </GlassCard>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <GlassCard className="p-8 h-full">
-                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
-                  Solutions (The Pitch)
-                </h2>
-                <ul className="space-y-4">
-                  {talkingPoints.solutions.map((point, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-muted-foreground">{point}</p>
-                        <button
-                          onClick={() => copyToClipboard(point)}
-                          className="text-xs text-primary hover:underline mt-1 flex items-center gap-1"
-                        >
-                          <Copy className="w-3 h-3" />
-                          Copy
-                        </button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </GlassCard>
-            </motion.div>
+            ))}
           </div>
-
-          {/* Objection Handlers */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-12"
-          >
-            <GlassCard className="p-8">
-              <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                <Shield className="w-6 h-6 text-orange-500" />
-                Objection Handlers
-              </h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                {talkingPoints.objectionHandlers.map((item, index) => (
-                  <div key={index} className="space-y-3">
-                    <div className="font-semibold text-destructive">{item.objection}</div>
-                    <div className="text-sm text-muted-foreground bg-muted/30 p-4 rounded-lg">
-                      {item.response}
-                    </div>
-                    <button
-                      onClick={() => copyToClipboard(item.response)}
-                      className="text-xs text-primary hover:underline flex items-center gap-1"
-                    >
-                      <Copy className="w-3 h-3" />
-                      Copy Response
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </GlassCard>
-          </motion.div>
-
-          {/* Quick Actions */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <GlassCard className="p-8">
-              <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                <Sparkles className="w-6 h-6 text-primary" />
-                Quick Actions
-              </h2>
-              <div className="grid md:grid-cols-3 gap-4">
-                <MagneticButton
-                  size="lg"
-                  className="gap-2 h-20 flex-col"
-                  onClick={() => window.open(siteConfig.bookingUrl, '_blank')}
-                >
-                  <Calendar className="w-6 h-6" />
-                  <span>Book Demo</span>
-                </MagneticButton>
-                <MagneticButton
-                  size="lg"
-                  variant="outline"
-                  className="gap-2 h-20 flex-col glass-card"
-                  onClick={() => window.open('/demos', '_blank')}
-                >
-                  <Calculator className="w-6 h-6" />
-                  <span>ROI Calculator</span>
-                </MagneticButton>
-                <MagneticButton
-                  size="lg"
-                  variant="outline"
-                  className="gap-2 h-20 flex-col glass-card"
-                  onClick={() => window.open('/case-studies', '_blank')}
-                >
-                  <FileText className="w-6 h-6" />
-                  <span>Case Studies</span>
-                </MagneticButton>
-              </div>
-            </GlassCard>
-          </motion.div>
+          <div className="mt-10 rounded-2xl bg-[#F6FAFE] border border-slate-200 p-7 flex flex-col sm:flex-row items-start sm:items-center gap-5 justify-between">
+            <div>
+              <div className="text-[16px] font-semibold text-[#042C53] mb-1">Want all four delivered today?</div>
+              <div className="text-[14px] text-slate-600">Email us your role + company. We'll send tailored versions within one business day.</div>
+            </div>
+            <a href="mailto:hello@trainyouragent.com" className="px-5 py-3 rounded-full bg-[#042C53] text-white text-[14px] font-semibold hover:bg-[#0A3D6E] shadow whitespace-nowrap">Request the kit</a>
+          </div>
         </div>
       </section>
 
-      <Footer />
+      <footer className="bg-white border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+          <div className="flex items-center gap-2.5"><BrainLogo size={28} /><span className="font-semibold text-[#042C53]">TrainYourAgent</span></div>
+          <div className="flex items-center gap-6"><Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link><Link to="/terms" className="hover:text-[#042C53]">Terms</Link><Link to="/security" className="hover:text-[#042C53]">Security</Link><a href={LINKEDIN_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">LinkedIn</a></div>
+        </div>
+      </footer>
     </div>
   );
 };
