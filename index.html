@@ -1,318 +1,56 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Initialize dataLayer -->
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      
-      // Capture UTM parameters on page load
-      (function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const utmData = {
-          utm_source: urlParams.get('utm_source'),
-          utm_medium: urlParams.get('utm_medium'),
-          utm_campaign: urlParams.get('utm_campaign'),
-          utm_content: urlParams.get('utm_content'),
-          utm_term: urlParams.get('utm_term'),
-          page_path: window.location.pathname,
-          page_title: document.title
-        };
-        
-        // Only push if UTM params exist
-        if (utmData.utm_source || utmData.utm_medium) {
-          window.dataLayer.push({
-            event: 'utm_capture',
-            ...utmData
-          });
-        }
-      })();
-    </script>
-    
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-P8DPG8PF');</script>
-    <!-- End Google Tag Manager -->
-    
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TrainYourAgent — AI That Thinks Like Your Business</title>
-    <meta name="description" content="Custom AI agents for every industry. Deploy in days. Scale forever. Automate 80% of tasks and unlock exponential growth.">
-    <meta name="author" content="TrainYourAgent" />
-    <!-- Preconnect to external resources -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://storage.googleapis.com">
-    
-    <!-- Preload critical font -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" as="style">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- DNS prefetch for analytics -->
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#042C53" />
 
-    <!-- Favicons -->
-    <link rel="icon" type="image/x-icon" href="https://storage.googleapis.com/gpt-engineer-file-uploads/PYXnusO2KZciheegxGWx3p7d7Vk2/uploads/1762984115770-ChatGPT_Image_Nov_7_2025_01_31_45_PM.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <meta name="theme-color" content="#4A90E2">
+    <title>TrainYourAgent — Everything-AI for SMBs & Startups</title>
+    <meta name="description" content="AI voice and messaging agents that actually run your business — plus marketing, lead gen, creative, infrastructure. Four years deep in AI. Built for SMBs and startups." />
 
-    <!-- SEO Meta -->
-    <meta name="robots" content="index, follow">
-    <meta name="keywords" content="AI agents, business automation, voice AI, customer service automation, 24/7 AI receptionist, lead capture, AI phone system">
-    <link rel="canonical" href="https://trainyouragent.com">
+    <link rel="icon" type="image/png" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://trainyouragent.com">
-    
-    
-    <meta property="og:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/PYXnusO2KZciheegxGWx3p7d7Vk2/social-images/social-1762984110137-Screenshot 2025-11-12 at 4.48.06 PM.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="TrainYourAgent - AI That Thinks Like Your Business">
+    <meta property="og:site_name" content="TrainYourAgent" />
+    <meta property="og:title" content="TrainYourAgent — Everything-AI for SMBs & Startups" />
+    <meta property="og:description" content="AI voice agents + everything else: marketing, lead gen, creative, infra. Four years deep in AI. $20K+/mo recurring." />
+    <meta property="og:url" content="https://trainyouragent.com" />
+    <meta property="og:image" content="https://trainyouragent.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
-    <!-- Twitter Card -->
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@trainyouragent" />
-    <meta name="twitter:creator" content="@trainyouragent" />
-    
-    
-    <meta name="twitter:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/PYXnusO2KZciheegxGWx3p7d7Vk2/social-images/social-1762984110137-Screenshot 2025-11-12 at 4.48.06 PM.png">
-    <meta name="twitter:image:alt" content="TrainYourAgent - AI That Thinks Like Your Business">
+    <meta name="twitter:title" content="TrainYourAgent — Everything-AI for SMBs & Startups" />
+    <meta name="twitter:description" content="AI voice agents + everything else: marketing, lead gen, creative, infra. Four years deep in AI." />
+    <meta name="twitter:image" content="https://trainyouragent.com/og-image.png" />
 
-    <!-- Additional SEO -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="TrainYourAgent">
+    <!-- Canonical -->
+    <link rel="canonical" href="https://trainyouragent.com" />
 
-    <!-- Schema.org Structured Data -->
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Schema.org Organization -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Organization",
-          "@id": "https://trainyouragent.com/#organization",
-          "name": "TrainYourAgent",
-          "legalName": "TrainYourAgent LLC",
-          "url": "https://trainyouragent.com",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://trainyouragent.com/og-image.jpg",
-            "width": 1200,
-            "height": 630
-          },
-          "description": "Custom AI agents for every industry. Deploy in 3-7 days. Flexible pilot program. Automate 80% of tasks and unlock exponential growth.",
-          "foundingDate": "2024",
-          "foundingLocation": {
-            "@type": "Place",
-            "address": {
-              "@type": "PostalAddress",
-              "addressRegion": "FL",
-              "addressCountry": "US"
-            }
-          },
-          "areaServed": {
-            "@type": "Country",
-            "name": "United States"
-          },
-          "sameAs": [
-            "https://x.com/trainyouragent",
-            "https://www.instagram.com/trainyouragent",
-            "https://www.linkedin.com/company/train-your-agent/"
-          ],
-          "contactPoint": [
-            {
-              "@type": "ContactPoint",
-              "contactType": "customer support",
-              "email": "support@trainyouragent.com",
-              "availableLanguage": ["English"],
-              "areaServed": "US"
-            },
-            {
-              "@type": "ContactPoint",
-              "contactType": "sales",
-              "email": "sales@trainyouragent.com",
-              "availableLanguage": ["English"],
-              "areaServed": "US"
-            }
-          ],
-          "founder": {
-            "@type": "Person",
-            "name": "Alexander",
-            "jobTitle": "Founder & CEO"
-          },
-          "employee": [
-            {
-              "@type": "Person",
-              "name": "Jess",
-              "jobTitle": "CRM & Operations Lead"
-            },
-            {
-              "@type": "Person",
-              "name": "Daniel",
-              "jobTitle": "Head of Sales"
-            },
-            {
-              "@type": "Person",
-              "name": "David",
-              "jobTitle": "Head of Development"
-            }
-          ],
-          "numberOfEmployees": {
-            "@type": "QuantitativeValue",
-            "value": 15
-          },
-          "slogan": "AI That Thinks Like Your Business",
-          "makesOffer": {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "AI Agent Implementation",
-              "description": "24/7 AI voice agents for business automation, lead capture, and customer service",
-              "provider": {
-                "@id": "https://trainyouragent.com/#organization"
-              },
-              "areaServed": {
-                "@type": "Country",
-                "name": "United States"
-              },
-              "serviceType": [
-                "AI Voice Agents",
-                "Business Automation",
-                "Lead Capture Systems",
-                "Customer Service Automation",
-                "24/7 AI Receptionist"
-              ]
-            }
-          }
-        },
-        {
-          "@type": "LocalBusiness",
-          "@id": "https://trainyouragent.com/#localbusiness",
-          "name": "TrainYourAgent",
-          "image": "https://trainyouragent.com/og-image.jpg",
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Florida",
-            "addressRegion": "FL",
-            "addressCountry": "US"
-          },
-          "geo": {
-            "@type": "GeoCoordinates",
-            "latitude": "27.9944024",
-            "longitude": "-81.7602544"
-          },
-          "url": "https://trainyouragent.com",
-          "email": "support@trainyouragent.com",
-          "priceRange": "$$",
-          "openingHoursSpecification": {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": [
-              "Monday",
-              "Tuesday",
-              "Wednesday",
-              "Thursday",
-              "Friday",
-              "Saturday",
-              "Sunday"
-            ],
-            "opens": "00:00",
-            "closes": "23:59",
-            "description": "AI Available 24/7"
-          },
-          "hasOfferCatalog": {
-            "@type": "OfferCatalog",
-            "name": "AI Agent Services",
-            "itemListElement": [
-              {
-                "@type": "OfferCatalog",
-                "name": "HVAC AI Solutions",
-                "itemListElement": [
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "HVAC 24/7 AI Receptionist"
-                    }
-                  }
-                ]
-              },
-              {
-                "@type": "OfferCatalog",
-                "name": "Legal AI Solutions",
-                "itemListElement": [
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "Legal Intake AI System"
-                    }
-                  }
-                ]
-              },
-              {
-                "@type": "OfferCatalog",
-                "name": "Healthcare AI Solutions",
-                "itemListElement": [
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "Healthcare Patient Intake AI"
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "reviewCount": "47",
-            "bestRating": "5",
-            "worstRating": "1"
-          },
-          "sameAs": [
-            "https://x.com/trainyouragent",
-            "https://www.instagram.com/trainyouragent",
-            "https://www.linkedin.com/company/train-your-agent/"
-          ]
-        },
-        {
-          "@type": "WebSite",
-          "@id": "https://trainyouragent.com/#website",
-          "url": "https://trainyouragent.com",
-          "name": "TrainYourAgent",
-          "publisher": {
-            "@id": "https://trainyouragent.com/#organization"
-          },
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": "https://trainyouragent.com/search?q={search_term_string}",
-            "query-input": "required name=search_term_string"
-          }
-        }
-      ]
-    }
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "TrainYourAgent",
+        "url": "https://trainyouragent.com",
+        "logo": "https://trainyouragent.com/apple-touch-icon.png",
+        "description": "Everything-AI services for SMBs and startups: voice agents, marketing, lead gen, creative, infrastructure, build & scale.",
+        "founder": { "@type": "Person", "name": "Alexander Mills", "sameAs": "https://www.linkedin.com/in/alexandermillsai" },
+        "address": { "@type": "PostalAddress", "addressLocality": "Tampa Bay", "addressRegion": "FL", "addressCountry": "US" },
+        "sameAs": ["https://www.linkedin.com/in/alexandermillsai"]
+      }
     </script>
-  <meta property="og:title" content="TrainYourAgent — AI That Thinks Like Your Business">
-  <meta name="twitter:title" content="TrainYourAgent — AI That Thinks Like Your Business">
-  <meta property="og:description" content="Custom AI agents for every industry. Deploy in days. Scale forever. Automate 80% of tasks and unlock exponential growth.">
-  <meta name="twitter:description" content="Custom AI agents for every industry. Deploy in days. Scale forever. Automate 80% of tasks and unlock exponential growth.">
-</head>
-
+  </head>
   <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P8DPG8PF"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
