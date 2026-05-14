@@ -1,326 +1,110 @@
-import { motion } from "framer-motion";
-import { Calculator, TrendingUp, Users, DollarSign, PhoneOff, Bot, Clock, Play, Sparkles } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/FooterEnhanced";
-import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import ROICalculator from "@/components/ROICalculatorEnhanced";
-import MissedCallCalculator from "@/components/calculators/MissedCallCalculator";
-import AIvsHumanCalculator from "@/components/calculators/AIvsHumanCalculator";
-import LeadResponseCalculator from "@/components/calculators/LeadResponseCalculator";
-import { GlassCard } from "@/components/enhanced/GlassCard";
-import { MagneticButton } from "@/components/enhanced/MagneticButton";
-import { DemoLeadGate } from "@/components/DemoLeadGate";
-import { trackConversion } from "@/lib/tracking";
-import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import ElevenlabsWidget from "@/components/ElevenlabsWidget";
 
-const nicheData = {
-  all: {
-    title: "All Industries",
-    demos: ["Interactive Voice Demo", "Lead Capture Demo", "Appointment Scheduling Demo"],
-    calculators: ["roi", "missed-calls", "ai-vs-human", "response-time"]
-  },
-  hvac: {
-    title: "HVAC & Home Services",
-    demos: ["Emergency Call Handling", "After-Hours Dispatch", "Service Scheduling"],
-    calculators: ["roi", "missed-calls", "ai-vs-human"],
-    defaultData: { avgDealValue: 8500, monthlyLeads: 120 }
-  },
-  accounting: {
-    title: "Accounting & Finance",
-    demos: ["Client Intake Demo", "Tax Season Overflow", "Appointment Booking"],
-    calculators: ["roi", "ai-vs-human", "response-time"],
-    defaultData: { avgDealValue: 3200, monthlyLeads: 45 }
-  },
-  roofing: {
-    title: "Roofing & Construction",
-    demos: ["Storm Emergency Response", "Estimate Scheduling", "Insurance Claim Intake"],
-    calculators: ["roi", "missed-calls", "response-time"],
-    defaultData: { avgDealValue: 12400, monthlyLeads: 80 }
-  },
-  legal: {
-    title: "Legal Services",
-    demos: ["Case Intake Demo", "Consultation Scheduling", "After-Hours Lead Capture"],
-    calculators: ["roi", "missed-calls", "ai-vs-human"],
-    defaultData: { avgDealValue: 4500, monthlyLeads: 35 }
-  },
-  healthcare: {
-    title: "Healthcare & Medical",
-    demos: ["Appointment Scheduling", "Patient Triage", "Prescription Refills"],
-    calculators: ["roi", "missed-calls", "response-time"],
-    defaultData: { avgDealValue: 285, monthlyLeads: 250 }
-  },
-  restaurants: {
-    title: "Restaurants & Hospitality",
-    demos: ["Reservation System", "Takeout Orders", "Event Bookings"],
-    calculators: ["roi", "ai-vs-human", "missed-calls"],
-    defaultData: { avgDealValue: 65, monthlyLeads: 500 }
-  },
-  logistics: {
-    title: "Logistics & Transportation",
-    demos: ["Quote Requests", "Shipment Tracking", "Load Scheduling"],
-    calculators: ["roi", "ai-vs-human", "response-time"],
-    defaultData: { avgDealValue: 1850, monthlyLeads: 95 }
-  }
-};
+const CAL_URL = "https://cal.com/trainyouragent/30min";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+const HERO_PHONE_DISPLAY = "(813) 555-0142";
+const HERO_PHONE_TEL = "+18135550142";
+
+function BrainLogo({ size = 40 }: { size?: number }) {
+  return (
+    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size }} aria-hidden="true">
+      <svg viewBox="0 0 64 64" style={{ width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" fill="#E6F1FB" />
+        <g fill="#0C447C"><circle cx="20" cy="27" r="7.5" /><circle cx="32" cy="21" r="8.5" /><circle cx="44" cy="27" r="7.5" /><circle cx="24" cy="40" r="7" /><circle cx="40" cy="40" r="7" /><rect x="29" y="44" width="6" height="11" rx="1.5" /></g>
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#185FA5" strokeWidth="1.5" />
+      </svg>
+    </span>
+  );
+}
+
+const DEMOS = [
+  { vertical: "HVAC", scenario: "After-hours emergency dispatch booking", outcome: "Books $189 trip fee, dispatches nearest tech, confirms via SMS." },
+  { vertical: "Healthcare", scenario: "New patient intake with insurance verification", outcome: "Verifies insurance, gathers history, books appointment, sends intake forms." },
+  { vertical: "Real Estate", scenario: "Zillow lead callback in <30 seconds", outcome: "Qualifies buyer/seller intent, pre-approval status, books showing." },
+  { vertical: "Legal", scenario: "Intake with automatic conflict check", outcome: "Asks the right qualifying questions, runs conflict check, routes to attorney." },
+  { vertical: "Solar", scenario: "Meta ad lead callback and qualification", outcome: "Verifies utility, monthly bill, roof orientation. Books site survey." },
+  { vertical: "Accounting", scenario: "Tax-season intake at 11pm Sunday", outcome: "Classifies client type, sends document checklist, books intake call." },
+];
 
 const Demos = () => {
-  const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("roi");
-  const [selectedNiche, setSelectedNiche] = useState("all");
-  const [demoLeadGateOpen, setDemoLeadGateOpen] = useState(false);
-  const [selectedDemo, setSelectedDemo] = useState<{
-    name: string;
-    type: 'voice' | 'lead-capture' | 'scheduling';
-  } | null>(null);
-
-  const currentNiche = nicheData[selectedNiche as keyof typeof nicheData];
-
-  const handleWatchDemo = (demoName: string, demoType: 'voice' | 'lead-capture' | 'scheduling') => {
-    // Check if user already submitted demo lead
-    const hasSubmittedDemo = sessionStorage.getItem('demo_lead_submitted');
-    
-    trackConversion('demo_watch_clicked', {
-      demo_name: demoName,
-      demo_type: demoType,
-      industry: selectedNiche,
-    });
-
-    if (hasSubmittedDemo) {
-      // User already qualified, open demo directly
-      openDemo(demoType, demoName);
-    } else {
-      // Show lead gate first
-      setSelectedDemo({ name: demoName, type: demoType });
-      setDemoLeadGateOpen(true);
-    }
-  };
-
-  const openDemo = (demoType: string, demoName: string) => {
-    trackConversion('demo_opened', {
-      demo_type: demoType,
-      demo_name: demoName,
-      industry: selectedNiche,
-    });
-
-    toast({
-      title: "Demo Feature Coming Soon",
-      description: `The ${demoName} will be available shortly. Thank you for your interest!`,
-    });
-    
-    // TODO: Implement actual demo opening logic
-    // if (demoType === 'voice') { /* open voice demo */ }
-    // if (demoType === 'lead-capture') { /* open lead capture demo */ }
-    // if (demoType === 'scheduling') { /* open scheduling demo */ }
-  };
-
-  const getDemoType = (demoName: string): 'voice' | 'lead-capture' | 'scheduling' => {
-    if (demoName.toLowerCase().includes('voice') || demoName.toLowerCase().includes('call') || demoName.toLowerCase().includes('dispatch')) {
-      return 'voice';
-    }
-    if (demoName.toLowerCase().includes('scheduling') || demoName.toLowerCase().includes('appointment') || demoName.toLowerCase().includes('booking')) {
-      return 'scheduling';
-    }
-    return 'lead-capture';
-  };
+  const [navScrolled, setNavScrolled] = useState(false);
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (!document.getElementById("tya-fonts")) { const l = document.createElement("link"); l.id = "tya-fonts"; l.rel = "stylesheet"; l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap"; document.head.appendChild(l); }
+    document.title = "Demos — TrainYourAgent";
+  }, []);
+  useEffect(() => { const f = () => setNavScrolled(window.scrollY > 20); window.addEventListener("scroll", f); return () => window.removeEventListener("scroll", f); }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navScrolled ? "bg-white/90 backdrop-blur-xl border-b border-slate-200/60" : "bg-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5"><BrainLogo size={36} /><span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span></Link>
+          <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E] shadow-sm">Book a call</a>
+        </div>
+      </nav>
 
-      <section className="pt-32 pb-20">
-        <div className="container mx-auto px-4 max-w-7xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-sm font-semibold text-primary">Interactive Demos & Calculators</span>
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gradient">
-              Experience AI in Action
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-              Try interactive demos and calculate your specific ROI with research-backed industry data.
-            </p>
-
-            {/* Niche Selector */}
-            <div className="max-w-md mx-auto">
-              <Select value={selectedNiche} onValueChange={setSelectedNiche}>
-                <SelectTrigger className="w-full h-12 text-lg border-2 border-primary/20 bg-background hover:border-primary/40 transition-colors">
-                  <SelectValue placeholder="Select your industry" />
-                </SelectTrigger>
-                <SelectContent className="bg-popover border-2 border-primary/20">
-                  <SelectItem value="all">All Industries</SelectItem>
-                  <SelectItem value="hvac">🏠 HVAC & Home Services</SelectItem>
-                  <SelectItem value="accounting">💼 Accounting & Finance</SelectItem>
-                  <SelectItem value="roofing">🏗️ Roofing & Construction</SelectItem>
-                  <SelectItem value="legal">⚖️ Legal Services</SelectItem>
-                  <SelectItem value="healthcare">🏥 Healthcare & Medical</SelectItem>
-                  <SelectItem value="restaurants">🍽️ Restaurants & Hospitality</SelectItem>
-                  <SelectItem value="logistics">🚚 Logistics & Transportation</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </motion.div>
-
-          {/* Demos Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="mb-16"
-          >
-            <h2 className="text-3xl font-bold mb-8 text-center">
-              {currentNiche.title} Demos
-            </h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {currentNiche.demos.map((demo, index) => (
-                <GlassCard key={index} className="p-6 hover-lift cursor-pointer group">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <Play className="w-6 h-6 text-primary" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg mb-2">{demo}</h3>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        See how AI handles real {selectedNiche === 'all' ? 'customer' : currentNiche.title.toLowerCase()} interactions
-                      </p>
-                      <MagneticButton 
-                        variant="outline" 
-                        size="sm" 
-                        className="rounded-full"
-                        onClick={() => handleWatchDemo(demo, getDemoType(demo))}
-                      >
-                        <Play className="w-4 h-4 mr-2" />
-                        Watch Demo
-                      </MagneticButton>
-                    </div>
-                  </div>
-                </GlassCard>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Calculators Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <h2 className="text-3xl font-bold mb-8 text-center">
-              ROI Calculators for {currentNiche.title}
-            </h2>
-
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-4 mb-8 h-auto bg-muted/50 p-2 rounded-xl">
-                {currentNiche.calculators.includes("roi") && (
-                  <TabsTrigger 
-                    value="roi" 
-                    className="flex items-center gap-2 py-3 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg"
-                  >
-                    <TrendingUp className="w-4 h-4" />
-                    <span className="hidden sm:inline">ROI Calculator</span>
-                    <span className="sm:hidden">ROI</span>
-                  </TabsTrigger>
-                )}
-                {currentNiche.calculators.includes("missed-calls") && (
-                  <TabsTrigger 
-                    value="missed-calls" 
-                    className="flex items-center gap-2 py-3 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg"
-                  >
-                    <PhoneOff className="w-4 h-4" />
-                    <span className="hidden sm:inline">Missed Calls</span>
-                    <span className="sm:hidden">Calls</span>
-                  </TabsTrigger>
-                )}
-                {currentNiche.calculators.includes("ai-vs-human") && (
-                  <TabsTrigger 
-                    value="ai-vs-human" 
-                    className="flex items-center gap-2 py-3 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg"
-                  >
-                    <Bot className="w-4 h-4" />
-                    <span className="hidden sm:inline">AI vs Human</span>
-                    <span className="sm:hidden">AI/Human</span>
-                  </TabsTrigger>
-                )}
-                {currentNiche.calculators.includes("response-time") && (
-                  <TabsTrigger 
-                    value="response-time" 
-                    className="flex items-center gap-2 py-3 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg"
-                  >
-                    <Clock className="w-4 h-4" />
-                    <span className="hidden sm:inline">Response Time</span>
-                    <span className="sm:hidden">Speed</span>
-                  </TabsTrigger>
-                )}
-              </TabsList>
-
-              {currentNiche.calculators.includes("roi") && (
-                <TabsContent value="roi">
-                  <ROICalculator />
-                </TabsContent>
-              )}
-
-              {currentNiche.calculators.includes("missed-calls") && (
-                <TabsContent value="missed-calls">
-                  <MissedCallCalculator />
-                </TabsContent>
-              )}
-
-              {currentNiche.calculators.includes("ai-vs-human") && (
-                <TabsContent value="ai-vs-human">
-                  <AIvsHumanCalculator />
-                </TabsContent>
-              )}
-
-              {currentNiche.calculators.includes("response-time") && (
-                <TabsContent value="response-time">
-                  <LeadResponseCalculator />
-                </TabsContent>
-              )}
-            </Tabs>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="mt-12 text-center p-8 glass-card rounded-2xl"
-          >
-            <p className="text-sm text-muted-foreground mb-2">
-              <strong>All calculations backed by industry research:</strong>
-            </p>
-            <p className="text-xs text-muted-foreground">
-              CallRail 2024 Report • InsideSales.com Study • BLS Data • SHRM Research • Work Institute • Drift CX Report • Gartner
-            </p>
-          </motion.div>
+      <section className="pt-32 pb-12 px-5 sm:px-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Demos</div>
+          <h1 className="text-[42px] sm:text-[64px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+            Hear an agent run. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Live, on the phone.</span>
+          </h1>
+          <p className="mt-6 text-[18px] text-slate-700 max-w-3xl leading-relaxed">
+            We don't ship pre-recorded videos. Call the number below — you'll talk to a real agent running a real scenario. Or pick a scenario and we'll build a custom demo for your use case in 48 hours.
+          </p>
+          <div className="mt-7 flex items-center gap-3 text-[16px] text-slate-700">
+            <span className="w-2 h-2 rounded-full bg-[#22A36C] animate-pulse" />
+            <span>Call our live demo agent:</span>
+            <a href={`tel:${HERO_PHONE_TEL}`} className="text-[#042C53] font-semibold underline">{HERO_PHONE_DISPLAY}</a>
+          </div>
         </div>
       </section>
 
-      {/* Demo Lead Gate */}
-      {selectedDemo && (
-        <DemoLeadGate
-          isOpen={demoLeadGateOpen}
-          onClose={() => {
-            setDemoLeadGateOpen(false);
-            setSelectedDemo(null);
-          }}
-          onSuccess={(demoType) => {
-            setDemoLeadGateOpen(false);
-            openDemo(demoType, selectedDemo.name);
-            setSelectedDemo(null);
-          }}
-          selectedIndustry={selectedNiche !== 'all' ? selectedNiche.toUpperCase() : ''}
-          demoType={selectedDemo.type}
-          demoName={selectedDemo.name}
-        />
-      )}
+      {/* Live ElevenLabs widget — talk to an agent right in the page */}
+      <section className="px-5 sm:px-8 pb-16">
+        <div className="max-w-3xl mx-auto">
+          <ElevenlabsWidget variant="inline" />
+        </div>
+      </section>
 
-      <Footer />
+      <section className="px-5 sm:px-8 py-12">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Scenarios we'll build for you</div>
+          <h2 className="text-[26px] sm:text-[36px] leading-tight font-semibold text-[#042C53] mb-8">
+            Pick one and we'll <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>demo it on your call.</span>
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {DEMOS.map((d, i) => (
+              <Link key={i} to="/demo-request" className="group rounded-2xl bg-white border border-slate-200 p-6 hover:border-[#185FA5] hover:shadow-[0_4px_24px_-10px_rgba(4,44,83,0.18)] transition">
+                <div className="text-[12px] uppercase tracking-[0.12em] text-[#185FA5] font-semibold mb-2">{d.vertical}</div>
+                <div className="text-[16px] font-semibold text-[#042C53] mb-2">{d.scenario}</div>
+                <div className="text-[13px] text-slate-600 leading-relaxed mb-4">{d.outcome}</div>
+                <div className="text-[13px] text-[#185FA5] font-medium inline-flex items-center gap-1.5">Request this demo <span className="transition-transform group-hover:translate-x-0.5">→</span></div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 sm:px-8 py-20 bg-[#042C53] text-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-[32px] sm:text-[48px] leading-[1.04] tracking-tight font-semibold">
+            Skip the demo, <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>build the real thing.</span>
+          </h2>
+          <p className="mt-5 text-[16px] text-white/85 max-w-2xl mx-auto leading-relaxed">Thirty-minute build call. We scope, you decide, we ship in days.</p>
+          <a href={CAL_URL} target="_blank" rel="noopener" className="mt-7 inline-block px-7 py-3.5 rounded-full bg-white text-[#042C53] font-semibold text-[14px] hover:bg-slate-100 shadow">Book a build call →</a>
+        </div>
+      </section>
+
+      <footer className="bg-white border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+          <div className="flex items-center gap-2.5"><BrainLogo size={28} /><span className="font-semibold text-[#042C53]">TrainYourAgent</span><span className="text-slate-400">— Tampa Bay, FL</span></div>
+          <div className="flex items-center gap-6"><Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link><Link to="/terms" className="hover:text-[#042C53]">Terms</Link><Link to="/security" className="hover:text-[#042C53]">Security</Link><a href={LINKEDIN_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">LinkedIn</a></div>
+        </div>
+      </footer>
     </div>
   );
 };
