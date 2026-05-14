@@ -1,26 +1,48 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "redirects": [
+    { "source": "/niche/healthcare",      "destination": "/healthcare",      "permanent": true },
+    { "source": "/niche/legal",           "destination": "/legal",           "permanent": true },
+    { "source": "/niche/real-estate",     "destination": "/real-estate",     "permanent": true },
+    { "source": "/niche/hvac",            "destination": "/hvac",            "permanent": true },
+    { "source": "/niche/roofing",         "destination": "/roofing",         "permanent": true },
+    { "source": "/niche/solar",           "destination": "/solar",           "permanent": true },
+    { "source": "/niche/accounting",      "destination": "/accounting",      "permanent": true },
+    { "source": "/niche/automotive",      "destination": "/automotive",      "permanent": true },
+    { "source": "/niche/spas",            "destination": "/spas",            "permanent": true },
+    { "source": "/niche/hotels",          "destination": "/hotels",          "permanent": true },
+    { "source": "/niche/bars-nightclubs", "destination": "/bars-nightclubs", "permanent": true },
+    { "source": "/niche/logistics",       "destination": "/logistics",       "permanent": true },
+    { "source": "/niche/gym",             "destination": "/gym",             "permanent": true },
+    { "source": "/niche/fitness",         "destination": "/gym",             "permanent": true },
+    { "source": "/calculators",           "destination": "/demos",           "permanent": false }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Permissions-Policy",
-          "value": "microphone=(self \"https://elevenlabs.io\")"
-        }
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=()" },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(apple-touch-icon|favicon|og-image|site).*",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
       ]
     }
   ]
