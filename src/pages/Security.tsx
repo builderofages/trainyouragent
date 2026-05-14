@@ -1,263 +1,247 @@
-import { motion } from "framer-motion";
-import { Shield, Lock, CheckCircle2, Server, Eye, FileCheck, Globe, Key, AlertCircle, Sparkles } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/FooterEnhanced";
-import { GlassCard } from "@/components/enhanced/GlassCard";
-import { MagneticButton } from "@/components/enhanced/MagneticButton";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-const securityFeatures = [
+const CAL_URL = "https://cal.com/trainyouragent/30min";
+
+function BrainLogo({ size = 40 }: { size?: number }) {
+  return (
+    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size }} aria-hidden="true">
+      <svg viewBox="0 0 64 64" style={{ width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" fill="#E6F1FB" />
+        <g fill="#0C447C">
+          <circle cx="20" cy="27" r="7.5" />
+          <circle cx="32" cy="21" r="8.5" />
+          <circle cx="44" cy="27" r="7.5" />
+          <circle cx="24" cy="40" r="7" />
+          <circle cx="40" cy="40" r="7" />
+          <rect x="29" y="44" width="6" height="11" rx="1.5" />
+        </g>
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#185FA5" strokeWidth="1.5" />
+      </svg>
+    </span>
+  );
+}
+
+const PILLARS = [
   {
-    icon: Lock,
-    title: "End-to-End Encryption",
-    description: "TLS 1.3 in transit, AES-256 at rest",
-    details: ["All data encrypted during transmission", "Military-grade encryption at rest", "Zero-knowledge architecture"]
+    label: "Encryption",
+    body: "TLS 1.2+ in transit, AES-256 at rest. Every audio recording, transcript, and customer record is encrypted on the storage layer before it touches disk. Keys are managed by AWS KMS and rotated automatically.",
   },
   {
-    icon: Server,
-    title: "Enterprise Infrastructure",
-    description: "99.9% uptime SLA on AWS",
-    details: ["Multi-region redundancy", "Automated daily backups", "DDoS protection included"]
+    label: "Access control",
+    body: "Single sign-on with SAML / OIDC for every customer over $2k/mo. Role-based permissions inside the dashboard. Every engineer with production access uses hardware security keys (no SMS 2FA, no app codes).",
   },
   {
-    icon: Eye,
-    title: "Privacy First",
-    description: "We never sell your data",
-    details: ["GDPR & CCPA compliant", "Right to deletion", "Transparent data usage"]
+    label: "Hosting",
+    body: "Primary infrastructure on AWS us-east-1 with multi-AZ failover. Voice routing rides Twilio's PCI-DSS Level 1 and HIPAA-eligible network. No data leaves North America unless you explicitly enable a non-US region.",
   },
   {
-    icon: FileCheck,
-    title: "Compliance Certified",
-    description: "SOC 2 Type II in progress",
-    details: ["HIPAA compliant for healthcare", "Industry-specific certifications", "Regular third-party audits"]
+    label: "Data residency",
+    body: "Customer audio is retained 30 days by default for QA, then deleted. Transcripts are retained per your settings (default 90 days, configurable to 0). You can purge any customer's record on demand within 24 hours.",
   },
   {
-    icon: Shield,
-    title: "Access Controls",
-    description: "Role-based permissions",
-    details: ["Multi-factor authentication", "SSO for enterprise", "Complete audit logs"]
+    label: "Vendor chain",
+    body: "Every subprocessor that touches customer data is listed publicly and reviewed annually. We sign DPAs with all of them and we publish our list — no surprise third parties.",
   },
   {
-    icon: AlertCircle,
-    title: "Incident Response",
-    description: "24/7 security monitoring",
-    details: ["Real-time threat detection", "Immediate incident response", "Transparent communication"]
-  }
+    label: "Incident response",
+    body: "24/7 on-call rotation with PagerDuty. We commit to notifying affected customers within 24 hours of confirmed breach, with a written postmortem within 7 days.",
+  },
 ];
 
-const complianceStandards = [
-  { name: "SOC 2 Type II", status: "In Progress", description: "Security & availability controls" },
-  { name: "GDPR", status: "Compliant", description: "EU data protection" },
-  { name: "CCPA", status: "Compliant", description: "California privacy rights" },
-  { name: "HIPAA", status: "Compliant", description: "Healthcare data security" },
-  { name: "PCI DSS", status: "Compliant", description: "Payment card data" }
+const COMPLIANCE = [
+  {
+    title: "SOC 2 Type II",
+    status: "In evaluation",
+    body: "We're working with a Big 4 auditor and Vanta to complete SOC 2 Type II in 2026. SOC 2 means an independent CPA firm audits how we handle customer data against five trust criteria: security, availability, processing integrity, confidentiality, and privacy. The report tells your security team — in their language — exactly how we protect data.",
+  },
+  {
+    title: "HIPAA (for healthcare customers)",
+    status: "BAA available",
+    body: "We sign a Business Associate Agreement with healthcare customers before any PHI flows. We are not a Covered Entity ourselves. Our voice stack runs on Twilio's HIPAA-eligible network with BAAs from every subprocessor in the chain. Recordings of PHI conversations are encrypted, access-logged, and retained per your written policy.",
+  },
+  {
+    title: "GDPR / CCPA",
+    status: "Compliant",
+    body: "We honor data subject access requests within 30 days. We don't sell personal data, ever. Our DPA includes Standard Contractual Clauses for any EU customer data, even though we default to US-only hosting.",
+  },
+  {
+    title: "PCI-DSS",
+    status: "Out of scope (by design)",
+    body: "Our agents do not collect, store, or transmit credit card numbers. If a caller offers card details on a call, the agent is trained to redirect them to a secure payment link instead. This keeps you out of PCI scope and us out of card data entirely.",
+  },
+];
+
+const FAQ = [
+  {
+    q: "Can I use this in a regulated environment before SOC 2 is done?",
+    a: "Yes. SOC 2 is an audit of practices we already follow. Our security controls — encryption, access management, vendor review, incident response — are already in place. SOC 2 just gives your security team a third-party document that says so. Most of our customers in healthcare, legal, and finance go live under our DPA + BAA before our SOC 2 report is finalized.",
+  },
+  {
+    q: "Where exactly does my call audio live?",
+    a: "Audio is captured by Twilio (or your existing telephony if we're white-labeling), streamed to our voice pipeline, transcribed, and stored encrypted in AWS S3 (us-east-1). Default retention is 30 days for audio, 90 days for transcripts. You can override either to 0 retention. We never train any model on your data.",
+  },
+  {
+    q: "Do you train AI models on my data?",
+    a: "No. Your call audio, transcripts, and customer records are never used to train any model — ours or our LLM providers'. We use the zero-retention API endpoints from Anthropic and OpenAI for every inference call.",
+  },
+  {
+    q: "What if a model provider has an outage?",
+    a: "Every agent has a fallback model. If Claude is down, we route to GPT-4. If both are down, the agent falls back to a deterministic script that handles the most common 80% of calls and texts a human. You never drop a call to a busy signal.",
+  },
+  {
+    q: "Can I get an audit log of every action my agent took?",
+    a: "Yes. Every call, transcript, booking, CRM write, and SMS is logged with timestamp, agent version, model used, and outcome. Logs are accessible in your dashboard and exportable as CSV or via API.",
+  },
+  {
+    q: "What happens to my data if I cancel?",
+    a: "On cancellation, we export everything to you (audio, transcripts, configurations) and delete our copy within 30 days. You'll get written confirmation when deletion completes.",
+  },
 ];
 
 const Security = () => {
+  const [navScrolled, setNavScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setNavScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (!document.getElementById("tya-fonts")) {
+      const l = document.createElement("link");
+      l.id = "tya-fonts";
+      l.rel = "stylesheet";
+      l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
+      document.head.appendChild(l);
+    }
+  }, []);
+
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-
-      <section className="pt-32 pb-20">
-        <div className="container mx-auto px-4 max-w-6xl">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
-              <Shield className="w-4 h-4 text-primary" />
-              <span className="text-sm font-semibold text-primary">Enterprise-Grade Security</span>
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gradient">
-              Your Data, Secured
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              We take security seriously. Bank-level encryption, industry certifications, and transparent practices protect your business and your customers.
-            </p>
-          </motion.div>
-
-          {/* Security Features Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-            {securityFeatures.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <GlassCard className="p-6 hover-lift h-full">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                    <feature.icon className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-4">{feature.description}</p>
-                  <ul className="space-y-2">
-                    {feature.details.map((detail, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm">
-                        <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                        <span className="text-muted-foreground">{detail}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </GlassCard>
-              </motion.div>
-            ))}
+    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navScrolled ? "bg-white/95 backdrop-blur-md border-b border-slate-200" : "bg-white border-b border-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5">
+            <BrainLogo size={36} />
+            <span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span>
+          </Link>
+          <div className="hidden md:flex items-center gap-7 text-[14px] text-slate-700">
+            <Link to="/solutions" className="hover:text-[#042C53] transition">Solutions</Link>
+            <Link to="/technology" className="hover:text-[#042C53] transition">Technology</Link>
+            <Link to="/security" className="hover:text-[#042C53] transition text-[#042C53] font-medium">Security</Link>
+            <Link to="/pricing" className="hover:text-[#042C53] transition">Pricing</Link>
+            <Link to="/about" className="hover:text-[#042C53] transition">About</Link>
+            <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E] transition shadow-sm">Book a call</a>
           </div>
+          <button className="md:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu">
+            <span className="block w-4 h-px bg-[#042C53] relative" style={{ boxShadow: mobileOpen ? "none" : "0 -5px 0 #042C53, 0 5px 0 #042C53", transform: mobileOpen ? "rotate(45deg)" : "none" }} />
+          </button>
+        </div>
+      </nav>
 
-          {/* Infrastructure */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            className="mb-20"
-          >
-            <h2 className="text-3xl font-bold mb-8 text-center">Infrastructure & Reliability</h2>
-            <GlassCard className="p-8">
-              <div className="grid md:grid-cols-4 gap-8 text-center">
-                <div>
-                  <div className="text-4xl font-bold text-primary mb-2">99.9%</div>
-                  <p className="text-sm text-muted-foreground">Uptime SLA</p>
-                </div>
-                <div>
-                  <div className="text-4xl font-bold text-primary mb-2">&lt;100ms</div>
-                  <p className="text-sm text-muted-foreground">Response Time</p>
-                </div>
-                <div>
-                  <div className="text-4xl font-bold text-primary mb-2">Daily</div>
-                  <p className="text-sm text-muted-foreground">Automated Backups</p>
-                </div>
-                <div>
-                  <div className="text-4xl font-bold text-primary mb-2">24/7</div>
-                  <p className="text-sm text-muted-foreground">Security Monitoring</p>
-                </div>
-              </div>
-            </GlassCard>
-          </motion.div>
-
-          {/* Compliance Standards */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="mb-20"
-          >
-            <h2 className="text-3xl font-bold mb-8 text-center">Compliance & Certifications</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {complianceStandards.map((standard, index) => (
-                <GlassCard key={index} className="p-6 hover-lift">
-                  <div className="flex items-start justify-between mb-4">
-                    <FileCheck className="w-8 h-8 text-primary" />
-                    <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                      standard.status === 'Compliant' 
-                        ? 'bg-green-500/10 text-green-500 border border-green-500/20' 
-                        : 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
-                    }`}>
-                      {standard.status}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">{standard.name}</h3>
-                  <p className="text-sm text-muted-foreground">{standard.description}</p>
-                </GlassCard>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Data Privacy */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9 }}
-            className="mb-20"
-          >
-            <h2 className="text-3xl font-bold mb-8 text-center">Data Privacy Commitment</h2>
-            <GlassCard className="p-8">
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                    <CheckCircle2 className="w-6 h-6 text-primary" />
-                    What We Do
-                  </h3>
-                  <ul className="space-y-3">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">Encrypt all data in transit and at rest</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">Maintain transparent data usage policies</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">Provide data portability and deletion rights</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">Regular third-party security audits</span>
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                    <AlertCircle className="w-6 h-6 text-primary" />
-                    What We Never Do
-                  </h3>
-                  <ul className="space-y-3">
-                    <li className="flex items-start gap-2">
-                      <AlertCircle className="w-5 h-5 text-destructive mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">Sell your data to third parties</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <AlertCircle className="w-5 h-5 text-destructive mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">Use your data for ads or marketing</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <AlertCircle className="w-5 h-5 text-destructive mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">Share data without your consent</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <AlertCircle className="w-5 h-5 text-destructive mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">Access your data unnecessarily</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </GlassCard>
-          </motion.div>
-
-          {/* Contact Security Team */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
-            className="glass-card p-12 rounded-3xl text-center"
-          >
-            <Key className="w-16 h-16 text-primary mx-auto mb-6" />
-            <h2 className="text-3xl font-bold mb-4">Questions About Security?</h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Our security team is here to answer your questions about compliance, certifications, or any security concerns.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <MagneticButton
-                variant="outline"
-                className="rounded-full"
-                onClick={() => window.location.href = 'mailto:security@trainyouragent.com'}
-              >
-                security@trainyouragent.com
-              </MagneticButton>
-              <MagneticButton
-                className="rounded-full bg-gradient-primary"
-                onClick={() => window.open('https://status.trainyouragent.com', '_blank')}
-              >
-                <Globe className="w-5 h-5 mr-2" />
-                System Status
-              </MagneticButton>
-            </div>
-          </motion.div>
+      <section className="pt-28 pb-12 px-5 sm:px-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Security & Compliance</div>
+          <h1 className="text-[42px] sm:text-[64px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+            Built for security reviews <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>that actually happen.</span>
+          </h1>
+          <p className="mt-5 text-[18px] text-slate-600 max-w-3xl leading-relaxed">
+            Our customers ship in regulated verticals — healthcare clinics, law firms, financial advisors, multi-site operators. So our security posture has to survive an InfoSec questionnaire, not just look good on a marketing page. This page is the questionnaire.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3 text-[13px]">
+            <span className="px-3 py-1.5 rounded-full bg-[#E6F1FB] text-[#042C53] font-medium">SOC 2 Type II — in evaluation</span>
+            <span className="px-3 py-1.5 rounded-full bg-[#E6F1FB] text-[#042C53] font-medium">HIPAA BAA available</span>
+            <span className="px-3 py-1.5 rounded-full bg-[#E6F1FB] text-[#042C53] font-medium">GDPR & CCPA</span>
+            <span className="px-3 py-1.5 rounded-full bg-[#E6F1FB] text-[#042C53] font-medium">AES-256 / TLS 1.2+</span>
+            <span className="px-3 py-1.5 rounded-full bg-[#E6F1FB] text-[#042C53] font-medium">Zero data training</span>
+          </div>
         </div>
       </section>
 
-      <Footer />
+      <section className="px-5 sm:px-8 py-12 bg-[#F6FAFE]">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">How we protect data</div>
+          <h2 className="text-[28px] sm:text-[36px] leading-tight font-semibold text-[#042C53] mb-8">Six pillars, no marketing fluff.</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            {PILLARS.map((p, i) => (
+              <div key={i} className="bg-white border border-slate-200 rounded-2xl p-6">
+                <div className="text-[13px] uppercase tracking-[0.12em] text-[#185FA5] font-semibold mb-2">{p.label}</div>
+                <div className="text-[15px] text-slate-700 leading-relaxed">{p.body}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 sm:px-8 py-16">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Compliance, in plain English</div>
+          <h2 className="text-[28px] sm:text-[36px] leading-tight font-semibold text-[#042C53] mb-8">
+            What each acronym actually means for you.
+          </h2>
+          <div className="space-y-4">
+            {COMPLIANCE.map((c, i) => (
+              <div key={i} className="bg-white border border-slate-200 rounded-2xl p-7">
+                <div className="flex items-baseline justify-between gap-4 mb-3 flex-wrap">
+                  <h3 className="text-[20px] font-semibold text-[#042C53]">{c.title}</h3>
+                  <span className="text-[12px] uppercase tracking-[0.12em] text-[#185FA5] font-semibold px-3 py-1 rounded-full bg-[#E6F1FB]">{c.status}</span>
+                </div>
+                <div className="text-[15px] text-slate-700 leading-relaxed">{c.body}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE]">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Questions security teams actually ask</div>
+          <h2 className="text-[28px] sm:text-[36px] leading-tight font-semibold text-[#042C53] mb-8">FAQ</h2>
+          <div className="space-y-4">
+            {FAQ.map((f, i) => (
+              <details key={i} className="bg-white border border-slate-200 rounded-xl p-5 group">
+                <summary className="cursor-pointer text-[16px] font-medium text-[#042C53] flex items-start justify-between gap-4">
+                  <span>{f.q}</span>
+                  <span className="text-[#185FA5] flex-shrink-0 transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <div className="mt-3 text-[15px] text-slate-700 leading-relaxed">{f.a}</div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 sm:px-8 py-16">
+        <div className="max-w-4xl mx-auto bg-[#042C53] rounded-2xl p-10 text-white">
+          <h2 className="text-[26px] sm:text-[32px] leading-tight font-semibold mb-3">Need our security package for your review?</h2>
+          <p className="text-[16px] text-white/85 mb-6 leading-relaxed max-w-2xl">
+            Email <a href="mailto:security@trainyouragent.com" className="underline">security@trainyouragent.com</a> and we'll send our latest pen test summary, subprocessor list, DPA, BAA template, and the SOC 2 evidence binder we're building toward. Usually back to you within 1 business day.
+          </p>
+          <a href="mailto:security@trainyouragent.com" className="inline-block px-5 py-3 rounded-full bg-white text-[#042C53] text-[14px] font-medium hover:bg-slate-100 transition">
+            Request security package &rarr;
+          </a>
+        </div>
+      </section>
+
+      <footer className="border-t border-slate-200 bg-white">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+          <div className="flex items-center gap-2.5">
+            <BrainLogo size={28} />
+            <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
+            <span className="text-slate-400">— Tampa Bay, FL</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>
+            <Link to="/terms" className="hover:text-[#042C53]">Terms</Link>
+            <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
+            <a href={CAL_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">Book a call</a>
+          </div>
+          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
+        </div>
+      </footer>
     </div>
   );
 };
