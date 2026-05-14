@@ -1,298 +1,91 @@
-import { motion } from "framer-motion";
-import { BookOpen, Award, CheckCircle2, ExternalLink, Sparkles, Search, FileText } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/FooterEnhanced";
-import { GlassCard } from "@/components/enhanced/GlassCard";
-import { MagneticButton } from "@/components/enhanced/MagneticButton";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-const researchPartners = [
-  {
-    name: "Gartner",
-    category: "Global Research & Advisory",
-    description: "World's leading research and advisory company providing insights on technology trends",
-    reports: ["AI Adoption Report 2024", "Customer Experience Predictions"],
-    logo: "G"
-  },
-  {
-    name: "McKinsey Global Institute",
-    category: "Management Consulting",
-    description: "Leading source of research on the global economy and business management",
-    reports: ["The State of AI 2024", "AI Economic Impact Study"],
-    logo: "M"
-  },
-  {
-    name: "Harvard Business Review",
-    category: "Business Research",
-    description: "Premier source for management ideas and best practices",
-    reports: ["Lead Response Time Studies", "Buyer Behavior Analysis"],
-    logo: "H"
-  },
-  {
-    name: "Forrester Research",
-    category: "Technology Research",
-    description: "Independent research firm focused on customer experience and technology",
-    reports: ["Future of Customer Experience", "AI CX Trends"],
-    logo: "F"
-  }
-];
+const CAL_URL = "https://cal.com/trainyouragent/30min";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
 
-const industryAssociations = [
-  {
-    name: "AICPA",
-    fullName: "American Institute of CPAs",
-    industry: "Accounting",
-    reports: ["Technology Survey 2024", "Firm Metrics Report"]
-  },
-  {
-    name: "ABA",
-    fullName: "American Bar Association",
-    industry: "Legal",
-    reports: ["TECHREPORT 2024", "Legal Trends"]
-  },
-  {
-    name: "ACCA",
-    fullName: "Air Conditioning Contractors of America",
-    industry: "HVAC",
-    reports: ["Industry Standards", "Business Benchmarks"]
-  },
-  {
-    name: "NRCA",
-    fullName: "National Roofing Contractors Association",
-    industry: "Roofing",
-    reports: ["Industry Research", "Market Analysis"]
-  },
-  {
-    name: "HIMSS",
-    fullName: "Healthcare Information and Management Systems Society",
-    industry: "Healthcare",
-    reports: ["Patient Engagement Study", "Healthcare IT Trends"]
-  },
-  {
-    name: "SHRM",
-    fullName: "Society for Human Resource Management",
-    industry: "Human Resources",
-    reports: ["Cost-per-Hire Report", "Total Rewards Survey"]
-  }
-];
-
-const methodology = [
-  {
-    step: "1",
-    title: "Identify Business Challenge",
-    description: "We start with real problems our clients face, not hypothetical scenarios"
-  },
-  {
-    step: "2",
-    title: "Search Credible Sources",
-    description: "We only cite peer-reviewed or industry-recognized research institutions"
-  },
-  {
-    step: "3",
-    title: "Cross-Reference Data",
-    description: "Every statistic is verified across multiple independent sources"
-  },
-  {
-    step: "4",
-    title: "Cite & Link Sources",
-    description: "Full transparency with direct links to original research materials"
-  },
-  {
-    step: "5",
-    title: "Annual Updates",
-    description: "We refresh data yearly or when new authoritative reports are published"
-  }
-];
+function BrainLogo({ size = 40 }: { size?: number }) {
+  return (
+    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size }} aria-hidden="true">
+      <svg viewBox="0 0 64 64" style={{ width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" fill="#E6F1FB" />
+        <g fill="#0C447C"><circle cx="20" cy="27" r="7.5" /><circle cx="32" cy="21" r="8.5" /><circle cx="44" cy="27" r="7.5" /><circle cx="24" cy="40" r="7" /><circle cx="40" cy="40" r="7" /><rect x="29" y="44" width="6" height="11" rx="1.5" /></g>
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#185FA5" strokeWidth="1.5" />
+      </svg>
+    </span>
+  );
+}
 
 const ResearchPartners = () => {
+  const [navScrolled, setNavScrolled] = useState(false);
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (!document.getElementById("tya-fonts")) { const l = document.createElement("link"); l.id = "tya-fonts"; l.rel = "stylesheet"; l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap"; document.head.appendChild(l); }
+    document.title = "Research & Partners — TrainYourAgent";
+  }, []);
+  useEffect(() => { const f = () => setNavScrolled(window.scrollY > 20); window.addEventListener("scroll", f); return () => window.removeEventListener("scroll", f); }, []);
+
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navScrolled ? "bg-white/90 backdrop-blur-xl border-b border-slate-200/60" : "bg-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5"><BrainLogo size={36} /><span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span></Link>
+          <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E] shadow-sm">Book a call</a>
+        </div>
+      </nav>
 
-      <section className="pt-32 pb-20">
-        <div className="container mx-auto px-4 max-w-6xl">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
-              <BookOpen className="w-4 h-4 text-primary" />
-              <span className="text-sm font-semibold text-primary">Research-Backed Claims</span>
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gradient">
-              Trusted Research Partners
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Every statistic, every claim, every recommendation is backed by credible research from the world's leading institutions. No made-up numbers. No marketing fluff. Just facts.
-            </p>
-          </motion.div>
-
-          {/* Our Commitment */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="mb-20"
-          >
-            <GlassCard className="p-8 md:p-12">
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                    <CheckCircle2 className="w-6 h-6 text-primary" />
-                    Our Standards
-                  </h2>
-                  <ul className="space-y-3">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">Only cite peer-reviewed or industry-recognized sources</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">Always provide direct links to source material</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">Update data annually or when new reports published</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">Transparent about estimated vs verified data</span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="text-6xl font-black text-primary mb-4">100%</div>
-                    <p className="text-xl font-semibold">Verifiable Sources</p>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      If we can't cite it, we don't claim it
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </GlassCard>
-          </motion.div>
-
-          {/* Global Research Partners */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mb-20"
-          >
-            <h2 className="text-3xl font-bold mb-8 text-center">Global Research Institutions</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {researchPartners.map((partner, index) => (
-                <GlassCard key={index} className="p-6 hover-lift">
-                  <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0">
-                      <span className="text-2xl font-black text-white">{partner.logo}</span>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold mb-1">{partner.name}</h3>
-                      <p className="text-sm text-primary font-semibold mb-2">{partner.category}</p>
-                      <p className="text-sm text-muted-foreground mb-3">{partner.description}</p>
-                      <div className="space-y-1">
-                        <p className="text-xs font-semibold text-foreground">Key Reports We Use:</p>
-                        {partner.reports.map((report, i) => (
-                          <p key={i} className="text-xs text-muted-foreground">• {report}</p>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </GlassCard>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Industry Associations */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="mb-20"
-          >
-            <h2 className="text-3xl font-bold mb-8 text-center">Industry Associations</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {industryAssociations.map((association, index) => (
-                <GlassCard key={index} className="p-6 hover-lift text-center">
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-3">
-                    <Award className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-bold text-lg mb-1">{association.name}</h3>
-                  <p className="text-xs text-muted-foreground mb-2">{association.fullName}</p>
-                  <span className="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary border border-primary/20 mb-3">
-                    {association.industry}
-                  </span>
-                  <div className="space-y-1">
-                    {association.reports.map((report, i) => (
-                      <p key={i} className="text-xs text-muted-foreground">• {report}</p>
-                    ))}
-                  </div>
-                </GlassCard>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Methodology */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="mb-20"
-          >
-            <h2 className="text-3xl font-bold mb-8 text-center">Our Research Methodology</h2>
-            <div className="space-y-4">
-              {methodology.map((item, index) => (
-                <GlassCard key={index} className="p-6 hover-lift">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <span className="text-xl font-black text-primary">{item.step}</span>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                      <p className="text-muted-foreground">{item.description}</p>
-                    </div>
-                  </div>
-                </GlassCard>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Contact */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="glass-card p-12 rounded-3xl text-center"
-          >
-            <Search className="w-16 h-16 text-primary mx-auto mb-6" />
-            <h2 className="text-3xl font-bold mb-4">Questions About Our Research?</h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Want to verify a source? Found more recent data? Have research to share? We're committed to transparency and continuous improvement.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <MagneticButton
-                variant="outline"
-                className="rounded-full"
-                onClick={() => window.location.href = 'mailto:research@trainyouragent.com'}
-              >
-                research@trainyouragent.com
-              </MagneticButton>
-              <MagneticButton
-                className="rounded-full bg-gradient-primary"
-                onClick={() => window.open('/resources', '_self')}
-              >
-                <FileText className="w-5 h-5 mr-2" />
-                Browse Research Library
-              </MagneticButton>
-            </div>
-          </motion.div>
+      <section className="pt-32 pb-12 px-5 sm:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Research & Partners</div>
+          <h1 className="text-[42px] sm:text-[64px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+            We build on the shoulders of <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>the people defining AI.</span>
+          </h1>
+          <p className="mt-6 text-[17px] text-slate-700 max-w-2xl leading-relaxed">
+            We're not a research lab. We're operators. We work with the labs, run their models in production, feed signal back, and ship the version that works for real businesses.
+          </p>
         </div>
       </section>
 
-      <Footer />
+      <section className="px-5 sm:px-8 pb-16">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[
+            { h: "Anthropic", b: "Primary reasoning. Production traffic, zero-retention." },
+            { h: "OpenAI",    b: "Fallback reasoning. Zero-retention API tier." },
+            { h: "Google",    b: "Gemini for long-context calls. Maps + Calendar integration." },
+            { h: "Meta",      b: "Llama family for specialized cost-sensitive routing." },
+            { h: "Mistral",   b: "Edge cases where Mistral's small models beat the big ones on latency." },
+            { h: "ElevenLabs",b: "Primary voice synthesis. Cloned voices on enterprise builds." },
+            { h: "Deepgram",  b: "Primary STT. Sub-200ms transcription at production volume." },
+            { h: "Cartesia",  b: "Alt voice for vertical-specific tone (hospitality, luxury)." },
+            { h: "Twilio",    b: "Voice + SMS infrastructure. HIPAA-eligible, PCI-DSS L1." },
+          ].map((p, i) => (
+            <div key={i} className="rounded-2xl bg-white border border-slate-200 p-6 hover:border-[#185FA5] hover:shadow-[0_4px_24px_-10px_rgba(4,44,83,0.18)] transition">
+              <div className="text-[17px] font-semibold text-[#042C53] mb-2">{p.h}</div>
+              <div className="text-[14px] text-slate-700 leading-relaxed">{p.b}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="px-5 sm:px-8 py-20 bg-[#F6FAFE] border-y border-slate-200/70">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Open to partnerships</div>
+          <h2 className="text-[28px] sm:text-[40px] leading-tight font-semibold text-[#042C53] mb-4">
+            Building tools we'd <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>actually want to use?</span>
+          </h2>
+          <p className="text-[15px] text-slate-700 max-w-xl mx-auto leading-relaxed mb-6">
+            We add new providers to our routing when they earn a place. Voice, STT, LLM, telephony, integration platforms — if your tool moves a number for our customers, we'll find a route for it.
+          </p>
+          <a href="mailto:partners@trainyouragent.com" className="inline-block px-6 py-3 rounded-full bg-[#042C53] text-white text-[14px] font-semibold hover:bg-[#0A3D6E] shadow">partners@trainyouragent.com</a>
+        </div>
+      </section>
+
+      <footer className="bg-white border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+          <div className="flex items-center gap-2.5"><BrainLogo size={28} /><span className="font-semibold text-[#042C53]">TrainYourAgent</span></div>
+          <div className="flex items-center gap-6"><Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link><Link to="/terms" className="hover:text-[#042C53]">Terms</Link><Link to="/security" className="hover:text-[#042C53]">Security</Link><a href={LINKEDIN_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">LinkedIn</a></div>
+        </div>
+      </footer>
     </div>
   );
 };
