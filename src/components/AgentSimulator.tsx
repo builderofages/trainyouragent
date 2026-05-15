@@ -1,27 +1,95 @@
 // src/components/AgentSimulator.tsx
 // Live "type a customer scenario, watch the agent respond" tool.
-// Streams Claude responses via /api/simulate (or falls back to /api/chat with sim system).
+// v34: vertical-aware. Pass `vertical="hvac"` etc. to pre-load 3 industry-specific
+// scenarios; falls back to a generic mixed set when no vertical is given.
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-const SCENARIOS = [
-  { v: "HVAC",       text: "My AC just stopped working and it's 95 degrees in the house. Can someone come today?" },
-  { v: "Healthcare", text: "Hi, I'm a new patient and need to schedule a physical. Do you take Aetna?" },
-  { v: "Real Estate",text: "I saw your listing on Maple Street. Is it still available and can I see it Saturday?" },
-  { v: "Legal",      text: "I think I have a slip-and-fall case from a grocery store last week. Can someone help?" },
-  { v: "Roofing",    text: "We had hail Sunday and the ceiling is leaking. Insurance claim — when can someone come?" },
+type Scenario = { v: string; text: string };
+
+/* ------------------------------------------------------------------ */
+/*  VERTICAL_SCENARIOS — 3 realistic prompts per supported industry    */
+/* ------------------------------------------------------------------ */
+export const VERTICAL_SCENARIOS: Record<string, Scenario[]> = {
+  hvac: [
+    { v: "HVAC", text: "AC stopped working, 95° in the house — can someone come today?" },
+    { v: "HVAC", text: "Need annual tune-up booked for Saturday morning — do you have availability?" },
+    { v: "HVAC", text: "Got a $2,500 quote from another company for a new condenser — does that sound right for a 3-ton unit?" },
+  ],
+  healthcare: [
+    { v: "Healthcare", text: "I'm a new patient, need to schedule a physical, do you take Aetna?" },
+    { v: "Healthcare", text: "I need to refill my prescription, who do I talk to?" },
+    { v: "Healthcare", text: "My kid has 102 fever — can I bring him in this afternoon or do I go to urgent care?" },
+  ],
+  "real-estate": [
+    { v: "Real Estate", text: "I saw your Maple Street listing, still available?" },
+    { v: "Real Estate", text: "Looking to sell — what's my house at 1234 Oak Ave probably worth?" },
+    { v: "Real Estate", text: "I'm an out-of-state buyer, can we do a virtual showing this weekend?" },
+  ],
+  legal: [
+    { v: "Legal", text: "I think I have a slip-and-fall case from a grocery store last week. Can someone help?" },
+    { v: "Legal", text: "I just got served papers for a divorce, what do I do first?" },
+    { v: "Legal", text: "My LLC needs an operating agreement — do you do flat-fee business law?" },
+  ],
+  ecommerce: [
+    { v: "E-commerce", text: "I ordered the running shoes a week ago and they haven't shipped — order #44712." },
+    { v: "E-commerce", text: "The boots I got are too small — can I swap for a 10.5 instead of returning?" },
+    { v: "E-commerce", text: "Do you ship to Canada and what's the duty situation?" },
+  ],
+  hospitality: [
+    { v: "Hospitality", text: "Table for four on Saturday at 7 — patio if you have it?" },
+    { v: "Hospitality", text: "What time is check-in and can I get a late checkout?" },
+    { v: "Hospitality", text: "Looking to book a room block for a wedding in October — 25 rooms, two nights." },
+  ],
+  roofing: [
+    { v: "Roofing", text: "We had hail Sunday and the ceiling is leaking. Insurance claim — when can someone come?" },
+    { v: "Roofing", text: "Need a quote for a full re-roof on a 2,400 sq ft ranch, asphalt shingle." },
+    { v: "Roofing", text: "Got a $14k bid from another contractor — can you come look and second-quote?" },
+  ],
+  solar: [
+    { v: "Solar", text: "I saw your ad about solar — average bill is $280, am I a good fit?" },
+    { v: "Solar", text: "South-facing roof, no shade, what's a 10kW system run me after rebates?" },
+    { v: "Solar", text: "How long does install take and do I lose power during it?" },
+  ],
+};
+
+/* Generic fallback when no vertical prop is supplied (legacy callers). */
+const DEFAULT_SCENARIOS: Scenario[] = [
+  { v: "HVAC",        text: "My AC just stopped working and it's 95 degrees in the house. Can someone come today?" },
+  { v: "Healthcare",  text: "Hi, I'm a new patient and need to schedule a physical. Do you take Aetna?" },
+  { v: "Real Estate", text: "I saw your listing on Maple Street. Is it still available and can I see it Saturday?" },
+  { v: "Legal",       text: "I think I have a slip-and-fall case from a grocery store last week. Can someone help?" },
+  { v: "Roofing",     text: "We had hail Sunday and the ceiling is leaking. Insurance claim — when can someone come?" },
 ];
 
-const SIM_SYSTEM = `You ARE a TrainYourAgent voice agent. The user message is what a real customer would say to a business that hired you. Respond as the agent would — short, warm, professional, asking the right qualifying questions and proposing a booking. 1-3 sentences max. No marketing tone. Sound human.`;
+type Props = {
+  defaultScenario?: string;
+  /** Slug like "hvac" | "healthcare" | "real-estate" | "legal" | "ecommerce" | "hospitality" | "roofing" | "solar" */
+  vertical?: string;
+};
 
-export default function AgentSimulator({ defaultScenario = SCENARIOS[0].text }: { defaultScenario?: string }) {
-  const [input, setInput] = useState(defaultScenario);
+export default function AgentSimulator({ defaultScenario, vertical }: Props) {
+  const scenarios = useMemo<Scenario[]>(() => {
+    if (vertical && VERTICAL_SCENARIOS[vertical]) return VERTICAL_SCENARIOS[vertical];
+    return DEFAULT_SCENARIOS;
+  }, [vertical]);
+
+  const initial = defaultScenario ?? scenarios[0].text;
+  const [input, setInput] = useState(initial);
   const [reply, setReply] = useState("");
   const [streaming, setStreaming] = useState(false);
-  const [vertical, setVertical] = useState(SCENARIOS[0].v);
+  const [activeIdx, setActiveIdx] = useState(0);
   const stopRef = useRef(false);
 
   useEffect(() => () => { stopRef.current = true; }, []);
+
+  // If vertical changes (e.g. user clicks a different page that mounts a new simulator),
+  // reset the input to the new vertical's first scenario.
+  useEffect(() => {
+    setInput(scenarios[0].text);
+    setActiveIdx(0);
+    setReply("");
+  }, [vertical]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const run = async () => {
     if (streaming || !input.trim()) return;
@@ -34,7 +102,7 @@ export default function AgentSimulator({ defaultScenario = SCENARIOS[0].text }: 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mode: "simulator",
-          messages: [{ role: "user", content: `[Industry: ${vertical}]\n${input}` }],
+          messages: [{ role: "user", content: `[Industry: ${scenarios[activeIdx].v}]\n${input}` }],
         }),
       });
       if (!res.ok || !res.body) throw new Error("sim down");
@@ -66,10 +134,13 @@ export default function AgentSimulator({ defaultScenario = SCENARIOS[0].text }: 
       </h3>
 
       <div className="flex flex-wrap gap-2 mb-4">
-        {SCENARIOS.map((s) => (
-          <button key={s.v} onClick={() => { setVertical(s.v); setInput(s.text); }}
-                  className={`px-3 py-1.5 rounded-full text-[12px] font-medium transition border ${vertical === s.v ? "bg-[#042C53] text-white border-[#042C53]" : "bg-[#F6FAFE] text-[#042C53] border-slate-200 hover:border-[#185FA5]"}`}>
-            {s.v}
+        {scenarios.map((s, i) => (
+          <button
+            key={i}
+            onClick={() => { setActiveIdx(i); setInput(s.text); }}
+            className={`px-3 py-1.5 rounded-full text-[12px] font-medium transition border text-left ${activeIdx === i ? "bg-[#042C53] text-white border-[#042C53]" : "bg-[#F6FAFE] text-[#042C53] border-slate-200 hover:border-[#185FA5]"}`}
+          >
+            Scenario {i + 1}
           </button>
         ))}
       </div>

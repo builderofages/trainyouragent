@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
+import AgentSimulator, { VERTICAL_SCENARIOS } from "@/components/AgentSimulator";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
@@ -536,6 +537,23 @@ const VerticalPage = () => {
         </div>
       </section>
 
+      {/* v34: vertical-aware AgentSimulator — only mounts for slugs we have scenarios for */}
+      {(() => {
+        const slug = location.pathname.replace(/^\//, "");
+        if (!VERTICAL_SCENARIOS[slug]) return null;
+        return (
+          <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-y border-slate-200/70">
+            <div className="max-w-5xl mx-auto">
+              <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Try it yourself</div>
+              <h2 className="text-[28px] sm:text-[40px] leading-tight font-semibold text-[#042C53] mb-8">
+                Three real {config.label.toLowerCase()} calls. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Type one. Watch the agent answer.</span>
+              </h2>
+              <AgentSimulator vertical={slug} />
+            </div>
+          </section>
+        );
+      })()}
+
       {/* Rich per-niche block — only renders for slugs present in VERTICAL_CONTENT */}
       {VERTICAL_CONTENT[location.pathname] && (() => {
         const rc = VERTICAL_CONTENT[location.pathname];
@@ -674,7 +692,11 @@ const VerticalPage = () => {
             <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
             <span className="text-slate-400">— Tampa Bay, FL</span>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-x-6 gap-y-2 flex-wrap justify-center">
+            <Link to="/learn" className="hover:text-[#042C53]">Learn</Link>
+            <Link to="/careers" className="hover:text-[#042C53]">Careers</Link>
+            <Link to="/status" className="hover:text-[#042C53]">Status</Link>
+            <Link to="/press" className="hover:text-[#042C53]">Press</Link>
             <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>
             <Link to="/terms" className="hover:text-[#042C53]">Terms</Link>
             <Link to="/security" className="hover:text-[#042C53]">Security</Link>

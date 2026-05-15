@@ -327,9 +327,13 @@ const Index = () => {
             <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
             <span className="text-slate-400">— Tampa Bay, FL</span>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-x-6 gap-y-2 flex-wrap justify-center">
             <Link to="/about" className="hover:text-[#042C53]">About</Link>
             <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
+            <Link to="/learn" className="hover:text-[#042C53]">Learn</Link>
+            <Link to="/careers" className="hover:text-[#042C53]">Careers</Link>
+            <Link to="/status" className="hover:text-[#042C53]">Status</Link>
+            <Link to="/press" className="hover:text-[#042C53]">Press</Link>
             <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
             <a href={CAL_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">Book a call</a>
             <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">LinkedIn</a>

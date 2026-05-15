@@ -78,6 +78,7 @@ const INDUSTRIES: LinkItem[] = [
 
 const RESOURCES: LinkItem[] = [
   { label: "Blog",           to: "/blog",        sub: "Operator playbooks + AI infrastructure deep dives." },
+  { label: "Learn AI",       to: "/learn",       sub: "Free mini-courses + the Operator Cohort." },
   { label: "Buyer's Guide",  to: "/resources",   sub: "How to evaluate AI vendors without getting taken." },
   { label: "ROI Calculator", to: "/calculators", sub: "Estimate the dollar impact in two minutes." },
   { label: "Case Studies",   to: "/case-studies",sub: "Wins from production agents already shipped." },

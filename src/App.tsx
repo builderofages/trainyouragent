@@ -43,6 +43,13 @@ import BlogPost from "./pages/blog/BlogPost";
 import BlogCategory from "./pages/blog/BlogCategory";
 import BlogTag from "./pages/blog/BlogTag";
 import Newsletter from "./pages/Newsletter";
+// v34: trust + academy + exit intent
+import Learn from "./pages/Learn";
+import Status from "./pages/Status";
+import Careers from "./pages/Careers";
+import Press from "./pages/Press";
+import ExitIntent from "@/components/ExitIntent";
+import LeadMagnetModal from "@/components/LeadMagnetModal";
 
 const queryClient = new QueryClient();
 
@@ -110,12 +117,21 @@ const App = () => (
           <Route path="/blog/tag/:tag" element={<BlogTag />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/newsletter" element={<Newsletter />} />
+          {/* v34: trust + academy */}
+          <Route path="/learn" element={<Learn />} />
+          <Route path="/status" element={<Status />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/press" element={<Press />} />
           {/* v33a: programmatic SEO — /:vertical/:city (200 LPs).
               Placed last among real routes so static paths above always win. */}
           <Route path="/:vertical/:city" element={<LocationPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <AiChat />
+        {/* v34: site-wide exit-intent gated by sessionStorage inside ExitIntent. */}
+        <ExitIntent>
+          {({ open, close }) => <LeadMagnetModal open={open} onClose={close} />}
+        </ExitIntent>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
