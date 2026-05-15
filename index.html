@@ -18,7 +18,7 @@
     <meta property="og:title" content="TrainYourAgent — Everything-AI for SMBs & Startups" />
     <meta property="og:description" content="AI voice agents + everything else: marketing, lead gen, creative, infra. Four years deep in AI. $20K+/mo recurring." />
     <meta property="og:url" content="https://trainyouragent.com" />
-    <meta property="og:image" content="https://trainyouragent.com/og-image.png" />
+    <meta property="og:image" content="https://trainyouragent.com/api/og?title=The%20AI%20that%27s%20actually%20running%20your%20business%20by%20morning." />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
 
@@ -26,27 +26,90 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="TrainYourAgent — Everything-AI for SMBs & Startups" />
     <meta name="twitter:description" content="AI voice agents + everything else: marketing, lead gen, creative, infra. Four years deep in AI." />
-    <meta name="twitter:image" content="https://trainyouragent.com/og-image.png" />
+    <meta name="twitter:image" content="https://trainyouragent.com/api/og?title=The%20AI%20that%27s%20actually%20running%20your%20business%20by%20morning." />
 
     <!-- Canonical -->
     <link rel="canonical" href="https://trainyouragent.com" />
 
-    <!-- Preconnect for performance -->
+    <!-- v33a: Preconnects (DNS + TLS warm-up for critical 3rd parties) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://app.cal.com" />
+    <link rel="preconnect" href="https://elevenlabs.io" />
+    <link rel="dns-prefetch" href="https://connect.facebook.net" />
 
-    <!-- Schema.org Organization -->
+    <!-- v33a: Preload primary fonts (Inter Tight + Playfair Display) with
+         display=swap so first paint is never font-blocked. -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap"
+      />
+    </noscript>
+
+    <!-- v33a: Critical CSS — kill layout shift before React hydrates. -->
+    <style>
+      :root { color-scheme: light; }
+      html, body { margin: 0; padding: 0; background: #FFFFFF; color: #0B1B2B;
+        font-family: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale; }
+      #root { min-height: 100vh; }
+      /* Reserve space so above-the-fold layout doesn't jump on hydration. */
+      .tya-skeleton-hero { min-height: 80vh; }
+      /* Visually-hidden util for skip links + screen-reader text. */
+      .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+        overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+      *:focus-visible { outline: 2px solid #185FA5; outline-offset: 2px; border-radius: 4px; }
+    </style>
+
+    <!-- Schema.org Organization + WebSite + SearchAction (sitewide root) -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "TrainYourAgent",
-        "url": "https://trainyouragent.com",
-        "logo": "https://trainyouragent.com/apple-touch-icon.png",
-        "description": "Everything-AI services for SMBs and startups: voice agents, marketing, lead gen, creative, infrastructure, build & scale.",
-        "founder": { "@type": "Person", "name": "Alexander Mills", "sameAs": "https://www.linkedin.com/in/alexandermillsai" },
-        "address": { "@type": "PostalAddress", "addressLocality": "Tampa Bay", "addressRegion": "FL", "addressCountry": "US" },
-        "sameAs": ["https://www.linkedin.com/in/alexandermillsai"]
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://trainyouragent.com/#org",
+            "name": "TrainYourAgent",
+            "url": "https://trainyouragent.com",
+            "logo": "https://trainyouragent.com/apple-touch-icon.png",
+            "description": "Everything-AI services for SMBs and startups: voice agents, marketing, lead gen, creative, infrastructure, build & scale.",
+            "founder": { "@type": "Person", "name": "Alexander Mills", "sameAs": "https://www.linkedin.com/in/alexandermillsai" },
+            "address": { "@type": "PostalAddress", "addressLocality": "Tampa Bay", "addressRegion": "FL", "addressCountry": "US" },
+            "sameAs": ["https://www.linkedin.com/in/alexandermillsai"],
+            "contactPoint": [{
+              "@type": "ContactPoint",
+              "telephone": "+1-813-555-0142",
+              "contactType": "sales",
+              "areaServed": "US",
+              "availableLanguage": ["English","Spanish"]
+            }]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://trainyouragent.com/#website",
+            "url": "https://trainyouragent.com",
+            "name": "TrainYourAgent",
+            "publisher": { "@id": "https://trainyouragent.com/#org" },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://trainyouragent.com/?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          }
+        ]
       }
     </script>
 
@@ -56,38 +119,44 @@
          to an empty string and the wrapper short-circuits — no broken pixel,
          no 404 noscript image, no console noise.
 
-         Events fired by the site (via window.fbq):
-           - PageView  — automatic, fired on first script load + on SPA navs
-           - Lead      — POSTed to /api/lead (200) → also bounced to CAPI
-           - Schedule  — Cal.com BOOKING_CREATED (server) + client confirmation
-           - Purchase  — Stripe checkout success → /api/checkout fires CAPI
-
-         Server-side mirror lives in api/meta-event.ts. Both fires share the
-         same `event_id` (UUID generated client-side, sent to both pixel and
-         CAPI) so Meta dedupes correctly. -->
+         v33a perf change: the pixel boot is deferred behind a requestIdleCallback
+         (or a 1500ms setTimeout fallback) so it never blocks first paint or
+         interactive. Page Lead/Schedule/Purchase fires queue up via the noop
+         fbq stub until the real script loads. -->
     <script>
       (function () {
         var PIXEL_ID = "__META_PIXEL_ID__";
+        // Always install a no-op fbq first so app code never throws.
+        window.fbq = window.fbq || function () { (window.fbq.queue = window.fbq.queue || []).push(arguments); };
+        window.fbq.queue = window.fbq.queue || [];
+
         if (!PIXEL_ID || PIXEL_ID === "__META_PIXEL_ID" + "__" || PIXEL_ID.length < 6) {
-          // No pixel ID configured — install a no-op fbq so app code that
-          // calls fbq() still works without errors, then bail.
-          window.fbq = window.fbq || function () { /* no-op (pixel disabled) */ };
-          window.fbq.queue = window.fbq.queue || [];
           window.fbq.disabled = true;
           return;
         }
-        // Standard Meta Pixel base code (snippet v2.9.197).
-        !function (f, b, e, v, n, t, s) {
-          if (f.fbq) return;
-          n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
-          if (!f._fbq) f._fbq = n;
-          n.push = n; n.loaded = !0; n.version = "2.0"; n.queue = [];
-          t = b.createElement(e); t.async = !0; t.src = v;
-          s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
-        }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
-        window.fbq("init", PIXEL_ID);
-        window.fbq("track", "PageView");
-        window.__TYA_PIXEL_ID__ = PIXEL_ID;
+
+        function bootPixel() {
+          if (window.fbq && window.fbq.loaded) return;
+          // Standard Meta Pixel base code (snippet v2.9.197) — but the queue
+          // we already installed gets drained when the real fbq loads.
+          !function (f, b, e, v, n, t, s) {
+            n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+            n.push = n; n.loaded = !0; n.version = "2.0";
+            n.queue = (window.fbq && window.fbq.queue) || [];
+            t = b.createElement(e); t.async = !0; t.defer = !0; t.src = v;
+            s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+          }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+          window.fbq("init", PIXEL_ID);
+          window.fbq("track", "PageView");
+          window.__TYA_PIXEL_ID__ = PIXEL_ID;
+        }
+
+        // Defer until idle so the pixel never blocks first paint.
+        if ("requestIdleCallback" in window) {
+          window.requestIdleCallback(bootPixel, { timeout: 2500 });
+        } else {
+          window.setTimeout(bootPixel, 1500);
+        }
       })();
     </script>
     <!-- /Meta Pixel (head) -->

@@ -25,12 +25,23 @@ export default function ElevenlabsWidget({
   useEffect(() => {
     if (typeof document === "undefined") return;
     if (document.getElementById("elevenlabs-convai-script")) return;
-    const s = document.createElement("script");
-    s.id = "elevenlabs-convai-script";
-    s.src = "https://elevenlabs.io/convai-widget/index.js";
-    s.async = true;
-    s.type = "text/javascript";
-    document.body.appendChild(s);
+    // v33a perf: defer widget boot to idle time so it never blocks LCP/TBT.
+    const inject = () => {
+      if (document.getElementById("elevenlabs-convai-script")) return;
+      const s = document.createElement("script");
+      s.id = "elevenlabs-convai-script";
+      s.src = "https://elevenlabs.io/convai-widget/index.js";
+      s.async = true;
+      s.defer = true;
+      s.type = "text/javascript";
+      document.body.appendChild(s);
+    };
+    if ("requestIdleCallback" in window) {
+      (window as unknown as { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number })
+        .requestIdleCallback(inject, { timeout: 3000 });
+    } else {
+      window.setTimeout(inject, 1800);
+    }
   }, []);
 
   if (variant === "floating") {

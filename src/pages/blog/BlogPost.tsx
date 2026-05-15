@@ -31,15 +31,70 @@ export default function BlogPost() {
       <Helmet>
         <title>{post.title} — Train Your Agent</title>
         <meta name="description" content={post.excerpt} />
+        <link rel="canonical" href={`https://trainyouragent.com/blog/${post.slug}`} />
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={post.excerpt} />
-        {post.heroImage && <meta property="og:image" content={post.heroImage} />}
+        <meta
+          property="og:image"
+          content={
+            post.heroImage ||
+            `https://trainyouragent.com/api/og?title=${encodeURIComponent(post.title)}&subtitle=${encodeURIComponent("TrainYourAgent · Blog")}`
+          }
+        />
         <meta property="og:type" content="article" />
+        <meta property="og:url" content={`https://trainyouragent.com/blog/${post.slug}`} />
         <meta property="article:published_time" content={post.date} />
         <meta property="article:author" content={post.author} />
         {(post.tags || []).map((t) => (
           <meta key={t} property="article:tag" content={t} />
         ))}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={post.excerpt} />
+        <meta
+          name="twitter:image"
+          content={
+            post.heroImage ||
+            `https://trainyouragent.com/api/og?title=${encodeURIComponent(post.title)}&subtitle=${encodeURIComponent("TrainYourAgent · Blog")}`
+          }
+        />
+        {/* v33a: Article + BreadcrumbList + Author JSON-LD */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Article",
+                "@id": `https://trainyouragent.com/blog/${post.slug}#article`,
+                headline: post.title,
+                description: post.excerpt,
+                datePublished: post.date,
+                dateModified: post.date,
+                image:
+                  post.heroImage ||
+                  `https://trainyouragent.com/api/og?title=${encodeURIComponent(post.title)}`,
+                author: {
+                  "@type": "Person",
+                  name: post.author,
+                  url: "https://trainyouragent.com/about",
+                },
+                publisher: { "@id": "https://trainyouragent.com/#org" },
+                mainEntityOfPage: `https://trainyouragent.com/blog/${post.slug}`,
+                articleSection: post.category,
+                keywords: (post.tags || []).join(", "),
+              },
+              {
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  { "@type": "ListItem", position: 1, name: "Home", item: "https://trainyouragent.com" },
+                  { "@type": "ListItem", position: 2, name: "Blog", item: "https://trainyouragent.com/blog" },
+                  { "@type": "ListItem", position: 3, name: post.category, item: `https://trainyouragent.com/blog/category/${categorySlug(post.category)}` },
+                  { "@type": "ListItem", position: 4, name: post.title, item: `https://trainyouragent.com/blog/${post.slug}` },
+                ],
+              },
+            ],
+          })}
+        </script>
       </Helmet>
 
       {/* Hero */}

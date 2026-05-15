@@ -63,15 +63,38 @@ const Index = () => {
       document.head.appendChild(l);
     }
     document.title = "TrainYourAgent — Everything-AI for SMBs & Startups";
+
+    // v33a: page-level FAQPage schema (Org + WebSite already in index.html).
+    const id = "tya-schema-index";
+    document.getElementById(id)?.remove();
+    const s = document.createElement("script");
+    s.id = id;
+    s.type = "application/ld+json";
+    s.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: FAQ_ITEMS.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    });
+    document.head.appendChild(s);
+    return () => { document.getElementById(id)?.remove(); };
   }, []);
 
   return (
     <div className="min-h-screen bg-white text-[#0B1B2B] overflow-x-hidden" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+      {/* v33a a11y: skip-to-content link — first focusable element */}
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[#042C53] focus:text-white focus:font-semibold focus:shadow-lg">
+        Skip to main content
+      </a>
 
       {/* NAV — canonical service nav */}
       <SiteNav />
 
       {/* HERO */}
+      <main id="main">
       <section className="relative pt-32 pb-24 px-5 sm:px-8 overflow-hidden">
         <div className="absolute inset-0 -z-10 pointer-events-none">
           <div className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] rounded-full opacity-60" style={{ background: "radial-gradient(closest-side, #DCEBFA 0%, rgba(220,235,250,0) 70%)" }} />
@@ -293,6 +316,8 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      </main>
 
       {/* FOOTER */}
       <footer className="bg-white border-t border-slate-200">

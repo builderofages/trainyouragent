@@ -45,6 +45,35 @@ const Comparisons = () => {
       document.head.appendChild(l);
     }
     document.title = "Comparisons — TrainYourAgent vs. off-the-shelf vs. BPO";
+
+    // v33a: WebPage + BreadcrumbList for /comparisons
+    const id = "tya-schema-comparisons";
+    document.getElementById(id)?.remove();
+    const s = document.createElement("script");
+    s.id = id;
+    s.type = "application/ld+json";
+    s.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "@id": "https://trainyouragent.com/comparisons#page",
+          url: "https://trainyouragent.com/comparisons",
+          name: "Comparisons — TrainYourAgent vs. off-the-shelf vs. BPO",
+          isPartOf: { "@id": "https://trainyouragent.com/#website" },
+          description: "How TrainYourAgent compares to off-the-shelf voice agents (Air, Synthflow, Bland), to BPO call centers, and to in-house CSRs.",
+        },
+        {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://trainyouragent.com" },
+            { "@type": "ListItem", position: 2, name: "Comparisons", item: "https://trainyouragent.com/comparisons" },
+          ],
+        },
+      ],
+    });
+    document.head.appendChild(s);
+    return () => { document.getElementById(id)?.remove(); };
   }, []);
   useEffect(() => { const f = () => setNavScrolled(window.scrollY > 20); window.addEventListener("scroll", f); return () => window.removeEventListener("scroll", f); }, []);
 

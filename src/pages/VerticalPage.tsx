@@ -394,6 +394,46 @@ const VerticalPage = () => {
       el.setAttribute("content", c);
     };
     setMeta("description", config.sub);
+
+    // v33a: Service + FAQPage schema for vertical hubs.
+    const schemaId = "tya-schema-vertical";
+    document.getElementById(schemaId)?.remove();
+    const slug = (typeof window !== "undefined" ? window.location.pathname : "/").replace(/\/$/, "") || "/";
+    const url = `https://trainyouragent.com${slug}`;
+    const s = document.createElement("script");
+    s.id = schemaId;
+    s.type = "application/ld+json";
+    s.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Service",
+          "@id": `${url}#service`,
+          serviceType: `${config.label} AI Voice Agent`,
+          name: `${config.label} AI agents`,
+          description: config.sub,
+          provider: { "@id": "https://trainyouragent.com/#org" },
+          areaServed: { "@type": "Country", name: "United States" },
+          offers: {
+            "@type": "Offer",
+            url: "https://trainyouragent.com/pricing",
+            priceCurrency: "USD",
+            price: "799",
+            availability: "https://schema.org/InStock",
+          },
+        },
+        {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://trainyouragent.com" },
+            { "@type": "ListItem", position: 2, name: "Industries", item: "https://trainyouragent.com/solutions" },
+            { "@type": "ListItem", position: 3, name: config.label, item: url },
+          ],
+        },
+      ],
+    });
+    document.head.appendChild(s);
+    return () => { document.getElementById(schemaId)?.remove(); };
   }, [config]);
 
   useEffect(() => {
@@ -414,7 +454,9 @@ const VerticalPage = () => {
   return (
     <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
       {/* NAV — canonical service nav */}
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[#042C53] focus:text-white focus:font-semibold focus:shadow-lg">Skip to main content</a>
       <SiteNav active="industries" />
+      <span id="main" tabIndex={-1} aria-hidden="true" />
 
       {overlay && (
         <div className="bg-[#042C53] text-white text-center text-[12px] sm:text-[13px] py-2 px-4 fixed top-[60px] left-0 right-0 z-40">

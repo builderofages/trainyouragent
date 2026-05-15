@@ -8,6 +8,7 @@ import Pricing from "./pages/Pricing";
 import Dashboard from "./pages/Dashboard";
 import NicheLanding from "./pages/NicheLanding";
 import Vertical from "./pages/VerticalPage";
+import LocationPage from "./pages/LocationPage";
 import SalesToolkit from "./pages/SalesToolkit";
 import Settings from "./pages/Settings";
 import Resources from "./pages/Resources";
@@ -99,6 +100,9 @@ const App = () => (
           <Route path="/blog/tag/:tag" element={<BlogTag />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/newsletter" element={<Newsletter />} />
+          {/* v33a: programmatic SEO — /:vertical/:city (200 LPs).
+              Placed last among real routes so static paths above always win. */}
+          <Route path="/:vertical/:city" element={<LocationPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <AiChat />

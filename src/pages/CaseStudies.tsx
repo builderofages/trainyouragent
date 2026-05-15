@@ -54,6 +54,35 @@ const CaseStudies = () => {
       document.head.appendChild(l);
     }
     document.title = "Case Studies — TrainYourAgent";
+
+    // v33a: CollectionPage + BreadcrumbList for /case-studies
+    const id = "tya-schema-cases";
+    document.getElementById(id)?.remove();
+    const s = document.createElement("script");
+    s.id = id;
+    s.type = "application/ld+json";
+    s.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "CollectionPage",
+          "@id": "https://trainyouragent.com/case-studies#page",
+          url: "https://trainyouragent.com/case-studies",
+          name: "Case Studies — TrainYourAgent",
+          isPartOf: { "@id": "https://trainyouragent.com/#website" },
+          description: "Real wins from TrainYourAgent customers running production AI voice agents.",
+        },
+        {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://trainyouragent.com" },
+            { "@type": "ListItem", position: 2, name: "Case Studies", item: "https://trainyouragent.com/case-studies" },
+          ],
+        },
+      ],
+    });
+    document.head.appendChild(s);
+    return () => { document.getElementById(id)?.remove(); };
   }, []);
 
   useEffect(() => {

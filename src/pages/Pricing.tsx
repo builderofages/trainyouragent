@@ -119,6 +119,57 @@ const Pricing = () => {
       el.setAttribute("content", c);
     };
     setMeta("description", "Three honest lanes: Founders, Operators, Scale. Pay for what runs through your agent, not for tier-feature theater. Free 7-day live trial.");
+
+    // v33a: Product/Offer schema for the three pricing lanes.
+    const id = "tya-schema-pricing";
+    document.getElementById(id)?.remove();
+    const s = document.createElement("script");
+    s.id = id;
+    s.type = "application/ld+json";
+    s.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: "TrainYourAgent — AI Voice Agents",
+      description: "AI voice + messaging agents for SMBs and startups. Three lanes: Founders (pay-as-you-go), Operators ($799/mo + 4,000 minutes), Scale (custom).",
+      brand: { "@type": "Brand", name: "TrainYourAgent" },
+      offers: {
+        "@type": "AggregateOffer",
+        priceCurrency: "USD",
+        lowPrice: "0",
+        highPrice: "9999",
+        offerCount: 3,
+        offers: [
+          {
+            "@type": "Offer",
+            name: "Founders",
+            description: "Pre-revenue or early-revenue startups. Pay only when calls come in.",
+            price: "0",
+            priceCurrency: "USD",
+            url: "https://trainyouragent.com/pricing#founders",
+            availability: "https://schema.org/InStock",
+          },
+          {
+            "@type": "Offer",
+            name: "Operators",
+            description: "SMBs already paying humans to answer phones. Includes 4,000 minutes / mo.",
+            price: "799",
+            priceCurrency: "USD",
+            url: "https://trainyouragent.com/pricing#operators",
+            availability: "https://schema.org/InStock",
+          },
+          {
+            "@type": "Offer",
+            name: "Scale",
+            description: "Multi-location, multi-brand, agency-scale operations. Custom pricing.",
+            priceCurrency: "USD",
+            url: "https://trainyouragent.com/pricing#scale",
+            availability: "https://schema.org/InStock",
+          },
+        ],
+      },
+    });
+    document.head.appendChild(s);
+    return () => { document.getElementById(id)?.remove(); };
   }, []);
 
   useEffect(() => {
@@ -130,7 +181,9 @@ const Pricing = () => {
   return (
     <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
       {/* NAV — canonical service nav */}
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[#042C53] focus:text-white focus:font-semibold focus:shadow-lg">Skip to main content</a>
       <SiteNav active="pricing" />
+      <span id="main" tabIndex={-1} aria-hidden="true" />
 
       <section className="pt-32 pb-12 px-5 sm:px-8">
         <div className="max-w-5xl mx-auto text-center">

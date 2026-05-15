@@ -42,6 +42,46 @@ const About = () => {
       document.head.appendChild(l);
     }
     document.title = "About — TrainYourAgent";
+
+    // v33a: Person + Organization schema for About page.
+    const id = "tya-schema-about";
+    document.getElementById(id)?.remove();
+    const s = document.createElement("script");
+    s.id = id;
+    s.type = "application/ld+json";
+    s.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://trainyouragent.com/about#alexander-mills",
+          name: "Alexander Mills",
+          jobTitle: "Founder",
+          url: "https://trainyouragent.com/about",
+          sameAs: [
+            "https://www.linkedin.com/in/alexandermillsai",
+          ],
+          worksFor: { "@id": "https://trainyouragent.com/#org" },
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Tampa Bay",
+            addressRegion: "FL",
+            addressCountry: "US",
+          },
+        },
+        {
+          "@type": "AboutPage",
+          "@id": "https://trainyouragent.com/about#page",
+          url: "https://trainyouragent.com/about",
+          name: "About — TrainYourAgent",
+          isPartOf: { "@id": "https://trainyouragent.com/#website" },
+          about: { "@id": "https://trainyouragent.com/about#alexander-mills" },
+          publisher: { "@id": "https://trainyouragent.com/#org" },
+        },
+      ],
+    });
+    document.head.appendChild(s);
+    return () => { document.getElementById(id)?.remove(); };
   }, []);
 
   return (
@@ -49,7 +89,9 @@ const About = () => {
       style={{ fontFamily: "'Inter Tight', 'Inter', system-ui, -apple-system, sans-serif" }}>
 
       {/* NAV — canonical service nav */}
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[#042C53] focus:text-white focus:font-semibold focus:shadow-lg">Skip to main content</a>
       <SiteNav active="about" />
+      <span id="main" tabIndex={-1} aria-hidden="true" />
 
       <main>
         <header className="pt-40 pb-16 relative overflow-hidden">
