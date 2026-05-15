@@ -32,6 +32,10 @@ import Contact from "./pages/Contact";
 import DemoVideo from "./pages/DemoVideo";
 import NotFound from "./pages/NotFound";
 import Start from "./pages/Start";
+// v33b: agency partner + service deep-dives + comparisons
+import AgencyPartner from "./pages/AgencyPartner";
+import SolutionDetail from "./pages/SolutionDetail";
+import VersusPage from "./pages/VersusPage";
 import AiChat from "@/components/AiChat";
 // v29: Blog + Newsletter
 import BlogIndex from "./pages/blog/BlogIndex";
@@ -70,6 +74,12 @@ const App = () => (
           <Route path="/hospitality" element={<Vertical />} />
           {/* /solutions is now the canonical Solutions hub (six service pillars) */}
           <Route path="/solutions" element={<Solutions />} />
+          {/* v33b: per-pillar deep-dives — /solutions/voice|chat|sites|infra|media|growth */}
+          <Route path="/solutions/:slug" element={<SolutionDetail />} />
+          {/* v33b: agency partner program */}
+          <Route path="/agency-partner" element={<AgencyPartner />} />
+          {/* v33b: competitor comparison pages */}
+          <Route path="/vs/:competitor" element={<VersusPage />} />
           {/* Supporting pages */}
           <Route path="/sales-toolkit" element={<SalesToolkit />} />
           <Route path="/resources" element={<Resources />} />

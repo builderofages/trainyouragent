@@ -25,6 +25,8 @@ function BrainLogo({ size = 40 }: { size?: number }) {
   );
 }
 
+type FeatureRow = { feature: string; them: string; us: string };
+
 type Vs = {
   name: string;
   url?: string;
@@ -34,7 +36,20 @@ type Vs = {
   whereWeWin: string[];
   pricingNote: string;
   verdict: string;
+  featureRows?: FeatureRow[];
 };
+
+// Default feature rows applied when a competitor doesn't override them.
+const DEFAULT_ROWS: FeatureRow[] = [
+  { feature: "Voice quality", them: "Good — top-tier TTS", us: "Same top-tier (ElevenLabs Flash + Cartesia Sonic)" },
+  { feature: "Cost per minute", them: "$0.06–$0.12 typical", us: "Bundled into per-call pricing — no per-minute surprises" },
+  { feature: "Custom agent training", them: "Self-serve in their console", us: "Done-for-you with weekly tuning by an engineer" },
+  { feature: "Vertical specialization", them: "Generic templates", us: "HVAC, healthcare, legal, real estate, automotive playbooks" },
+  { feature: "White-label option", them: "Limited / paid add-on", us: "Yes — full white-label for agency partners" },
+  { feature: "SLA", them: "Best-effort / community support", us: "99.9% uptime + on-call rotation in first 90 days" },
+  { feature: "Build timeline", them: "DIY — depends on your team", us: "14 days from kickoff to live traffic" },
+  { feature: "Lead-to-deploy speed", them: "Self-serve onboarding", us: "Founder on the call same week" },
+];
 
 export const COMPETITORS: Record<string, Vs> = {
   bland: {
@@ -88,6 +103,9 @@ export const COMPETITORS: Record<string, Vs> = {
     verdict: "Pick Retell if you're building voice into your product. Pick us if you want a finished agent for your business.",
   },
 };
+
+// /vs/airagent alias → same record as air-ai (the URL the spec asked for).
+COMPETITORS.airagent = COMPETITORS["air-ai"];
 
 const VersusPage = () => {
   const { competitor = "" } = useParams<{ competitor: string }>();
@@ -161,12 +179,77 @@ const VersusPage = () => {
       </section>
 
       <section className="px-5 sm:px-8 py-12">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-2">Side-by-side</div>
+          <h2 className="text-[26px] sm:text-[36px] leading-tight font-semibold text-[#042C53] mb-6">
+            Feature <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>comparison.</span>
+          </h2>
+          <div className="rounded-3xl border border-slate-200 overflow-hidden bg-white">
+            <div className="grid grid-cols-[1.1fr_1fr_1fr] gap-0 text-[12px] uppercase tracking-[0.14em] font-semibold bg-[#F6FAFE] text-slate-500">
+              <div className="px-4 py-3">Feature</div>
+              <div className="px-4 py-3 border-l border-slate-200">{vs.name}</div>
+              <div className="px-4 py-3 border-l border-slate-200 text-[#042C53]">TrainYourAgent</div>
+            </div>
+            {(vs.featureRows ?? DEFAULT_ROWS).map((row, i) => (
+              <div
+                key={i}
+                className="grid grid-cols-[1.1fr_1fr_1fr] gap-0 text-[14px] border-t border-slate-100 items-stretch"
+              >
+                <div className="px-4 py-3 font-semibold text-[#042C53] bg-white">{row.feature}</div>
+                <div className="px-4 py-3 border-l border-slate-100 text-slate-700 bg-white">{row.them}</div>
+                <div className="px-4 py-3 border-l border-slate-100 text-slate-800 bg-[#F6FAFE]">{row.us}</div>
+              </div>
+            ))}
+          </div>
+          <div className="text-[12px] text-slate-500 mt-3 italic">
+            Comparison reflects publicly documented features as of last review. Tell us if anything's out of date.
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 sm:px-8 py-12 bg-[#F6FAFE] border-y border-slate-200/70">
         <div className="max-w-4xl mx-auto">
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-2">Pricing reality</div>
           <h2 className="text-[26px] sm:text-[36px] leading-tight font-semibold text-[#042C53] mb-4">
             What it actually <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>costs.</span>
           </h2>
-          <p className="text-[16px] text-slate-700 leading-relaxed">{vs.pricingNote}</p>
+          <p className="text-[16px] text-slate-700 leading-relaxed mb-6">{vs.pricingNote}</p>
+          <Link to="/pricing" className="inline-flex items-center gap-1 text-[14px] font-semibold text-[#185FA5] hover:text-[#042C53]">
+            See our full pricing →
+          </Link>
+        </div>
+      </section>
+
+      <section className="px-5 sm:px-8 py-12">
+        <div className="max-w-5xl mx-auto rounded-3xl bg-white border border-slate-200 p-7 sm:p-10 grid md:grid-cols-2 gap-8">
+          <div>
+            <div className="text-[12px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-2">When to pick {vs.name}</div>
+            <p className="text-[15px] text-slate-700 leading-relaxed">{vs.bestFor}</p>
+          </div>
+          <div>
+            <div className="text-[12px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2">When to pick TrainYourAgent</div>
+            <p className="text-[15px] text-[#042C53] leading-relaxed font-medium">
+              You want a finished, working agent inside two weeks — built by an engineer who'll be on the call, not a vendor SDR. You'd rather pay a premium than spend three months wiring it yourself.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 sm:px-8 py-12">
+        <div className="max-w-4xl mx-auto rounded-3xl bg-gradient-to-br from-[#042C53] to-[#0A3D6E] text-white p-8 sm:p-10 shadow-[0_20px_60px_-20px_rgba(4,44,83,0.4)] text-center">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#9CC4EC] font-semibold mb-3">Switch from {vs.name}</div>
+          <h2 className="text-[26px] sm:text-[36px] leading-tight font-semibold mb-3">
+            Already on {vs.name}?{" "}
+            <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
+              We migrate you for free.
+            </span>
+          </h2>
+          <p className="text-[15px] text-white/85 max-w-2xl mx-auto leading-relaxed mb-6">
+            Number porting, transcript export, calendar + CRM rewiring, and parallel-running both stacks for a week before cutover. Zero downtime, zero re-training.
+          </p>
+          <a href={CAL_URL} target="_blank" rel="noopener" className="inline-block px-7 py-3.5 rounded-full bg-white text-[#042C53] font-semibold text-[14px] hover:bg-slate-100 shadow">
+            Book a switch-from-{vs.name} call →
+          </a>
         </div>
       </section>
 
