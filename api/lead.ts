@@ -8,6 +8,18 @@
 //   LEAD_NOTIFY_FROM        (optional — defaults to leads@trainyouragent.com)
 //   BEEHIIV_API_KEY         (required for newsletter forwarding)
 //   BEEHIIV_PUB_ID          (required for newsletter forwarding — pub_xxx format)
+//
+// Hardening (v30):
+//   - 5 req / IP / hour rate limit
+//   - CORS allowlist
+//   - Honeypot field check (`website` / `hp` — must be empty)
+//   - RFC-5322-ish email validation
+//   - HTML stripped from name/company/payload before notifications
+//   - Source allowlist
+//   - Body size cap
+
+import { rateLimit, ipFromRequest } from "./_lib/rate-limit";
+import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors";
 
 export const config = { runtime: "edge" };
 
@@ -20,10 +32,10 @@ type Lead = {
   payload?: unknown;
   path?: string;
   ts?: string;
-  // If true, also enroll the email in the beehiiv newsletter publication.
-  // Newsletter components and the floater set this to true.
-  // Other forms (contact, demo-request) leave it falsy.
   subscribeToNewsletter?: boolean;
+  // Honeypots — must be empty/absent. Bots fill every visible field.
+  website?: string;
+  hp?: string;
 };
 
 const RESEND_KEY = process.env.RESEND_API_KEY;
@@ -33,7 +45,6 @@ const NOTIFY_FROM = process.env.LEAD_NOTIFY_FROM || "leads@trainyouragent.com";
 const BEEHIIV_KEY = process.env.BEEHIIV_API_KEY;
 const BEEHIIV_PUB = process.env.BEEHIIV_PUB_ID;
 
-// Sources that should always be enrolled in the newsletter, regardless of flag.
 const NEWSLETTER_SOURCES = new Set([
   "newsletter",
   "newsletter-floater",
@@ -41,17 +52,69 @@ const NEWSLETTER_SOURCES = new Set([
   "blog-cta",
 ]);
 
+// Allowlist — every lead `source` we accept. Reject anything else.
+const ALLOWED_SOURCES = new Set([
+  "newsletter",
+  "newsletter-floater",
+  "newsletter-page",
+  "blog-cta",
+  "buyers-guide",
+  "contact",
+  "demo-request",
+  "roi-calc",
+  "pathway-router",
+]);
+
+const MAX_BODY_BYTES = 16 * 1024; // 16 KB is plenty for a lead form
+const EMAIL_RE = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']{2,}$/;
+
 export default async function handler(req: Request) {
-  if (req.method !== "POST") return json({ ok: false, error: "method" }, 405);
+  const cors = corsCheck(req);
+  if (!cors.allowed) return forbiddenResponse();
+  if (cors.isPreflight) return preflightResponse(cors.headers);
+
+  if (req.method !== "POST") return json({ ok: false, error: "method" }, 405, cors.headers);
+
+  // Rate limit — 5 req per IP per hour.
+  const ip = ipFromRequest(req);
+  const rl = rateLimit(`lead:${ip}`, { limit: 5, windowMs: 60 * 60 * 1000 });
+  if (!rl.ok) return json({ ok: false, error: "rate-limited" }, 429, { ...cors.headers, ...rl.headers });
+
+  // Body size cap.
+  const raw = await req.text();
+  if (raw.length > MAX_BODY_BYTES) return json({ ok: false, error: "too-large" }, 413, cors.headers);
+
   let body: Lead;
   try {
-    body = await req.json();
+    body = JSON.parse(raw);
   } catch {
-    return json({ ok: false, error: "bad-json" }, 400);
+    return json({ ok: false, error: "bad-json" }, 400, cors.headers);
   }
-  if (!body.email || !body.source) return json({ ok: false, error: "missing-fields" }, 400);
 
+  // Honeypot — silently 200 so bots don't learn.
+  if ((body.website && body.website.trim() !== "") || (body.hp && body.hp.trim() !== "")) {
+    return json({ ok: true }, 200, cors.headers);
+  }
+
+  if (!body.email || !body.source) {
+    return json({ ok: false, error: "missing-fields" }, 400, cors.headers);
+  }
+  if (!ALLOWED_SOURCES.has(body.source)) {
+    return json({ ok: false, error: "bad-source" }, 400, cors.headers);
+  }
+  if (typeof body.email !== "string" || !EMAIL_RE.test(body.email) || body.email.length > 254) {
+    return json({ ok: false, error: "bad-email" }, 400, cors.headers);
+  }
+
+  // Sanitize all human-controlled strings before they hit notifications/email.
+  body.email = body.email.trim().toLowerCase();
+  body.name = clean(body.name, 120);
+  body.company = clean(body.company, 200);
+  body.phone = clean(body.phone, 40);
+  body.path = clean(body.path, 500);
+  body.payload = sanitizePayload(body.payload);
   body.ts = new Date().toISOString();
+
   const subject = `[Lead · ${body.source}] ${body.name || body.email}`;
   const text = formatLead(body);
 
@@ -77,18 +140,16 @@ export default async function handler(req: Request) {
     );
   }
 
-  // Beehiiv enrollment — only when explicitly opted in OR the source is a newsletter form.
   const wantsNewsletter = body.subscribeToNewsletter === true || NEWSLETTER_SOURCES.has(body.source);
   if (wantsNewsletter && BEEHIIV_KEY && BEEHIIV_PUB) {
     tasks.push(forwardToBeehiiv(body));
   }
 
   await Promise.allSettled(tasks);
-  return json({ ok: true });
+  return json({ ok: true }, 200, { ...cors.headers, ...rl.headers });
 }
 
 async function forwardToBeehiiv(lead: Lead): Promise<unknown> {
-  // https://developers.beehiiv.com/docs/api/v2/subscriptions/create
   const url = `https://api.beehiiv.com/v2/publications/${BEEHIIV_PUB}/subscriptions`;
   const utm: Record<string, string> = {};
   if (lead.path) utm.utm_source = "trainyouragent.com";
@@ -132,9 +193,40 @@ function formatLead(l: Lead): string {
   ].filter(Boolean).join("\n");
 }
 
-function json(body: unknown, status = 200) {
+// Strip HTML/control chars, collapse whitespace, cap length.
+function clean(v: unknown, max: number): string | undefined {
+  if (typeof v !== "string") return undefined;
+  const out = v
+    .replace(/<[^>]*>/g, "")        // strip tags
+    .replace(/[\r\n\t]+/g, " ")     // collapse newlines (prevent header injection)
+    .replace(/[\x00-\x1f\x7f]/g, "") // control chars
+    .trim()
+    .slice(0, max);
+  return out || undefined;
+}
+
+function sanitizePayload(p: unknown): unknown {
+  if (p == null) return undefined;
+  if (typeof p === "string") return clean(p, 4000);
+  if (typeof p === "number" || typeof p === "boolean") return p;
+  if (Array.isArray(p)) return p.slice(0, 50).map(sanitizePayload);
+  if (typeof p === "object") {
+    const out: Record<string, unknown> = {};
+    let n = 0;
+    for (const [k, v] of Object.entries(p as Record<string, unknown>)) {
+      if (n++ > 50) break;
+      const cleanKey = String(k).replace(/[^\w.-]/g, "").slice(0, 64);
+      if (!cleanKey) continue;
+      out[cleanKey] = sanitizePayload(v);
+    }
+    return out;
+  }
+  return undefined;
+}
+
+function json(body: unknown, status = 200, extraHeaders: Record<string, string> = {}) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", ...extraHeaders },
   });
 }

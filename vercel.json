@@ -26,11 +26,20 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=()" },
-        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" }
+        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(self \"https://app.cal.com\" \"https://elevenlabs.io\"), camera=(self \"https://app.cal.com\"), payment=(self \"https://js.stripe.com\"), usb=(), magnetometer=(), gyroscope=(), interest-cohort=()" },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
+        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin-allow-popups" },
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://app.cal.com https://embed.cal.com https://cal.com https://elevenlabs.io https://*.elevenlabs.io https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://plausible.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://app.cal.com; img-src 'self' data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://api.cal.com https://app.cal.com https://*.supabase.co wss://*.supabase.co https://api.elevenlabs.io https://*.elevenlabs.io https://api.stripe.com https://www.google-analytics.com https://*.analytics.google.com https://connect.facebook.net https://www.facebook.com https://graph.facebook.com https://plausible.io; frame-src 'self' https://app.cal.com https://cal.com https://embed.cal.com https://elevenlabs.io https://*.elevenlabs.io https://js.stripe.com https://hooks.stripe.com; media-src 'self' blob: https:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://hooks.stripe.com; frame-ancestors 'none'; upgrade-insecure-requests" }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, max-age=0" },
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
       ]
     },
     {

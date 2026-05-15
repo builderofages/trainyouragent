@@ -39,7 +39,7 @@ export default function AiChat() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ system: SYSTEM, messages: next }),
+        body: JSON.stringify({ mode: "assistant", messages: next }),
       });
       if (!res.ok || !res.body) throw new Error("Chat unavailable");
       const reader = res.body.getReader();

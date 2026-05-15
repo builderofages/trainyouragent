@@ -1,12 +1,8 @@
-// api/cal-webhook.ts — Vercel edge function. Receives webhooks from Cal.com
-// when meetings are booked, rescheduled, or cancelled. Fans out to:
-//   1) Slack (instant notification — uses SLACK_WEBHOOK_URL)
-//   2) Resend (internal email — uses RESEND_API_KEY)
-//   3) Meta CAPI (Schedule conversion event — calls /api/meta-event)
+// api/cal-webhook.ts — Vercel edge function. Cal.com webhook receiver.
 //
 // REQUIRES env: CAL_WEBHOOK_SECRET
-// Optional env: SLACK_WEBHOOK_URL, RESEND_API_KEY, LEAD_NOTIFY_TO, LEAD_NOTIFY_FROM,
-//               META_PIXEL_ID, META_CAPI_TOKEN
+// Optional env: SLACK_WEBHOOK_URL, RESEND_API_KEY, LEAD_NOTIFY_TO,
+//               LEAD_NOTIFY_FROM, META_PIXEL_ID, META_CAPI_TOKEN
 //
 // In Cal.com:
 //   Settings -> Developer -> Webhooks -> New
@@ -16,6 +12,14 @@
 //
 // Cal signs each request with HMAC-SHA256(secret, raw_body) in
 // the `X-Cal-Signature-256` header. We verify before doing anything.
+//
+// Hardening (v30):
+//   - Reject browser-origin requests (webhooks must come from Cal, no Origin)
+//   - Body size cap
+//   - Signature still required and verified in constant time
+//   - Per-IP rate limit as defense-in-depth in case secret leaks
+
+import { rateLimit, ipFromRequest } from "./_lib/rate-limit";
 
 export const config = { runtime: "edge" };
 
@@ -25,13 +29,28 @@ const RESEND_KEY = process.env.RESEND_API_KEY || "";
 const NOTIFY_TO = process.env.LEAD_NOTIFY_TO || "hello@trainyouragent.com";
 const NOTIFY_FROM = process.env.LEAD_NOTIFY_FROM || "leads@trainyouragent.com";
 const SITE = "https://trainyouragent.com";
+const MAX_BODY_BYTES = 64 * 1024;
 
 export default async function handler(req: Request) {
   if (req.method !== "POST") return json({ ok: false, error: "method" }, 405);
+
+  // Webhooks from Cal.com server-to-server have no `Origin` header. If a
+  // browser is hitting this endpoint, refuse before we touch the secret.
+  const origin = req.headers.get("origin");
+  if (origin) return json({ ok: false, error: "no-browser" }, 403);
+
   if (!SECRET) return json({ ok: false, error: "cal-not-configured" }, 500);
 
+  const ip = ipFromRequest(req);
+  const rl = rateLimit(`cal:${ip}`, { limit: 120, windowMs: 60 * 60 * 1000 });
+  if (!rl.ok) return json({ ok: false, error: "rate-limited" }, 429, rl.headers);
+
   const raw = await req.text();
-  const sig = req.headers.get("x-cal-signature-256") || "";
+  if (raw.length > MAX_BODY_BYTES) return json({ ok: false, error: "too-large" }, 413);
+
+  // Signature verification. Cal headers: x-cal-signature-256 (preferred) or
+  // x-cal-signature (legacy). Both are HMAC-SHA256 hex of the raw body.
+  const sig = req.headers.get("x-cal-signature-256") || req.headers.get("x-cal-signature") || "";
   const ok = await verify(raw, sig, SECRET);
   if (!ok) return json({ ok: false, error: "bad-signature" }, 401);
 
@@ -54,7 +73,6 @@ export default async function handler(req: Request) {
 
   const tasks: Promise<unknown>[] = [];
 
-  // 1) Slack
   if (SLACK_URL) {
     const emoji = triggerEvent === "BOOKING_CANCELLED" ? ":x:" : ":calendar:";
     tasks.push(fetch(SLACK_URL, {
@@ -68,7 +86,6 @@ export default async function handler(req: Request) {
     }));
   }
 
-  // 2) Resend internal email
   if (RESEND_KEY) {
     tasks.push(fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -82,7 +99,6 @@ export default async function handler(req: Request) {
     }));
   }
 
-  // 3) Meta CAPI Schedule event (only on creation)
   if (triggerEvent === "BOOKING_CREATED" && process.env.META_PIXEL_ID && process.env.META_CAPI_TOKEN) {
     tasks.push(fetch(`${SITE}/api/meta-event`, {
       method: "POST",
@@ -102,10 +118,9 @@ export default async function handler(req: Request) {
   }
 
   await Promise.allSettled(tasks);
-  return json({ ok: true, triggerEvent });
+  return json({ ok: true, triggerEvent }, 200, rl.headers);
 }
 
-// Cal.com signs the raw body with HMAC-SHA256, hex-encoded.
 async function verify(raw: string, signature: string, secret: string): Promise<boolean> {
   if (!signature) return false;
   const key = await crypto.subtle.importKey(
@@ -127,6 +142,9 @@ function timingSafeEqual(a: string, b: string): boolean {
   return r === 0;
 }
 
-function json(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
+function json(body: unknown, status = 200, extra: Record<string, string> = {}) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "content-type": "application/json", ...extra },
+  });
 }

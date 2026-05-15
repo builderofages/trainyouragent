@@ -36,7 +36,10 @@ export default function LeadMagnetModal({
         });
         if (!r.ok) throw new Error("Submit failed");
       } else {
-        try { window.localStorage.setItem("tya:buyersguide:" + Date.now(), JSON.stringify({ email, name })); } catch {}
+        // SECURITY (v30): never persist raw PII (email/name) in localStorage. If the
+        // form endpoint is unavailable, surface an error instead of silently storing
+        // the lead in the browser where any third-party script could read it.
+        throw new Error("Submit failed");
       }
       setState("ok");
     } catch {

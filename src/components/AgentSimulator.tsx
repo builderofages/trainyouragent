@@ -33,7 +33,7 @@ export default function AgentSimulator({ defaultScenario = SCENARIOS[0].text }: 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          system: SIM_SYSTEM,
+          mode: "simulator",
           messages: [{ role: "user", content: `[Industry: ${vertical}]\n${input}` }],
         }),
       });
