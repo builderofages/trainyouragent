@@ -1,418 +1,337 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { GlassCard } from "@/components/enhanced/GlassCard";
-import { MagneticButton } from "@/components/enhanced/MagneticButton";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  ArrowRight,
-  ArrowLeft,
-  CheckCircle,
-  Sparkles,
-  TrendingUp,
-  DollarSign,
-  Users,
-  Wrench,
-  Target,
-  Download,
-  Calendar,
-} from "lucide-react";
-import { trackEvent } from "@/lib/tracking";
-import { siteConfig } from "@/config/site";
-import { toast } from "sonner";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
-type Step = 1 | 2 | 3 | 4 | 5 | 6;
+const CAL_URL = "https://cal.com/trainyouragent/30min";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+const HERO_PHONE_DISPLAY = "(813) 555-0142";
+const HERO_PHONE_TEL = "+18135550142";
 
-interface FormData {
-  challenge: string;
-  revenue: string;
-  staffSize: string;
-  techStack: string;
-  goals: string;
-  name: string;
-  email: string;
-  phone: string;
-  company: string;
+function BrainLogo({ size = 40 }: { size?: number }) {
+  return (
+    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size }} aria-hidden="true">
+      <svg viewBox="0 0 64 64" style={{ width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" fill="#E6F1FB" />
+        <g fill="#0C447C">
+          <circle cx="20" cy="27" r="7.5" /><circle cx="32" cy="21" r="8.5" /><circle cx="44" cy="27" r="7.5" />
+          <circle cx="24" cy="40" r="7" /><circle cx="40" cy="40" r="7" /><rect x="29" y="44" width="6" height="11" rx="1.5" />
+        </g>
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#185FA5" strokeWidth="1.5" />
+      </svg>
+    </span>
+  );
 }
 
-export default function SolutionConfigurator() {
-  const [currentStep, setCurrentStep] = useState<Step>(1);
-  const [formData, setFormData] = useState<FormData>({
-    challenge: "",
-    revenue: "",
-    staffSize: "",
-    techStack: "",
-    goals: "",
-    name: "",
-    email: "",
-    phone: "",
-    company: "",
-  });
+type Lane = "startup" | "smb" | "agency" | "ops";
+type Industry = "healthcare" | "legal" | "real-estate" | "hvac" | "roofing" | "solar" | "accounting" | "automotive" | "spas" | "hotels" | "bars-nightclubs" | "logistics" | "fitness" | "startup-saas" | "ecommerce" | "other";
+type Problem = "inbound-voice" | "outbound" | "support" | "lead-qual" | "ops-automation" | "everything";
+type Volume = "lt-200" | "200-1000" | "1000-5000" | "gt-5000";
 
-  const totalSteps = 6;
+type Answers = {
+  lane: Lane | null;
+  industry: Industry | null;
+  problem: Problem | null;
+  volume: Volume | null;
+  stack: string[];
+  email: string;
+  name: string;
+  company: string;
+};
 
-  const updateFormData = (field: keyof FormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+const STEPS = ["Lane", "Industry", "Problem", "Volume", "Stack", "Send"];
 
-  const nextStep = () => {
-    if (currentStep < totalSteps) {
-      setCurrentStep((prev) => (prev + 1) as Step);
-      trackEvent("configurator_step_completed", { step: currentStep });
+const LANE_OPT: { id: Lane; label: string; sub: string }[] = [
+  { id: "startup", label: "I'm building a startup", sub: "Pre-revenue or early-revenue, founder-led." },
+  { id: "smb",     label: "I run an SMB",            sub: "Established business, real customers, real phones." },
+  { id: "agency",  label: "I run an agency",         sub: "Marketing, web, or consulting — reselling to clients." },
+  { id: "ops",     label: "I lead ops at scale",     sub: "Multi-location, multi-brand, or franchise." },
+];
+
+const INDUSTRIES: { id: Industry; label: string }[] = [
+  { id: "healthcare",     label: "Healthcare" },
+  { id: "legal",          label: "Legal" },
+  { id: "real-estate",    label: "Real Estate" },
+  { id: "hvac",           label: "HVAC" },
+  { id: "roofing",        label: "Roofing" },
+  { id: "solar",          label: "Solar" },
+  { id: "accounting",     label: "Accounting" },
+  { id: "automotive",     label: "Automotive" },
+  { id: "spas",           label: "Spas / Med Spas" },
+  { id: "hotels",         label: "Hotels / Hospitality" },
+  { id: "bars-nightclubs",label: "Bars / Nightclubs" },
+  { id: "logistics",      label: "Logistics" },
+  { id: "fitness",        label: "Fitness / Studios" },
+  { id: "startup-saas",   label: "SaaS / Startup" },
+  { id: "ecommerce",      label: "Ecommerce" },
+  { id: "other",          label: "Other" },
+];
+
+const PROBLEMS: { id: Problem; label: string; sub: string }[] = [
+  { id: "inbound-voice",  label: "Inbound voice", sub: "Answer every call, book, qualify, route." },
+  { id: "outbound",       label: "Outbound",       sub: "Cold or warm calling, qualification, follow-up." },
+  { id: "support",        label: "Customer support", sub: "Tier-1 deflection, FAQ handling, ticket triage." },
+  { id: "lead-qual",      label: "Lead qualification", sub: "Inbound web/ad leads, qualified before your rep." },
+  { id: "ops-automation", label: "Ops automation", sub: "Internal workflows, document triage, reminders." },
+  { id: "everything",     label: "Everything", sub: "Full stack — voice, chat, ops, GTM, brand. We'll prioritize." },
+];
+
+const VOLUMES: { id: Volume; label: string }[] = [
+  { id: "lt-200",    label: "<200 calls / month" },
+  { id: "200-1000",  label: "200–1,000" },
+  { id: "1000-5000", label: "1,000–5,000" },
+  { id: "gt-5000",   label: "5,000+" },
+];
+
+const STACK_OPTIONS = ["HubSpot", "Salesforce", "Pipedrive", "Close", "ServiceTitan", "Housecall Pro", "Jobber", "Clio", "MyCase", "Athena", "Epic", "Cal.com", "Calendly", "Google Calendar", "Stripe", "Zapier", "Make", "n8n", "Slack", "Twilio", "Other"];
+
+const recommendPlan = (a: Answers): { plan: string; price: string; eta: string } => {
+  if (a.lane === "ops") return { plan: "Scale", price: "Custom (typically $5–25K/mo)", eta: "3–6 weeks to production" };
+  if (a.lane === "agency") return { plan: "Partner", price: "Volume-tiered per agent", eta: "First agent in 7 days" };
+  if (a.lane === "startup") return { plan: "Founders", price: "$0 upfront · $0.18/min · $25/booking", eta: "Live in 7 business days" };
+  // smb default
+  if (a.volume === "gt-5000") return { plan: "Operators+", price: "$1,495/mo + overage", eta: "10–14 business days" };
+  return { plan: "Operators", price: "$4,950 build · $799/mo · 4,000 min included", eta: "10–14 business days" };
+};
+
+const SolutionConfigurator = () => {
+  const [navScrolled, setNavScrolled] = useState(false);
+  const [step, setStep] = useState(0);
+  const [a, setA] = useState<Answers>({ lane: null, industry: null, problem: null, volume: null, stack: [], email: "", name: "", company: "" });
+  const [sent, setSent] = useState(false);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (!document.getElementById("tya-fonts")) {
+      const l = document.createElement("link");
+      l.id = "tya-fonts"; l.rel = "stylesheet";
+      l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
+      document.head.appendChild(l);
     }
-  };
+    document.title = "Configure your agent — TrainYourAgent";
+  }, []);
 
-  const prevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep((prev) => (prev - 1) as Step);
+  useEffect(() => {
+    const onScroll = () => setNavScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Persist lane to localStorage as visitor progresses
+  useEffect(() => {
+    if (a.lane) {
+      try { window.localStorage.setItem("tya:pathway", a.lane); } catch {}
     }
+  }, [a.lane]);
+
+  const rec = useMemo(() => recommendPlan(a), [a]);
+
+  const canAdvance = () => {
+    if (step === 0) return !!a.lane;
+    if (step === 1) return !!a.industry;
+    if (step === 2) return !!a.problem;
+    if (step === 3) return !!a.volume;
+    if (step === 4) return true;
+    if (step === 5) return !!a.email && !!a.name;
+    return false;
   };
 
-  const handleSubmit = async () => {
-    trackEvent("configurator_completed", { challenge: formData.challenge });
-    toast.success("Your personalized roadmap is ready!");
-    window.open(siteConfig.bookingUrl, "_blank");
-  };
-
-  const renderStep = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          <StepContainer
-            title="What's your biggest challenge?"
-            subtitle="Help us understand where you need the most support"
-            icon={Target}
-          >
-            <RadioGroup value={formData.challenge} onValueChange={(val) => updateFormData("challenge", val)}>
-              {[
-                { value: "missed_calls", label: "Missing too many calls and losing leads" },
-                { value: "scheduling", label: "Scheduling chaos and no-shows" },
-                { value: "lead_quality", label: "Poor lead quality and conversion rates" },
-                { value: "staff_overwhelm", label: "Staff overwhelmed with admin tasks" },
-                { value: "growth", label: "Can't scale operations fast enough" },
-                { value: "visibility", label: "Low market visibility and online presence" },
-              ].map((option) => (
-                <motion.div
-                  key={option.value}
-                  whileHover={{ x: 4 }}
-                  className="flex items-center space-x-3 p-4 rounded-lg border border-border hover:border-primary transition-colors cursor-pointer"
-                >
-                  <RadioGroupItem value={option.value} id={option.value} />
-                  <Label htmlFor={option.value} className="cursor-pointer flex-1">
-                    {option.label}
-                  </Label>
-                </motion.div>
-              ))}
-            </RadioGroup>
-          </StepContainer>
-        );
-
-      case 2:
-        return (
-          <StepContainer
-            title="What's your current monthly revenue?"
-            subtitle="This helps us estimate your potential ROI"
-            icon={DollarSign}
-          >
-            <RadioGroup value={formData.revenue} onValueChange={(val) => updateFormData("revenue", val)}>
-              {[
-                { value: "0-50k", label: "$0 - $50,000" },
-                { value: "50k-100k", label: "$50,000 - $100,000" },
-                { value: "100k-250k", label: "$100,000 - $250,000" },
-                { value: "250k-500k", label: "$250,000 - $500,000" },
-                { value: "500k-1m", label: "$500,000 - $1,000,000" },
-                { value: "1m+", label: "$1,000,000+" },
-              ].map((option) => (
-                <motion.div
-                  key={option.value}
-                  whileHover={{ x: 4 }}
-                  className="flex items-center space-x-3 p-4 rounded-lg border border-border hover:border-primary transition-colors cursor-pointer"
-                >
-                  <RadioGroupItem value={option.value} id={option.value} />
-                  <Label htmlFor={option.value} className="cursor-pointer flex-1">
-                    {option.label}
-                  </Label>
-                </motion.div>
-              ))}
-            </RadioGroup>
-          </StepContainer>
-        );
-
-      case 3:
-        return (
-          <StepContainer
-            title="How many staff members do you have?"
-            subtitle="Understanding your team size helps us recommend the right solutions"
-            icon={Users}
-          >
-            <RadioGroup value={formData.staffSize} onValueChange={(val) => updateFormData("staffSize", val)}>
-              {[
-                { value: "1-5", label: "1-5 employees (Solo or small team)" },
-                { value: "6-15", label: "6-15 employees (Growing business)" },
-                { value: "16-50", label: "16-50 employees (Established business)" },
-                { value: "51+", label: "51+ employees (Large organization)" },
-              ].map((option) => (
-                <motion.div
-                  key={option.value}
-                  whileHover={{ x: 4 }}
-                  className="flex items-center space-x-3 p-4 rounded-lg border border-border hover:border-primary transition-colors cursor-pointer"
-                >
-                  <RadioGroupItem value={option.value} id={option.value} />
-                  <Label htmlFor={option.value} className="cursor-pointer flex-1">
-                    {option.label}
-                  </Label>
-                </motion.div>
-              ))}
-            </RadioGroup>
-          </StepContainer>
-        );
-
-      case 4:
-        return (
-          <StepContainer
-            title="What tools are you currently using?"
-            subtitle="We'll ensure seamless integration with your existing tech"
-            icon={Wrench}
-          >
-            <RadioGroup value={formData.techStack} onValueChange={(val) => updateFormData("techStack", val)}>
-              {[
-                { value: "basic", label: "Basic tools (Email, Phone, Spreadsheets)" },
-                { value: "crm", label: "CRM system (Salesforce, HubSpot, etc.)" },
-                { value: "advanced", label: "Advanced stack (CRM + Scheduling + Payment)" },
-                { value: "custom", label: "Custom or industry-specific software" },
-                { value: "none", label: "Looking to start fresh" },
-              ].map((option) => (
-                <motion.div
-                  key={option.value}
-                  whileHover={{ x: 4 }}
-                  className="flex items-center space-x-3 p-4 rounded-lg border border-border hover:border-primary transition-colors cursor-pointer"
-                >
-                  <RadioGroupItem value={option.value} id={option.value} />
-                  <Label htmlFor={option.value} className="cursor-pointer flex-1">
-                    {option.label}
-                  </Label>
-                </motion.div>
-              ))}
-            </RadioGroup>
-          </StepContainer>
-        );
-
-      case 5:
-        return (
-          <StepContainer
-            title="What are your growth goals?"
-            subtitle="Let's align our recommendations with your ambitions"
-            icon={TrendingUp}
-          >
-            <RadioGroup value={formData.goals} onValueChange={(val) => updateFormData("goals", val)}>
-              {[
-                { value: "stabilize", label: "Stabilize current operations and reduce chaos" },
-                { value: "grow_20", label: "Grow revenue by 20-50% this year" },
-                { value: "grow_100", label: "Double revenue within 12 months" },
-                { value: "expand", label: "Expand to new locations or markets" },
-                { value: "dominate", label: "Become the market leader in my area" },
-              ].map((option) => (
-                <motion.div
-                  key={option.value}
-                  whileHover={{ x: 4 }}
-                  className="flex items-center space-x-3 p-4 rounded-lg border border-border hover:border-primary transition-colors cursor-pointer"
-                >
-                  <RadioGroupItem value={option.value} id={option.value} />
-                  <Label htmlFor={option.value} className="cursor-pointer flex-1">
-                    {option.label}
-                  </Label>
-                </motion.div>
-              ))}
-            </RadioGroup>
-          </StepContainer>
-        );
-
-      case 6:
-        return (
-          <StepContainer
-            title="Get Your Personalized Roadmap"
-            subtitle="Enter your details to receive your custom transformation plan"
-            icon={Sparkles}
-          >
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="name">Full Name *</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => updateFormData("name", e.target.value)}
-                  placeholder="John Smith"
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="email">Email Address *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => updateFormData("email", e.target.value)}
-                  placeholder="john@company.com"
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="phone">Phone Number *</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => updateFormData("phone", e.target.value)}
-                  placeholder="(555) 123-4567"
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="company">Company Name</Label>
-                <Input
-                  id="company"
-                  value={formData.company}
-                  onChange={(e) => updateFormData("company", e.target.value)}
-                  placeholder="Your Company LLC"
-                />
-              </div>
-            </div>
-          </StepContainer>
-        );
-
-      default:
-        return null;
-    }
-  };
-
-  const isStepValid = () => {
-    switch (currentStep) {
-      case 1:
-        return !!formData.challenge;
-      case 2:
-        return !!formData.revenue;
-      case 3:
-        return !!formData.staffSize;
-      case 4:
-        return !!formData.techStack;
-      case 5:
-        return !!formData.goals;
-      case 6:
-        return !!formData.name && !!formData.email && !!formData.phone;
-      default:
-        return false;
-    }
+  const submit = () => {
+    const body = `Lane: ${a.lane}%0D%0AIndustry: ${a.industry}%0D%0AProblem: ${a.problem}%0D%0AVolume: ${a.volume}%0D%0AStack: ${a.stack.join(", ")}%0D%0AName: ${a.name}%0D%0ACompany: ${a.company}%0D%0AEmail: ${a.email}%0D%0ARecommended: ${rec.plan} — ${rec.price} — ${rec.eta}`;
+    window.location.href = `mailto:hello@trainyouragent.com?subject=Configurator%20build%20request%20from%20${encodeURIComponent(a.name)}&body=${body}`;
+    setSent(true);
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      
-      <main className="flex-1 py-20">
-        <div className="container mx-auto px-4 max-w-3xl">
-          {/* Progress bar */}
-          <div className="mb-12">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-sm font-medium text-muted-foreground">
-                Step {currentStep} of {totalSteps}
-              </span>
-              <span className="text-sm font-medium text-primary">
-                {Math.round((currentStep / totalSteps) * 100)}% Complete
-              </span>
-            </div>
-            <div className="h-2 bg-muted rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-gradient-to-r from-primary to-cyan-500"
-                initial={{ width: 0 }}
-                animate={{ width: `${(currentStep / totalSteps) * 100}%` }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              />
-            </div>
+    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navScrolled ? "bg-white/90 backdrop-blur-xl border-b border-slate-200/60" : "bg-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5">
+            <BrainLogo size={36} />
+            <span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span>
+          </Link>
+          <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E] shadow-sm">Book a call instead</a>
+        </div>
+      </nav>
+
+      <section className="pt-32 pb-12 px-5 sm:px-8">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Configurator</div>
+          <h1 className="text-[40px] sm:text-[60px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+            Get a real quote in <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>about ninety seconds.</span>
+          </h1>
+          <p className="mt-5 text-[17px] text-slate-700 max-w-xl mx-auto leading-relaxed">
+            Six quick questions. We come back with a written plan, a ballpark price, and a build-call invite — sent to your inbox, not your spam folder.
+          </p>
+        </div>
+      </section>
+
+      <section className="px-5 sm:px-8 pb-20">
+        <div className="max-w-3xl mx-auto">
+          <div className="mb-6 flex items-center gap-2">
+            {STEPS.map((s, i) => (
+              <div key={i} className="flex-1 h-1.5 rounded-full bg-slate-200 overflow-hidden">
+                <div className="h-full bg-[#185FA5] transition-all" style={{ width: i < step ? "100%" : i === step ? "50%" : "0%" }} />
+              </div>
+            ))}
           </div>
+          <div className="text-[12px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2">Step {step + 1} of {STEPS.length}</div>
 
-          {/* Step content */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              {renderStep()}
-            </motion.div>
-          </AnimatePresence>
+          {!sent && step === 0 && (
+            <div>
+              <h2 className="text-[28px] sm:text-[36px] font-semibold text-[#042C53] mb-6 leading-tight">Which lane are you in?</h2>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {LANE_OPT.map((l) => (
+                  <button key={l.id} onClick={() => setA({ ...a, lane: l.id })}
+                          className={`text-left rounded-2xl border p-5 transition ${a.lane === l.id ? "bg-[#042C53] text-white border-[#042C53]" : "bg-white border-slate-200 hover:border-[#185FA5]"}`}>
+                    <div className={`text-[16px] font-semibold mb-1 ${a.lane === l.id ? "text-white" : "text-[#042C53]"}`}>{l.label}</div>
+                    <div className={`text-[13px] leading-relaxed ${a.lane === l.id ? "text-white/85" : "text-slate-600"}`}>{l.sub}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
-          {/* Navigation */}
-          <div className="flex justify-between items-center mt-8">
-            <Button
-              onClick={prevStep}
-              disabled={currentStep === 1}
-              variant="outline"
-              size="lg"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
+          {!sent && step === 1 && (
+            <div>
+              <h2 className="text-[28px] sm:text-[36px] font-semibold text-[#042C53] mb-6 leading-tight">What industry?</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {INDUSTRIES.map((i) => (
+                  <button key={i.id} onClick={() => setA({ ...a, industry: i.id })}
+                          className={`text-left rounded-xl border p-4 text-[14px] transition ${a.industry === i.id ? "bg-[#042C53] text-white border-[#042C53]" : "bg-white border-slate-200 hover:border-[#185FA5] text-[#042C53]"}`}>
+                    {i.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
-            {currentStep < totalSteps ? (
-              <MagneticButton
-                strength={20}
-                onClick={nextStep}
-                disabled={!isStepValid()}
-                size="lg"
-              >
-                Continue
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </MagneticButton>
-            ) : (
-              <MagneticButton
-                strength={25}
-                onClick={handleSubmit}
-                disabled={!isStepValid()}
-                size="lg"
-                className="bg-gradient-to-r from-primary to-cyan-500"
-              >
-                Get My Roadmap
-                <Download className="w-4 h-4 ml-2" />
-              </MagneticButton>
-            )}
+          {!sent && step === 2 && (
+            <div>
+              <h2 className="text-[28px] sm:text-[36px] font-semibold text-[#042C53] mb-6 leading-tight">What are we solving first?</h2>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {PROBLEMS.map((p) => (
+                  <button key={p.id} onClick={() => setA({ ...a, problem: p.id })}
+                          className={`text-left rounded-2xl border p-5 transition ${a.problem === p.id ? "bg-[#042C53] text-white border-[#042C53]" : "bg-white border-slate-200 hover:border-[#185FA5]"}`}>
+                    <div className={`text-[16px] font-semibold mb-1 ${a.problem === p.id ? "text-white" : "text-[#042C53]"}`}>{p.label}</div>
+                    <div className={`text-[13px] leading-relaxed ${a.problem === p.id ? "text-white/85" : "text-slate-600"}`}>{p.sub}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {!sent && step === 3 && (
+            <div>
+              <h2 className="text-[28px] sm:text-[36px] font-semibold text-[#042C53] mb-6 leading-tight">Roughly what volume?</h2>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {VOLUMES.map((v) => (
+                  <button key={v.id} onClick={() => setA({ ...a, volume: v.id })}
+                          className={`text-left rounded-2xl border p-5 text-[16px] font-semibold transition ${a.volume === v.id ? "bg-[#042C53] text-white border-[#042C53]" : "bg-white border-slate-200 hover:border-[#185FA5] text-[#042C53]"}`}>
+                    {v.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {!sent && step === 4 && (
+            <div>
+              <h2 className="text-[28px] sm:text-[36px] font-semibold text-[#042C53] mb-2 leading-tight">What's in your stack?</h2>
+              <p className="text-[14px] text-slate-600 mb-6">Pick whatever applies. We'll wire the agent into these.</p>
+              <div className="flex flex-wrap gap-2">
+                {STACK_OPTIONS.map((s) => {
+                  const active = a.stack.includes(s);
+                  return (
+                    <button key={s} onClick={() => setA({ ...a, stack: active ? a.stack.filter((x) => x !== s) : [...a.stack, s] })}
+                            className={`px-4 py-2 rounded-full text-[13px] font-medium transition border ${active ? "bg-[#042C53] text-white border-[#042C53]" : "bg-white text-[#042C53] border-slate-200 hover:border-[#185FA5]"}`}>
+                      {s}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {!sent && step === 5 && (
+            <div>
+              <h2 className="text-[28px] sm:text-[36px] font-semibold text-[#042C53] mb-2 leading-tight">Where do we send it?</h2>
+              <p className="text-[14px] text-slate-600 mb-6">Your plan + price + Loom walkthrough — into your inbox within one business day.</p>
+
+              <div className="rounded-2xl bg-[#F6FAFE] border border-slate-200 p-6 mb-6">
+                <div className="text-[11px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-3">Based on your answers</div>
+                <div className="grid sm:grid-cols-3 gap-4">
+                  <div>
+                    <div className="text-[12px] text-slate-500 mb-1">Recommended plan</div>
+                    <div className="text-[18px] font-semibold text-[#042C53]">{rec.plan}</div>
+                  </div>
+                  <div>
+                    <div className="text-[12px] text-slate-500 mb-1">Ballpark</div>
+                    <div className="text-[15px] font-semibold text-[#042C53] leading-tight">{rec.price}</div>
+                  </div>
+                  <div>
+                    <div className="text-[12px] text-slate-500 mb-1">Time to live</div>
+                    <div className="text-[15px] font-semibold text-[#042C53] leading-tight">{rec.eta}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-3">
+                <input value={a.name} onChange={(e) => setA({ ...a, name: e.target.value })} placeholder="Your name" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5]" />
+                <input value={a.company} onChange={(e) => setA({ ...a, company: e.target.value })} placeholder="Company (optional)" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5]" />
+                <input value={a.email} type="email" onChange={(e) => setA({ ...a, email: e.target.value })} placeholder="Work email" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5] sm:col-span-2" />
+              </div>
+            </div>
+          )}
+
+          {sent && (
+            <div className="rounded-3xl bg-[#F6FAFE] border border-slate-200 p-10 text-center">
+              <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Submitted</div>
+              <h2 className="text-[28px] sm:text-[36px] font-semibold text-[#042C53] leading-tight mb-3">
+                Got it. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>We'll be back within one business day.</span>
+              </h2>
+              <p className="text-[15px] text-slate-700 max-w-md mx-auto leading-relaxed mb-7">
+                Want to skip the wait? Book a 30-minute build call right now and we'll walk through your config live.
+              </p>
+              <a href={CAL_URL} target="_blank" rel="noopener" className="inline-block px-7 py-3.5 rounded-full bg-[#042C53] text-white font-semibold text-[14px] hover:bg-[#0A3D6E] shadow-lg">
+                Book a build call →
+              </a>
+            </div>
+          )}
+
+          {!sent && (
+            <div className="mt-8 flex items-center justify-between">
+              <button onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0}
+                      className="px-5 py-3 rounded-full text-[14px] text-slate-600 hover:text-[#042C53] disabled:opacity-30">
+                ← Back
+              </button>
+              {step < STEPS.length - 1 ? (
+                <button onClick={() => setStep(step + 1)} disabled={!canAdvance()}
+                        className="px-6 py-3 rounded-full bg-[#042C53] text-white text-[14px] font-semibold hover:bg-[#0A3D6E] disabled:opacity-30 shadow-lg">
+                  Continue →
+                </button>
+              ) : (
+                <button onClick={submit} disabled={!canAdvance()}
+                        className="px-6 py-3 rounded-full bg-[#22A36C] text-white text-[14px] font-semibold hover:bg-[#1E8E5E] disabled:opacity-30 shadow-lg">
+                  Send my config →
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+
+      <footer className="bg-white border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+          <div className="flex items-center gap-2.5"><BrainLogo size={28} /><span className="font-semibold text-[#042C53]">TrainYourAgent</span><span className="text-slate-400">— Tampa Bay, FL</span></div>
+          <div className="flex items-center gap-6">
+            <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>
+            <Link to="/terms" className="hover:text-[#042C53]">Terms</Link>
+            <Link to="/security" className="hover:text-[#042C53]">Security</Link>
+            <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">LinkedIn</a>
           </div>
         </div>
-      </main>
-
-      <Footer />
+      </footer>
     </div>
   );
-}
-
-interface StepContainerProps {
-  title: string;
-  subtitle: string;
-  icon: any;
-  children: React.ReactNode;
-}
-
-const StepContainer = ({ title, subtitle, icon: Icon, children }: StepContainerProps) => {
-  return (
-    <GlassCard className="p-8">
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: "spring", stiffness: 200, damping: 15 }}
-        className="w-16 h-16 rounded-xl bg-primary/20 flex items-center justify-center mb-6 mx-auto"
-      >
-        <Icon className="w-8 h-8 text-primary" />
-      </motion.div>
-
-      <h2 className="text-3xl font-bold text-center mb-3">{title}</h2>
-      <p className="text-muted-foreground text-center mb-8">{subtitle}</p>
-
-      <div className="space-y-3">{children}</div>
-    </GlassCard>
-  );
 };
+
+export default SolutionConfigurator;
