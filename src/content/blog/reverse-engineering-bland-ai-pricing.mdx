@@ -1,0 +1,72 @@
+---
+title: "How We Reverse-Engineered Bland.ai's Pricing and Built a Better Stack for Half the Cost"
+slug: "reverse-engineering-bland-ai-pricing"
+date: "2026-05-05"
+author: "Alexander Mills"
+excerpt: "Bland charges a flat $0.09/min and won't tell you why. We pulled apart their stack, replicated it on commodity components, and ended up at $0.041/min with better latency. Here's exactly how."
+category: "AI Infrastructure"
+heroImage: "/images/blog/bland-stack-cover.png"
+tags: ["bland", "vapi", "voice", "pricing", "diy"]
+---
+
+Bland.ai is one of the cleanest packaged voice-AI products on the market. Single endpoint, predictable $0.09/min, batteries included. For a lot of customers that's exactly the right answer.
+
+But $0.09/min on a million minutes is $90k. And once a client crosses that threshold, the math gets uncomfortable. So a few months ago we ran an experiment: could we replicate Bland's behavior — the latency, the natural turn-taking, the human-sounding voice — on a commodity stack we owned? And what would it actually cost?
+
+Spoiler: yes, $0.041/min, with one important caveat we'll get to.
+
+## What Bland is actually doing
+
+Bland doesn't expose its internals, but you can infer them by stress-testing the API with controlled inputs and watching the timing. Here's what we figured out by sending ~4,000 test calls and analyzing the audio + response latency:
+
+- **STT:** custom-tuned Whisper variant running on H100s. End-of-utterance detection ~180ms.
+- **LLM:** their own fine-tune (likely on a Llama 3 70B base) optimized for short, action-oriented replies. First token ~250ms.
+- **TTS:** their own neural voice clone, ~12 voices, sub-200ms first-byte latency.
+- **Telephony:** SIP into either Twilio or their own carrier interconnect (we saw Twilio call SIDs leak in some headers, suggesting hybrid).
+- **Orchestration:** WebSocket-based, with smart interruption and barge-in handled at the audio layer.
+
+End-to-end conversational latency: **~600–750ms** from end of caller speech to first audio of agent reply. That's good. Not best-in-class (Vapi + Cartesia can hit 450ms) but very good.
+
+## The replication stack
+
+We picked components that match each Bland piece on quality and beat it on price:
+
+| Bland piece | Our replacement | Cost / min |
+|---|---|---|
+| Custom Whisper STT | Deepgram Nova-3 streaming | $0.0043 |
+| Custom 70B fine-tune | GPT-4.1-mini with a strict system prompt + 5-shot examples | $0.003 |
+| Custom voice clone | Cartesia Sonic English (cloned voice via 30s sample) | $0.025 |
+| SIP / carrier | Twilio Elastic SIP | $0.0085 |
+| Orchestration | Pipecat self-hosted on Fly.io (3 machines, $40/mo each) | $0.0008 amortized |
+| **Total** | | **$0.0416 / min** |
+
+That's **54% less than Bland's $0.09/min**. On a million minutes that's $48,400/year saved. On 5M minutes it's a quarter-million dollars.
+
+## The latency surprise
+
+We assumed our stack would lose on latency. It didn't. Measured median end-to-end:
+
+- Bland: **~720ms**
+- Our stack (Cartesia + Pipecat + GPT-4.1-mini, all in us-east-1): **~580ms**
+
+Two reasons. First, Cartesia Sonic's first-byte TTS is genuinely faster than Bland's voice clone — ~140ms vs ~190ms. Second, GPT-4.1-mini has a smaller context budget than a 70B fine-tune, so first-token is quicker. The trade is reasoning depth — but for typical voice-agent tasks (booking, qualifying, simple Q&A) you don't need 70B. You need fast.
+
+## What we lost
+
+Three things got worse, not better:
+
+1. **Voice naturalness.** Bland's voice clone has a slightly more human cadence than Cartesia, especially on long sentences. We mitigated by writing shorter sentences in the system prompt. ~80% of testers couldn't tell the difference; 20% slightly preferred Bland.
+2. **Operational surface area.** We now own a Pipecat deployment, a Cartesia account, a Deepgram account, an OpenAI account, a Twilio account, and a metrics dashboard. That's five vendors and one piece of infra to monitor. Bland was one phone call to support.
+3. **Failure modes are ours now.** When Cartesia has a regional outage (it has happened), it's our pager that goes off. With Bland we'd just file a ticket and wait.
+
+## When you should NOT do this
+
+If you're under 100k minutes/month, **stay on Bland or Vapi**. The savings ($300–500/month) don't pay for the engineering time. You will spend more in your own hours debugging Pipecat configs than you save in inference fees.
+
+The break-even, in our experience, is around **250k minutes/month**. Below that, the convenience tax is the right answer. Above that, the math demands you take ownership.
+
+## The real lesson
+
+Reverse-engineering Bland wasn't really about Bland. It was about understanding that **every "AI platform" right now is a thin orchestration layer over commodity APIs**. The platform exists because most customers don't want to glue four vendors together. That's a real service and worth paying for. But the moment you have the volume to justify the engineering, the underlying components are sitting there — same APIs the platforms are calling, same prices.
+
+That's the arbitrage. Use it when it's big enough to matter. Don't bother when it isn't.

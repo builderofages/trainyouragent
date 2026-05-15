@@ -1,0 +1,80 @@
+---
+title: "The HVAC After-Hours Playbook — Turning Night Calls into Morning Revenue"
+slug: "hvac-after-hours-playbook"
+date: "2026-04-28"
+author: "Alexander Mills"
+excerpt: "HVAC shops lose 30–50% of after-hours leads to voicemail. Here's the exact AI-voice + dispatch flow we built for one shop that converted those lost calls into $180k of recovered annual revenue."
+category: "Vertical Playbooks"
+heroImage: "/images/blog/hvac-night-cover.png"
+tags: ["hvac", "vertical", "voice", "case-study", "after-hours"]
+---
+
+The HVAC industry has a math problem that nobody fixes because nobody is awake to fix it.
+
+A typical residential HVAC shop in the US gets ~28% of its inbound call volume between 6pm and 7am. Most of those calls are emergencies — no heat in February, no AC in July, a smell of gas at 11pm. The shop's voicemail picks up. Roughly **40% of those callers hang up without leaving a message and call the next shop on Google.** Of the ones who leave a voicemail, ~60% are also calling competitors in parallel. By the time the dispatch desk listens at 7:30am, the job is gone.
+
+We built a voice-AI playbook that intercepts those calls and books them while the human team sleeps. Here's the exact flow, the exact tools, and the exact numbers from one client (a 14-tech residential HVAC shop in the Phoenix metro).
+
+## The flow
+
+Caller dials the main number after-hours. Forwarded to the AI agent.
+
+1. **Triage in 20 seconds.** "Hi, you've reached [Shop]. Is this an emergency — meaning no heat, no cooling, gas smell, or water leak — or a routine question?"
+2. **Branch on emergency.**
+   - **Emergency:** capture name, address, phone, system type. Page on-call tech via Twilio SMS. Confirm tech ETA back to caller within 60 seconds. Log to ServiceTitan.
+   - **Routine:** offer next-day morning slot. Capture details. Send confirmation SMS. Drop into the dispatch queue tagged "AI-booked overnight."
+3. **Always-do:** record the call, transcribe it, drop a summary into Slack #after-hours, and send the customer a text receipt of what was promised. The text receipt is the single highest-leverage thing in the whole flow — it makes the customer trust that something actually happened.
+
+Total call duration: average 2 minutes 40 seconds. Average AI cost per call: $0.31.
+
+## The stack
+
+- **Telephony:** Twilio (forwarded from the shop's existing number after 6pm).
+- **Orchestration:** Pipecat on a $40/mo Fly.io machine.
+- **STT:** Deepgram Nova-3.
+- **LLM:** GPT-4.1-mini with a 1,200-token system prompt that includes the shop's service area zip codes, dispatch rules, and pricing floor.
+- **TTS:** Cartesia Sonic, voice cloned from a 30-second sample of the owner's wife (real story — customers respond better to a voice they sort-of recognize).
+- **Dispatch integration:** ServiceTitan via webhook, plus a backup Airtable row for redundancy.
+- **On-call paging:** Twilio SMS to a rotating list, with PagerDuty escalation if no acknowledgment in 4 minutes.
+
+## What we tested and threw away
+
+Three things we tried that didn't work:
+
+1. **Asking the caller to "describe the problem in detail."** They don't. They panic-talk. We cut the question. The agent now just asks four yes/no questions and one "what's your address" and books based on that.
+2. **Quoting prices on the call.** Customers would commit, then no-show in the morning when they Googled and found a cheaper shop. We removed all pricing from the AI script. Tech quotes on arrival. Show-up rate jumped from 71% to 94%.
+3. **Using the owner's actual voice.** We A/B'd. His voice scored worse than the cloned-wife voice on warmth and trust ratings. He took it personally for about a week. Then he saw the conversion delta and got over it.
+
+## The numbers (8 months in)
+
+Pre-AI baseline: shop captured ~22% of after-hours inbound as actual booked jobs.
+
+Post-AI:
+- After-hours inbound: 487 calls/month average
+- AI answered: 100% (one outage week we had to discount, see below)
+- Triaged as emergencies: 18%
+- Booked next-day slots: 41%
+- Hung up after triage / not interested: 28%
+- Wrong-number / spam / voicemail-only: 13%
+
+That's a **59% capture rate** of after-hours volume turning into either an emergency dispatch or a booked next-day slot. Up from 22%.
+
+Revenue impact, conservatively (using the shop's average ticket of $487 and historical 70% close rate on booked appointments):
+
+- 487 calls × 0.59 capture × 0.70 close × $487 = **~$98k/month gross**
+- Pre-AI same math: 487 × 0.22 × 0.70 × $487 = **~$36k/month gross**
+- **Recovered: ~$62k/month, or ~$745k/year gross. Net of AI cost (~$1,400/mo) and dispatch overhead, ~$180k/year clean profit.**
+
+The shop spent $4,800 to build it (one-time) and pays $1,400/mo to run it. Payback was 11 days.
+
+## What broke
+
+Twice in 8 months Cartesia had a regional outage and our agent went silent mid-call for 30+ seconds. Both times the caller hung up. We added a fallback to ElevenLabs Flash (more expensive, but a different vendor) that auto-engages if Cartesia's first-byte exceeds 800ms. Hasn't happened since but the safety net matters.
+
+Also: ServiceTitan's webhook rate-limited us during a heat wave. We added an Airtable mirror as a write-behind buffer that retries against ServiceTitan with exponential backoff. Lost zero jobs since.
+
+## The takeaway
+
+After-hours HVAC is the easiest, highest-ROI voice-AI use case we've ever shipped. The customer is highly motivated, the conversation is short and structured, the dispatch system is already automated, and the alternative (voicemail) is so bad that anything beats it.
+
+If you run an HVAC shop and you're still using voicemail at night, you are subsidizing every competitor in your zip code. Stop.

@@ -31,6 +31,12 @@ import Contact from "./pages/Contact";
 import DemoVideo from "./pages/DemoVideo";
 import NotFound from "./pages/NotFound";
 import AiChat from "@/components/AiChat";
+// v29: Blog + Newsletter
+import BlogIndex from "./pages/blog/BlogIndex";
+import BlogPost from "./pages/blog/BlogPost";
+import BlogCategory from "./pages/blog/BlogCategory";
+import BlogTag from "./pages/blog/BlogTag";
+import Newsletter from "./pages/Newsletter";
 
 const queryClient = new QueryClient();
 
@@ -82,10 +88,16 @@ const App = () => (
           <Route path="/niche/:nicheId" element={<NicheLanding />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          {/* v29: Blog + Newsletter */}
+          <Route path="/blog" element={<BlogIndex />} />
+          <Route path="/blog/category/:category" element={<BlogCategory />} />
+          <Route path="/blog/tag/:tag" element={<BlogTag />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/newsletter" element={<Newsletter />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-                <AiChat />
-        </BrowserRouter>
+        <AiChat />
+      </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );

@@ -1,0 +1,76 @@
+---
+title: "The Real Cost of an AI Voice Agent in 2026 — TTS, STT, LLM, telephony, broken down"
+slug: "real-cost-ai-voice-agent-2026"
+date: "2026-05-12"
+author: "Alexander Mills"
+excerpt: "Every vendor sells you a number per minute. Almost none of them tell you what's actually inside it. Here's the full unbundled cost — TTS, STT, LLM, telephony, infra — for an AI voice agent in 2026."
+category: "AI Voice"
+heroImage: "/images/blog/voice-cost-cover.png"
+tags: ["voice", "pricing", "infrastructure", "llm", "telephony"]
+---
+
+Every voice-AI vendor pitches you a single number: $0.12/min. $0.30/min. $0.99/min. The number sounds clean, but it's a black box. Inside that minute is a stack of four to six paid services, each metered differently, each with margin baked in. If you don't know what's actually being billed, you can't tell whether you're getting a fair deal — or whether you should just build it yourself.
+
+Here's the unbundled 2026 cost of one minute of an AI voice agent on a phone call. Real numbers, real providers, current as of Q2 2026.
+
+## The five things you pay for, every minute
+
+A voice agent on a phone call is five services running in parallel, glued together by orchestration code. Strip away the marketing and every vendor is reselling some combination of these:
+
+1. **Telephony** — the actual phone line. Twilio, Telnyx, Plivo, Vonage.
+2. **STT (speech-to-text)** — transcribing the caller. Deepgram, AssemblyAI, OpenAI Whisper, Google.
+3. **LLM** — the brain that decides what to say. OpenAI, Anthropic, Groq, fine-tuned open models.
+4. **TTS (text-to-speech)** — the voice that speaks back. ElevenLabs, Cartesia, Rime, PlayHT, OpenAI TTS.
+5. **Orchestration / infra** — Pipecat, LiveKit Agents, Vapi, Retell, your own WebSocket server.
+
+There's a sixth line item nobody talks about: **failed calls and silence**. You pay for telephony minutes whether or not the agent says anything useful.
+
+## The 2026 numbers, per minute
+
+Assume an average call: **45 seconds of caller speech, 30 seconds of agent speech, ~600 LLM tokens in / ~300 out per turn, 4 turns per call, 60-second total billable minute.**
+
+| Component | Provider | Rate (May 2026) | Cost / min |
+|---|---|---|---|
+| Telephony (inbound US local) | Twilio | $0.0085/min | $0.009 |
+| STT (streaming) | Deepgram Nova-3 | $0.0043/min | $0.004 |
+| LLM | GPT-4.1-mini, ~2,400 in / 1,200 out per call | $0.40/$1.60 per M tok | $0.003 |
+| TTS | ElevenLabs Flash v2.5, ~600 chars | $0.10 per 1k chars | $0.060 |
+| Orchestration | Self-hosted Pipecat on a $40/mo VPS, ~5k min capacity | infra-amortized | $0.008 |
+| **Total** | | | **~$0.084 / min** |
+
+That's the floor. About **8.4 cents a minute** if you assemble it yourself with mid-tier components.
+
+Now compare to what hosted platforms charge:
+
+- **Vapi:** $0.05/min platform fee + you pay providers separately. Effective ~$0.13–0.18/min.
+- **Retell:** $0.07–0.31/min depending on voice tier.
+- **Bland.ai:** $0.09/min flat (uses their own stack).
+- **Air.ai / Synthflow / Agentive / etc.:** $0.20–$0.99/min depending on packaging.
+
+The gap between DIY ($0.08) and a polished managed platform ($0.15–0.25) is your **convenience tax**. For under 50,000 minutes/month, the convenience tax is probably worth it. Above that, you're leaving real money on the table.
+
+## What actually moves the cost needle
+
+People obsess over the wrong line. They argue about which LLM to use. The LLM is **the cheapest part of the stack**. At ~$0.003/min it's literally a rounding error.
+
+The two costs that actually matter:
+
+**TTS dominates.** ElevenLabs Turbo/Flash is ~70% of the variable cost in our breakdown. You can cut this in half by switching to Cartesia Sonic ($0.04/min equivalent) or Rime, but you trade voice quality. For a brand-sensitive use case (luxury hotels, high-end legal) the ElevenLabs premium is worth it. For HVAC after-hours triage? Cartesia is fine.
+
+**Telephony adds up at scale.** $0.009/min sounds tiny until you're doing a million minutes/month. That's $9k just to keep the lines open. Negotiate volume rates with Twilio at 250k+ minutes — typically 20–35% off rack rate. Telnyx is ~25% cheaper than Twilio out of the box but has more carrier-routing edge cases.
+
+## The hidden costs nobody quotes
+
+Three line items that don't show up in any vendor's pricing table but always show up in your bill:
+
+1. **Recording storage.** $0.0025/min for storage + $0.0015/min for transcription if you want a permanent record. Most clients want a permanent record.
+2. **Webhook / CRM integrations.** Each appointment booked is a Calendly or HubSpot API call. Each lead is a Slack ping. These are free until you hit rate limits, then they're not.
+3. **Failed call retries.** ~8% of voice calls fail (NAT issues, codec mismatch, carrier weirdness). You eat the cost of the failed call AND the retry.
+
+Add ~12–15% on top of your "happy path" cost to model these realistically.
+
+## The real question
+
+The question isn't "what does an AI voice agent cost in 2026." The question is: **what's the gross margin between what you pay per minute and what your customer pays you per appointment, lead, or recovered no-show?**
+
+A 60-second call that costs you 8 cents and books a $4,200 HVAC repair has 99.998% gross margin. That math doesn't change whether you're paying $0.08/min or $0.25/min. So pick the stack you can actually ship and ship it. Optimize the unit economics later — when you have units.
