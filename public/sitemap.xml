@@ -40,7 +40,6 @@
   <url><loc>https://trainyouragent.com/gym</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://trainyouragent.com/ecommerce</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://trainyouragent.com/hospitality</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://trainyouragent.com/dental</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://trainyouragent.com/resources/what-to-look-for-in-a-voice-agent</loc><changefreq>monthly</changefreq><priority>0.55</priority></url>
   <url><loc>https://trainyouragent.com/resources/ai-voice-economics-2026</loc><changefreq>monthly</changefreq><priority>0.55</priority></url>
   <url><loc>https://trainyouragent.com/resources/hvac-after-hours-playbook</loc><changefreq>monthly</changefreq><priority>0.55</priority></url>
@@ -211,26 +210,6 @@
   <url><loc>https://trainyouragent.com/hospitality/seattle</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://trainyouragent.com/hospitality/boston</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://trainyouragent.com/hospitality/philadelphia</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/tampa</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/miami</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/orlando</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/jacksonville</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/atlanta</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/charlotte</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/nashville</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/austin</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/dallas</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/houston</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/phoenix</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/las-vegas</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/denver</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/chicago</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/nyc</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/los-angeles</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/san-diego</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/seattle</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/boston</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://trainyouragent.com/dental/philadelphia</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://trainyouragent.com/accounting/tampa</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://trainyouragent.com/accounting/miami</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://trainyouragent.com/accounting/orlando</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -251,4 +230,20 @@
   <url><loc>https://trainyouragent.com/accounting/seattle</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://trainyouragent.com/accounting/boston</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://trainyouragent.com/accounting/philadelphia</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://trainyouragent.com/learn</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://trainyouragent.com/status</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://trainyouragent.com/careers</loc><changefreq>weekly</changefreq><priority>0.65</priority></url>
+  <url><loc>https://trainyouragent.com/press</loc><changefreq>monthly</changefreq><priority>0.55</priority></url>
+  <url><loc>https://trainyouragent.com/agency-partner</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://trainyouragent.com/solutions/voice</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://trainyouragent.com/solutions/chat</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://trainyouragent.com/solutions/sites</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://trainyouragent.com/solutions/infra</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://trainyouragent.com/solutions/media</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://trainyouragent.com/solutions/growth</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://trainyouragent.com/vs/bland</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://trainyouragent.com/vs/synthflow</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://trainyouragent.com/vs/vapi</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://trainyouragent.com/vs/retell</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://trainyouragent.com/vs/airagent</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>
