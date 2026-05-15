@@ -100,11 +100,7 @@ const Team = () => {
           <div className="flex items-center gap-6">
             <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>
             <Link to="/terms" className="hover:text-[#042C53]">Terms</Link>
-            <Link to="/security" className="hover:text-[#042C53]">Security</Link>
-          </div>
-        </div>
-      </footer>
-    </div>
+            <Link to="/security" className="hover:text-[#042C53]">Security</Link></div></div></footer></div>
   );
 };
 
