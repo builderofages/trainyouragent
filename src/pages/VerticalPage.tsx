@@ -1,218 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-/**
- * VerticalPage v1 — unified template for every /vertical route.
- * White surface, brand blue, brain-cloud logo, AI objections section.
- * One component handles all 14 verticals via VERTICAL_CONFIG lookup.
- */
-
-type Transcript = { who: "caller" | "agent" | "system"; text: string };
-type VerticalConfig = {
-  label: string;
-  eyebrow: string;
-  headline1: string;
-  headline2: string;
-  sub: string;
-  bullets: string[];
-  transcript: Transcript[];
-  integrations: string[];
-};
-
-const VERTICAL_CONFIG: Record<string, VerticalConfig> = {
-  "/roofing": {
-    label: "Roofing", eyebrow: "AI for roofing",
-    headline1: "Storm calls", headline2: "captured at 2am.",
-    sub: "When a hail event hits, your phone explodes. We answer every call, triage by insurance status, and book inspections — even at 2am while you sleep.",
-    bullets: ["Insurance-first qualification flow", "Storm-surge call burst handling", "Inspection booking into your CRM", "Adjuster coordination handoff"],
-    transcript: [
-      { who: "caller", text: "Just got hit by hail in Brandon — need an inspection." },
-      { who: "agent",  text: "Got it. Is your roof currently leaking?" },
-      { who: "caller", text: "Not yet. State Farm policy." },
-      { who: "agent",  text: "Booking an inspection tomorrow morning. Address?" },
-      { who: "system", text: "→ Booked · JobNimbus · Insp: D. Chen · Confirmation sent" },
-    ],
-    integrations: ["JobNimbus","AccuLynx","CompanyCam","ServiceTitan","HubSpot","Twilio"],
-  },
-  "/hvac": {
-    label: "HVAC", eyebrow: "AI for HVAC",
-    headline1: "Emergency calls", headline2: "answered, dispatched.",
-    sub: "After-hours, weekend, holiday — every call gets answered. Triage by urgency, dispatch by zone, book by tech availability.",
-    bullets: ["After-hours emergency dispatch", "Service-call booking into ServiceTitan", "Membership renewals and saves", "Tech-routing by zip + skill"],
-    transcript: [
-      { who: "caller", text: "AC stopped overnight, house is at 84." },
-      { who: "agent",  text: "Sorry about that. Earliest tech in 33602 is 1–3pm. Book it?" },
-      { who: "caller", text: "Yes please." },
-      { who: "system", text: "→ Booked · ServiceTitan · Tech: M. Alvarez · ETA texted" },
-    ],
-    integrations: ["ServiceTitan","Housecall Pro","Jobber","FieldEdge","Twilio","HubSpot"],
-  },
-  "/solar": {
-    label: "Solar", eyebrow: "AI for solar",
-    headline1: "Consultation booking,", headline2: "with a qualification gate.",
-    sub: "Filter tire-kickers before your closer's calendar fills. The agent qualifies homeowner, roof type, average bill, and only books people who fit.",
-    bullets: ["Homeowner + utility qualification", "Roof type + shading screening", "Bill range gate before booking", "Closer-calendar protection"],
-    transcript: [
-      { who: "caller", text: "Saw your ad — want to know about solar." },
-      { who: "agent",  text: "Happy to help. Do you own the home and what's your average power bill?" },
-      { who: "caller", text: "Own it, around $280/mo." },
-      { who: "agent",  text: "You're a fit. Booking a 20-min design consult Thursday at 4pm." },
-      { who: "system", text: "→ Booked · Salesforce · Closer: R. Park · Materials sent" },
-    ],
-    integrations: ["Salesforce","HubSpot","Aurora","SolarApp","Twilio","DocuSign"],
-  },
-  "/gym": {
-    label: "Gym & Fitness", eyebrow: "AI for gyms",
-    headline1: "Tour bookings.", headline2: "Cancellation saves.",
-    sub: "Two flows: capture interested leads into a tour the same day, and intercept cancellations with a save offer before they hit your CRM.",
-    bullets: ["Same-day tour booking", "Membership cancellation save flow", "Class waitlist + reschedule", "Renewal reminders"],
-    transcript: [
-      { who: "caller", text: "Want to cancel my membership." },
-      { who: "agent",  text: "Sorry to hear that. Mind sharing why?" },
-      { who: "caller", text: "Just not coming enough." },
-      { who: "agent",  text: "I can pause for 60 days at no charge — keep your rate. Want that?" },
-      { who: "system", text: "→ Saved · Mindbody · Pause 60d · Renewal scheduled" },
-    ],
-    integrations: ["Mindbody","Mariana Tek","Glofox","Stripe","Twilio","HubSpot"],
-  },
-  "/healthcare": {
-    label: "Healthcare", eyebrow: "AI for clinics",
-    headline1: "Patient intake,", headline2: "routed to the right room.",
-    sub: "HIPAA-ready intake. The agent screens symptoms, captures insurance, books to the right provider, and only escalates clinical questions to staff.",
-    bullets: ["HIPAA-ready data flow", "Insurance verification at booking", "Symptom triage to provider type", "Clinical-question escalation"],
-    transcript: [
-      { who: "caller", text: "Need to see someone for a sinus infection." },
-      { who: "agent",  text: "Are you a current patient?" },
-      { who: "caller", text: "Yes." },
-      { who: "agent",  text: "Earliest opening with Dr. Patel is tomorrow at 10:15. Book it?" },
-      { who: "system", text: "→ Booked · Athenahealth · Insurance verified · Reminder sent" },
-    ],
-    integrations: ["Athenahealth","Epic","DrChrono","Twilio","Calendly Health","Stripe"],
-  },
-  "/legal": {
-    label: "Legal", eyebrow: "AI for law firms",
-    headline1: "Conflict checks first,", headline2: "then a consult.",
-    sub: "Every inbound goes through conflict screening before booking. Captures the matter type, opposing party, and jurisdiction — refuses cleanly when there's a hit.",
-    bullets: ["Automatic conflict-of-interest screening", "Matter-type routing to right attorney", "Intake forms triggered post-call", "Refusal + referral on conflicts"],
-    transcript: [
-      { who: "caller", text: "Need a personal injury lawyer — auto accident last week." },
-      { who: "agent",  text: "Sorry to hear. Have you spoken to insurance yet, and was a police report filed?" },
-      { who: "caller", text: "Yes to both." },
-      { who: "agent",  text: "Booking a 30-min consult with Ms. Reyes Friday at 2pm." },
-      { who: "system", text: "→ Booked · Clio · Conflict cleared · Intake form sent" },
-    ],
-    integrations: ["Clio","MyCase","PracticePanther","DocuSign","Twilio","HubSpot"],
-  },
-  "/real-estate": {
-    label: "Real Estate", eyebrow: "AI for real estate",
-    headline1: "Showing requests,", headline2: "qualified by budget.",
-    sub: "Captures buyer pre-approval status, target price band, and timeline before booking a showing — your agents only meet ready buyers.",
-    bullets: ["Pre-approval qualification", "Price-band + timeline gate", "Showing booking into MLS calendar", "Listing-alert opt-in"],
-    transcript: [
-      { who: "caller", text: "Want to see the house on Magnolia." },
-      { who: "agent",  text: "Got it. Are you pre-approved and what's your target range?" },
-      { who: "caller", text: "Pre-approved, up to $620k." },
-      { who: "agent",  text: "It's at $599. Booking a showing Saturday at 11am with Marcus." },
-      { who: "system", text: "→ Booked · Follow Up Boss · Pre-qual confirmed" },
-    ],
-    integrations: ["Follow Up Boss","Sierra","kvCORE","DocuSign","Twilio","HubSpot"],
-  },
-  "/automotive": {
-    label: "Automotive", eyebrow: "AI for dealerships",
-    headline1: "Test-drive booking,", headline2: "parts inquiries handled.",
-    sub: "Captures buyer intent, current vehicle, financing status, and books test drives. Routes parts and service inquiries to the right department.",
-    bullets: ["Test-drive booking with trade-in info", "Parts + service routing", "Financing pre-screen capture", "Inventory-question handling"],
-    transcript: [
-      { who: "caller", text: "Want to test drive the F-150 Lariat." },
-      { who: "agent",  text: "Got it. Do you have a trade-in and are you financing or paying cash?" },
-      { who: "caller", text: "Trading a 2019 Ram, financing." },
-      { who: "agent",  text: "Booking Saturday at 10am with Jen. Bringing payoff info?" },
-      { who: "system", text: "→ Booked · CDK Drive · Trade-in noted · Finance pre-app sent" },
-    ],
-    integrations: ["CDK Drive","DealerSocket","VinSolutions","Twilio","HubSpot","DocuSign"],
-  },
-  "/spas": {
-    label: "Med Spa", eyebrow: "AI for med spas",
-    headline1: "Consults booked,", headline2: "pre-screen forms sent.",
-    sub: "Captures treatment interest, contraindications screening, and books consults. Pre-screen forms go out automatically before appointment.",
-    bullets: ["Treatment-specific qualification", "Contraindication pre-screen", "Consult booking + intake forms", "Package + add-on upsell"],
-    transcript: [
-      { who: "caller", text: "Interested in Botox — first time." },
-      { who: "agent",  text: "Welcome. Any history of allergies or current medications?" },
-      { who: "caller", text: "None." },
-      { who: "agent",  text: "Booking a 30-min consult Thursday at 5pm with Dr. Chen." },
-      { who: "system", text: "→ Booked · Boulevard · Pre-screen form sent" },
-    ],
-    integrations: ["Boulevard","Mindbody","Vagaro","Stripe","Twilio","Mailchimp"],
-  },
-  "/hotels": {
-    label: "Hotels", eyebrow: "AI for hotels",
-    headline1: "Reservations taken,", headline2: "upsells offered on stay.",
-    sub: "Direct bookings without paying OTA commissions. The agent confirms availability, captures preferences, and offers upgrades on call.",
-    bullets: ["Direct booking (skip OTA fees)", "Room-preference capture", "Upsell offers on confirmation", "Group + corporate inquiry routing"],
-    transcript: [
-      { who: "caller", text: "Looking for a king room next Friday-Sunday." },
-      { who: "agent",  text: "We have availability at $189/night. Want to upgrade to a suite for $40 more?" },
-      { who: "caller", text: "Yes, the suite." },
-      { who: "system", text: "→ Booked · Cloudbeds · 2 nights suite · Confirmation #4827" },
-    ],
-    integrations: ["Cloudbeds","Mews","Opera","Stripe","Twilio","Mailchimp"],
-  },
-  "/bars-nightclubs": {
-    label: "Bars / Clubs", eyebrow: "AI for bars + nightclubs",
-    headline1: "Table requests,", headline2: "guestlist sign-up.",
-    sub: "Handles bottle-service inquiries, table reservations, guestlist, and event RSVPs without your host staff drowning in calls.",
-    bullets: ["Bottle-service inquiry routing", "Table reservation booking", "Guestlist + RSVP capture", "Event-night load handling"],
-    transcript: [
-      { who: "caller", text: "Need a table for 6 Saturday — bottle service." },
-      { who: "agent",  text: "Got it. Bottle minimum is $750 for that section. Confirm?" },
-      { who: "caller", text: "Yes, confirmed." },
-      { who: "system", text: "→ Booked · SevenRooms · Bottle min confirmed · Deposit charged" },
-    ],
-    integrations: ["SevenRooms","OpenTable","Resy","Stripe","Twilio","Mailchimp"],
-  },
-  "/logistics": {
-    label: "Logistics", eyebrow: "AI for logistics",
-    headline1: "Pickup quotes,", headline2: "dispatch routing.",
-    sub: "Captures shipment specs, generates quotes from your rate matrix, and routes to dispatch. Handles tracking inquiries without tying up dispatchers.",
-    bullets: ["Quote generation from rate matrix", "Pickup booking + dispatch routing", "Tracking inquiry self-service", "Carrier coordination handoff"],
-    transcript: [
-      { who: "caller", text: "Need to ship 12 pallets from Tampa to Atlanta." },
-      { who: "agent",  text: "Standard or expedited? And dimensions per pallet?" },
-      { who: "caller", text: "Standard, 48x40 each." },
-      { who: "agent",  text: "Quote is $1,840. Pickup tomorrow afternoon. Confirm?" },
-      { who: "system", text: "→ Booked · McLeod · Dispatch alerted · Driver assigned" },
-    ],
-    integrations: ["McLeod","Samsara","Trimble","DAT","Twilio","HubSpot"],
-  },
-  "/accounting": {
-    label: "Accounting", eyebrow: "AI for accountants + CPAs",
-    headline1: "Discovery intake,", headline2: "scope qualification.",
-    sub: "Filters every inbound by entity type, revenue, current bookkeeping setup, and timeline. Books only the prospects worth your scoping time.",
-    bullets: ["Entity type + revenue qualification", "Current-stack discovery", "Tax-season urgency routing", "Document collection automation"],
-    transcript: [
-      { who: "caller", text: "Looking for a CPA — small ecom business." },
-      { who: "agent",  text: "What's last year's revenue and are you on QBO or Xero?" },
-      { who: "caller", text: "$680k, QBO." },
-      { who: "agent",  text: "You're a fit. Booking a 30-min discovery with Sarah Tuesday at 2pm." },
-      { who: "system", text: "→ Booked · Karbon · Doc-request sent · Intake started" },
-    ],
-    integrations: ["Karbon","QuickBooks","Xero","Drake","Stripe","HubSpot"],
-  },
-  "/solutions": {
-    label: "Agencies", eyebrow: "AI for agencies",
-    headline1: "Client-side intake,", headline2: "at scale.",
-    sub: "White-label voice + chat agents for your clients. We build, you brand. Per-client dashboards, per-client billing, per-client analytics.",
-    bullets: ["White-label deployment per client", "Per-client dashboards + billing", "Multi-tenant management console", "Reseller margin built in"],
-    transcript: [
-      { who: "caller", text: "Calling about your roofing pilot — want to renew." },
-      { who: "agent",  text: "Great. Adding next quarter onto your existing contract?" },
-      { who: "caller", text: "Yes, plus add HVAC line." },
-      { who: "system", text: "→ Booked · HubSpot · Renewal logged · CSM notified" },
-    ],
-    integrations: ["HubSpot","Salesforce","Stripe Connect","Twilio","Slack","Notion"],
-  },
-};
+const CAL_URL = "https://cal.com/trainyouragent/30min";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+const HERO_PHONE_DISPLAY = "(813) 555-0142";
+const HERO_PHONE_TEL = "+18135550142";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
   return (
@@ -220,12 +12,8 @@ function BrainLogo({ size = 40 }: { size?: number }) {
       <svg viewBox="0 0 64 64" style={{ width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
         <circle cx="32" cy="32" r="30" fill="#E6F1FB" />
         <g fill="#0C447C">
-          <circle cx="20" cy="27" r="7.5" />
-          <circle cx="32" cy="21" r="8.5" />
-          <circle cx="44" cy="27" r="7.5" />
-          <circle cx="24" cy="40" r="7" />
-          <circle cx="40" cy="40" r="7" />
-          <rect x="29" y="44" width="6" height="11" rx="1.5" />
+          <circle cx="20" cy="27" r="7.5" /><circle cx="32" cy="21" r="8.5" /><circle cx="44" cy="27" r="7.5" />
+          <circle cx="24" cy="40" r="7" /><circle cx="40" cy="40" r="7" /><rect x="29" y="44" width="6" height="11" rx="1.5" />
         </g>
         <circle cx="32" cy="32" r="30" fill="none" stroke="#185FA5" strokeWidth="1.5" />
       </svg>
@@ -233,64 +21,185 @@ function BrainLogo({ size = 40 }: { size?: number }) {
   );
 }
 
-function LiveTranscript({ lines }: { lines: Transcript[] }) {
-  const [visible, setVisible] = useState(1);
-  useEffect(() => {
-    if (visible >= lines.length) return;
-    const t = setTimeout(() => setVisible((v) => v + 1), 1400);
-    return () => clearTimeout(t);
-  }, [visible, lines.length]);
-  return (
-    <div className="bg-[#042C53] text-white rounded-3xl p-7 md:p-9 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle at 20% 0%, white 0%, transparent 50%)" }} />
-      <div className="relative">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#378ADD] animate-pulse" />
-            <span className="text-[11px] tracking-[0.2em] uppercase text-[#85B7EB] font-mono">Live transcript · sample call</span>
-          </div>
-          <button onClick={() => setVisible(1)} className="text-[11px] text-[#85B7EB] hover:text-white transition font-mono uppercase tracking-wider">Replay</button>
-        </div>
-        <div className="space-y-3 font-mono text-[13.5px] leading-relaxed min-h-[230px]">
-          {lines.slice(0, visible).map((row, i) => (
-            <div key={i} className="flex gap-3 animate-fade-in">
-              <span className={`flex-shrink-0 w-16 ${row.who === "caller" ? "text-[#85B7EB]" : row.who === "agent" ? "text-[#9FE1CB]" : "text-slate-400"}`}>{row.who}:</span>
-              <span className={row.who === "system" ? "text-slate-400 text-[12.5px]" : "text-white"}>{row.text}</span>
-            </div>
-          ))}
-          {visible < lines.length && (
-            <div className="flex gap-3 opacity-60">
-              <span className="w-16 text-slate-400">···</span>
-              <span className="inline-flex gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#378ADD] animate-bounce" />
-                <span className="w-1.5 h-1.5 rounded-full bg-[#378ADD] animate-bounce" style={{ animationDelay: "120ms" }} />
-                <span className="w-1.5 h-1.5 rounded-full bg-[#378ADD] animate-bounce" style={{ animationDelay: "240ms" }} />
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+type LaneId = "startup" | "smb" | "agency" | "ops";
 
-const OBJECTIONS = [
-  { q: "What if the AI hallucinates or goes off-script?", a: "It can't say things outside the script we author with you. Out-of-domain questions trigger a clean refusal + human callback. Every \"I don't know\" enters our eval set and gets a permanent guardrail in the next refresh. We publish the refusal log to your dashboard." },
-  { q: "Where does my customer data live?", a: "On infrastructure you can audit. Call recordings + transcripts in your S3 bucket if you want, or our SOC 2 Type II–targeted environment if you don't. Zero data is used to train other customers' models. HIPAA-ready architecture available on request." },
-  { q: "Isn't this just a ChatGPT wrapper?", a: "No. We custom fine-tune a model on your real call recordings or scripts so it sounds like your business. On Pro and Platform tiers you keep the model weights — if we vanish tomorrow, you walk away with the trained model. Try doing that with a wrapper." },
-  { q: "What if I get locked in?", a: "Month-to-month after a 90-day commit. Full data export on request, no destruction theater, no claw-back. You own the phone number, the recordings, and on Platform tier the model itself." },
-  { q: "Why not just use Vapi, Retell, or Voiceflow myself?", a: "Those are platforms — DIY toolkits. We're the team. We build the script, train the model, wire the integrations, monitor the calls, fix the failures, refresh weekly. Your ops team never opens a flow editor. The labor IS the product." },
-  { q: "How do I know it's actually working?", a: "Live dashboard with every call, every transcript, every booking, every escalation. Public uptime number. Weekly metrics email. We'll set up a 14-day pilot on a small call volume before you commit — measurable before you scale." },
-];
+type VerticalConfig = {
+  label: string; eyebrow: string; headline1: string; headline2: string; sub: string;
+  bullets: string[]; transcript: string[]; integrations: string[]; pricePoint: string;
+};
 
-const Vertical = () => {
+const V: Record<string, VerticalConfig> = {
+  "/healthcare": {
+    label: "Healthcare",
+    eyebrow: "For practices, clinics, and multi-location groups",
+    headline1: "Patient intake that doesn't",
+    headline2: "send people to voicemail.",
+    sub: "Your agent answers in two rings, verifies insurance, schedules the visit, and routes urgent symptoms to a human. BAA per customer. HIPAA-aware architecture. We are not a Covered Entity ourselves.",
+    bullets: ["After-hours triage with human escalation rules you control","Insurance verification + intake forms before the visit","Native integration with athena, eClinicalWorks, DrChrono, Epic open APIs","BAA signed before any PHI flows"],
+    transcript: ["Caller: Hi, I'm trying to schedule for next week.","Agent: Of course — can I get your full name and date of birth?","Caller: Sarah Lee, March 12, 1989.","Agent: Found you, Sarah. I see your Aetna PPO is still on file. Returning patient?","Caller: Yes, I had a visit last year.","Agent: We have Tuesday at 9:40 with Dr. Patel or Thursday at 2:15 with Dr. Kim. Which works?"],
+    integrations: ["Athena","eClinicalWorks","Epic open API","DrChrono","Twilio HIPAA","Cal.com"],
+    pricePoint: "Operators plan + BAA add-on",
+  },
+  "/legal": {
+    label: "Legal", eyebrow: "For solo and multi-attorney firms",
+    headline1: "Intake that filters", headline2: "before you spend a minute.",
+    sub: "Conflict checks, jurisdiction filters, matter classification, and triage to the right attorney. Your agent runs the qualifying questions so you don't burn billable time on a no-fit lead.",
+    bullets: ["Automatic conflict check against your CMS","Jurisdiction + practice-area routing","Engagement letter triggered on qualified leads","Native integration with Clio, MyCase, PracticePanther"],
+    transcript: ["Caller: I think I have a slip-and-fall case.","Agent: Where did it happen?","Caller: Grocery store in Florida, last Tuesday.","Agent: Did you see a doctor for any injuries?","Caller: Yes, the same day.","Agent: That helps. Let me book you with Sarah Reyes, our senior PI attorney — Tuesday at 10 work?"],
+    integrations: ["Clio","MyCase","PracticePanther","Lawmatics","DocuSign","Cal.com"],
+    pricePoint: "Operators plan",
+  },
+  "/real-estate": {
+    label: "Real Estate", eyebrow: "For agents, teams, and brokerages",
+    headline1: "Every lead answered,", headline2: "every showing booked.",
+    sub: "Speed-to-lead in seconds, not hours. Your agent qualifies buyer/seller intent, verifies pre-approval, and books showings — even from Zillow leads at 11pm Sunday.",
+    bullets: ["Speed-to-lead under 30 seconds, 24/7","Buyer vs seller intent classification","Pre-approval qualification questions","Native integration with Follow Up Boss, KvCORE, Sierra Interactive"],
+    transcript: ["Agent: Hi, this is Lex calling from Coastal Realty. You looked at the listing on Maple Street?","Caller: Yeah, is it still available?","Agent: It is. Working with an agent currently?","Caller: No.","Agent: Pre-approval in place, or still early?","Caller: I'm pre-approved up to 450.","Agent: Saturday 10am or Sunday 1pm showing. Which works?"],
+    integrations: ["Follow Up Boss","KvCORE","Sierra Interactive","Boomtown","MLS APIs","Cal.com"],
+    pricePoint: "Operators plan",
+  },
+  "/hvac": {
+    label: "HVAC", eyebrow: "For service companies, multi-tech teams, and franchises",
+    headline1: "Every after-hours call", headline2: "becomes a booked job.",
+    sub: "Storm Monday at 6am. AC dies on a Sunday at 2pm. Your agent picks up, qualifies emergency vs routine, prices the dispatch, and books the tech truck.",
+    bullets: ["Emergency vs routine classification with your pricing logic","Real-time tech availability lookup","Native integration with ServiceTitan, Housecall Pro, Jobber","Surge-proof for storm season"],
+    transcript: ["Caller: AC stopped working and it's 95 degrees in the house.","Agent: That's miserable. Current customer?","Caller: Yes, you did our install two years ago.","Agent: I see your unit on file. Emergency same-day dispatch trip fee is $189, applied to any repair. Tech 12 minutes from you — 3:45 work?","Caller: Yes, please."],
+    integrations: ["ServiceTitan","Housecall Pro","Jobber","FieldEdge","Twilio","Cal.com"],
+    pricePoint: "Operators plan",
+  },
+  "/roofing": {
+    label: "Roofing", eyebrow: "For storm-chasers, residential, and commercial",
+    headline1: "Storm week without", headline2: "missing a single call.",
+    sub: "Hail hits, phones melt. Your agent qualifies insurance vs cash, books the inspection, captures damage description, and triages emergencies.",
+    bullets: ["Insurance vs cash classification at intake","Storm-surge capacity that doesn't crack","Native integration with AccuLynx, JobNimbus, Roofr","Inspection scheduling with photos and damage description capture"],
+    transcript: ["Caller: We had hail Sunday and I think we have damage.","Agent: Insurance claim or cash repair?","Caller: Probably insurance.","Agent: Filed yet?","Caller: Not yet.","Agent: We'll come document the damage first. Tuesday 9am or Wednesday 11am?"],
+    integrations: ["AccuLynx","JobNimbus","Roofr","CompanyCam","Cal.com"],
+    pricePoint: "Operators plan",
+  },
+  "/solar": {
+    label: "Solar", eyebrow: "For installers, EPC, and consumer brands",
+    headline1: "Lead qual before", headline2: "your closer's coffee.",
+    sub: "Inbound from a meta ad doesn't deserve six hours of voicemail tag. Your agent qualifies roof orientation, utility, current bill, and books the site survey while the lead is still hot.",
+    bullets: ["Utility + bill + orientation qual at intake","Site survey booking with installer availability","Native integration with Aurora, Enerflo, Solo","SMS follow-up sequence if the call drops"],
+    transcript: ["Caller: I saw your ad about solar.","Agent: Awesome. Average monthly electric bill?","Caller: Around $280.","Agent: South-facing roof?","Caller: South, mostly.","Agent: Site survey Thursday 4pm or Saturday 10am?"],
+    integrations: ["Aurora Solar","Enerflo","Solo","OpenSolar","HubSpot","Cal.com"],
+    pricePoint: "Operators plan",
+  },
+  "/accounting": {
+    label: "Accounting", eyebrow: "For CPAs, bookkeepers, and tax-season surges",
+    headline1: "Tax season without", headline2: "burning out your bench.",
+    sub: "Every January through April your phones explode. Your agent runs intake, classifies client type, schedules the appointment, and triages emergencies.",
+    bullets: ["Client type classification (individual, S-corp, LLC, sole prop)","Document checklist sent over SMS before appointment","Native integration with Karbon, TaxDome, Canopy","Returning vs new client routing"],
+    transcript: ["Caller: I need someone to do my taxes this year.","Agent: Personal or business?","Caller: Both — S-corp and personal.","Agent: $850 combined. Send our checklist and book intake?","Caller: That works."],
+    integrations: ["Karbon","TaxDome","Canopy","QuickBooks","Stripe","Cal.com"],
+    pricePoint: "Operators plan",
+  },
+  "/automotive": {
+    label: "Automotive", eyebrow: "For dealers, service centers, and multi-location",
+    headline1: "Service-bay scheduling", headline2: "that doesn't lose the work.",
+    sub: "Every inbound about a service appointment gets answered, qualified for warranty, and booked into the right bay — without your service writer pausing the customer in front of them.",
+    bullets: ["Warranty vs out-of-pocket triage","Loaner / shuttle / waiting-room options at booking","Native integration with CDK, Reynolds, Dealertrack","Make/model/VIN capture"],
+    transcript: ["Caller: I need an oil change and my check engine light is on.","Agent: Year, make, model?","Caller: 2019 Camry.","Agent: Powertrain warranty?","Caller: I think so.","Agent: Tuesday 8am with loaner, or Thursday 7:30am waiting?"],
+    integrations: ["CDK","Reynolds & Reynolds","Dealertrack","Tekion","Cal.com"],
+    pricePoint: "Operators plan",
+  },
+  "/spas": {
+    label: "Spas", eyebrow: "For day spas, med spas, and wellness studios",
+    headline1: "Booking + waitlist", headline2: "without losing the vibe.",
+    sub: "Your agent answers in your tone, books treatments, manages waitlists, and protects revenue from no-shows with deposit logic — at the calm pace your clients expect.",
+    bullets: ["Treatment + provider preference matching","Deposit + cancellation policy enforcement","Native integration with Mindbody, Boulevard, Vagaro","Waitlist with auto-fill on cancellations"],
+    transcript: ["Caller: I'd like to book a 90-minute massage this weekend.","Agent: Saturday or Sunday?","Caller: Saturday.","Agent: 11am with Maya or 4pm with Devon. We hold with a $40 deposit — text you a payment link?"],
+    integrations: ["Mindbody","Boulevard","Vagaro","Square","Stripe","Cal.com"],
+    pricePoint: "Operators plan",
+  },
+  "/hotels": {
+    label: "Hotels", eyebrow: "For boutique, mid-scale, and multi-property",
+    headline1: "Front-desk overflow", headline2: "answered by your brand.",
+    sub: "Every call routed off the front desk gets your tone, your information, your booking link — not a generic IVR that ages your brand badly.",
+    bullets: ["Concierge questions (parking, breakfast, check-in, amenities)","Direct-booking handoff to your PMS","Native integration with Cloudbeds, Mews, Opera","Multi-language (EN/ES/FR baseline)"],
+    transcript: ["Caller: What time is check-in?","Agent: 4pm. Early sometimes available — put a request on your reservation?","Caller: Yes please, name's Carla Rivera.","Agent: Got you, Carla. Anything else — parking, breakfast, gym hours?"],
+    integrations: ["Cloudbeds","Mews","Opera Cloud","RoomRaccoon","Cal.com"],
+    pricePoint: "Operators plan",
+  },
+  "/bars-nightclubs": {
+    label: "Bars & Nightclubs", eyebrow: "For venues, lounges, and event nightlife",
+    headline1: "Reservations + tables", headline2: "while the bar is loud.",
+    sub: "Your agent picks up when the host can't — books tables, holds VIP requests, manages the waitlist, and texts guests when they're up.",
+    bullets: ["Reservation + waitlist + table-hold logic","VIP / minimum-spend handling","Native integration with SevenRooms, Resy, OpenTable","SMS-first guest comms"],
+    transcript: ["Caller: Table for six at 9pm Friday?","Agent: VIP table with $750 minimum, or general at 10pm. Which?","Caller: VIP.","Agent: Done — texting deposit link. Bottle picked out?"],
+    integrations: ["SevenRooms","Resy","OpenTable","Tock","Toast","Cal.com"],
+    pricePoint: "Operators plan",
+  },
+  "/logistics": {
+    label: "Logistics", eyebrow: "For carriers, brokers, and last-mile",
+    headline1: "Driver comms + dispatch", headline2: "at the speed of the load.",
+    sub: "Your agent answers driver check-calls, runs status updates, and handles standard exceptions — freeing dispatchers to make the calls that actually need a human.",
+    bullets: ["Driver check-call automation","Standard exception triage (delays, detention, late loads)","Native integration with McLeod, TMW, Trucker Tools","Multilingual driver support (EN/ES)"],
+    transcript: ["Driver: BOL 4471 — at the receiver, 30-minute wait.","Agent: 30-minute detention starting now. Logging and notifying broker. Anything else?","Driver: That's it."],
+    integrations: ["McLeod","TMW","Trucker Tools","Truckstop","Cal.com"],
+    pricePoint: "Operators plan",
+  },
+  "/gym": {
+    label: "Fitness", eyebrow: "For studios, gyms, and multi-location chains",
+    headline1: "Memberships + classes", headline2: "answered in your brand.",
+    sub: "From the front desk you can't always staff to the inbound class question at 9pm — your agent runs intake, books trials, and handles cancellations on policy.",
+    bullets: ["Membership inquiry + trial booking","Class waitlist + reschedule logic","Native integration with Mindbody, Wellness Living, Glofox","Cancellation policy enforcement"],
+    transcript: ["Caller: Do you have a free trial?","Agent: 7-day pass is free for new members. Saturday 8am Yoga or Sunday 9am HIIT?","Caller: Saturday Yoga.","Agent: Booked. Texting check-in details."],
+    integrations: ["Mindbody","Wellness Living","Glofox","Zen Planner","Cal.com"],
+    pricePoint: "Operators plan",
+  },
+  "/solutions": {
+    label: "Custom", eyebrow: "Don't see your industry?",
+    headline1: "Custom agents for", headline2: "anything humans answer.",
+    sub: "If your team is currently answering something repetitive, we can build an agent for it. Gaming, content, SaaS, ecommerce, advisory, moderation — anything.",
+    bullets: ["Custom training data + scripts","Custom integrations (REST, webhook, or direct DB)","Custom voice + tone","Custom escalation rules"],
+    transcript: ["Agent: Thanks for calling. How can I help today?"],
+    integrations: ["Anything you use","Custom build","REST + webhook"],
+    pricePoint: "Custom — Scale plan",
+  },
+};
+
+type LaneOverlay = { tag: string; ctaPrimary: string; ctaSecondary: string };
+const LANE_OVERLAY: Record<LaneId, LaneOverlay> = {
+  startup: { tag: "Founder lane", ctaPrimary: "Apply for the founder lane", ctaSecondary: "Book a 30-min build call" },
+  smb:     { tag: "Operator lane", ctaPrimary: "Start the build",            ctaSecondary: "Call us live" },
+  agency:  { tag: "Partner lane",  ctaPrimary: "Become a partner",           ctaSecondary: "Book a partnership call" },
+  ops:     { tag: "Scale lane",    ctaPrimary: "Get a custom quote",         ctaSecondary: "Book an architecture call" },
+};
+const LANE_IDS: LaneId[] = ["startup","smb","agency","ops"];
+
+const VerticalPage = () => {
   const location = useLocation();
-  const config = VERTICAL_CONFIG[location.pathname] || VERTICAL_CONFIG["/hvac"];
+  const config = V[location.pathname] || V["/solutions"];
   const [navScrolled, setNavScrolled] = useState(false);
-  const [calls, setCalls] = useState(140);
-  const [missedRate, setMissedRate] = useState(35);
-  const [avgValue, setAvgValue] = useState(180);
-  const monthlyValue = useMemo(() => Math.round(calls * (missedRate / 100) * 30 * 0.7) * avgValue, [calls, missedRate, avgValue]);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [lane, setLane] = useState<LaneId | null>(null);
+  const [trIdx, setTrIdx] = useState(0);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const saved = window.localStorage.getItem("tya:pathway");
+      if (saved && LANE_IDS.includes(saved as LaneId)) setLane(saved as LaneId);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (!document.getElementById("tya-fonts")) {
+      const l = document.createElement("link");
+      l.id = "tya-fonts"; l.rel = "stylesheet";
+      l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
+      document.head.appendChild(l);
+    }
+    document.title = `${config.label} — AI agents that work — TrainYourAgent`;
+    const setMeta = (n: string, c: string) => {
+      let el = document.querySelector(`meta[name='${n}']`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.setAttribute("name", n); document.head.appendChild(el); }
+      el.setAttribute("content", c);
+    };
+    setMeta("description", config.sub);
+  }, [config]);
 
   useEffect(() => {
     const onScroll = () => setNavScrolled(window.scrollY > 20);
@@ -299,213 +208,171 @@ const Vertical = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof document === "undefined") return;
-    if (!document.getElementById("tya-fonts")) {
-      const l = document.createElement("link");
-      l.id = "tya-fonts";
-      l.rel = "stylesheet";
-      l.href = "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter+Tight:wght@400;500;600;700&display=swap";
-      document.head.appendChild(l);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    document.title = `TrainYourAgent — ${config.label} AI Agents`;
-    const setMeta = (sel: string, attr: string, val: string) => {
-      let el = document.head.querySelector(sel) as any;
-      if (!el) { el = document.createElement("meta"); const m = sel.match(/\[(\w+)="([^"]+)"\]/); if (m) el.setAttribute(m[1], m[2]); document.head.appendChild(el); }
-      el.setAttribute(attr, val);
-    };
-    setMeta('meta[name="description"]', "content", config.sub);
-    setMeta('meta[name="theme-color"]', "content", "#FAFBFC");
+    setTrIdx(0);
+    const id = setInterval(() => setTrIdx((i) => (i + 1) % (config.transcript.length + 4)), 2200);
+    return () => clearInterval(id);
   }, [config]);
 
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    if (document.getElementById("tya-elevenlabs-script")) return;
-    const s = document.createElement("script");
-    s.id = "tya-elevenlabs-script";
-    s.src = "https://unpkg.com/@elevenlabs/convai-widget-embed";
-    s.async = true; s.type = "text/javascript";
-    document.head.appendChild(s);
-    if (!document.querySelector("elevenlabs-convai")) {
-      const w = document.createElement("elevenlabs-convai");
-      w.setAttribute("agent-id", "agent_5801k8nhs68yfyb8m0px86cdp6fc");
-      document.body.appendChild(w);
-    }
-  }, []);
+  const overlay = lane ? LANE_OVERLAY[lane] : null;
+  const visibleTranscript = useMemo(() => config.transcript.slice(0, Math.min(trIdx, config.transcript.length)), [config, trIdx]);
 
   return (
-    <div className="min-h-screen bg-[#FAFBFC] text-[#042C53] antialiased selection:bg-[#185FA5] selection:text-white overflow-x-hidden"
-      style={{ fontFamily: "'Inter Tight', 'Inter', system-ui, -apple-system, sans-serif" }}>
-      <style>{`@keyframes fade-in { from { opacity: 0; transform: translateY(4px) } to { opacity: 1; transform: translateY(0) } } .animate-fade-in { animation: fade-in 0.35s ease-out both }`}</style>
-
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all ${navScrolled ? "bg-white/85 backdrop-blur-xl border-b border-slate-200/80" : "bg-transparent border-b border-transparent"}`}>
-        <div className="max-w-[1240px] mx-auto px-6 py-4 flex items-center justify-between gap-8">
-          <Link to="/" className="flex items-center gap-2.5 font-semibold text-[17px] tracking-tight text-[#042C53]">
+    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navScrolled ? "bg-white/90 backdrop-blur-xl border-b border-slate-200/60" : "bg-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5">
             <BrainLogo size={36} />
-            <span>TrainYourAgent</span>
+            <span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span>
           </Link>
-          <div className="hidden md:flex gap-7 items-center text-[14px]">
-            <Link to="/#what" className="text-slate-600 hover:text-[#042C53] transition">What we do</Link>
-            <Link to="/#niches" className="text-slate-600 hover:text-[#042C53] transition">Verticals</Link>
-            <Link to="/#pricing" className="text-slate-600 hover:text-[#042C53] transition">Pricing</Link>
-            <Link to="/#faq" className="text-slate-600 hover:text-[#042C53] transition">FAQ</Link>
+          <div className="hidden md:flex items-center gap-7 text-[14px] text-slate-700">
+            <Link to="/solutions" className="hover:text-[#042C53]">Solutions</Link>
+            <Link to="/technology" className="hover:text-[#042C53]">Technology</Link>
+            <Link to="/security" className="hover:text-[#042C53]">Security</Link>
+            <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
+            <Link to="/about" className="hover:text-[#042C53]">About</Link>
+            <a href={`tel:${HERO_PHONE_TEL}`} className="text-[#185FA5] hover:text-[#042C53] font-medium">{HERO_PHONE_DISPLAY}</a>
+            <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E] shadow-sm">Book a call</a>
           </div>
-          <a href="mailto:hello@trainyouragent.com?subject=Book%20a%20discovery%20call" className="inline-flex items-center gap-2 px-5 py-2.5 text-[14px] font-semibold tracking-tight text-white bg-[#185FA5] hover:bg-[#0C447C] transition rounded-full shadow-[0_8px_20px_-6px_rgba(24,95,165,0.45)]">
-            Book a call
-          </a>
+          <button className="md:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu">
+            <span className="block w-4 h-px bg-[#042C53] relative" style={{ boxShadow: mobileOpen ? "none" : "0 -5px 0 #042C53, 0 5px 0 #042C53", transform: mobileOpen ? "rotate(45deg)" : "none" }} />
+          </button>
         </div>
       </nav>
 
-      <main>
+      {overlay && (
+        <div className="bg-[#042C53] text-white text-center text-[12px] sm:text-[13px] py-2 px-4 fixed top-[60px] left-0 right-0 z-40">
+          You're viewing this through the <span className="font-semibold text-[#9CC4EC]">{overlay.tag}</span>. Copy and CTAs adapted.
+          <button onClick={() => { setLane(null); try { window.localStorage.removeItem("tya:pathway"); } catch {} }} className="ml-3 underline text-white/70 hover:text-white">Reset</button>
+        </div>
+      )}
 
-      <header className="pt-40 pb-20 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(900px 500px at 80% -10%, rgba(133,183,235,0.25), transparent 60%), radial-gradient(700px 400px at 10% 0%, rgba(230,241,251,0.6), transparent 60%)" }} />
-        <div className="max-w-[1240px] mx-auto px-6 relative">
-          <Link to="/#niches" className="inline-flex items-center gap-2 text-[12px] font-mono tracking-wider uppercase text-[#185FA5] hover:text-[#042C53] transition mb-6">← All verticals</Link>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-9 text-[11px] tracking-[0.18em] uppercase border border-slate-200 bg-white text-slate-600 font-mono rounded-full">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#185FA5] animate-pulse" />
-            {config.eyebrow}
-          </div>
-          <h1 className="text-[clamp(46px,7vw,104px)] leading-[0.98] tracking-[-0.025em] mb-8 max-w-[1100px]"
-            style={{ fontFamily: "'Playfair Display', 'Times New Roman', serif", fontWeight: 500 }}>
-            {config.headline1}<br />
-            <em className="italic font-normal" style={{ color: "#185FA5" }}>{config.headline2}</em>
+      <section className={`px-5 sm:px-8 pb-16 ${overlay ? "pt-36" : "pt-32"}`}>
+        <div className="max-w-6xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">{config.eyebrow}</div>
+          <h1 className="text-[42px] sm:text-[68px] lg:text-[80px] leading-[1.02] tracking-tight font-semibold text-[#042C53]">
+            {config.headline1} <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>{config.headline2}</span>
           </h1>
-          <p className="text-[clamp(17px,1.45vw,21px)] text-slate-600 max-w-[640px] mb-10 leading-relaxed">{config.sub}</p>
-          <div className="flex gap-3 flex-wrap items-center">
-            <a href="mailto:hello@trainyouragent.com?subject=Discovery%20call%20-%20{config.label}" className="inline-flex items-center gap-2 px-7 py-3.5 text-[15px] font-semibold text-white bg-[#185FA5] hover:bg-[#0C447C] transition rounded-full shadow-[0_14px_36px_-10px_rgba(24,95,165,0.5)]">
-              Book a discovery call →
-            </a>
-            <Link to="/#demo" className="inline-flex items-center gap-2 px-7 py-3.5 text-[15px] font-semibold text-[#042C53] bg-white hover:bg-slate-50 border border-slate-200 transition rounded-full">
-              Hear the agent live
-            </Link>
+          <p className="mt-6 text-[18px] sm:text-[20px] text-slate-700 max-w-3xl leading-relaxed">{config.sub}</p>
+          <div className="mt-8 flex flex-col sm:flex-row gap-3">
+            <a href={CAL_URL} target="_blank" rel="noopener" className="px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] shadow-lg shadow-[#042C53]/15">{overlay ? overlay.ctaPrimary : "Book a build call"} →</a>
+            <a href={`tel:${HERO_PHONE_TEL}`} className="px-6 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] border-2 border-[#042C53]/15 hover:border-[#042C53]">{overlay ? overlay.ctaSecondary : `Call us: ${HERO_PHONE_DISPLAY}`}</a>
           </div>
         </div>
-      </header>
+      </section>
 
-      <section className="py-20">
-        <div className="max-w-[1240px] mx-auto px-6 grid lg:grid-cols-[1fr,1.2fr] gap-8">
-          <div className="bg-white border border-slate-200 rounded-3xl p-8 md:p-10">
-            <div className="text-[11px] tracking-[0.2em] uppercase text-[#185FA5] font-mono mb-3">Scope</div>
-            <h2 className="text-[28px] tracking-tight mb-5 font-medium">What this agent handles for {config.label.toLowerCase()}.</h2>
-            <ul className="space-y-3">
+      <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-y border-slate-200/70">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.1fr] gap-10">
+          <div>
+            <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">What we build for {config.label}</div>
+            <h2 className="text-[28px] sm:text-[40px] leading-tight font-semibold text-[#042C53] mb-8">
+              The version that <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>actually ships.</span>
+            </h2>
+            <ul className="space-y-3 text-[15px] text-slate-700">
               {config.bullets.map((b, i) => (
-                <li key={i} className="flex gap-3 items-start text-[15px] text-[#042C53] leading-relaxed">
-                  <span className="text-[#185FA5] mt-1.5 text-[8px]">●</span><span>{b}</span>
+                <li key={i} className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full mt-2.5 bg-[#185FA5]" />
+                  <span className="leading-relaxed">{b}</span>
                 </li>
               ))}
             </ul>
-            <div className="mt-8 pt-6 border-t border-slate-200">
-              <div className="text-[11px] tracking-[0.2em] uppercase text-slate-500 font-mono mb-3">Integrations we wire</div>
-              <div className="flex flex-wrap gap-2">
-                {config.integrations.map((i) => (
-                  <span key={i} className="text-[12px] font-mono text-slate-600 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-full">{i}</span>
-                ))}
-              </div>
+            <div className="mt-8 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-[12px] text-slate-600">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22A36C]" /> {config.pricePoint}
             </div>
           </div>
-          <LiveTranscript lines={config.transcript} />
-        </div>
-      </section>
 
-      {/* ROI */}
-      <section className="py-20 bg-white border-y border-slate-200">
-        <div className="max-w-[1100px] mx-auto px-6">
-          <div className="text-center mb-10">
-            <div className="text-[11px] tracking-[0.2em] uppercase text-[#185FA5] font-mono mb-3">ROI for {config.label.toLowerCase()}</div>
-            <h2 className="text-[clamp(32px,4vw,52px)] leading-[1.05] tracking-[-0.025em]" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 500 }}>
-              What you'd <em className="italic font-normal" style={{ color: "#185FA5" }}>recover</em> per month.
-            </h2>
-          </div>
-          <div className="bg-white border border-slate-200 rounded-3xl p-8 md:p-10 grid md:grid-cols-2 gap-8">
-            <div className="space-y-5">
-              <label className="block">
-                <span className="text-[13px] text-slate-600 flex justify-between mb-2">Inbound calls / day <span className="font-mono text-[#042C53] font-medium">{calls}</span></span>
-                <input type="range" min="20" max="500" value={calls} onChange={(e) => setCalls(+e.target.value)} className="w-full accent-[#185FA5]" />
-              </label>
-              <label className="block">
-                <span className="text-[13px] text-slate-600 flex justify-between mb-2">% currently missed <span className="font-mono text-[#042C53] font-medium">{missedRate}%</span></span>
-                <input type="range" min="5" max="80" value={missedRate} onChange={(e) => setMissedRate(+e.target.value)} className="w-full accent-[#185FA5]" />
-              </label>
-              <label className="block">
-                <span className="text-[13px] text-slate-600 flex justify-between mb-2">Avg ticket value <span className="font-mono text-[#042C53] font-medium">${avgValue}</span></span>
-                <input type="range" min="40" max="2000" step="10" value={avgValue} onChange={(e) => setAvgValue(+e.target.value)} className="w-full accent-[#185FA5]" />
-              </label>
+          <div className="rounded-3xl bg-white border border-slate-200 p-6 sm:p-8 shadow-[0_4px_40px_-12px_rgba(4,44,83,0.18)]">
+            <div className="flex items-center justify-between mb-5">
+              <div className="text-[11px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold">Live sample · {config.label}</div>
+              <div className="flex items-center gap-2 text-[11px] text-[#22A36C]"><span className="w-1.5 h-1.5 rounded-full bg-[#22A36C] animate-pulse" /> Streaming</div>
             </div>
-            <div className="bg-[#F4F7FB] rounded-2xl p-7 flex flex-col justify-center">
-              <div className="text-[11px] tracking-[0.2em] uppercase text-slate-500 font-mono mb-2">Estimated capture / month</div>
-              <div className="text-[44px] leading-none tracking-tight text-[#185FA5]" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 600 }}>${monthlyValue.toLocaleString()}</div>
-              <div className="text-[12px] text-slate-500 mt-3 leading-relaxed">Assumes the agent recovers 70% of currently-missed calls into a qualified booking. Real recovery rate published weekly.</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* AI OBJECTIONS — for the doubters */}
-      <section className="py-24">
-        <div className="max-w-[1100px] mx-auto px-6">
-          <div className="text-center mb-12">
-            <div className="text-[11px] tracking-[0.2em] uppercase text-[#185FA5] font-mono mb-3">Why trust an AI agent</div>
-            <h2 className="text-[clamp(34px,4.5vw,56px)] leading-[1.05] tracking-[-0.025em] max-w-2xl mx-auto" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 500 }}>
-              The hard <em className="italic font-normal" style={{ color: "#185FA5" }}>questions</em>, answered.
-            </h2>
-            <p className="text-slate-600 text-[15px] max-w-xl mx-auto mt-4 leading-relaxed">If you've been burned by AI hype, read these first. Same answers we give buyers on the discovery call.</p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-5">
-            {OBJECTIONS.map((o, i) => (
-              <div key={i} className="bg-white border border-slate-200 rounded-2xl p-7">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-[11px] font-mono text-[#185FA5]">0{i + 1}</span>
+            <div className="space-y-3 min-h-[260px]">
+              {visibleTranscript.map((line, i) => (
+                <div key={i} className="text-[14px] leading-relaxed text-slate-800 animate-[fadein_0.4s_ease-out]">
+                  <span className={`font-semibold ${line.startsWith("Agent") || line.startsWith("Driver") ? "text-[#185FA5]" : "text-[#042C53]"}`}>
+                    {line.split(":")[0]}:
+                  </span>{" "}{line.split(":").slice(1).join(":")}
                 </div>
-                <h3 className="text-[16px] tracking-tight mb-3 font-medium text-[#042C53]">{o.q}</h3>
-                <p className="text-slate-600 text-[14px] leading-relaxed">{o.a}</p>
+              ))}
+              {visibleTranscript.length < config.transcript.length && (
+                <div className="text-[13px] text-slate-400 italic flex items-center gap-2">
+                  <span className="inline-block w-1 h-3 bg-slate-300 animate-pulse" /> Agent typing...
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 sm:px-8 py-16">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Integrations</div>
+          <h2 className="text-[24px] sm:text-[32px] leading-tight font-semibold text-[#042C53] mb-6">
+            Wires into the stack <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>you already pay for.</span>
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {config.integrations.map((i, k) => (
+              <span key={k} className="px-4 py-2 rounded-full bg-[#F6FAFE] border border-slate-200 text-[13px] text-[#042C53] font-medium">{i}</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-y border-slate-200/70">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">What we hear most</div>
+          <h2 className="text-[26px] sm:text-[36px] leading-tight font-semibold text-[#042C53] mb-8">
+            The doubts <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>we answer on every call.</span>
+          </h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            {[
+              { h: "AI sounds robotic and customers hate it.", b: "Not in 2026. Top-tier voice models with prosody tuning sound human. Most callers don't realize." },
+              { h: "It can't handle our edge cases.",          b: "The agent handles the 80% confidently and escalates the 20% to a named human — your senior staff, your on-call line." },
+              { h: "I don't want to be locked in.",            b: "Month-to-month after the build. Your data, your agent config, your call history — you own all of it. Export with one click." },
+              { h: "What about a bad call going viral?",       b: "Every call has a transcript and a quality score. Outlier behavior gets flagged before it gets repeated. Plus a deterministic fallback for the worst case." },
+            ].map((o, i) => (
+              <div key={i} className="rounded-2xl bg-white border border-slate-200 p-6">
+                <div className="text-[15px] font-semibold text-[#042C53] mb-2">"{o.h}"</div>
+                <div className="text-[14px] text-slate-700 leading-relaxed">{o.b}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 bg-white border-t border-slate-200 relative overflow-hidden">
-        <div className="absolute inset-0" style={{ background: "radial-gradient(800px 400px at 50% 50%, rgba(133,183,235,0.4), transparent 65%)" }} />
-        <div className="max-w-[900px] mx-auto px-6 text-center relative">
-          <div className="text-[11px] tracking-[0.2em] uppercase text-[#185FA5] font-mono mb-4">Get started</div>
-          <h2 className="text-[clamp(36px,5vw,72px)] leading-[1.02] tracking-[-0.03em] mb-6" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 500 }}>
-            Built for {config.label.toLowerCase()}, <em className="italic font-normal" style={{ color: "#185FA5" }}>shipped in days.</em>
+      <section className="px-5 sm:px-8 py-20 bg-[#042C53] text-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-[36px] sm:text-[56px] leading-[1.04] tracking-tight font-semibold">
+            Ready for a {config.label} agent <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>that actually ships?</span>
           </h2>
-          <p className="text-slate-600 text-[18px] max-w-xl mx-auto mb-10 leading-relaxed">30 minutes with the founder. We'll write the actual scope on the call. No deck.</p>
-          <a href={`mailto:hello@trainyouragent.com?subject=${encodeURIComponent(config.label)}%20discovery%20call`}
-            className="inline-flex items-center gap-2 px-8 py-4 text-[15px] font-semibold text-white bg-[#185FA5] hover:bg-[#0C447C] transition rounded-full shadow-[0_18px_50px_-12px_rgba(24,95,165,0.55)]">
-            hello@trainyouragent.com →
-          </a>
+          <p className="mt-5 text-[17px] text-white/85 max-w-2xl mx-auto leading-relaxed">Thirty-minute build call. You leave with a written plan and a price.</p>
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+            <a href={CAL_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 shadow-lg">{overlay ? overlay.ctaPrimary : "Book a build call"} →</a>
+            <a href={`tel:${HERO_PHONE_TEL}`} className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15">Or call us: {HERO_PHONE_DISPLAY}</a>
+          </div>
         </div>
       </section>
 
-      </main>
-
-      <footer className="py-14 bg-[#FAFBFC] border-t border-slate-200">
-        <div className="max-w-[1240px] mx-auto px-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-          <Link to="/" className="flex items-center gap-3">
-            <BrainLogo size={36} />
-            <div>
-              <div className="text-[15px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</div>
-              <div className="text-slate-500 text-[12px]">AI that thinks like your business.</div>
-            </div>
-          </Link>
-          <div className="flex gap-6 text-[13px] text-slate-600 flex-wrap">
-            <Link to="/" className="hover:text-[#042C53] transition">Home</Link>
-            <Link to="/#niches" className="hover:text-[#042C53] transition">Verticals</Link>
-            <Link to="/#pricing" className="hover:text-[#042C53] transition">Pricing</Link>
-            <a href="mailto:hello@trainyouragent.com" className="hover:text-[#042C53] transition">Email</a>
+      <footer className="bg-white border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+          <div className="flex items-center gap-2.5">
+            <BrainLogo size={28} />
+            <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
+            <span className="text-slate-400">— Tampa Bay, FL</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>
+            <Link to="/terms" className="hover:text-[#042C53]">Terms</Link>
+            <Link to="/security" className="hover:text-[#042C53]">Security</Link>
+            <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
+            <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">LinkedIn</a>
           </div>
           <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
         </div>
       </footer>
+
+      <style>{`@keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }`}</style>
     </div>
   );
 };
 
-export default Vertical;
+export default VerticalPage;
