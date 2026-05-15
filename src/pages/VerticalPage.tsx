@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import SiteNav from "@/components/SiteNav";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
@@ -150,6 +151,47 @@ const V: Record<string, VerticalConfig> = {
     integrations: ["Mindbody","Wellness Living","Glofox","Zen Planner","Cal.com"],
     pricePoint: "Operators plan",
   },
+  "/ecommerce": {
+    label: "E-commerce", eyebrow: "For DTC, marketplaces, and Shopify Plus",
+    headline1: "Support that converts —", headline2: "not just deflects.",
+    sub: "Your store gets a chat + voice agent that knows your SKUs, your shipping windows, your return policy, and your discount logic. Shoppers get answers in their language; you get higher AOV and lower refund rate.",
+    bullets: [
+      "Shopify / WooCommerce / BigCommerce native — order lookup, refunds, tracking, swaps",
+      "Pre-purchase questions answered in the cart with discount code attribution",
+      "Native integration with Klaviyo, Gorgias, Zendesk, Recharge",
+      "Multi-language (EN/ES/FR/DE) and 24/7 — no overnight ticket queue",
+    ],
+    transcript: [
+      "Caller: I ordered the running shoes a week ago and they haven't shipped.",
+      "Agent: Pulling up your order — order #44712, Hyperion Trail in size 10. Sorry about that. Carrier picked up Tuesday and is currently in transit, ETA Saturday.",
+      "Caller: Can I change the size to 10.5?",
+      "Agent: It's already with the carrier so I can't change it in flight, but the moment it arrives I'll auto-create a free size-swap return and ship the 10.5 today on a Saturday-delivery — sound good?",
+      "Caller: Yes, perfect.",
+    ],
+    integrations: ["Shopify","Klaviyo","Gorgias","Zendesk","Recharge","ShipStation","Cal.com"],
+    pricePoint: "Operators plan",
+  },
+  "/hospitality": {
+    label: "Hospitality", eyebrow: "For hotels, restaurants, resorts, and venues",
+    headline1: "Front-of-house overflow,", headline2: "answered in your brand.",
+    sub: "Reservations, concierge questions, room service, group bookings, lost-and-found — your agent handles it in your tone, in the guest's language, 24/7. Front-desk staff stay focused on the guest who's standing right in front of them.",
+    bullets: [
+      "Reservations + waitlist + table holds across SevenRooms, Resy, OpenTable, Tock",
+      "Concierge questions (parking, breakfast, check-in, amenities, late checkout)",
+      "Direct-booking handoff to your PMS (Cloudbeds, Mews, Opera Cloud)",
+      "Multi-language baseline (EN/ES/FR) with on-brand voice cloning",
+    ],
+    transcript: [
+      "Caller: Hi, I'd like to book a table for four on Saturday at 7.",
+      "Agent: Of course. Indoor, patio, or chef's counter?",
+      "Caller: Patio if you have it.",
+      "Agent: I have 7:15 on the patio under the heat lamps — same name as your last visit, the Calderon party?",
+      "Caller: Yes that's me.",
+      "Agent: Booked. Texting you the confirmation now. Anything for the occasion — anniversary, birthday?",
+    ],
+    integrations: ["SevenRooms","Resy","OpenTable","Cloudbeds","Mews","Opera Cloud","Cal.com"],
+    pricePoint: "Operators plan",
+  },
   "/solutions": {
     label: "Custom", eyebrow: "Don't see your industry?",
     headline1: "Custom agents for", headline2: "anything humans answer.",
@@ -158,6 +200,157 @@ const V: Record<string, VerticalConfig> = {
     transcript: ["Agent: Thanks for calling. How can I help today?"],
     integrations: ["Anything you use","Custom build","REST + webhook"],
     pricePoint: "Custom — Scale plan",
+  },
+};
+
+/* ------------------------------------------------------------------ */
+/*  VERTICAL_CONTENT — rich per-niche content for the top 8 verticals  */
+/*                                                                    */
+/*  Each entry adds:                                                  */
+/*    painPoint  — in their language, not jargon                       */
+/*    tools      — 3 specific named tools we ship + the outcome        */
+/*    caseStudy  — placeholder for Alexander to fill in [Customer]/[Y] */
+/*    cta        — vertical-specific CTA copy                          */
+/*                                                                    */
+/*  When the current slug has an entry here, the VerticalPage renders */
+/*  an extra "Built for {industry}" block beneath the integrations    */
+/*  strip. Falls back gracefully for slugs without an entry.          */
+/* ------------------------------------------------------------------ */
+type RichContent = {
+  painPoint: { headline: string; body: string };
+  tools: { name: string; outcome: string }[];
+  caseStudy: string;       // contains [Customer] and [Y] for Alexander to replace
+  cta: { primary: string; secondary: string };
+};
+
+export const VERTICAL_CONTENT: Record<string, RichContent> = {
+  "/hvac": {
+    painPoint: {
+      headline: "Sunday at 2pm in July. The AC dies. Your phone rings — and rings.",
+      body: "Every after-hours call you miss is a competitor's truck in your customer's driveway tomorrow morning. The on-call tech can't answer because he's already in someone's attic. The answering service flubbed the address last week and you ate a $400 truck-roll. Your CSR is on PTO. Storm season is in three weeks.",
+    },
+    tools: [
+      { name: "After-hours emergency triage agent", outcome: "Picks up in under three rings, classifies emergency vs routine on your pricing logic, books the dispatch with your trip-fee disclosure, and texts the on-call tech the address + customer history before the truck rolls." },
+      { name: "ServiceTitan / Housecall Pro / Jobber dispatch sync", outcome: "Live tech availability lookup against the actual schedule — no double-booking, no calling back to confirm, no manual ticket creation. The job is in the system before you hang up." },
+      { name: "Storm-surge auto-scaling", outcome: "When call volume spikes 10x during a heat event or freeze, the agent absorbs it without a single missed call. Your CSRs handle the white-glove customers; the agent absorbs the surge." },
+    ],
+    caseStudy: "After we shipped the after-hours dispatch agent for [Customer], a Tampa-area HVAC company with 14 trucks, they captured [Y]% more after-hours emergency tickets in their first storm event and recovered roughly $[Y]K in jobs that would have gone to voicemail.",
+    cta: {
+      primary: "Stop missing after-hours emergency calls. Book a 30-minute build call.",
+      secondary: "Or call us live and see how we'd answer your phones.",
+    },
+  },
+  "/healthcare": {
+    painPoint: {
+      headline: "Your front desk is drowning. Patients hang up. Stars drop. Repeat.",
+      body: "Average call wait is six minutes. The voicemail box fills by 2pm. New-patient inquiries drop off the funnel because nobody calls back the same day. Your insurance verification team is two FTE behind, and nobody's caught up since flu season. Meanwhile your Yelp reviews are about the phones.",
+    },
+    tools: [
+      { name: "Patient intake + insurance verification agent", outcome: "Answers in two rings, verifies eligibility against the payor in real time, captures intake forms over SMS before the visit, and routes urgent symptoms to a human under the rules YOU control. BAA signed before any PHI flows." },
+      { name: "Athena / eClinicalWorks / Epic open-API booking", outcome: "Books straight into the right provider's panel based on payor mix, location, and acuity. No staff transcription, no double-booking, no follow-up calls to confirm." },
+      { name: "Recall + no-show recovery cadence", outcome: "Auto-runs the 24h confirm + 2h reminder + same-day rebook flow over voice + SMS. No-show rate drops 30-50% in the first 60 days for most clinics." },
+    ],
+    caseStudy: "After we shipped patient intake for [Customer], a multi-location primary-care group, their average call wait dropped from [Y] to under 30 seconds and new-patient capture climbed [Y]% in the first quarter — without adding a single front-desk FTE.",
+    cta: {
+      primary: "Stop sending patients to voicemail. Book a 30-minute build call.",
+      secondary: "Or talk to a real person on our line.",
+    },
+  },
+  "/real-estate": {
+    painPoint: {
+      headline: "Zillow lead drops at 11pm Sunday. By Monday at 9am it's dead.",
+      body: "Speed-to-lead under five minutes triples your contact rate. Yours is currently four hours, eight on weekends. The lead-gen spend is real — Zillow, Realtor, paid social, ISA team — and the ROI is leaking out the bottom because you can't pick up the phone fast enough. The good leads are already in someone else's CRM by the time you call.",
+    },
+    tools: [
+      { name: "Speed-to-lead voice + SMS agent", outcome: "Calls and texts inside 30 seconds of any inbound — Zillow, Realtor, your site, Facebook lead form. Qualifies buyer vs seller, captures pre-approval status, and books the showing or listing appointment before the lead can browse to a competitor." },
+      { name: "Follow Up Boss / KvCORE / Sierra Interactive native sync", outcome: "Two-way sync, not a webhook duct-taped together. Lead source, conversation transcript, qualification answers, and booked showing all land in the right CRM stage automatically." },
+      { name: "Long-cycle nurture cadence", outcome: "Most leads aren't ready today — the agent runs the 30/60/90/180-day touch cadence over voice + SMS so the lead is warm when they finally are ready, instead of sitting in a stale CRM tag." },
+    ],
+    caseStudy: "After we shipped speed-to-lead for [Customer], a Tampa-area team running $[Y]K/mo in Zillow spend, their contact-rate on inbound leads jumped from [Y]% to [Y]% and they closed [Y] additional deals in the first quarter that would otherwise have aged out.",
+    cta: {
+      primary: "Stop losing the 11pm lead. Book a 30-minute build call.",
+      secondary: "Or call our line — we'll qualify you the same way.",
+    },
+  },
+  "/legal": {
+    painPoint: {
+      headline: "You bill at $450/hr. You're answering intake calls for $0/hr.",
+      body: "Half your inbound is unqualified — wrong jurisdiction, wrong practice area, conflicts, or just price-shoppers. The other half are great leads who got voicemail and went to the firm down the street. Your paralegal does intake, but she's also doing real work, so the queue builds. The lead form on your site? Last reply was Tuesday.",
+    },
+    tools: [
+      { name: "Intake + conflict-check agent", outcome: "Runs your conflict check against the CMS in real time, filters by jurisdiction and practice area, captures the matter facts, and triages to the right attorney. Sends you a fully-summarized intake before you ever pick up." },
+      { name: "Clio / MyCase / PracticePanther native integration", outcome: "Creates the contact, opens the matter, attaches the intake summary, and triggers the engagement letter automation — all before the lead's coffee gets cold." },
+      { name: "Engagement-letter trigger on qualified leads", outcome: "Auto-generates and sends the engagement letter via DocuSign for qualified matters, with payment plan capture for retainer collection. Closes the loop without partner involvement." },
+    ],
+    caseStudy: "After we shipped intake for [Customer], a multi-attorney PI firm, qualified-lead-to-signed-retainer conversion lifted from [Y]% to [Y]% and partners stopped fielding intake calls entirely — recovering an estimated [Y] billable hours per month across the firm.",
+    cta: {
+      primary: "Stop burning billables on intake. Book a 30-minute build call.",
+      secondary: "Or DM Alexander on LinkedIn — fastest path.",
+    },
+  },
+  "/ecommerce": {
+    painPoint: {
+      headline: "WISMO tickets are eating your margin and your team's morale.",
+      body: "60-70% of your support volume is 'where is my order?' — questions a customer could answer themselves if your tracking page worked. Your CX team is burning out on tier-1 questions while real escalations sit in the queue. Refund rate is creeping because the size-chart question isn't getting answered in the cart. Klaviyo flows convert, but pre-purchase questions die in a chat widget that nobody answers after 6pm.",
+    },
+    tools: [
+      { name: "Pre-purchase chat agent in the cart", outcome: "Answers sizing, fit, shipping, returns, and discount-code questions in the cart with full SKU + policy context. Recovers carts that would otherwise abandon and lifts AOV on bundle/upsell suggestions." },
+      { name: "Shopify / Gorgias / Klaviyo native order agent", outcome: "Resolves WISMO, processes returns + exchanges + refunds against your policy, and triggers the right Klaviyo flow — without a CX agent touching the ticket. Slashes tier-1 ticket volume 60-80%." },
+      { name: "Multi-language voice + chat 24/7", outcome: "EN/ES/FR/DE/PT baseline. International shoppers get same-language answers at 3am, your overnight ticket queue empties itself, and your CSAT in non-English markets stops being the bottom of your dashboard." },
+    ],
+    caseStudy: "After we shipped the support agent for [Customer], a 9-figure DTC apparel brand, tier-1 ticket volume dropped [Y]% in 60 days and CSAT held at [Y]+ — letting them shrink the seasonal CX hire from [Y] heads to [Y].",
+    cta: {
+      primary: "Stop drowning in WISMO tickets. Book a 30-minute build call.",
+      secondary: "Or see the agent live in our chat widget.",
+    },
+  },
+  "/hospitality": {
+    painPoint: {
+      headline: "The phone rings during the dinner rush. Nobody catches it.",
+      body: "Walk-ins are stacking, the host is in the weeds, the bartender is ringing in tabs, and the phone is on its fourth ring. That's a covered table for Saturday at 7 — gone. OTA fees are eating 15-20% of your room revenue but direct bookings drop because nobody answers the phone with your brand voice. Concierge questions from in-house guests interrupt the front desk every six minutes.",
+    },
+    tools: [
+      { name: "Reservation + waitlist agent", outcome: "Picks up when the host is in the weeds. Books reservations into SevenRooms / Resy / OpenTable / Tock, manages the waitlist, sends 'your table is up' SMS, and protects you from no-shows with deposit logic on prime times." },
+      { name: "Direct-booking + concierge agent for hotels", outcome: "Answers in your brand tone, handles parking + breakfast + check-in + amenity questions, and converts looker-callers into direct bookings via your PMS — pulling revenue back from OTAs at the moment of decision." },
+      { name: "Multi-language guest comms", outcome: "EN/ES/FR/PT baseline with on-brand voice cloning. International guests get same-language answers, your front desk stops translating, and your TripAdvisor reviews about communication start improving." },
+    ],
+    caseStudy: "After we shipped the reservation + concierge agent for [Customer], a boutique 80-room property in Miami Beach, direct bookings climbed [Y]% in the first quarter (recovering an estimated $[Y]K from OTA commissions) and front-desk after-call work dropped [Y] hours per week.",
+    cta: {
+      primary: "Stop letting the dinner-rush phone ring out. Book a 30-minute build call.",
+      secondary: "Or hear the agent answer our own line.",
+    },
+  },
+  "/roofing": {
+    painPoint: {
+      headline: "Hail event Sunday night. By Tuesday your phones are unmanageable.",
+      body: "Storm-chasers are already door-knocking your zip codes. Insurance-claim leads need to be called back inside the hour or they sign with someone else. Your sales reps are in the field, your office is one CSR who's drowning, and the inbound from your paid spend is hitting voicemail. Storm season is your year — and you can't afford a missed call.",
+    },
+    tools: [
+      { name: "Storm-surge inbound agent", outcome: "Absorbs 10x call volume during storm events without a single missed call. Classifies insurance vs cash, captures damage description + photo upload via SMS, and books the inspection inside the same call." },
+      { name: "AccuLynx / JobNimbus / Roofr native pipeline sync", outcome: "Creates the lead, attaches the intake notes, schedules the inspection on the right rep's calendar, and triggers the carrier-comms flow for insurance claims — all before your sales rep gets back from his current job." },
+      { name: "Insurance-claim follow-up cadence", outcome: "Auto-runs the carrier-adjuster + supplement + completion-photo cadence over voice + SMS. Closes the gap between inspection and signed contract without a sales coordinator involved." },
+    ],
+    caseStudy: "After we shipped the storm-event agent for [Customer], a residential roofer in DFW, they captured [Y]% more inbound leads during their first major hail event post-launch and added an estimated $[Y]K in claim-funded contracts in the 30 days following.",
+    cta: {
+      primary: "Stop losing storm-week leads to voicemail. Book a 30-minute build call.",
+      secondary: "Or call us live — same way your customers will.",
+    },
+  },
+  "/solar": {
+    painPoint: {
+      headline: "Meta lead drops at 9pm. Your closer calls Monday morning. Lead is dead.",
+      body: "You spend $200-$400 per lead on paid social. The best ones are time-sensitive — they just got their summer electric bill and they're shopping right now. By Monday they've already scheduled a site survey with the competitor who called them in 90 seconds. Your inside sales team is qualifying through a trickle of cold-feeling leads because the warm ones aged out over the weekend.",
+    },
+    tools: [
+      { name: "Sub-60-second qualification agent", outcome: "Calls and texts inside 60 seconds of any inbound from Meta / Google / your site. Qualifies utility, average bill, roof orientation + shading, and homeownership in under three minutes — then books the site survey on the right rep's calendar." },
+      { name: "Aurora / Enerflo / Solo native pipeline sync", outcome: "Pushes qualified leads with full intake into your existing system, including utility data and rough sizing — so your closer walks into the appointment with a real proposal already roughed in." },
+      { name: "Long-cycle nurture for not-ready-now leads", outcome: "Most solar leads aren't ready today. The agent runs the 30/60/90-day SMS + voice nurture cadence so the lead converts when their next utility bill lands, instead of going dead in your CRM." },
+    ],
+    caseStudy: "After we shipped the speed-to-lead agent for [Customer], a residential solar installer running $[Y]K/mo in Meta spend, their lead-to-set rate climbed from [Y]% to [Y]% and cost-per-set dropped [Y]% within 60 days — the same paid spend now feeds twice the booked surveys.",
+    cta: {
+      primary: "Stop losing $300 leads to slow callbacks. Book a 30-minute build call.",
+      secondary: "Or call our line — we'll qualify you the same way.",
+    },
   },
 };
 
@@ -220,26 +413,8 @@ const VerticalPage = () => {
 
   return (
     <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navScrolled ? "bg-white/90 backdrop-blur-xl border-b border-slate-200/60" : "bg-transparent"}`}>
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <BrainLogo size={36} />
-            <span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span>
-          </Link>
-          <div className="hidden md:flex items-center gap-7 text-[14px] text-slate-700">
-            <Link to="/solutions" className="hover:text-[#042C53]">Solutions</Link>
-            <Link to="/technology" className="hover:text-[#042C53]">Technology</Link>
-            <Link to="/security" className="hover:text-[#042C53]">Security</Link>
-            <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
-            <Link to="/about" className="hover:text-[#042C53]">About</Link>
-            <a href={`tel:${HERO_PHONE_TEL}`} className="text-[#185FA5] hover:text-[#042C53] font-medium">{HERO_PHONE_DISPLAY}</a>
-            <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E] shadow-sm">Book a call</a>
-          </div>
-          <button className="md:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu">
-            <span className="block w-4 h-px bg-[#042C53] relative" style={{ boxShadow: mobileOpen ? "none" : "0 -5px 0 #042C53, 0 5px 0 #042C53", transform: mobileOpen ? "rotate(45deg)" : "none" }} />
-          </button>
-        </div>
-      </nav>
+      {/* NAV — canonical service nav */}
+      <SiteNav active="industries" />
 
       {overlay && (
         <div className="bg-[#042C53] text-white text-center text-[12px] sm:text-[13px] py-2 px-4 fixed top-[60px] left-0 right-0 z-40">
@@ -318,6 +493,102 @@ const VerticalPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Rich per-niche block — only renders for slugs present in VERTICAL_CONTENT */}
+      {VERTICAL_CONTENT[location.pathname] && (() => {
+        const rc = VERTICAL_CONTENT[location.pathname];
+        return (
+          <>
+            {/* Pain point */}
+            <section className="px-5 sm:px-8 py-20 bg-[#042C53] text-white">
+              <div className="max-w-5xl mx-auto">
+                <div className="text-[12px] uppercase tracking-[0.18em] text-[#9CC4EC] font-semibold mb-3">
+                  In your language
+                </div>
+                <h2 className="text-[28px] sm:text-[44px] leading-[1.1] tracking-tight font-semibold mb-5">
+                  {rc.painPoint.headline}
+                </h2>
+                <p className="text-[17px] text-white/85 leading-relaxed max-w-3xl">
+                  {rc.painPoint.body}
+                </p>
+              </div>
+            </section>
+
+            {/* Tools we ship */}
+            <section className="px-5 sm:px-8 py-20">
+              <div className="max-w-6xl mx-auto">
+                <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">
+                  What we ship for {config.label}
+                </div>
+                <h2 className="text-[28px] sm:text-[40px] leading-tight font-semibold text-[#042C53] mb-10">
+                  Three tools.{" "}
+                  <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
+                    Built for the work you actually do.
+                  </span>
+                </h2>
+                <div className="grid md:grid-cols-3 gap-4">
+                  {rc.tools.map((t, i) => (
+                    <div key={i} className="rounded-2xl bg-white border border-slate-200 p-7 hover:border-[#185FA5] transition">
+                      <div className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold mb-3">
+                        Tool 0{i + 1}
+                      </div>
+                      <div className="text-[18px] font-semibold text-[#042C53] mb-3 leading-snug">
+                        {t.name}
+                      </div>
+                      <div className="text-[14px] text-slate-700 leading-relaxed">
+                        {t.outcome}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* Case study placeholder */}
+            <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-y border-slate-200/70">
+              <div className="max-w-4xl mx-auto">
+                <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">
+                  Case in point
+                </div>
+                <blockquote
+                  className="text-[22px] sm:text-[30px] leading-[1.3] tracking-tight text-[#042C53] font-medium"
+                  style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic" }}
+                >
+                  "{rc.caseStudy}"
+                </blockquote>
+                <div className="mt-5 text-[12px] text-slate-500 tracking-[0.12em] uppercase">
+                  Production deployment · {config.label}
+                </div>
+              </div>
+            </section>
+
+            {/* Vertical-specific CTA */}
+            <section className="px-5 sm:px-8 py-20">
+              <div className="max-w-4xl mx-auto text-center">
+                <h2 className="text-[28px] sm:text-[40px] leading-[1.15] tracking-tight font-semibold text-[#042C53]">
+                  {rc.cta.primary}
+                </h2>
+                <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+                  <a
+                    href={CAL_URL}
+                    target="_blank"
+                    rel="noopener"
+                    className="px-7 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] shadow-lg shadow-[#042C53]/15"
+                  >
+                    Book a 30-min build call →
+                  </a>
+                  <a
+                    href={`tel:${HERO_PHONE_TEL}`}
+                    className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] border-2 border-[#042C53]/15 hover:border-[#042C53]"
+                  >
+                    {rc.cta.secondary}
+                  </a>
+                </div>
+              </div>
+            </section>
+          </>
+        );
+      })()}
 
       <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-y border-slate-200/70">
         <div className="max-w-6xl mx-auto">

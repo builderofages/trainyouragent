@@ -13,6 +13,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { pixelEvents } from "@/lib/metaPixel";
 
 const FORM_ENDPOINT = "/api/lead";
 
@@ -187,7 +188,7 @@ export default function PathwayRouter({ className = "" }: { className?: string }
     const final: Pathway = { ...pathway, email, completedAt: new Date().toISOString() };
     savePathway(final);
     try {
-      await fetch(FORM_ENDPOINT, {
+      const res = await fetch(FORM_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
@@ -202,6 +203,20 @@ export default function PathwayRouter({ className = "" }: { className?: string }
           },
         }),
       });
+      // Fire Meta Pixel `Lead` (browser + server CAPI mirror) when the lead
+      // endpoint accepts the submission. Both fires share the same event_id
+      // so Meta dedupes correctly across pixel and CAPI.
+      if (res.ok) {
+        pixelEvents.lead(
+          { email },
+          {
+            content_name: "pathway-router",
+            lane: final.lane,
+            branch: final.branch,
+            bottleneck: final.bottleneck,
+          },
+        ).catch(() => { /* non-fatal */ });
+      }
       setSubmitState("ok");
       setTimeout(() => navigate(routeFor(final)), 700);
     } catch {

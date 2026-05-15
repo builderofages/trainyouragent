@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import SiteNav from "@/components/SiteNav";
+import PathwayRouter from "@/components/PathwayRouter";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
@@ -51,9 +53,6 @@ const FAQ_ITEMS = [
 ];
 
 const Index = () => {
-  const [navScrolled, setNavScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-
   useEffect(() => {
     if (typeof document === "undefined") return;
     if (!document.getElementById("tya-fonts")) {
@@ -66,33 +65,11 @@ const Index = () => {
     document.title = "TrainYourAgent — Everything-AI for SMBs & Startups";
   }, []);
 
-  useEffect(() => {
-    const onScroll = () => setNavScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
     <div className="min-h-screen bg-white text-[#0B1B2B] overflow-x-hidden" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
 
-      {/* NAV */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navScrolled ? "bg-white/90 backdrop-blur-xl border-b border-slate-200/60" : "bg-transparent"}`}>
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <BrainLogo size={36} />
-            <span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span>
-          </Link>
-          <div className="hidden md:flex items-center gap-7 text-[14px] text-slate-700">
-            <Link to="/about" className="hover:text-[#042C53]">About</Link>
-            <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
-            <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
-            <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E] shadow-sm">Book a call</a>
-          </div>
-          <button className="md:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu">
-            <span className="block w-4 h-px bg-[#042C53] relative" style={{ boxShadow: mobileOpen ? "none" : "0 -5px 0 #042C53, 0 5px 0 #042C53", transform: mobileOpen ? "rotate(45deg)" : "none" }} />
-          </button>
-        </div>
-      </nav>
+      {/* NAV — canonical service nav */}
+      <SiteNav />
 
       {/* HERO */}
       <section className="relative pt-32 pb-24 px-5 sm:px-8 overflow-hidden">
@@ -126,14 +103,17 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Brain orb */}
-          <div className="relative h-[420px] lg:h-[480px] flex items-center justify-center">
-            <div className="relative w-full max-w-[420px] aspect-square">
-              <div className="absolute inset-0 rounded-full blur-2xl opacity-70" style={{ background: "radial-gradient(closest-side, #BDDAF4 0%, rgba(189,218,244,0) 70%)" }} />
-              <div className="relative w-full h-full flex items-center justify-center">
-                <BrainLogo size={300} />
-              </div>
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-white/85 backdrop-blur border border-slate-200 text-[12px] text-slate-600 whitespace-nowrap">
+          {/* Pathway Router (embedded — hero right column on desktop, stacks
+              below the copy on mobile via grid order) */}
+          <div className="relative flex items-center justify-center lg:justify-end">
+            <div className="relative w-full max-w-md">
+              {/* Soft halo behind the card to keep it floating in the brand hero */}
+              <div
+                className="absolute -inset-6 rounded-[32px] blur-2xl opacity-70 pointer-events-none -z-10"
+                style={{ background: "radial-gradient(closest-side, #BDDAF4 0%, rgba(189,218,244,0) 70%)" }}
+              />
+              <PathwayRouter />
+              <div className="mt-3 text-center text-[12px] text-slate-500">
                 Four years deep in AI · Every major model
               </div>
             </div>

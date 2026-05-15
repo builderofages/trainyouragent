@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import SiteNav from "@/components/SiteNav";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
@@ -47,29 +48,8 @@ const About = () => {
     <div className="min-h-screen bg-[#FAFBFC] text-[#042C53] antialiased selection:bg-[#185FA5] selection:text-white overflow-x-hidden"
       style={{ fontFamily: "'Inter Tight', 'Inter', system-ui, -apple-system, sans-serif" }}>
 
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all ${navScrolled ? "bg-white/85 backdrop-blur-xl border-b border-slate-200/80" : "bg-transparent border-b border-transparent"}`}>
-        <div className="max-w-[1240px] mx-auto px-6 py-4 flex items-center justify-between gap-8">
-          <Link to="/" className="flex items-center gap-2.5 font-semibold text-[17px] tracking-tight text-[#042C53]">
-            <BrainLogo size={36} />
-            <span>TrainYourAgent</span>
-          </Link>
-          <div className="hidden md:flex gap-7 items-center text-[14px]">
-            <Link to="/#what" className="text-slate-600 hover:text-[#042C53] transition">What we do</Link>
-            <Link to="/#niches" className="text-slate-600 hover:text-[#042C53] transition">Verticals</Link>
-            <Link to="/#pricing" className="text-slate-600 hover:text-[#042C53] transition">Pricing</Link>
-            <Link to="/about" className="text-[#042C53] font-medium">About</Link>
-            <Link to="/contact" className="text-slate-600 hover:text-[#042C53] transition">Contact</Link>
-          </div>
-          <div className="flex items-center gap-3">
-            <a href={CAL_URL} target="_blank" rel="noopener" className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 text-[14px] font-semibold text-white bg-[#185FA5] hover:bg-[#0C447C] transition rounded-full">
-              Book a call
-            </a>
-            <button onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu" className="md:hidden w-10 h-10 grid place-items-center rounded-full border border-slate-200 bg-white">
-              <span className="block w-4 h-px bg-[#042C53] relative" style={{ boxShadow: mobileOpen ? "none" : "0 -5px 0 #042C53, 0 5px 0 #042C53", transform: mobileOpen ? "rotate(45deg)" : "none" }} />
-            </button>
-          </div>
-        </div>
-      </nav>
+      {/* NAV — canonical service nav */}
+      <SiteNav active="about" />
 
       <main>
         <header className="pt-40 pb-16 relative overflow-hidden">

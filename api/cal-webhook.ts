@@ -100,19 +100,43 @@ export default async function handler(req: Request) {
   }
 
   if (triggerEvent === "BOOKING_CREATED" && process.env.META_PIXEL_ID && process.env.META_CAPI_TOKEN) {
+    // Stable booking-scoped ID. Used as the base for both Lead and Schedule
+    // events so the browser-side fire (if any) can dedupe against the same
+    // event_id Meta receives server-side.
+    const baseId = `cal_${p.uid || p.id || Date.now()}`;
+    const userBlock = {
+      email: summary.email,
+      first_name: (summary.name || "").split(" ")[0],
+      last_name:  (summary.name || "").split(" ").slice(1).join(" "),
+    };
+    const customBlock = { content_name: summary.type, lead_event_source: "cal.com" };
+
+    // 1) Schedule — the booking is the actual scheduled event.
     tasks.push(fetch(`${SITE}/api/meta-event`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         event_name: "Schedule",
-        event_id: `cal_${p.uid || p.id || Date.now()}`,
+        event_id: `${baseId}_schedule`,
         event_source_url: `${SITE}/contact`,
-        user: {
-          email: summary.email,
-          first_name: (summary.name || "").split(" ")[0],
-          last_name:  (summary.name || "").split(" ").slice(1).join(" "),
-        },
-        custom_data: { content_name: summary.type, lead_event_source: "cal.com" },
+        user: userBlock,
+        custom_data: customBlock,
+      }),
+    }));
+
+    // 2) Lead — every booking is also a sales-qualified lead. Mirror this so
+    //    Meta optimizes for Lead conversions on the ad set even when the
+    //    site-side Lead pixel didn't fire (DM-driven bookings, direct cal.com
+    //    links shared in outbound, etc).
+    tasks.push(fetch(`${SITE}/api/meta-event`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event_name: "Lead",
+        event_id: `${baseId}_lead`,
+        event_source_url: `${SITE}/contact`,
+        user: userBlock,
+        custom_data: customBlock,
       }),
     }));
   }

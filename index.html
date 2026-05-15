@@ -49,8 +49,59 @@
         "sameAs": ["https://www.linkedin.com/in/alexandermillsai"]
       }
     </script>
+
+    <!-- Meta Pixel — base code.
+         Pixel ID is injected at build time from META_PIXEL_ID env var via
+         vite.config.ts (define block). When unset, __META_PIXEL_ID__ resolves
+         to an empty string and the wrapper short-circuits — no broken pixel,
+         no 404 noscript image, no console noise.
+
+         Events fired by the site (via window.fbq):
+           - PageView  — automatic, fired on first script load + on SPA navs
+           - Lead      — POSTed to /api/lead (200) → also bounced to CAPI
+           - Schedule  — Cal.com BOOKING_CREATED (server) + client confirmation
+           - Purchase  — Stripe checkout success → /api/checkout fires CAPI
+
+         Server-side mirror lives in api/meta-event.ts. Both fires share the
+         same `event_id` (UUID generated client-side, sent to both pixel and
+         CAPI) so Meta dedupes correctly. -->
+    <script>
+      (function () {
+        var PIXEL_ID = "__META_PIXEL_ID__";
+        if (!PIXEL_ID || PIXEL_ID === "__META_PIXEL_ID" + "__" || PIXEL_ID.length < 6) {
+          // No pixel ID configured — install a no-op fbq so app code that
+          // calls fbq() still works without errors, then bail.
+          window.fbq = window.fbq || function () { /* no-op (pixel disabled) */ };
+          window.fbq.queue = window.fbq.queue || [];
+          window.fbq.disabled = true;
+          return;
+        }
+        // Standard Meta Pixel base code (snippet v2.9.197).
+        !function (f, b, e, v, n, t, s) {
+          if (f.fbq) return;
+          n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+          if (!f._fbq) f._fbq = n;
+          n.push = n; n.loaded = !0; n.version = "2.0"; n.queue = [];
+          t = b.createElement(e); t.async = !0; t.src = v;
+          s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+        }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+        window.fbq("init", PIXEL_ID);
+        window.fbq("track", "PageView");
+        window.__TYA_PIXEL_ID__ = PIXEL_ID;
+      })();
+    </script>
+    <!-- /Meta Pixel (head) -->
   </head>
   <body>
+    <!-- Meta Pixel noscript fallback. HTML5 disallows <img> inside <noscript>
+         when <noscript> is in <head>, so it lives here. When the pixel ID
+         isn't configured at build time the placeholder string remains and
+         the <img> 404s harmlessly (Meta's tr endpoint returns 1x1 anyway). -->
+    <noscript>
+      <img height="1" width="1" style="display:none"
+           src="https://www.facebook.com/tr?id=__META_PIXEL_ID__&ev=PageView&noscript=1"
+           alt="" />
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

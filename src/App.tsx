@@ -65,7 +65,10 @@ const App = () => (
           <Route path="/real-estate" element={<Vertical />} />
           <Route path="/solar" element={<Vertical />} />
           <Route path="/gym" element={<Vertical />} />
-          <Route path="/solutions" element={<Vertical />} />
+          <Route path="/ecommerce" element={<Vertical />} />
+          <Route path="/hospitality" element={<Vertical />} />
+          {/* /solutions is now the canonical Solutions hub (six service pillars) */}
+          <Route path="/solutions" element={<Solutions />} />
           {/* Supporting pages */}
           <Route path="/sales-toolkit" element={<SalesToolkit />} />
           <Route path="/resources" element={<Resources />} />

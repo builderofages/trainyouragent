@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { pixelEvents } from "@/lib/metaPixel";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
@@ -38,6 +39,23 @@ const Dashboard = () => {
     document.title = "Dashboard — TrainYourAgent";
   }, []);
   useEffect(() => { const f = () => setNavScrolled(window.scrollY > 20); window.addEventListener("scroll", f); return () => window.removeEventListener("scroll", f); }, []);
+
+  // v32: Stripe checkout success → fire Meta Pixel `Purchase` event (browser
+  // pixel + server CAPI mirror with shared event_id). Stripe sends the buyer
+  // here via SUCCESS_URL=/dashboard?checkout=ok. Fire once per session — we
+  // stash the event_id in sessionStorage so a refresh on the success page
+  // doesn't double-count.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("checkout") !== "ok") return;
+    const KEY = "tya:purchase-fired";
+    if (window.sessionStorage.getItem(KEY)) return;
+    window.sessionStorage.setItem(KEY, "1");
+    pixelEvents
+      .purchase(undefined, undefined, "USD", { content_name: "stripe-checkout" })
+      .catch(() => { /* non-fatal */ });
+  }, []);
 
   return (
     <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import SiteNav from "@/components/SiteNav";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 
@@ -120,25 +121,8 @@ const Security = () => {
 
   return (
     <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navScrolled ? "bg-white/95 backdrop-blur-md border-b border-slate-200" : "bg-white border-b border-transparent"}`}>
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <BrainLogo size={36} />
-            <span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span>
-          </Link>
-          <div className="hidden md:flex items-center gap-7 text-[14px] text-slate-700">
-            <Link to="/solutions" className="hover:text-[#042C53] transition">Solutions</Link>
-            <Link to="/technology" className="hover:text-[#042C53] transition">Technology</Link>
-            <Link to="/security" className="hover:text-[#042C53] transition text-[#042C53] font-medium">Security</Link>
-            <Link to="/pricing" className="hover:text-[#042C53] transition">Pricing</Link>
-            <Link to="/about" className="hover:text-[#042C53] transition">About</Link>
-            <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E] transition shadow-sm">Book a call</a>
-          </div>
-          <button className="md:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu">
-            <span className="block w-4 h-px bg-[#042C53] relative" style={{ boxShadow: mobileOpen ? "none" : "0 -5px 0 #042C53, 0 5px 0 #042C53", transform: mobileOpen ? "rotate(45deg)" : "none" }} />
-          </button>
-        </div>
-      </nav>
+      {/* NAV — canonical service nav */}
+      <SiteNav />
 
       <section className="pt-28 pb-12 px-5 sm:px-8">
         <div className="max-w-5xl mx-auto">
