@@ -30,6 +30,7 @@ import SolutionConfigurator from "./pages/SolutionConfigurator";
 import Contact from "./pages/Contact";
 import DemoVideo from "./pages/DemoVideo";
 import NotFound from "./pages/NotFound";
+import Start from "./pages/Start";
 import AiChat from "@/components/AiChat";
 // v29: Blog + Newsletter
 import BlogIndex from "./pages/blog/BlogIndex";
@@ -48,6 +49,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/start" element={<Start />} />
           <Route path="/settings" element={<Settings />} />
           {/* All vertical landing pages route through the unified VerticalPage template */}
           <Route path="/accounting" element={<Vertical />} />
