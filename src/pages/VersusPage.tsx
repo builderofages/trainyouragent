@@ -10,11 +10,16 @@ const HERO_PHONE_TEL = "+18135550142";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
   return (
-    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size }} aria-hidden="true">
-      <svg viewBox="0 0 64 64" style={{ width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
-        <circle cx="32" cy="32" r="30" fill="#E6F1FB" />
-        <g fill="#0C447C"><circle cx="20" cy="27" r="7.5" /><circle cx="32" cy="21" r="8.5" /><circle cx="44" cy="27" r="7.5" /><circle cx="24" cy="40" r="7" /><circle cx="40" cy="40" r="7" /><rect x="29" y="44" width="6" height="11" rx="1.5" /></g>
-        <circle cx="32" cy="32" r="30" fill="none" stroke="#185FA5" strokeWidth="1.5" />
+    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size, color: "#042C53" }} aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" style={{ width: size, height: size }} aria-hidden="true">
+        <g strokeWidth="4">
+          <path d="M 32 6 L 58 32 L 32 58 L 6 32 Z" />
+        </g>
+        <g strokeWidth="2.4">
+          <path d="M 32 6 L 32 58" />
+          <path d="M 6 32 L 58 32" />
+        </g>
+        <circle cx="32" cy="32" r="3" fill="currentColor" stroke="none" />
       </svg>
     </span>
   );
