@@ -11,7 +11,7 @@
 |---|---|---|---|
 | 1 | **Resend** (email) | `RESEND_API_KEY`, `LEAD_NOTIFY_TO`*, `LEAD_NOTIFY_FROM`* | 4 min |
 | 2 | **Anthropic** (chat + simulator) | `ANTHROPIC_API_KEY` | 3 min |
-| 3 | **Stripe** (checkout) | `STRIPE_SECRET_KEY`, `STRIPE_PRICE_OPERATORS`, `STRIPE_PRICE_FOUNDERS_BUILD` | 12 min |
+| 3 | **Stripe** (checkout + webhook) | `STRIPE_SECRET_KEY`, `STRIPE_PRICE_OPERATORS`, `STRIPE_PRICE_FOUNDERS_BUILD`, `STRIPE_WEBHOOK_SECRET` | 14 min |
 | 4 | **Slack webhook** (lead pings) | `SLACK_WEBHOOK_URL` | 5 min |
 | 5 | **beehiiv** (newsletter) | `BEEHIIV_PUB_ID`, `BEEHIIV_API_KEY` | 6 min |
 | 6 | **Meta Pixel + CAPI** (FB/IG ads) | `META_PIXEL_ID`, `META_CAPI_TOKEN` | 10 min |
@@ -167,6 +167,20 @@ curl -X POST https://trainyouragent.com/api/checkout \
   -d '{"plan":"operators","email":"you@yourdomain.com"}'
 ```
 Expected: `{"url":"https://checkout.stripe.com/c/pay/cs_live_..."}`. Open the URL in a browser to confirm the Stripe-hosted page loads with the right price.
+
+**Step D — Wire the webhook (`api/stripe-webhook.ts`):**
+
+Required for: server-side `Purchase` event to Meta CAPI (so iOS/ITP/ad-block users still convert), Slack ping when a customer buys, beehiiv `customers` tag for the post-purchase sequence, and the Resend welcome email.
+
+1. https://dashboard.stripe.com/webhooks -> **+ Add endpoint**
+2. Endpoint URL: `https://trainyouragent.com/api/stripe-webhook`
+3. Listen to: `checkout.session.completed` and `invoice.payment_succeeded`
+4. After creating, copy **Signing secret** (`whsec_...`) -> this is `STRIPE_WEBHOOK_SECRET`
+5. Add to Vercel:
+   ```bash
+   echo "whsec_xxxxxxxxx" | vercel env add STRIPE_WEBHOOK_SECRET production
+   ```
+6. Test from the Stripe dashboard: webhook page -> **Send test webhook** -> pick `checkout.session.completed`. Endpoint should return `200 {"ok":true,"type":"checkout.session.completed",...}`. If it returns `401 bad-signature`, the secret is wrong.
 
 
 ---
@@ -731,10 +745,11 @@ You should see `200 OK` for every endpoint you just tested. Any `500` here = red
 | Env var | Read in |
 |---|---|
 | `ANTHROPIC_API_KEY` | `api/chat.ts` |
-| `RESEND_API_KEY`, `LEAD_NOTIFY_TO`, `LEAD_NOTIFY_FROM`, `SLACK_WEBHOOK_URL` | `api/lead.ts`, `api/cal-webhook.ts` |
+| `RESEND_API_KEY`, `LEAD_NOTIFY_TO`, `LEAD_NOTIFY_FROM`, `SLACK_WEBHOOK_URL` | `api/lead.ts`, `api/cal-webhook.ts`, `api/stripe-webhook.ts`, `api/booking-abandoned.ts` |
 | `STRIPE_SECRET_KEY`, `STRIPE_PRICE_OPERATORS`, `STRIPE_PRICE_FOUNDERS_BUILD` | `api/checkout.ts` |
-| `BEEHIIV_PUB_ID`, `BEEHIIV_API_KEY` | (newsletter handler — separate subagent) |
-| `META_PIXEL_ID`, `META_CAPI_TOKEN`, `META_TEST_EVENT_CODE` | `api/meta-event.ts`, `api/cal-webhook.ts`, `index.html` (pixel ID hardcoded) |
+| `STRIPE_WEBHOOK_SECRET` | `api/stripe-webhook.ts` |
+| `BEEHIIV_PUB_ID`, `BEEHIIV_API_KEY` | `api/lead.ts`, `api/stripe-webhook.ts`, `api/booking-abandoned.ts` |
+| `META_PIXEL_ID`, `META_CAPI_TOKEN`, `META_TEST_EVENT_CODE` | `api/meta-event.ts`, `api/cal-webhook.ts`, `api/stripe-webhook.ts`, `index.html` (pixel ID hardcoded) |
 | `GA4_MEASUREMENT_ID` | GTM container (referenced from `index.html`) |
 | `GADS_CONVERSION_ID`, `GADS_CONVERSION_LABEL` | GTM container |
 | `CAL_WEBHOOK_SECRET` | `api/cal-webhook.ts` |

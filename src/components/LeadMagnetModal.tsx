@@ -5,7 +5,10 @@
 import { useEffect, useState } from "react";
 
 const FORM_ENDPOINT = "/api/lead"; // wired to api/lead.ts
-const PDF_PATH = "/buyers-guide.pdf";
+// v33c: dynamic generated PDF (api/buyers-guide-pdf.ts) — pass the email so
+// the server can log the download. The PDF body itself is identical for every
+// caller; the email just gives us an attribution row in logs.
+const PDF_ENDPOINT = "/api/buyers-guide-pdf";
 
 export default function LeadMagnetModal({
   open, onClose,
@@ -28,24 +31,23 @@ export default function LeadMagnetModal({
     e.preventDefault();
     setState("sending");
     try {
-      if (FORM_ENDPOINT) {
-        const r = await fetch(FORM_ENDPOINT, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({ email, name, source: "buyers-guide", path: location.pathname }),
-        });
-        if (!r.ok) throw new Error("Submit failed");
-      } else {
-        // SECURITY (v30): never persist raw PII (email/name) in localStorage. If the
-        // form endpoint is unavailable, surface an error instead of silently storing
-        // the lead in the browser where any third-party script could read it.
-        throw new Error("Submit failed");
-      }
+      // v33c: lead capture first, then we hand the user a personalized PDF
+      // download URL (server-generated PDF lives at /api/buyers-guide-pdf).
+      const r = await fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ email, name, source: "buyers-guide", path: location.pathname }),
+      });
+      if (!r.ok) throw new Error("Submit failed");
       setState("ok");
     } catch {
       setState("err");
     }
   };
+
+  // v33c: build the personalized PDF link. The email is just for tracking;
+  // the PDF body is identical for everyone.
+  const pdfHref = `${PDF_ENDPOINT}?email=${encodeURIComponent(email)}`;
 
   if (!open) return null;
 
@@ -71,7 +73,7 @@ export default function LeadMagnetModal({
           <div className="text-center py-4">
             <div className="text-[12px] uppercase tracking-[0.18em] text-[#22A36C] font-semibold mb-3">Unlocked</div>
             <h4 className="text-[22px] font-semibold text-[#042C53] mb-3">Your download is ready.</h4>
-            <a href={PDF_PATH} target="_blank" rel="noopener" className="inline-block px-6 py-3 rounded-full bg-[#042C53] text-white text-[14px] font-semibold hover:bg-[#0A3D6E]">
+            <a href={pdfHref} target="_blank" rel="noopener" className="inline-block px-6 py-3 rounded-full bg-[#042C53] text-white text-[14px] font-semibold hover:bg-[#0A3D6E]">
               Download the PDF →
             </a>
             <div className="mt-4 text-[13px] text-slate-600">We've also emailed a copy to {email}.</div>
