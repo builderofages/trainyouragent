@@ -27,8 +27,8 @@
 //     Stripe's event.id is used as the Meta event_id seed so duplicate
 //     deliveries collapse on Meta's side.
 
-import { rateLimit, ipFromRequest } from "./_lib/rate-limit";
-import { verifyStripeSignature } from "./checkout";
+import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
+import { verifyStripeSignature } from "./checkout.js";
 
 export const config = { runtime: "edge" };
 

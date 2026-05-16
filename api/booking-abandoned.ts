@@ -20,8 +20,8 @@
 //   - Email validation
 //   - Vertical + dropoffStep allowlists so the beehiiv tag can't be polluted
 
-import { rateLimit, ipFromRequest } from "./_lib/rate-limit";
-import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors";
+import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
+import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors.js";
 
 export const config = { runtime: "edge" };
 

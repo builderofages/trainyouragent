@@ -41,7 +41,7 @@ type NodeRes = {
   send(body: Buffer | string): void;
 };
 
-export const config = { runtime: "nodejs20.x" };
+export const config = { runtime: "nodejs" };
 
 const NAVY = "#042C53";
 const ACCENT = "#185FA5";

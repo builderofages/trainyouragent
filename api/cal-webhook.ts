@@ -19,7 +19,7 @@
 //   - Signature still required and verified in constant time
 //   - Per-IP rate limit as defense-in-depth in case secret leaks
 
-import { rateLimit, ipFromRequest } from "./_lib/rate-limit";
+import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
 
 export const config = { runtime: "edge" };
 

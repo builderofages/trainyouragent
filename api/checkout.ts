@@ -13,8 +13,8 @@
 //   - Stripe error messages NOT echoed to caller (could leak account hints)
 //   - Webhook signature placeholder exported for future api/stripe-webhook.ts
 
-import { rateLimit, ipFromRequest } from "./_lib/rate-limit";
-import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors";
+import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
+import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors.js";
 
 export const config = { runtime: "edge" };
 

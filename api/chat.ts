@@ -11,8 +11,8 @@
 //   - max_tokens capped at 800
 //   - ANTHROPIC_API_KEY never logged or echoed in errors
 
-import { rateLimit, ipFromRequest } from "./_lib/rate-limit";
-import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors";
+import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
+import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors.js";
 
 export const config = { runtime: "edge" };
 

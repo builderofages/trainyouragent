@@ -14,8 +14,8 @@
 //     requires PII be hashed before transmission per CAPI spec)
 //   - Meta error responses scrubbed before returning to caller
 
-import { rateLimit, ipFromRequest } from "./_lib/rate-limit";
-import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors";
+import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
+import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors.js";
 
 export const config = { runtime: "edge" };
 
