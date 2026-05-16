@@ -192,7 +192,32 @@ function renderPdf(): Uint8Array {
   h2("What drives the spread");
   p("Verticals where missed inbound calls correlate with immediate revenue loss (real estate, HVAC, legal intake) adopted first. Verticals where buyer-personas are reached primarily through field/in-person channels (construction, parts of restaurants) adopted last.");
   p("Healthcare is the surprise leader at 38% — we expected regulatory friction (HIPAA, BAA agreements, EHR integration) to slow it. Instead, the labor crisis in front-desk medical staffing has dramatically accelerated buying. Front-desk turnover above 35%/yr forced operations leaders to evaluate agent options as a survival tactic, not an optimization.");
+  p("Construction lags partly because the typical decision-maker (the GC, the small-business owner) is hard to reach through the digital-marketing channels most AI-ops vendors rely on for distribution. We expect this vertical to accelerate once a few high-visibility case studies emerge in 2026-2027.");
+  p("Real estate's #1 ranking comes from a precise math problem: Zillow and other portal leads cool off in 90 seconds, and the most successful agent teams have rebuilt their operations around speed-to-lead. AI voice agents that respond in under 60 seconds, 24/7, are an obvious unlock. Adoption among the top-decile producer teams is north of 60% by our data.");
   drawFooter(doc, W, H, M);
+
+  // Per-vertical pages — one page each for the top 4 verticals, with deeper narrative.
+  for (const [vertical, blurb] of [
+    ["Real estate", "Median 19-day payback. Primary value driver is sub-60-second callbacks on portal leads. Top install patterns: outbound dialer triggered on portal lead submission, qualification flow (buyer/seller intent, financing stage, timeline), CRM sync to Follow Up Boss or kvCORE. Watch-outs: state-specific licensing rules around what an AI can and cannot say in property-related conversations; consult counsel before launch."],
+    ["HVAC + home services", "Median 28-day payback. Primary value driver is after-hours emergency capture. Top install patterns: 24/7 inbound voice agent with ServiceTitan or HouseCallPro integration, urgency-triage flow that surfaces emergencies to the on-call tech, automatic dispatch SMS. Watch-outs: bilingual coverage is non-optional in most US metros; budget extra build time for Spanish flow."],
+    ["Healthcare (admin)", "Median 41-day payback. Primary value driver is front-desk labor savings. Top install patterns: new-patient intake with insurance verification, appointment scheduling with EHR sync (Athena, Epic, Dentrix), prescription-refill triage. Watch-outs: BAA agreements required; never store PHI outside the HIPAA boundary; some EHRs have weak API ergonomics that add 2x to integration timelines."],
+    ["Legal intake", "Median 47-day payback. Primary value driver is conflict-check + qualification depth. Top install patterns: voice and chat intake with Clio or PracticePanther sync, conflict-check automation, area-of-law routing. Watch-outs: unauthorized-practice-of-law restrictions on what the agent can and cannot say; pair every install with a clear escalation path to a licensed attorney."],
+  ] as Array<[string, string]>) {
+    doc.addPage(); paintBackground(doc, W, H); drawHeaderBar(doc, W, M); y = M + 50;
+    h2(`Vertical deep-dive: ${vertical}`);
+    p(blurb);
+    h3("Typical install economics");
+    p("Build fee: $6,000-$15,000. Monthly retainer: $999-$2,499. Per-call run cost: $0.32-$0.58. Time to live: 21-35 days from kickoff. Typical contract length: 12 months with month-to-month after initial term.");
+    h3("Common rollout pitfalls");
+    bullet("Trying to automate the hardest 20% of calls in phase one. Scope the easy 70% first.", 1);
+    bullet("Insufficient KB freshness cadence — vertical-specific knowledge changes quickly.", 2);
+    bullet("Under-investing in the human escalation path — the 5% of complex cases destroy customer trust if mishandled.", 3);
+    h3("Recommended success metrics");
+    bullet("Primary: after-hours capture rate (% of off-hours calls handled by agent vs voicemail).", 1);
+    bullet("Secondary: booked-appointment rate from inbound calls (baseline vs post-install).", 2);
+    bullet("Tertiary: agent-CSAT (post-call 1-question survey of agent interaction quality).", 3);
+    drawFooter(doc, W, H, M);
+  }
 
   // ============ SECTION 2 — ROI ============
   doc.addPage(); paintBackground(doc, W, H); drawHeaderBar(doc, W, M); y = M + 50;
@@ -222,6 +247,21 @@ function renderPdf(): Uint8Array {
   verticalPayback.forEach(([label, days]) => bar(label, `${days} days`, days, 140));
   drawFooter(doc, W, H, M);
 
+  // ============ SECTION 2b — ROI deep dive ============
+  doc.addPage(); paintBackground(doc, W, H); drawHeaderBar(doc, W, M); y = M + 50;
+  h2("ROI deep-dive by deployment type");
+  h3("Voice agent for inbound call capture");
+  p("Best-in-class category for ROI demonstration. Booking-rate uplift typical of 5-12 percentage points (e.g. 38% baseline -> 47% post-install). After-hours capture moves from 18% callback recovery (voicemail-based) to 100%. Average revenue lift per 1,000 monthly calls: $7,000-$14,000 depending on vertical.");
+  h3("Speed-to-lead outbound dialer");
+  p("Tightest payback when paired with active paid-lead generation (Meta, Google, portal subscriptions). The 18-day median masks variance: customers with no existing follow-up discipline see 30%+ lift in lead-to-meeting conversion; customers with disciplined manual follow-up see only 8-12% lift.");
+  h3("Customer-support chatbot");
+  p("Deflection rate of 65-85% is typical at month 3 (after iteration). Cost-per-resolved-ticket drops from $4-$8 (human BPO) to $0.04-$0.12 (AI agent + escalation). Longer payback because deflection-rate measurement requires careful baseline + post-install comparison and is muddied by ticket-volume changes.");
+  h3("Sales follow-up automation");
+  p("Better as copilot than autonomous agent. Reps using AI-drafted follow-up email shipped 3.4x more touches per week and saw 18-26% lift in deal-close rate over 90 days. Payback is slow because the lift is in revenue-quality metrics that take time to measure.");
+  h3("Internal knowledge / Q&A bot");
+  p("Slowest payback of the five categories — 110 days median. The win is in employee productivity (time-saved on policy questions, onboarding faster) which is hard to measure. We recommend this category third in priority for new buyers.");
+  drawFooter(doc, W, H, M);
+
   // ============ SECTION 3 — failure modes ============
   doc.addPage(); paintBackground(doc, W, H); drawHeaderBar(doc, W, M); y = M + 50;
   h1("Section 3 — The 7 reasons pilots fail");
@@ -246,6 +286,19 @@ function renderPdf(): Uint8Array {
   bullet("Include 1-2 customer-side team members on the eval-grading panel from week 1.", 7);
   drawFooter(doc, W, H, M);
 
+  // Failure-mode deep dive page
+  doc.addPage(); paintBackground(doc, W, H); drawHeaderBar(doc, W, M); y = M + 50;
+  h2("Failure modes — narrative deep dive");
+  h3("1. No named metric owner (41% of dead pilots)");
+  p("By far the most common cause. The pilot's executive sponsor delegates implicitly to a vendor and to a generic 'operations team' that has no specific person on the hook. By week 4 nobody is looking at the dashboard. By week 8 the agent has degraded due to KB drift and prompt staleness. By week 12 the pilot is declared dead. The fix is administrative, not technical: name an individual, on the customer side, who has 30 minutes twice a week blocked on their calendar to review agent performance.");
+  h3("2. Success metric never defined (27%)");
+  p("Vague outcomes like 'improve customer experience' or 'save time' cannot be evaluated. The corollary is that the executive can never confidently fund expansion because there's no number to point at. The fix is to define one primary metric with a baseline and a target before the pilot starts, and to collect two weeks of baseline data before going live so the comparison has integrity.");
+  h3("3. Over-scoped phase one (19%)");
+  p("Eager teams ask the agent to handle the hardest 10% of cases in phase one — the emotional escalations, the multi-system disputes, the nuanced exceptions. The agent struggles on the hardest cases (which is correct behavior), and the political verdict is rendered on those failures rather than the much larger volume of successes. The fix is to scope the easy 70% of cases for phase one. Earn the political capital. Then expand.");
+  h3("4. No human escalation path (17%)");
+  p("Either it doesn't exist or it was never tested. The first time a real customer says 'let me talk to a person,' the agent fails to route correctly, the customer hangs up, the 1-star review is posted. Test the escalation path on day one with three live scenarios — one billing, one technical, one emotional. The escalation must be tested, not just configured.");
+  drawFooter(doc, W, H, M);
+
   // ============ SECTION 4 — readiness scorecard ============
   doc.addPage(); paintBackground(doc, W, H); drawHeaderBar(doc, W, M); y = M + 50;
   h1("Section 4 — 15-point readiness scorecard");
@@ -268,6 +321,20 @@ function renderPdf(): Uint8Array {
     "We have communicated the rollout plan to the customer-facing team before kickoff.",
   ];
   scorecard.forEach((s, i) => bullet(s, i + 1));
+  drawFooter(doc, W, H, M);
+
+  // Scorecard scoring guide
+  doc.addPage(); paintBackground(doc, W, H); drawHeaderBar(doc, W, M); y = M + 50;
+  h2("How to use the scorecard");
+  p("Score honestly. Lying to yourself at the scoring stage is the most expensive form of false confidence — you'll burn a $10k pilot to learn what you could have known here for free.");
+  h3("13-15 points: Ship it");
+  p("You have the organizational readiness for a successful pilot. Pick a vendor, kick off, follow the standard 90-day plan. Expect to pass the day-60 evaluation.");
+  h3("9-12 points: Ship with high-touch enablement");
+  p("You have the bones of a successful pilot but a few specific gaps. Address the lowest-scoring items before kickoff — usually metric definition and human-escalation testing. Build a 90-day plan with weekly check-ins, not bi-weekly. Expect to need one mid-course correction.");
+  h3("5-8 points: Don't ship yet");
+  p("The gaps will compound. You'll spend $10k+ to learn what's missing. Spend the next 4-8 weeks closing the gaps (name the metric owner, define the metric, collect baseline, design the escalation path) and re-score. Most teams in this band can move to the 'ship with enablement' tier within a quarter if they're intentional.");
+  h3("Under 5 points: Do not ship");
+  p("The pilot will fail. The economic and political cost will set your AI program back 12-18 months. Use the scorecard as a roadmap for organizational readiness investments. Re-evaluate in 6 months.");
   drawFooter(doc, W, H, M);
 
   // ============ SECTION 5 — vendor landscape ============
