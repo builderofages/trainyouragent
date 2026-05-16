@@ -1,0 +1,197 @@
+---
+title: "The Real Cost of a Custom AI Agent in 2026 (Bottom-Up Build Math)"
+slug: "the-real-cost-of-a-custom-ai-agent"
+date: "2026-05-14"
+author: "Alexander Mills"
+excerpt: "Forget the $99/mo SaaS pricing pages. Here's what a real custom AI agent actually costs to build, run, and maintain — engineering hours, infra, model spend, evaluation, on-call. Plus the breakeven math vs the human team it replaces."
+category: "AI Strategy"
+heroImage: "/api/og?title=Real+Cost+of+a+Custom+AI+Agent&subtitle=TrainYourAgent"
+tags: ["pricing", "cost", "agents", "infrastructure", "budgeting"]
+readingTime: "10 min read"
+---
+
+Every founder who asks "what does a custom agent cost?" is really asking three different questions stacked on top of each other:
+
+1. **What's the build cost?** (one-time)
+2. **What's the run cost?** (recurring infra + model spend)
+3. **What's the maintenance cost?** (people-time to keep it working)
+
+The SaaS pricing pages with the big "$99/mo" headline only answer about 20% of question 2. The rest is in the footnotes. Here's the bottom-up math, the way I actually quote deals.
+
+## Build cost: what actually goes into "$9,950"
+
+Our typical custom-build fee at TrainYourAgent is $9,950. Here's where every dollar goes for a representative install (mid-complexity, two integrations, single-channel voice agent):
+
+| Line item | Hours | Loaded rate | Cost |
+|---|---|---|---|
+| Discovery + scope doc | 6 | $250/hr | $1,500 |
+| System prompt + persona engineering | 8 | $250/hr | $2,000 |
+| Knowledge-base extraction + chunking | 6 | $250/hr | $1,500 |
+| Integration #1 (CRM or PMS) | 8 | $250/hr | $2,000 |
+| Integration #2 (calendar or telephony) | 6 | $250/hr | $1,500 |
+| Evaluation suite (20 test cases) | 6 | $250/hr | $1,500 |
+| Telephony provisioning + SIP routing | 3 | $250/hr | $750 |
+| Production hardening + handoff | 4 | $250/hr | $1,000 |
+| **Total engineering** | **47 hrs** | | **$11,750** |
+| Founder margin reduction (discounted) | | | **-$1,800** |
+| **Quoted price** | | | **$9,950** |
+
+The fully-loaded engineering rate of $250/hr reflects: senior IC pay, payroll burden, benefits, software stack (Vapi, Pinecone, monitoring, eval tooling), proration of office/admin overhead, sales acquisition cost, and ~25% gross-margin retained for the business. Below that rate, you're either using contractors who'll disappear when you need them, or you're building the wrong company.
+
+For deals priced below $9,950, the scope is genuinely smaller — single integration, no telephony, off-the-shelf knowledge base. Below $5,000 you should be on a SaaS template.
+
+## Run cost: the line items the sales page hides
+
+This is where most SMBs get surprised. Here's the breakdown for a realistic month at 600 calls / 4 min avg:
+
+**Model spend (the LLM itself)**
+- Inference at ~$0.02/min effective (Claude Sonnet 4.6 with optimized prompts) × 2,400 min = **$48/mo**
+- Worth noting: bad prompts and unbounded conversations can 3-5x this number. We've audited installs where a competitor shop was burning $250/mo on model calls for the same call volume because they were re-injecting the entire knowledge base into every turn.
+
+**Telephony**
+- Vapi or Bland routed via Twilio: ~$0.022/min × 2,400 = $53
+- Phone number: $1/mo
+- **Subtotal: $54/mo**
+
+**Speech (STT + TTS)**
+- STT (Deepgram Nova-3): $0.0043/min × 2,400 = $10
+- TTS (Eleven Labs Flash 2.5 or PlayHT): $0.030/min effective × 2,400 = $72
+- **Subtotal: $82/mo**
+
+**Vector / RAG infrastructure**
+- Pinecone serverless or pgvector on Supabase: $25-$60/mo at typical KB size
+- Embedding refresh costs: $10/mo amortized
+- **Subtotal: $40/mo**
+
+**Observability + analytics**
+- Datadog or Logflare: $20/mo at this volume
+- Call recording storage (90-day retention): $15/mo
+- **Subtotal: $35/mo**
+
+**Total run cost: $259/mo**
+
+For 600 calls, that's $0.43 per call landed. Cheaper than a single Bing-clicked ad lead.
+
+## Maintenance cost: the line item that decides whether you ship
+
+This is the one the bargain-bin agencies don't price in. After day one, an agent needs:
+
+- **Daily**: monitor call recordings flagged by the eval system (~15 min, automated triage cuts this to 5 min).
+- **Weekly**: tag the failed conversations, update the system prompt, redeploy. Usually 2-4 hours.
+- **Monthly**: full eval re-run, knowledge base refresh, A/B test new prompt variants. 4-8 hours.
+- **Quarterly**: model upgrade evaluation (new Sonnet release? GPT-6?), regression testing, customer-facing changelog. 6-12 hours.
+
+If you do this yourself: budget 20-30 hours/month of competent IC time. At $250/hr loaded that's $5,000-$7,500/mo — more than the cost of the agent itself.
+
+If we maintain it for you under retainer: $1,500-$3,500/mo depending on complexity. That's why most customers stay on retainer after build — the math is straightforward.
+
+## Breakeven math: when does this beat hiring?
+
+The most useful framing for buyers is: **how many months of run cost equals one quarter of a human FTE?**
+
+A US-loaded receptionist at $54K/yr = $13,500/quarter. Our typical install costs:
+
+- $9,950 build (one time)
+- $599/mo retainer (Operators tier) + $259/mo run cost = $858/mo all-in.
+
+For three months that's $2,574 run + $9,950 build = $12,524.
+
+**You break even on day 84.** Quarter two onward, the agent is pure profit on the labor-replacement side, and that's before factoring booking-rate improvements or after-hours capture.
+
+For a $108K/yr two-person team, the breakeven drops to ~day 30.
+
+## The pricing models I've actually seen work
+
+After three years building agents for SMBs, exactly three pricing structures hold up:
+
+**1. Fixed-fee build + retainer.** What we do. Clean MRR, predictable.
+
+**2. Pay-per-booked-outcome.** Works when the customer has a single, easy-to-attribute conversion event (booked appointment, qualified lead, paid order). $20-50 per booked appointment is common. Bad when the customer disputes attribution.
+
+**3. Revenue share.** Works for early-stage SaaS or content businesses with a clean revenue line and a long-term partnership. Bad for SMB because the accounting is painful.
+
+Everything else (hourly, "we'll bill you what it takes") fails. Skip them.
+
+## Where most agencies overcharge
+
+Three patterns I see weekly:
+
+- **$30,000+ "AI strategy" engagements that don't ship code.** This is consulting wearing engineering's clothes. Refuse.
+- **Per-seat SaaS pricing for agents nobody uses.** If you're paying $99/user/mo for an agent that 12 employees ignore, you're paying $1,188/mo for a Slack notification.
+- **"Enterprise" voice platforms at $5K/mo minimum.** For 90% of SMBs this is 10x the right price.
+
+## Where most agencies undercharge
+
+Two patterns that destroy projects:
+
+- **$1,500 "we'll build your agent in a weekend" Fiverr fees.** They deliver something that demos well and breaks in production. There's no maintenance retainer because there's no business behind it.
+- **Free pilots.** A pilot that doesn't have skin in the game on the buyer side never gets the data, the integrations, or the attention it needs to succeed. Charge for pilots. Even $500.
+
+## A simple budgeting framework
+
+If you're an SMB buyer thinking about an agent, the math you should run:
+
+- **Hard ceiling on build**: 6 months of the labor cost it replaces.
+- **Hard ceiling on monthly run + retainer**: 30% of the labor cost it replaces.
+- **Maintenance retainer required from month 1**. No retainer = no agent. The thing degrades without it.
+
+If a vendor's quote violates any of those, it's the wrong vendor.
+
+## Try the cost estimator
+
+We built a [Cost Estimator](/tools/cost-estimator) that runs this math against your own call volume and labor cost — gives you a 12-month TCO with all four cost components broken out. Free, no email required to see the result.
+
+If you want a real quote on a real build: [book a call](/book). I'll run your specific numbers live during the call and email you the scope doc inside 24 hours.
+
+## Cost benchmarks across deal sizes we've actually closed
+
+For context, here's the spread of build + run costs across the deal sizes we've shipped in 2025-26:
+
+| Tier | Build fee | Mo retainer | Mo run cost | 12-mo TCO |
+|---|---|---|---|---|
+| Solo operator (coach, single attorney) | $2,950 | $399 | $90 | $8,818 |
+| Single-location SMB | $4,950 | $799 | $180 | $16,698 |
+| Multi-location SMB (3-5 sites) | $9,950 | $1,499 | $310 | $31,658 |
+| Multi-location enterprise SMB | $14,950 | $2,500 | $620 | $52,390 |
+| Custom multi-product DTC | $24,950 | $5,000+ | $1,200+ | $99,350+ |
+
+For each tier the model is the same: front-load the engineering on the build fee, recover ongoing engineering effort and infra through the retainer, recover variable usage through the run cost line. SMBs at every tier are roughly paying $0.30–$0.65 per call landed, all-in.
+
+## The math nobody runs but should
+
+The honest test for whether you should build vs buy off-the-shelf SaaS isn't the sticker price. It's this single ratio:
+
+**(annual_revenue_from_the_use_case) / (annual_TCO_of_the_solution)**
+
+If that ratio is above 8x, you almost certainly want a custom build because the marginal improvement from a custom solution will multiply that ratio dramatically.
+
+If that ratio is below 3x, SaaS is probably right because you can't afford the slope of investment a custom build implies.
+
+Between 3x and 8x is the gray zone where it depends on how much your team can absorb in onboarding effort and whether the SaaS template can be customized enough to land the use case.
+
+Most SMB voice-agent installs end up in the 12-20x range — which is why they're a category where custom builds dominate SaaS.
+
+## What "ongoing infra" actually means in 2026
+
+A non-exhaustive list of services I'm paying for every month to ship a single voice agent install:
+
+- LLM provider (Anthropic API)
+- Telephony orchestration (Vapi)
+- SIP routing (Twilio)
+- STT (Deepgram)
+- TTS (Eleven Labs)
+- Vector DB (Pinecone, sometimes pgvector on Supabase)
+- Embedding model API
+- Observability (Datadog Logs)
+- Call recording storage (S3 with 90-day retention)
+- Eval framework (custom + Braintrust)
+- Application hosting (Vercel)
+- Database (Supabase)
+- Error tracking (Sentry)
+- Email transactional (Resend)
+- SMS transactional (Twilio)
+- Status page (Statuspage)
+
+Each of those is between $5 and $80/mo. Total infra-only cost per install: $130-$220/mo depending on volume. That's why the $259/mo run cost I quoted earlier isn't actually padding — it's just covering what real infrastructure costs in 2026.
+
+If a vendor is quoting you $100/mo "all-in" for a custom voice agent, they're either eating the infra cost on their own balance sheet (unsustainable, you'll be repriced inside 12 months) or they're cutting corners that will bite you in production.

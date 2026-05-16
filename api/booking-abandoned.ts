@@ -92,18 +92,29 @@ export default async function handler(req: Request) {
 
   if (RESEND_KEY) {
     const scheduledAt = new Date(Date.now() + NUDGE_DELAY_MS).toISOString();
-    const subject = "Heads up — you started but didn't finish booking";
+    // v42: soft re-engage. Lead with the report (no commitment), then offer
+    // the call as the secondary CTA. Drops the "you didn't finish" framing
+    // because it tested badly — too guilt-inducing.
+    const subject = "Sending you the State of AI Ops 2026 report";
     const text = [
       "Hey,",
       "",
-      "Saw you opened the calendar but didn't lock in a time. No pressure —",
-      "but if you're trying to figure out whether an AI voice agent makes",
-      "sense for your business, 30 minutes with us will save you a week of",
-      "vendor calls.",
+      "Saw you were looking around earlier — figured I'd send something more",
+      "useful than a 'did you forget?' nudge. Our 30-page State of AI",
+      "Operations 2026 report just came out. It covers:",
       "",
-      `Here's the link if you want it: ${KICKOFF_LINK}`,
+      "  • Adoption + payback benchmarks across 8 verticals",
+      "  • The 7 reasons pilots fail (and how to avoid each)",
+      "  • Our 15-point readiness scorecard",
+      "  • The 2026-2027 vendor landscape",
       "",
-      "Or just reply with one question and I'll answer it directly.",
+      "Free, no further commitment:",
+      "  https://trainyouragent.com/report/state-of-ai-ops-2026",
+      "",
+      "If after reading it you'd like a 30-min scoping conversation, the",
+      `calendar is here: ${KICKOFF_LINK}`,
+      "",
+      "Either way, happy to answer any single specific question by reply.",
       "",
       "— Alexander Mills",
       "  Founder, TrainYourAgent",

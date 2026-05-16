@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import RoiCalculator from "@/components/RoiCalculator";
+import SmartPriceReveal from "@/components/SmartPriceReveal";
 import NewsletterCapture from "@/components/NewsletterCapture";
 import CalEmbed from "@/components/CalEmbed";
 import ToastHost, { toast } from "@/components/Toast";
@@ -254,6 +255,13 @@ const Pricing = () => {
         </div>
       </section>
 
+      {/* v42: smart price reveal */}
+      <section className="px-5 sm:px-8 pt-12 pb-4">
+        <div className="max-w-5xl mx-auto">
+          <SmartPriceReveal />
+        </div>
+      </section>
+
       {/* ROI CALCULATOR */}
       <section className="px-5 sm:px-8 py-24">
         <div className="max-w-5xl mx-auto">
@@ -275,6 +283,10 @@ const Pricing = () => {
             <h2 className="text-[26px] sm:text-[36px] leading-tight font-semibold text-[#042C53]">
               Pick a time. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Talk to a builder.</span>
             </h2>
+            <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-[12.5px] text-amber-900">
+              <span aria-hidden>•</span>
+              Calendar fills 7-10 days out — book before Friday for a slot this month.
+            </div>
           </div>
           <CalEmbed height={680} />
         </div>

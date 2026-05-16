@@ -20,6 +20,7 @@
 //   - Per-IP rate limit as defense-in-depth in case secret leaks
 
 import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
+import { recordEvent } from "./_lib/lead-store.js";
 
 export const config = { runtime: "edge" };
 
@@ -70,6 +71,13 @@ export default async function handler(req: Request) {
     meetingUrl:  p.metadata?.videoCallUrl || p.location || "",
     triggerEvent,
   };
+
+  // v42: persistent funnel event so /admin/funnel sees real numbers.
+  if (triggerEvent === "BOOKING_CREATED") {
+    try {
+      recordEvent("booking_created", { source: "cal.com", data: { type: summary.type } });
+    } catch { /* never block webhook on logging */ }
+  }
 
   const tasks: Promise<unknown>[] = [];
 

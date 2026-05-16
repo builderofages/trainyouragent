@@ -15,6 +15,7 @@ import AiChat from "@/components/AiChat";
 import ExitIntent from "@/components/ExitIntent";
 import LeadMagnetModal from "@/components/LeadMagnetModal";
 import LiveActivity from "@/components/LiveActivity";
+import LiveActivityTicker from "@/components/LiveActivityTicker";
 
 // v41: everything else is lazy-loaded to keep main entry chunk small.
 const Dashboard           = lazy(() => import("./pages/Dashboard"));
@@ -76,6 +77,14 @@ const RoiCalculator     = lazy(() => import("./pages/tools/RoiCalculator"));
 const PromptCritic      = lazy(() => import("./pages/tools/PromptCritic"));
 const ScenarioGenerator = lazy(() => import("./pages/tools/ScenarioGenerator"));
 const LatencySimulator  = lazy(() => import("./pages/tools/LatencySimulator"));
+
+// v42: live AI demos
+const SalesObjectionHandler = lazy(() => import("./pages/demos/SalesObjectionHandler"));
+const SopWriter             = lazy(() => import("./pages/demos/SopWriter"));
+const SeoCluster            = lazy(() => import("./pages/demos/SeoCluster"));
+
+// v42: lead-magnet report page
+const StateOfAiOps2026  = lazy(() => import("./pages/StateOfAiOps2026"));
 
 const queryClient = new QueryClient();
 
@@ -181,6 +190,12 @@ const App = () => (
             <Route path="/tools/prompt-critic" element={<PromptCritic />} />
             <Route path="/tools/scenario-generator" element={<ScenarioGenerator />} />
             <Route path="/tools/latency-simulator" element={<LatencySimulator />} />
+            {/* v42: live AI demos */}
+            <Route path="/demos/sales-objection-handler" element={<SalesObjectionHandler />} />
+            <Route path="/demos/sop-writer" element={<SopWriter />} />
+            <Route path="/demos/seo-cluster" element={<SeoCluster />} />
+            {/* v42: report (lead magnet) */}
+            <Route path="/report/state-of-ai-ops-2026" element={<StateOfAiOps2026 />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />
@@ -191,6 +206,7 @@ const App = () => (
           {({ open, close }) => <LeadMagnetModal open={open} onClose={close} />}
         </ExitIntent>
         <LiveActivity />
+        <LiveActivityTicker />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

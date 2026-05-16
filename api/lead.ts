@@ -73,6 +73,11 @@ const ALLOWED_SOURCES = new Set([
   // v41: community + partners
   "community-win",
   "partner-apply",
+  // v42: report lead magnet + demos
+  "report-state-of-ai-ops-2026",
+  "demo:objections",
+  "demo:sop",
+  "demo:seo",
 ]);
 
 const MAX_BODY_BYTES = 16 * 1024; // 16 KB is plenty for a lead form

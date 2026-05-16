@@ -15,6 +15,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { fireEvent } from "@/lib/event";
 
 const FORM_ENDPOINT = "/api/lead";
 
@@ -173,11 +174,12 @@ export default function Start() {
   const [email, setEmail] = useState("");
   const [submitState, setSubmitState] = useState<"idle" | "sending" | "ok" | "err">("idle");
 
-  // Load any pre-existing pathway on mount.
+  // Load any pre-existing pathway on mount + fire router_view once.
   useEffect(() => {
     const existing = loadPathway();
     if (existing.lane) setPathway(existing);
     if (existing.email) setEmail(existing.email);
+    void fireEvent("router_view", { resumed: existing.lane ? 1 : 0 });
   }, []);
 
   // Inject Inter Tight font once (matches the rest of the site).
@@ -199,6 +201,7 @@ export default function Start() {
     setPathway(next);
     savePathway(next);
     setStep(2);
+    void fireEvent("router_lane_chosen", { lane });
   };
 
   const pickBranch = (branch: string, branchSlug?: string) => {
@@ -238,10 +241,12 @@ export default function Start() {
         }),
       });
       setSubmitState("ok");
+      void fireEvent("router_email_gate", { email_provided: true });
       setTimeout(() => navigate(routeFor(final)), 700);
     } catch {
       // Still route them — we have their answers in localStorage.
       setSubmitState("err");
+      void fireEvent("router_email_gate", { email_provided: false });
       setTimeout(() => navigate(routeFor(final)), 1200);
     }
   };

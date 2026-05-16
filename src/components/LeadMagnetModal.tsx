@@ -5,19 +5,44 @@
 import { useEffect, useState } from "react";
 
 const FORM_ENDPOINT = "/api/lead"; // wired to api/lead.ts
-// v33c: dynamic generated PDF (api/buyers-guide-pdf.ts) — pass the email so
-// the server can log the download. The PDF body itself is identical for every
-// caller; the email just gives us an attribution row in logs.
-const PDF_ENDPOINT = "/api/buyers-guide-pdf";
+
+type Props = {
+  open: boolean;
+  onClose: () => void;
+  title?: string;
+  subtitle?: string;
+  /** Source enum sent to /api/lead — must be in the ALLOWED_SOURCES set */
+  source?: string;
+  /** Backend that serves the PDF after capture. Email is appended as ?email= */
+  pdfEndpoint?: string;
+  /** Button copy after capture */
+  downloadCta?: string;
+};
 
 export default function LeadMagnetModal({
   open, onClose,
-  title = "The AI Voice Buyer's Guide",
-  subtitle = "What to look for, what to refuse to pay for, and the seven questions every vendor dodges.",
-}: { open: boolean; onClose: () => void; title?: string; subtitle?: string }) {
+  // v42: default to the State of AI Ops 2026 report (richer lead magnet)
+  title = "State of AI Operations 2026",
+  subtitle = "30 pages on AI agent adoption, ROI benchmarks, the 7 reasons pilots fail, and the 2026-2027 vendor landscape. Free.",
+  source = "report-state-of-ai-ops-2026",
+  pdfEndpoint = "/api/state-of-ai-ops-pdf",
+  downloadCta = "Download the report →",
+}: Props) {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "ok" | "err">("idle");
   const [name, setName] = useState("");
+
+  // v42: prefill email if we have it from a prior pathway-router session.
+  useEffect(() => {
+    if (!open) return;
+    try {
+      const raw = window.localStorage.getItem("tya:pathway");
+      if (raw) {
+        const obj = JSON.parse(raw) as { email?: string };
+        if (obj?.email && !email) setEmail(obj.email);
+      }
+    } catch { /* ignore */ }
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -36,7 +61,7 @@ export default function LeadMagnetModal({
       const r = await fetch(FORM_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ email, name, source: "buyers-guide", path: location.pathname }),
+        body: JSON.stringify({ email, name, source, path: location.pathname }),
       });
       if (!r.ok) throw new Error("Submit failed");
       setState("ok");
@@ -45,9 +70,9 @@ export default function LeadMagnetModal({
     }
   };
 
-  // v33c: build the personalized PDF link. The email is just for tracking;
-  // the PDF body is identical for everyone.
-  const pdfHref = `${PDF_ENDPOINT}?email=${encodeURIComponent(email)}`;
+  // build the PDF link. The email is just for tracking; the PDF body is
+  // identical for everyone.
+  const pdfHref = `${pdfEndpoint}?email=${encodeURIComponent(email)}`;
 
   if (!open) return null;
 
@@ -74,7 +99,7 @@ export default function LeadMagnetModal({
             <div className="text-[12px] uppercase tracking-[0.18em] text-[#22A36C] font-semibold mb-3">Unlocked</div>
             <h4 className="text-[22px] font-semibold text-[#042C53] mb-3">Your download is ready.</h4>
             <a href={pdfHref} target="_blank" rel="noopener" className="inline-block px-6 py-3 rounded-full bg-[#042C53] text-white text-[14px] font-semibold hover:bg-[#0A3D6E]">
-              Download the PDF →
+              {downloadCta}
             </a>
             <div className="mt-4 text-[13px] text-slate-600">We've also emailed a copy to {email}.</div>
           </div>

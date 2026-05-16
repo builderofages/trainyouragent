@@ -67,6 +67,28 @@ export default function ToolsIndex() {
         ))}
       </div>
 
+      {/* v42: live AI demos (hit /api/chat) */}
+      <div className="mt-10">
+        <div className="text-[11px] uppercase tracking-[0.18em] font-semibold mb-3" style={{ color: BLUE }}>Live AI demos</div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {[
+            { slug: "sales-objection-handler", title: "Sales objection handler", blurb: "3 reframes + the psychology behind each." },
+            { slug: "sop-writer",               title: "SOP writer",               blurb: "Numbered SOP with roles, timing, tools." },
+            { slug: "seo-cluster",              title: "SEO cluster generator",    blurb: "20 keywords across 4 topical clusters." },
+          ].map((d) => (
+            <Link
+              key={d.slug}
+              to={`/demos/${d.slug}`}
+              className="block rounded-2xl border border-slate-200 hover:border-[#185FA5] p-5 transition-colors"
+            >
+              <div className="text-[15px] font-semibold mb-1" style={{ color: NAVY }}>{d.title}</div>
+              <div className="text-[13px] text-slate-600 leading-snug">{d.blurb}</div>
+              <div className="mt-3 text-[12.5px] font-medium" style={{ color: BLUE }}>Open demo →</div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
       <div className="mt-12 rounded-2xl bg-[#042C53] text-white p-6 sm:p-8">
         <div className="text-[12px] uppercase tracking-[0.18em] text-[#9BC3E8] font-semibold mb-2">
           Ready to ship?

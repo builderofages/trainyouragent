@@ -5,6 +5,8 @@ import PathwayRouter from "@/components/PathwayRouter";
 // v38: trust signals — testimonial wall, ship counter, built-in-public.
 import WallOfLove from "@/components/WallOfLove";
 import ShipsCounter from "@/components/ShipsCounter";
+// v42: site-visit funnel event
+import { fireSiteVisitOnce } from "@/lib/event";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
@@ -57,6 +59,7 @@ const FAQ_ITEMS = [
 
 const Index = () => {
   useEffect(() => {
+    fireSiteVisitOnce();
     if (typeof document === "undefined") return;
     if (!document.getElementById("tya-fonts")) {
       const l = document.createElement("link");
@@ -130,6 +133,13 @@ const Index = () => {
                   <span>Stop missing calls →</span>
                 </span>
               </Link>
+            </div>
+            {/* v42: live AI demos — prominent under the hero CTAs */}
+            <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-[13px]">
+              <span className="text-slate-500">Try a live demo:</span>
+              <Link to="/demos/sales-objection-handler" className="text-[#185FA5] font-medium hover:underline">Sales objection handler →</Link>
+              <Link to="/demos/sop-writer" className="text-[#185FA5] font-medium hover:underline">SOP writer →</Link>
+              <Link to="/demos/seo-cluster" className="text-[#185FA5] font-medium hover:underline">SEO cluster generator →</Link>
             </div>
           </div>
 

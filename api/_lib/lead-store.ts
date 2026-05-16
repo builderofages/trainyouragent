@@ -1,83 +1,140 @@
 // api/_lib/lead-store.ts
-// Ephemeral in-memory lead store. On Vercel edge each isolate keeps its own
-// copy — fine for v41 (we'll swap in Supabase in v42). Pinned to globalThis
-// so HMR / module-reload doesn't wipe it within an isolate's lifetime.
+// v42: Supabase-backed lead + event store with an in-memory fallback so the
+// site keeps working when env vars aren't provisioned (CI, local, first
+// deploy before Supabase is wired). Public function signatures are preserved
+// from v41 so admin endpoints don't need to change.
+
+import { getSupabase, supabaseConfigured } from "./supabase.js";
+
+// ---------- shared types ---------------------------------------------------
 
 export type LeadRecord = {
   ts: number;            // ms epoch
   source: string;
   emailHash: string;     // masked: first 2 chars + *** + domain
   path?: string;
-  ip?: string;           // truncated /24 for IPv4 — privacy nicety
+  ip?: string;           // truncated /24 for IPv4
 };
 
-type Store = {
-  leads: LeadRecord[];           // newest-first, capped at 500
-  visitorPings: number[];        // ms epochs
-  routerCompleted: number[];     // ms epochs
-  bookings: number[];            // ms epochs
+// ---------- in-memory fallback --------------------------------------------
+
+type MemStore = {
+  leads: LeadRecord[];
+  visitorPings: number[];
+  routerCompleted: number[];
+  bookings: number[];
   purchases: { ts: number; amount: number }[];
 };
 
-const g = globalThis as any;
+const g = globalThis as unknown as { __tya_lead_store__?: MemStore };
 if (!g.__tya_lead_store__) {
   g.__tya_lead_store__ = {
-    leads: [],
-    visitorPings: [],
-    routerCompleted: [],
-    bookings: [],
-    purchases: [],
-  } as Store;
+    leads: [], visitorPings: [], routerCompleted: [], bookings: [], purchases: [],
+  };
 }
-const store: Store = g.__tya_lead_store__;
+const mem: MemStore = g.__tya_lead_store__!;
 
 const MAX_LEADS = 500;
 const MAX_EVENTS = 5000;
+
+// ---------- helpers --------------------------------------------------------
 
 export function maskEmail(email: string): string {
   if (!email || typeof email !== "string") return "***";
   const [local, domain] = email.split("@");
   if (!domain) return "***";
-  const head = local.slice(0, 2);
-  return `${head}***@${domain}`;
+  return `${local.slice(0, 2)}***@${domain}`;
 }
+
+function truncateIp(ip: string): string {
+  if (!ip) return "";
+  if (ip.includes(":")) return ip.split(":").slice(0, 4).join(":") + "::";
+  const parts = ip.split(".");
+  if (parts.length === 4) return parts.slice(0, 3).join(".") + ".0";
+  return "";
+}
+
+// ---------- writes ---------------------------------------------------------
 
 export function recordLead(input: {
   email: string;
   source: string;
   path?: string;
   ip?: string;
+  payload?: unknown;
 }): void {
+  const masked = maskEmail(input.email);
+  const truncIp = input.ip ? truncateIp(input.ip) : undefined;
   const rec: LeadRecord = {
     ts: Date.now(),
     source: input.source,
-    emailHash: maskEmail(input.email),
+    emailHash: masked,
     path: input.path,
-    ip: input.ip ? truncateIp(input.ip) : undefined,
+    ip: truncIp,
   };
-  store.leads.unshift(rec);
-  if (store.leads.length > MAX_LEADS) store.leads.length = MAX_LEADS;
-}
+  // Always keep an in-memory copy for fast local reads / fallback.
+  mem.leads.unshift(rec);
+  if (mem.leads.length > MAX_LEADS) mem.leads.length = MAX_LEADS;
 
-export function recordEvent(kind: "visit" | "router" | "booking"): void {
-  const now = Date.now();
-  const list =
-    kind === "visit"   ? store.visitorPings   :
-    kind === "router"  ? store.routerCompleted :
-                         store.bookings;
-  list.push(now);
-  if (list.length > MAX_EVENTS) list.splice(0, list.length - MAX_EVENTS);
-}
-
-export function recordPurchase(amount: number): void {
-  store.purchases.push({ ts: Date.now(), amount });
-  if (store.purchases.length > MAX_EVENTS) {
-    store.purchases.splice(0, store.purchases.length - MAX_EVENTS);
+  // Best-effort persist to Supabase. Never block on it.
+  const sb = getSupabase();
+  if (sb) {
+    void sb.from("leads").insert({
+      email: masked,
+      source: input.source,
+      payload: (input.payload as Record<string, unknown>) ?? null,
+      path: input.path ?? null,
+      ip: truncIp ?? null,
+    }).then(({ error }) => {
+      if (error) console.error("[lead-store] supabase insert failed", error.message);
+    });
   }
 }
 
+export function recordEvent(
+  kind: string,
+  meta?: { source?: string; amount?: number; data?: Record<string, unknown> },
+): void {
+  const now = Date.now();
+  // memory bookkeeping for the funnel charts that read the legacy shape
+  if (kind === "site_visit" || kind === "visit") {
+    mem.visitorPings.push(now);
+    if (mem.visitorPings.length > MAX_EVENTS) mem.visitorPings.splice(0, mem.visitorPings.length - MAX_EVENTS);
+  } else if (kind === "router_email_gate" || kind === "router") {
+    mem.routerCompleted.push(now);
+    if (mem.routerCompleted.length > MAX_EVENTS) mem.routerCompleted.splice(0, mem.routerCompleted.length - MAX_EVENTS);
+  } else if (kind === "booking_created" || kind === "booking") {
+    mem.bookings.push(now);
+    if (mem.bookings.length > MAX_EVENTS) mem.bookings.splice(0, mem.bookings.length - MAX_EVENTS);
+  } else if (kind === "purchase_completed") {
+    mem.purchases.push({ ts: now, amount: meta?.amount ?? 0 });
+    if (mem.purchases.length > MAX_EVENTS) mem.purchases.splice(0, mem.purchases.length - MAX_EVENTS);
+  }
+
+  const sb = getSupabase();
+  if (sb) {
+    void sb.from("events").insert({
+      event_type: kind,
+      source: meta?.source ?? null,
+      meta: meta?.data ?? null,
+      amount_cents: typeof meta?.amount === "number" ? Math.round(meta.amount) : null,
+    }).then(({ error }) => {
+      if (error) console.error("[lead-store] supabase event insert failed", error.message);
+    });
+  }
+}
+
+export function recordPurchase(amount: number): void {
+  recordEvent("purchase_completed", { amount });
+}
+
+// ---------- reads ----------------------------------------------------------
+
 export function getLeads(limit = 100): LeadRecord[] {
-  return store.leads.slice(0, limit);
+  // Memory is always up-to-date for current isolate. The /api/admin/leads
+  // route is best-effort; for the canonical list users should query
+  // Supabase directly via SQL.
+  return mem.leads.slice(0, limit);
 }
 
 function withinMs(arr: number[], ms: number): number {
@@ -89,18 +146,17 @@ function withinMs(arr: number[], ms: number): number {
 
 export function getMetrics() {
   const DAY = 24 * 60 * 60 * 1000;
-  const leadsTs = store.leads.map((l) => l.ts);
+  const leadsTs = mem.leads.map((l) => l.ts);
   const leads24h = withinMs(leadsTs, DAY);
   const leads7d  = withinMs(leadsTs, 7 * DAY);
   const leads30d = withinMs(leadsTs, 30 * DAY);
 
-  const bookings24h = withinMs(store.bookings, DAY);
-  const bookings7d  = withinMs(store.bookings, 7 * DAY);
-  const bookings30d = withinMs(store.bookings, 30 * DAY);
+  const bookings24h = withinMs(mem.bookings, DAY);
+  const bookings7d  = withinMs(mem.bookings, 7 * DAY);
+  const bookings30d = withinMs(mem.bookings, 30 * DAY);
 
-  const purchases30d = store.purchases.filter((p) => p.ts >= Date.now() - 30 * DAY);
+  const purchases30d = mem.purchases.filter((p) => p.ts >= Date.now() - 30 * DAY);
   const revenue30d   = purchases30d.reduce((a, b) => a + (Number(b.amount) || 0), 0);
-  // crude MRR estimate: assume 30d revenue ~ monthly recurring
   const mrrEstimate  = revenue30d;
 
   return {
@@ -108,35 +164,32 @@ export function getMetrics() {
     bookings: { "24h": bookings24h, "7d": bookings7d, "30d": bookings30d },
     purchases:{ "30d": purchases30d.length },
     revenue:  { "30d": revenue30d, mrrEstimate },
-    storeSize: { leads: store.leads.length, events: store.visitorPings.length },
+    storeSize: { leads: mem.leads.length, events: mem.visitorPings.length },
+    backend: supabaseConfigured() ? "supabase+memory" : "memory-only",
     generatedAt: new Date().toISOString(),
   };
 }
 
 export function getFunnel() {
   const DAY = 24 * 60 * 60 * 1000;
-  const visit  = withinMs(store.visitorPings, 7 * DAY);
-  const router = withinMs(store.routerCompleted, 7 * DAY);
+  const visit  = withinMs(mem.visitorPings, 7 * DAY);
+  const router = withinMs(mem.routerCompleted, 7 * DAY);
   const cutoff = Date.now() - 7 * DAY;
-  const email  = store.leads.filter((l) => l.ts >= cutoff).length;
-  const book   = withinMs(store.bookings, 7 * DAY);
-  const purch  = store.purchases.filter((p) => p.ts >= cutoff).length;
+  const email  = mem.leads.filter((l) => l.ts >= cutoff).length;
+  const book   = withinMs(mem.bookings, 7 * DAY);
+  const purch  = mem.purchases.filter((p) => p.ts >= cutoff).length;
 
-  // by-source — last 30d
   const cutoff30 = Date.now() - 30 * DAY;
   const bySource: Record<string, number> = {};
-  for (const l of store.leads) {
+  for (const l of mem.leads) {
     if (l.ts < cutoff30) continue;
     bySource[l.source] = (bySource[l.source] || 0) + 1;
   }
 
-  const rate = (a: number, b: number) =>
-    b === 0 ? 0 : Math.round((a / b) * 1000) / 10; // 1 dp
+  const rate = (a: number, b: number) => b === 0 ? 0 : Math.round((a / b) * 1000) / 10;
 
   return {
-    stages: {
-      visit, router, email, book, purchase: purch,
-    },
+    stages: { visit, router, email, book, purchase: purch },
     conversion: {
       visit_to_router:    rate(router, visit),
       router_to_email:    rate(email, router),
@@ -145,15 +198,7 @@ export function getFunnel() {
       visit_to_purchase:  rate(purch, visit),
     },
     bySource,
+    backend: supabaseConfigured() ? "supabase+memory" : "memory-only",
     generatedAt: new Date().toISOString(),
   };
-}
-
-function truncateIp(ip: string): string {
-  // IPv4: drop last octet. IPv6: keep first 4 hextets.
-  if (!ip) return "";
-  if (ip.includes(":")) return ip.split(":").slice(0, 4).join(":") + "::";
-  const parts = ip.split(".");
-  if (parts.length === 4) return parts.slice(0, 3).join(".") + ".0";
-  return "";
 }

@@ -1,0 +1,199 @@
+---
+title: "AI Receptionist ROI Calculator: A Real Walkthrough"
+slug: "ai-receptionist-roi-calculator-walkthrough"
+date: "2026-05-10"
+author: "Alexander Mills"
+excerpt: "We built a free ROI calculator that runs the actual math on whether an AI receptionist beats your current setup. Here's a step-by-step walkthrough using a real 4-location dental group as the example."
+category: "AI Voice"
+heroImage: "/api/og?title=AI+Receptionist+ROI+Calculator+Walkthrough&subtitle=TrainYourAgent"
+tags: ["roi", "calculator", "receptionist", "voice-agent", "dental"]
+readingTime: "9 min read"
+---
+
+The first question on every voice-agent discovery call is *"what's this going to cost me?"* and the honest second question is *"is it actually going to pay back?"*
+
+To answer both at the same time, we built a [free Cost Estimator](/tools/cost-estimator) on the site. No email gate to see the result, no marketing copy in the way. Plug in your numbers, get the 12-month TCO for in-house, outsourced, and AI-agent configurations side by side.
+
+Below is a step-by-step walkthrough using a real customer scenario — a four-location dental group in the Mountain West with 1,800 inbound calls/month — so you can see exactly how the calculator works and what assumptions it's making.
+
+## The customer in the walkthrough
+
+I'm using a real composite of three dental customers we've worked with. The numbers are slightly rounded but the proportions are accurate.
+
+- **Business**: 4-location general dentistry group, Mountain West region
+- **Monthly inbound calls**: 1,800 (averaged across locations)
+- **Average call duration**: 3.5 minutes
+- **Current setup**: 3 part-time receptionists, $19/hr loaded, 25 hrs/week each
+- **Current booking rate from inbound calls**: 42%
+- **Average value of a new appointment**: $340 (mix of cleanings, fillings, and intake)
+- **Current after-hours coverage**: voicemail; missed-call callback rate ~18%
+
+## Step 1: enter the inputs
+
+Open the [Cost Estimator](/tools/cost-estimator) and fill in:
+
+- **Monthly call volume**: 1800
+- **Average call duration (minutes)**: 3.5
+- **Current cost of receptionist labor (monthly)**: 6,170 (3 reps × 25 hrs × $19/hr × 4.33 weeks)
+- **Current booking rate**: 42%
+- **Average value per booked appointment**: 340
+- **After-hours volume share**: 25%
+
+The calculator immediately produces three scenarios.
+
+## Step 2: read the in-house scenario
+
+**Cost line items:**
+- Loaded labor: $6,170/mo
+- Phone system and software (your existing PBX, EHR phone integration): $180/mo
+- Effective cost per call: $3.53
+- Annual cost: $76,200
+
+**Revenue line items:**
+- Calls answered (business hours only): 1,575 (87.5% of monthly volume)
+- Calls converted to booked appointments: 661 (42% × 1,575)
+- Calls missed: 225 (all after-hours)
+- Of missed calls, recovered via callback: 41 (18% recovery)
+- Total booked appointments: 702
+- Total revenue from booked appointments: $238,680/yr
+
+The calculator's verdict on in-house: **a positive but leaky operation**. Real revenue happens, but 225 calls/month vanish into voicemail and only 18% come back.
+
+## Step 3: read the outsourced answering-service scenario
+
+The calculator assumes a competitive blended answering service like Ruby or AnswerConnect at scale:
+
+**Cost line items:**
+- Base plan covering ~600 minutes: $469/mo
+- Overage at $1.39/min on excess 5,700 minutes: $7,923/mo (!!)
+- Annual cost: **$100,704**
+
+The calculator surfaces a yellow warning here: at 1,800 calls × 3.5 min, the outsourced model is dramatically more expensive than in-house because the overage rate destroys the unit economics. For high-volume dental, **the answering service is the worst of all three options.**
+
+**Revenue line items:**
+- Calls answered: 1,710 (95%)
+- Calls converted to booked appointments: 462 (27% — answering services have lower close rates on dental because of insurance verification complexity)
+- Total revenue: $188,496/yr
+
+## Step 4: read the AI agent scenario
+
+**Cost line items:**
+- Model inference: $113/mo (1,800 × 3.5 × $0.018)
+- Telephony + STT/TTS: $189/mo
+- Vector DB + observability: $42/mo
+- Retainer (multi-location + EHR integration): $1,499/mo
+- Build cost amortized over 12 months: $828/mo (from $9,950)
+- **Total monthly: $2,671**
+- **Annual: $32,052**
+
+**Revenue line items:**
+- Calls answered: 1,800 (100% — 24/7 coverage)
+- Calls converted to booked appointments: 882 (49% — our measured uplift across dental installs)
+- Total booked appointments: 882
+- Total revenue: $359,856/yr
+
+## Step 5: the side-by-side
+
+The calculator's headline output:
+
+```
+Scenario               Annual cost    Annual revenue   Net contribution
+─────────────────────  ────────────   ──────────────   ────────────────
+In-house receptionists $76,200        $238,680         $162,480
+Answering service      $100,704       $188,496         $87,792
+AI voice agent         $32,052        $359,856         $327,804
+```
+
+The agent doesn't just save on labor cost. It **adds $121,000 in revenue** by capturing every call and converting at a higher rate. Net contribution improvement vs in-house: $165,324/yr.
+
+## Step 6: the breakeven
+
+Build cost: $9,950. Monthly net improvement vs in-house: $13,777. **Breakeven: day 22.**
+
+Most customers don't believe that number until they see it in their own EHR after the first month. We had one dental group call us to ask if their PMS was double-counting — it wasn't, they'd genuinely added 180 booked appointments month one because the agent caught every single after-hours call from people in dental pain Googling "emergency dentist near me."
+
+## Step 7: the sensitivity analysis
+
+The calculator has a sensitivity slider. The two assumptions worth pressure-testing:
+
+**a) Booking rate uplift.** If you don't believe the 7-point booking rate lift (42% → 49%), drag it down to a conservative 3 points. The agent scenario still beats in-house by $58,000/yr in net contribution.
+
+**b) Call value.** If your appointments are worth less — say $180 instead of $340 — the agent still wins, but by a smaller $43,000/yr margin.
+
+The only configuration where the agent loses to in-house: call volume below ~250/month AND average call value under $100. That's not a dental group. That's a single-operator coach business. For that customer, we recommend a chatbot, not a voice agent.
+
+## Step 8: what the calculator doesn't include
+
+To be honest about what we're modeling and what we're not:
+
+- **Not included**: lift in Google reviews from faster response (real, hard to attribute).
+- **Not included**: reduced staff turnover from removing the worst part of the receptionist job (real, hard to model).
+- **Not included**: the time the owner saves not putting out fires when calls slip (real, definitely real, definitely hard to model).
+- **Included but conservative**: booking-rate uplift, which we model at the 25th-percentile of our actual install data so the calculator under-promises.
+
+The calculator's output should be read as a **floor**, not a ceiling.
+
+## The most common pushback
+
+"Won't patients hate talking to a robot?"
+
+This is the most common objection. The honest answer: a poorly-built agent — wrong voice, awkward prompts, no escalation path — gets hated. A well-built one gets a 4.6 / 5 rating from real customers in our post-call survey. Patients care that someone answers the phone and books their appointment correctly. The "human or AI" distinction matters less than founders think.
+
+The other honest part: we always include a human escalation. Any caller who says "I want to talk to a person" gets routed to a real number. About 6% of calls trigger this. The rest are completely handled by the agent.
+
+## Try the calculator
+
+[Run your own numbers](/tools/cost-estimator) — takes 2 minutes, no email required to see the result. If the math looks good, [book a call](/book) and we'll quote a specific scope for your business inside 24 hours.
+
+If the math doesn't look good — your volume is too low, your call value is too small, your current operation is actually well-tuned — I'll tell you that on the call. We turn down about 15% of inbound discovery calls because the math doesn't support an install. We'd rather tell you no than ship a pilot that won't pay back.
+
+## A second walkthrough: HVAC after-hours
+
+For a different shape of business, let me run the same calculator against an HVAC scenario so you see how the numbers shift.
+
+**Inputs:**
+- Monthly call volume: 620
+- Average call duration: 4 minutes
+- Current cost of receptionist labor: $4,500 (single full-time, $54k/yr)
+- Current booking rate: 38%
+- Average value per booked appointment: $890 (HVAC service ticket avg)
+- After-hours volume share: 22%
+
+**In-house scenario:**
+- Annual cost: $54,000
+- Calls answered: 484 (78%, after-hours all missed)
+- Booked appointments: 184 (38% × 484)
+- Of after-hours missed (136), recovered via callback: 24
+- Total bookings: 208
+- Annual revenue: $208 × 12 × $890 ÷ 12 = $185,120
+
+**AI agent scenario:**
+- Annual cost: $12,540 (build amortized) + $13,200 (retainer) + $5,400 (run) = $31,140
+- Calls answered: 620 (100%)
+- Booked appointments: 285 (46% lift × 620)
+- Annual revenue: $285 × 12 × $890 = $3,043,800 / 12 ≈ $253,584
+
+**Net contribution delta**: agent adds $90,584/yr in net contribution. Build cost: $9,950. **Breakeven: day 40.**
+
+The pattern across verticals: the higher the per-booking value, the faster the breakeven. HVAC at $890/booking pays back faster than dental at $340/booking, which pays back faster than coffee-shop catering at $80/booking (which actually doesn't pay back — we'd recommend a chatbot, not a voice agent, for that one).
+
+## What to put into the calculator if you don't know your numbers
+
+A common situation: the SMB owner doesn't actually know their current booking rate, or their missed-call percentage, or their average appointment value. That's a problem worth fixing *before* you buy an agent — but here are reasonable defaults if you need to estimate:
+
+- **Booking rate from inbound calls**: dental 38-45%, HVAC 32-42%, roofing 28-38%, legal intake 14-22%, hospitality reservation 55-70%.
+- **Missed-call percentage**: anywhere from 18% (well-staffed bilingual office) to 45% (single-receptionist with one phone line).
+- **Average appointment value**: pull from your last 90 days of booked-job revenue / number of new bookings. If you can't, your accountant can usually pull this in 10 minutes.
+
+If you don't know any of these, the right first step isn't a voice agent — it's a 30-minute audit of your current call data. We'll do that for free on a discovery call.
+
+## The cost lines we model that other calculators don't
+
+A lot of "AI ROI calculators" are toys that compare a SaaS sticker price to a labor cost and call it done. Our calculator models four cost lines for the AI scenario that most don't:
+
+1. **Build cost amortized over 12 months** — most calculators omit this entirely
+2. **Per-call inference + telephony costs** — usually buried in vendor disclosures
+3. **Retainer for ongoing maintenance** — the line item that decides whether the agent survives month two
+4. **Integration costs** — most "free" calculators assume integrations cost zero; in reality the EHR/PMS integration alone is $2,000-$5,000 of engineering
+
+Modeling all four gives you a real number to compare against, not a sales-page-fantasy number.

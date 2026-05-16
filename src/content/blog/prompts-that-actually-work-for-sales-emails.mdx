@@ -1,0 +1,261 @@
+---
+title: "20 Prompts That Actually Work for Sales Emails (With Example Outputs)"
+slug: "prompts-that-actually-work-for-sales-emails"
+date: "2026-05-08"
+author: "Alexander Mills"
+excerpt: "Stop sending the AI a vague 'write me a sales email' and getting back something that smells like a hallucinated LinkedIn post. Here are 20 production-tested prompts with the exact outputs they generate — cold open, follow-up, breakup, re-engagement, and more."
+category: "AI Marketing"
+heroImage: "/api/og?title=20+Prompts+for+Sales+Emails&subtitle=TrainYourAgent"
+tags: ["prompts", "sales", "email", "outreach", "ai", "copy"]
+readingTime: "11 min read"
+---
+
+The problem with most "AI writes your sales emails" advice is that the prompts the authors share are the same generic templates that produce the same generic outputs — the LinkedIn-y "I noticed your company is doing exciting things in the space" garbage that every prospect deletes in 0.3 seconds.
+
+These 20 prompts are different. They're production-tested, mostly stolen from how I actually write outreach for TrainYourAgent and refined across thousands of sends. For each prompt I include the input variables, the system prompt context, and a real example output so you can see what comes back.
+
+Use them as is, or adapt them to your voice. The structures matter more than the exact words.
+
+## The system prompt to put at the top of all 20
+
+Before the per-prompt variations, here's the system context I use globally:
+
+```
+You are writing on behalf of {sender_name}, founder of {sender_company}.
+Voice: direct, specific, no marketing jargon, never use the words
+"leverage", "synergy", "exciting", "passionate", or "circle back". Write
+the way a smart person texts a peer. Subject lines are 5 words or fewer.
+Body emails are under 80 words unless explicitly told otherwise. End with
+a single clear ask, never two. Do not invent facts about the recipient.
+If a fact is unknown, ask one specific clarifying question instead.
+```
+
+Drop this into the system prompt of every call. It'll cut the slop rate by 60% before you even start tuning.
+
+---
+
+## 1. Cold open — bottom-up referral angle
+
+```
+Write a 60-word cold email to {recipient_name}, who is {recipient_title}
+at {recipient_company}. The angle: their team member {team_member} just
+{specific_action}. Reference it specifically. Then ask for a 15-minute
+intro conversation. One ask, one CTA, no calendar link in the first send.
+```
+
+**Example output** (for a real prospect we sent it to):
+> Subject: Followed Jess's webinar
+> Hi Marcus — Jess on your team ran a webinar last Thursday on dental front-desk staffing, and the question someone asked about "what if AI handles intake during lunch" stuck with me. That's literally what we ship. Worth 15 minutes to compare notes? I'm not pitching — happy to share what we've seen at four dental groups in your size range first.
+> — Alexander
+
+## 2. Cold open — trigger event angle
+
+```
+The trigger: {trigger_event} happened at {company} on {date}. Write a
+55-word email that mentions the trigger without seeming creepy, connects
+it to a problem we solve, and asks for a 15-minute call.
+```
+
+**Example output**:
+> Subject: Saw the funding news
+> Hi Priya — saw the Series A close yesterday. Congrats. Usually the next 90 days is when the inbound volume on your team breaks the existing setup. We help SaaS companies your size keep speed-to-lead under 60s during the post-funding spike. Worth a quick call this week or next?
+> — Alexander
+
+## 3. Cold open — explicit pain hypothesis
+
+```
+Write a 50-word email that proposes a specific, contrarian hypothesis
+about a pain {recipient_title} probably feels right now. Don't ask if
+they have the pain — assume it. End with one specific data point we
+could share.
+```
+
+**Example output**:
+> Subject: Two-shift PMS problem
+> Hi Daniel — at $5M ARR with a two-shift support model, the handoff between AM and PM in your PMS is probably where your CSAT slips on Thursdays. We're seeing it in two of your peers. I have a one-page tear-down of the fix — want me to send it?
+> — Alexander
+
+## 4. Cold open — competitor mention
+
+```
+Write a 55-word email that references {competitor_name} as a comparison,
+without being insulting. Position us as the deliberate next option. End
+with one specific question.
+```
+
+**Example output**:
+> Subject: Tried Vapi?
+> Hi Sarah — most HVAC owners I talk to either tried Vapi and got 80% of the way there, or tried RingDNA and hated the price. We're a managed-build for the 20% Vapi leaves on the floor at $1,499/mo. Two questions before I propose anything: how many calls/mo, and is intake the bottleneck or quoting?
+> — Alexander
+
+## 5. Day-3 follow-up — soft bump
+
+```
+Write a 25-word follow-up to a cold email sent 3 days ago. Reference the
+prior subject. No new pitch. One specific ask.
+```
+
+**Example output**:
+> Subject: re: Followed Jess's webinar
+> Hi Marcus — bumping this in case it slipped. Worth 15 min next Tue or Wed afternoon?
+> — Alexander
+
+## 6. Day-7 follow-up — add a resource
+
+```
+Write a 60-word follow-up that adds a specific resource (article, case
+study, benchmark) related to the original pitch. Don't ask for a meeting
+this time — ask whether the resource is useful.
+```
+
+**Example output**:
+> Subject: One more for you
+> Hi Marcus — adding a one-pager from a dental group your size that ran an AI front-desk pilot for 60 days. Booking rate moved 42% → 49%, mostly on Saturday and after-hours calls. Two pages, 4-min read. Useful? Happy to walk through it if anything sparks a question.
+> — Alexander
+
+## 7. Day-14 breakup email
+
+```
+Write a 35-word breakup email. Polite, not passive-aggressive. State you're
+moving them out of the active list, but leave the door open. Single ask: a
+yes/no.
+```
+
+**Example output**:
+> Subject: Closing the loop, Marcus
+> No pressure either way — just want to confirm I should move this out of my active list. A quick "not now, ask me in Q3" works perfectly if that's the answer.
+> — Alexander
+
+## 8. Re-engagement after 90 days of silence
+
+```
+Write a 55-word re-engagement email referencing the original topic and
+adding one new data point that makes it timely.
+```
+
+**Example output**:
+> Subject: Quick update on the intake numbers
+> Hi Hector — wanted to circle back on roofing intake (3-month mark). We just shipped a roof-inspection scheduling flow with a Salt Lake competitor that lifted booked inspections 31%. Different from what we discussed in February. Worth a re-look this quarter?
+> — Alexander
+
+## 9. Demo-confirmation email
+
+```
+Write a 50-word confirmation email for a 30-minute call booked for {date}
+{time}. Confirm the calendar invite came through, the meeting link, and
+ask one prep question.
+```
+
+**Example output**:
+> Subject: See you Tuesday 2pm
+> Hi Daniel — confirming our 30-min Tuesday at 2pm ET. Calendar invite + Zoom link should be in your inbox. One ask: send your monthly call volume and current PMS so I can have specific numbers ready on the call. See you Tuesday.
+> — Alexander
+
+## 10. Post-demo "what's next" email
+
+```
+Write a 90-word email recapping a discovery call. Reference 2-3 specific
+things the prospect mentioned. State the proposed next step with the
+specific dollar value and timeline. One CTA.
+```
+
+**Example output**:
+> Subject: Recap + scope
+> Hi Daniel — great call earlier. Three things you mentioned that we'll build for: (1) after-hours intake routing through Mon-Wed, (2) Salesforce sync for the qualified leads, (3) Spanish-language coverage on weekends. Proposed scope: $9,950 build, 30 days to live, $1,499/mo retainer after. I'll send the formal scope doc Wednesday. Anything you want me to revise before then?
+> — Alexander
+
+## 11. Negotiation — anchoring high
+
+```
+Write a 60-word email that proposes scope and price, anchoring at the
+high end of the range with one optional add-on, then offers a smaller
+"phase 1" alternative at a lower price.
+```
+
+(Use for opening proposal where you want the customer to anchor higher than they would have.)
+
+## 12. Negotiation — handling pushback on price
+
+```
+Write a 55-word reply to a prospect who said "the price is too high."
+Don't discount. Restate the value in one sentence, then offer a smaller
+scope at a lower price.
+```
+
+## 13. Stalled deal — getting unstuck
+
+```
+Write a 45-word email to a prospect who's gone quiet after the proposal.
+Reference the specific decision they're stuck on. Offer one piece of
+help. Don't push for a yes.
+```
+
+## 14. Mutual close email
+
+```
+Write a 70-word email proposing a 30-day mutual close plan with three
+explicit steps: legal review, technical integration call, kickoff.
+Include suggested dates.
+```
+
+## 15. Customer kickoff (post-close)
+
+```
+Write a 80-word welcome email to a customer who just signed. Confirm
+the kickoff time, one homework item, one promise (when they'll see
+the first build artifact).
+```
+
+## 16. Quarterly business review request
+
+```
+Write a 50-word email to an existing customer requesting a 30-min QBR.
+Reference one specific metric we have data on. One CTA.
+```
+
+## 17. Upsell — adding a second integration
+
+```
+Write a 60-word email proposing an upsell to a customer already on
+Operators tier. Reference what they currently get, propose the specific
+add-on with a price, and frame it against a specific result other
+customers got.
+```
+
+## 18. Renewal nudge — 30 days before contract end
+
+```
+Write a 65-word email 30 days before a contract renews. Don't ask for
+the renewal — share specific results from the prior term and ask whether
+anything has changed in their priorities.
+```
+
+## 19. Churn save — when a customer wants to cancel
+
+```
+Write a 70-word reply to a customer who has just emailed to cancel. Don't
+beg. Acknowledge the decision. Ask one specific clarifying question that
+helps you decide whether to fight for the save or accept it gracefully.
+```
+
+## 20. Win-back email — 6 months after churn
+
+```
+Write a 55-word email to a customer who churned 6 months ago. Reference
+one specific reason they cited at cancellation. Share what's changed
+since then. Soft ask for a 15-min conversation.
+```
+
+## What separates these from the slop
+
+Three patterns across all 20:
+
+- **Specificity over completeness.** A 50-word email with one specific reference will outperform a 200-word email with three generic ones every single time.
+- **One ask per email.** Two asks = zero responses. Always.
+- **Voice constraints in the system prompt.** The "never use the words leverage / synergy / exciting / circle back" rule is doing more work than people realize. It strips out the LinkedIn-y top notes that signal "AI generated."
+
+## Run your prompts through the critic
+
+If you have a sales-email prompt you're not sure about, run it through our [Prompt Critic](/tools/prompt-critic). It'll score clarity, specificity, structure, and safety on a 10-point rubric and return a tightened rewrite.
+
+Or [book a call](/book) if you want us to actually build the outbound automation that ships these for your team — most installs run $999-$1,999/mo and replace a junior SDR at a fraction of the cost.

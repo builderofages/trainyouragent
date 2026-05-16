@@ -29,6 +29,7 @@
 
 import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
 import { verifyStripeSignature } from "./checkout.js";
+import { recordEvent } from "./_lib/lead-store.js";
 
 export const config = { runtime: "edge" };
 
@@ -91,6 +92,15 @@ export default async function handler(req: Request) {
   // success page should use the same scheme (`purchase_${session.id}`) so
   // Meta dedupes. We expose both forms just in case the client used either.
   const purchaseEventId = `purchase_${obj.id || event.id}`;
+
+  // v42: persistent funnel event so /admin/metrics sees real revenue.
+  try {
+    recordEvent("purchase_completed", {
+      source: "stripe",
+      amount: typeof customer.amount === "number" ? customer.amount : 0,
+      data: { plan: customer.plan ?? null, currency: customer.currency ?? null },
+    });
+  } catch { /* never block webhook on logging */ }
 
   const tasks: Promise<unknown>[] = [];
 
