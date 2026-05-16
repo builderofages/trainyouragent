@@ -79,7 +79,7 @@ export function recordLead(input: {
   // Best-effort persist to Supabase. Never block on it.
   const sb = getSupabase();
   if (sb) {
-    void sb.from("leads").insert({
+    void sb.from("tya_leads").insert({
       email: masked,
       source: input.source,
       payload: (input.payload as Record<string, unknown>) ?? null,
@@ -113,7 +113,7 @@ export function recordEvent(
 
   const sb = getSupabase();
   if (sb) {
-    void sb.from("events").insert({
+    void sb.from("tya_events").insert({
       event_type: kind,
       source: meta?.source ?? null,
       meta: meta?.data ?? null,
