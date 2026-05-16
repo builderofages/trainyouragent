@@ -104,6 +104,7 @@ Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
+Disallow: /admin
 Crawl-delay: 2
 
 # Sitemap

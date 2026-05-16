@@ -36,6 +36,9 @@ import Start from "./pages/Start";
 import AgencyPartner from "./pages/AgencyPartner";
 import SolutionDetail from "./pages/SolutionDetail";
 import VersusPage from "./pages/VersusPage";
+// v40b: programmatic SEO — /alternatives/:competitor-for-:vertical (50 LPs) + /admin
+import AlternativeFor from "./pages/AlternativeFor";
+import Admin from "./pages/Admin";
 import AiChat from "@/components/AiChat";
 // v29: Blog + Newsletter
 import BlogIndex from "./pages/blog/BlogIndex";
@@ -94,6 +97,10 @@ const App = () => (
           <Route path="/agency-partner" element={<AgencyPartner />} />
           {/* v33b: competitor comparison pages */}
           <Route path="/vs/:competitor" element={<VersusPage />} />
+          {/* v40b: alternatives — /alternatives/:slug (slug = "competitor-for-vertical", 50 LPs) */}
+          <Route path="/alternatives/:slug" element={<AlternativeFor />} />
+          {/* v40b: internal admin dashboard (token-gated via ?token=) */}
+          <Route path="/admin" element={<Admin />} />
           {/* Supporting pages */}
           <Route path="/sales-toolkit" element={<SalesToolkit />} />
           <Route path="/resources" element={<Resources />} />
