@@ -77,6 +77,8 @@ const INDUSTRIES: LinkItem[] = [
 ];
 
 const RESOURCES: LinkItem[] = [
+  { label: "Customers",      to: "/customers",   sub: "Operators running TrainYourAgent on real production traffic." },
+  { label: "Testimonials",   to: "/testimonials",sub: "Quotes from founders, operators, and clinic owners." },
   { label: "Blog",           to: "/blog",        sub: "Operator playbooks + AI infrastructure deep dives." },
   { label: "Learn AI",       to: "/learn",       sub: "Free mini-courses + the Operator Cohort." },
   { label: "Buyer's Guide",  to: "/resources",   sub: "How to evaluate AI vendors without getting taken." },
@@ -92,7 +94,7 @@ const RESOURCES: LinkItem[] = [
 type DropdownKey = "solutions" | "industries" | "resources" | null;
 
 export type SiteNavProps = {
-  active?: "solutions" | "industries" | "resources" | "pricing" | "about";
+  active?: "solutions" | "industries" | "resources" | "pricing" | "about" | "trial";
 };
 
 export default function SiteNav({ active }: SiteNavProps) {
@@ -191,6 +193,16 @@ export default function SiteNav({ active }: SiteNavProps) {
             >
               Pricing
             </Link>
+            {/* v38: 7-day live trial pitch surfaced as a top-level destination */}
+            <Link
+              to="/trial"
+              className={`hover:text-[#042C53] inline-flex items-center gap-1.5 ${active === "trial" ? "text-[#042C53] font-semibold" : ""}`}
+            >
+              Trial
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[10px] uppercase tracking-[0.1em] font-semibold">
+                7d
+              </span>
+            </Link>
             <Link
               to="/about"
               className={`hover:text-[#042C53] ${active === "about" ? "text-[#042C53] font-semibold" : ""}`}
@@ -256,6 +268,16 @@ export default function SiteNav({ active }: SiteNavProps) {
                 className="px-3 py-3 rounded-lg text-[#042C53] font-medium hover:bg-[#F6FAFE]"
               >
                 Pricing
+              </Link>
+              <Link
+                to="/trial"
+                onClick={() => setMobileOpen(false)}
+                className="px-3 py-3 rounded-lg text-[#042C53] font-medium hover:bg-[#F6FAFE] inline-flex items-center gap-2"
+              >
+                Trial
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[10px] uppercase tracking-[0.1em] font-semibold">
+                  7-day
+                </span>
               </Link>
               <Link
                 to="/about"

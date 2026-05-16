@@ -5,6 +5,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
+// v38: ship log embedded above the service grid
+import BuiltInPublic from "@/components/BuiltInPublic";
 
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
 
@@ -253,7 +255,16 @@ const Status = () => {
       </section>
 
       {/* SERVICE GRID */}
-      <section className="px-5 sm:px-8 pb-16">
+      {/* v38: Built-in-public ship log sits above the service grid so visitors
+          see *what* shipped before they see *whether* it's up. */}
+      <BuiltInPublic
+        className="bg-white border-b border-slate-200"
+        title="Recent ships."
+        eyebrow="Built in public"
+        limit={8}
+      />
+
+      <section className="px-5 sm:px-8 pb-16 pt-8">
         <div className="max-w-5xl mx-auto rounded-3xl border border-slate-200 bg-white shadow-[0_4px_40px_-12px_rgba(4,44,83,0.10)] overflow-hidden">
           {SERVICES.map((s, i) => {
             const state = states[s.key];

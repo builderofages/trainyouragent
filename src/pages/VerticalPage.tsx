@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
 import AgentSimulator, { VERTICAL_SCENARIOS } from "@/components/AgentSimulator";
+// v38: filtered Wall of Love on every vertical page
+import WallOfLove from "@/components/WallOfLove";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
@@ -603,6 +605,16 @@ const VerticalPage = () => {
                 </div>
               </div>
             </section>
+
+            {/* v38: Wall of Love filtered to this vertical (falls back to all
+                quotes if the filtered pool is empty so the section never goes
+                blank while placeholders are TBD). */}
+            <WallOfLove
+              vertical={config.label}
+              eyebrow={`What ${config.label} operators say`}
+              title={`Trusted by ${config.label} operators already running on us.`}
+              background="white"
+            />
 
             {/* Case study placeholder */}
             <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-y border-slate-200/70">

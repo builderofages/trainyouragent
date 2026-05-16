@@ -23,7 +23,12 @@ const PRICE_OPERATORS = process.env.STRIPE_PRICE_OPERATORS || "";
 const PRICE_FOUNDERS  = process.env.STRIPE_PRICE_FOUNDERS_BUILD || "";
 
 // Hardcoded success/cancel URLs — never accept these from the client.
-const SUCCESS_URL = "https://trainyouragent.com/dashboard?checkout=ok";
+// v38: success URL routes to /onboarding so new customers land in the
+// 5-step kickoff flow (welcome video → schedule call → connect tools →
+// approve agent → go live). The {CHECKOUT_SESSION_ID} placeholder is
+// substituted by Stripe so we can correlate the onboarding view with the
+// purchase event in /api/stripe-webhook.
+const SUCCESS_URL = "https://trainyouragent.com/onboarding?session_id={CHECKOUT_SESSION_ID}";
 const CANCEL_URL  = "https://trainyouragent.com/pricing?checkout=cancelled";
 
 const EMAIL_RE = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']{2,}$/;

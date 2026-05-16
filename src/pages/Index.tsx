@@ -2,6 +2,9 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
 import PathwayRouter from "@/components/PathwayRouter";
+// v38: trust signals — testimonial wall, ship counter, built-in-public.
+import WallOfLove from "@/components/WallOfLove";
+import ShipsCounter from "@/components/ShipsCounter";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
@@ -110,6 +113,10 @@ const Index = () => {
             <p className="mt-7 text-[18px] sm:text-[20px] text-slate-700 leading-relaxed max-w-2xl">
               Voice agents, lead gen, creative, infrastructure — built by operators who've shipped 300+ projects across four years in AI. <span className="text-[#042C53] font-medium">$20K+/mo recurring</span> from SMBs and startups already running on us.
             </p>
+            {/* v38: live ship-counter — pulls commit count from GitHub */}
+            <div className="mt-5">
+              <ShipsCounter variant="hero" />
+            </div>
             <div className="mt-9 flex flex-col sm:flex-row gap-3">
               <Link to="/contact?lane=startup" className="px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] transition shadow-lg shadow-[#042C53]/15 flex items-center justify-between gap-3 min-w-[260px]">
                 <span className="flex flex-col items-start leading-tight">
@@ -160,6 +167,12 @@ const Index = () => {
           ))}
         </div>
       </section>
+
+      {/* v38: WALL OF LOVE — sits between proof strip and Capabilities */}
+      <WallOfLove
+        eyebrow="Wall of love"
+        title="Operators don't recommend things lightly."
+      />
 
       {/* CAPABILITIES */}
       <section className="px-5 sm:px-8 py-24">
@@ -330,6 +343,9 @@ const Index = () => {
           <div className="flex items-center gap-x-6 gap-y-2 flex-wrap justify-center">
             <Link to="/about" className="hover:text-[#042C53]">About</Link>
             <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
+            <Link to="/trial" className="hover:text-[#042C53]">Trial</Link>
+            <Link to="/customers" className="hover:text-[#042C53]">Customers</Link>
+            <Link to="/testimonials" className="hover:text-[#042C53]">Testimonials</Link>
             <Link to="/learn" className="hover:text-[#042C53]">Learn</Link>
             <Link to="/careers" className="hover:text-[#042C53]">Careers</Link>
             <Link to="/status" className="hover:text-[#042C53]">Status</Link>

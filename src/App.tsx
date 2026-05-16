@@ -50,6 +50,13 @@ import Careers from "./pages/Careers";
 import Press from "./pages/Press";
 import ExitIntent from "@/components/ExitIntent";
 import LeadMagnetModal from "@/components/LeadMagnetModal";
+// v38: trust + conversion infrastructure
+import Customers from "./pages/Customers";
+import CaseStudyTemplate from "@/components/CaseStudyTemplate";
+import Trial from "./pages/Trial";
+import Testimonials from "./pages/Testimonials";
+import Onboarding from "./pages/Onboarding";
+import LiveActivity from "@/components/LiveActivity";
 
 const queryClient = new QueryClient();
 
@@ -122,6 +129,12 @@ const App = () => (
           <Route path="/status" element={<Status />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/press" element={<Press />} />
+          {/* v38: trust + conversion infrastructure */}
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/customers/:slug" element={<CaseStudyTemplate />} />
+          <Route path="/trial" element={<Trial />} />
+          <Route path="/testimonials" element={<Testimonials />} />
+          <Route path="/onboarding" element={<Onboarding />} />
           {/* v33a: programmatic SEO — /:vertical/:city (200 LPs).
               Placed last among real routes so static paths above always win. */}
           <Route path="/:vertical/:city" element={<LocationPage />} />
@@ -132,6 +145,8 @@ const App = () => (
         <ExitIntent>
           {({ open, close }) => <LeadMagnetModal open={open} onClose={close} />}
         </ExitIntent>
+        {/* v38: site-wide live-activity widget; sticky bottom-left, dismissable. */}
+        <LiveActivity />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

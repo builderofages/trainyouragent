@@ -1,0 +1,188 @@
+// src/components/BuiltInPublic.tsx
+// v38: Built-in-public timeline — fetches the last 10 commits from the
+// public GitHub API on mount, refreshes every 60s. Caches in sessionStorage
+// so navigating around the site doesn't re-burn API quota.
+//
+// Parses commit messages matching `vN[a-z]?: {description}` and renders a
+// vertical timeline (date · ship version · description). Skips merge commits
+// and anything without a v-prefix so the timeline reads as a real ship log.
+
+import { useEffect, useState } from "react";
+
+const REPO_API = "https://api.github.com/repos/builderofages/trainyouragent/commits?per_page=10";
+const CACHE_KEY = "tya:bip:commits:v1";
+const CACHE_TTL_MS = 60 * 1000;
+
+export type BipCommit = {
+  sha: string;
+  date: string;
+  url: string;
+  version: string;       // e.g. "v36c"
+  description: string;   // e.g. "fix Vercel build — add .js to ./_lib imports"
+  rawMessage: string;
+};
+
+type CachedPayload = { ts: number; items: BipCommit[] };
+
+function readCache(): CachedPayload | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.sessionStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const p = JSON.parse(raw) as CachedPayload;
+    if (Date.now() - p.ts > CACHE_TTL_MS) return null;
+    return p;
+  } catch { return null; }
+}
+
+function writeCache(items: BipCommit[]) {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), items }));
+  } catch {}
+}
+
+// Accepts "v36c: fix Vercel build …", "v34: trust pages …", "v38: …"
+const V_RE = /^(v\d+[a-z]?)\s*:\s*(.+)$/i;
+
+export function parseCommits(raw: any[]): BipCommit[] {
+  if (!Array.isArray(raw)) return [];
+  const out: BipCommit[] = [];
+  for (const c of raw) {
+    const msg: string = c?.commit?.message ?? "";
+    const firstLine = msg.split("\n")[0]?.trim() ?? "";
+    // skip merges
+    if (/^merge /i.test(firstLine)) continue;
+    const m = firstLine.match(V_RE);
+    if (!m) continue;
+    out.push({
+      sha: String(c?.sha ?? "").slice(0, 7),
+      date: c?.commit?.author?.date ?? c?.commit?.committer?.date ?? "",
+      url: c?.html_url ?? `https://github.com/builderofages/trainyouragent/commit/${c?.sha ?? ""}`,
+      version: m[1],
+      description: m[2].trim(),
+      rawMessage: firstLine,
+    });
+  }
+  return out;
+}
+
+function fmtDate(iso: string) {
+  if (!iso) return "";
+  try {
+    const d = new Date(iso);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  } catch { return iso.slice(0, 10); }
+}
+
+type Props = {
+  title?: string;
+  eyebrow?: string;
+  limit?: number;
+  className?: string;
+};
+
+export default function BuiltInPublic({
+  title = "Built in public.",
+  eyebrow = "Ship log",
+  limit = 10,
+  className = "",
+}: Props) {
+  const [items, setItems] = useState<BipCommit[]>(() => readCache()?.items ?? []);
+  const [loading, setLoading] = useState<boolean>(items.length === 0);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const cached = readCache();
+        if (cached && cached.items.length) {
+          setItems(cached.items);
+          setLoading(false);
+          // Still refresh in the background after using cache
+        }
+        const r = await fetch(REPO_API, { headers: { Accept: "application/vnd.github+json" } });
+        if (!r.ok) throw new Error(`github ${r.status}`);
+        const raw = await r.json();
+        if (cancelled) return;
+        const parsed = parseCommits(raw);
+        setItems(parsed);
+        setError(null);
+        writeCache(parsed);
+      } catch (e: any) {
+        if (cancelled) return;
+        setError(String(e?.message || e));
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    load();
+    const id = window.setInterval(load, CACHE_TTL_MS);
+    return () => { cancelled = true; window.clearInterval(id); };
+  }, []);
+
+  const list = items.slice(0, limit);
+
+  return (
+    <section className={`px-5 sm:px-8 py-16 ${className}`}>
+      <div className="max-w-3xl mx-auto">
+        <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">{eyebrow}</div>
+        <h2 className="text-[26px] sm:text-[36px] leading-tight font-semibold text-[#042C53] mb-2">
+          {title}
+        </h2>
+        <p className="text-[14px] text-slate-500 mb-8">
+          Every ship is pushed to{" "}
+          <a
+            href="https://github.com/builderofages/trainyouragent"
+            target="_blank"
+            rel="noopener"
+            className="text-[#185FA5] hover:text-[#042C53] underline decoration-[#185FA5]/30"
+          >
+            github.com/builderofages/trainyouragent
+          </a>
+          . Pulled live from the repo every 60 seconds.
+        </p>
+
+        {loading && list.length === 0 && (
+          <div className="text-[13px] text-slate-500">Loading ship log…</div>
+        )}
+        {!loading && error && list.length === 0 && (
+          <div className="text-[13px] text-slate-500">
+            Couldn't reach GitHub right now — the ship log will reload on the next try.
+          </div>
+        )}
+
+        <ol className="relative pl-6 border-l border-slate-200 space-y-6">
+          {list.map((c) => (
+            <li key={c.sha} className="relative">
+              <span
+                className="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full border-2 border-white"
+                style={{ background: "#185FA5", boxShadow: "0 0 0 1px #CBDDF1" }}
+                aria-hidden="true"
+              />
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <span className="text-[11px] uppercase tracking-[0.14em] text-slate-400 tabular-nums">
+                  {fmtDate(c.date)}
+                </span>
+                <span className="text-[11px] uppercase tracking-[0.14em] font-semibold text-[#185FA5]">
+                  {c.version}
+                </span>
+                <a
+                  href={c.url}
+                  target="_blank"
+                  rel="noopener"
+                  className="text-[10px] text-slate-300 hover:text-[#185FA5] tabular-nums"
+                  aria-label={`Open commit ${c.sha} on GitHub`}
+                >
+                  {c.sha}
+                </a>
+              </div>
+              <div className="text-[15px] text-[#042C53] leading-snug mt-1">{c.description}</div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}

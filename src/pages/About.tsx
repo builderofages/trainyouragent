@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
+// v38: trust signals
+import BuiltInPublic from "@/components/BuiltInPublic";
+import ShipsCounter from "@/components/ShipsCounter";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
@@ -161,8 +164,17 @@ const About = () => {
               <a href={CAL_URL} target="_blank" rel="noopener" className="inline-flex items-center gap-2 px-6 py-3 text-[14px] font-semibold text-white bg-[#185FA5] hover:bg-[#0C447C] transition rounded-full">Book 30 min with me →</a>
               <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="inline-flex items-center gap-2 px-6 py-3 text-[14px] font-semibold text-[#042C53] bg-white hover:bg-slate-50 border border-slate-200 transition rounded-full">Connect on LinkedIn →</a>
             </div>
+            {/* v38: live ship counter under the bio */}
+            <div className="mt-8"><ShipsCounter variant="hero" /></div>
           </div>
         </section>
+
+        {/* v38: built-in-public timeline pulled live from GitHub */}
+        <BuiltInPublic
+          className="bg-white border-b border-slate-200"
+          title="What we shipped this week."
+          eyebrow="Built in public"
+        />
 
         <section className="py-24 relative overflow-hidden">
           <div className="absolute inset-0" style={{ background: "radial-gradient(800px 400px at 50% 50%, rgba(133,183,235,0.4), transparent 65%)" }} />
