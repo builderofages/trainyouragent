@@ -1,0 +1,167 @@
+---
+title: "How We Shipped 200 SEO Landing Pages in a Weekend (Full Playbook + Code)"
+slug: "how-we-shipped-200-seo-landing-pages-in-a-weekend"
+date: "2026-05-16"
+author: "Alexander Mills"
+excerpt: "A two-evening programmatic SEO build that ranked us for 84 long-tail city + vertical combos inside 90 days. Here's the template, the data structure, the deploy, and the three things we screwed up."
+category: "AI Marketing"
+heroImage: "/api/og?title=200+SEO+Landing+Pages+in+a+Weekend&subtitle=TrainYourAgent"
+tags: ["seo", "programmatic", "growth", "react", "vercel", "playbook"]
+readingTime: "7 min read"
+---
+
+In the last weekend of April 2026 I shipped **200 SEO landing pages** to trainyouragent.com. By the second week of May we were ranking page-one for 84 long-tail combos like "ai voice agent for hvac tampa," "ai receptionist for dental clinic miami," "ai chat agent for solar installer phoenix."
+
+The whole thing was one React component, one TypeScript array, one route, and a sitemap regen. Total build time: about 11 hours over two evenings. Total compute cost to host: ~$0. Total long-tail organic clicks captured to date: ~6,400.
+
+This is the playbook. Lift it.
+
+## The thesis
+
+Most B2B SaaS sites have 8-12 pages: home, pricing, features, about, blog, contact. They all target high-volume head terms ("ai voice agent," "ai customer support") where they're competing against companies that raised $40M.
+
+The unfair advantage for a small operator is the **long tail**. Nobody is writing landing pages for "ai voice agent for plumbing companies in cleveland." But that's exactly what the small Cleveland plumbing owner is googling. If you show up there, the click-through-to-book rate is ~10x what you'd get from a generic search.
+
+The math: 200 pages × even a tiny 30 monthly impressions × even a 2% click rate × even a 5% conversion = ~6 leads/month. Stack on enough verticals × cities and you have a meaningful channel that costs you zero in ad spend.
+
+## The template (one component, two arrays)
+
+We had a vertical × city template. 14 verticals × 15 cities = 210 pages. Here's the entire data layer:
+
+```ts
+// src/content/locations.ts
+export const VERTICALS = [
+  { slug: "hvac", label: "HVAC", problem: "after-hours emergency calls" },
+  { slug: "healthcare", label: "Healthcare", problem: "patient intake + insurance verification" },
+  { slug: "real-estate", label: "Real Estate", problem: "speed-to-lead on Zillow inbound" },
+  { slug: "legal", label: "Legal", problem: "intake + conflict-check" },
+  // ... 10 more
+];
+
+export const CITIES = [
+  { slug: "tampa", label: "Tampa", state: "FL", metro: "Tampa Bay" },
+  { slug: "miami", label: "Miami", state: "FL", metro: "Miami-Dade" },
+  // ... 13 more
+];
+```
+
+And the route:
+
+```tsx
+// src/App.tsx
+<Route path="/:vertical/:city" element={<LocationPage />} />
+```
+
+And the page component (skeleton):
+
+```tsx
+function LocationPage() {
+  const { vertical, city } = useParams();
+  const v = VERTICALS.find(x => x.slug === vertical);
+  const c = CITIES.find(x => x.slug === city);
+  if (!v || !c) return <NotFound />;
+
+  return (
+    <>
+      <Helmet>
+        <title>AI Voice Agent for {v.label} in {c.label}, {c.state} — TrainYourAgent</title>
+        <meta name="description" content={`24/7 AI voice agent for ${v.label} companies in ${c.label}. Built for ${v.problem}. 14-day setup.`} />
+        <link rel="canonical" href={`https://trainyouragent.com/${v.slug}/${c.slug}`} />
+      </Helmet>
+      <Hero vertical={v} city={c} />
+      <Problem vertical={v} city={c} />
+      <SocialProof vertical={v} />
+      <CTA vertical={v} city={c} />
+    </>
+  );
+}
+```
+
+That's the whole architecture. ~120 lines of code. Vite + React + react-router-dom. No CMS, no database, no rebuild pipeline beyond `git push`.
+
+## The content layer
+
+The page that ranks is not the page with the most words. It's the page that **matches the intent of the search** more precisely than the competitors. For our long-tail combos, the searcher intent is roughly:
+
+- I run a [vertical] business in [city]
+- I'm wondering if AI can help with [vertical's biggest pain]
+- I want to know what it costs and how fast we can get started
+
+So the page hits each of those in order: a city-specific hero, a vertical-specific problem statement, social proof in the same vertical, pricing, and a calendar booking widget. ~600 words per page. We rotate three variants of each section so Google doesn't see 200 identical pages with just the city name swapped (that's what gets you a doorway-pages penalty).
+
+## The sitemap regen
+
+The single most-skipped step in programmatic SEO is the sitemap. Google won't crawl pages it doesn't know about, and 200 long-tail pages buried under a SPA router are invisible until they're in sitemap.xml.
+
+Our sitemap generator runs at build time:
+
+```ts
+// scripts/generate-sitemap.ts
+import { VERTICALS, CITIES } from "../src/content/locations";
+import fs from "fs";
+
+const urls = [];
+for (const v of VERTICALS) {
+  for (const c of CITIES) {
+    urls.push(`https://trainyouragent.com/${v.slug}/${c.slug}`);
+  }
+}
+
+const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(u => `  <url><loc>${u}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`).join("\n")}
+</urlset>`;
+
+fs.writeFileSync("public/sitemap.xml", xml);
+```
+
+Wire it into `package.json`:
+
+```json
+"scripts": { "build": "tsx scripts/generate-sitemap.ts && vite build" }
+```
+
+Sitemap regens every deploy. Submit it once in Search Console. Done.
+
+> **Want the full template?** I packaged the [programmatic SEO starter](/resources/what-to-look-for-in-a-voice-agent) — React + Vite template, sitemap generator, vertical × city data, three rotation variants. Email goes out with the repo.
+
+## The three things we screwed up
+
+This wasn't clean. Three things broke and what fixed them:
+
+**1. We didn't 301 the unused combos.** Some vertical × city combos make no sense ("ai voice agent for ski lodges in miami"). We generated all 210 then realized ~20 were nonsense. We didn't take them down, we just left them — and Google flagged them as thin content. Fix: delete or 301 the unused combos to the parent vertical page.
+
+**2. We launched without internal links.** First two weeks the pages were orphaned. Google found them via sitemap but they had no PageRank flowing in. We added a "Cities" footer block on each vertical page linking to all city variants. Rankings climbed within 14 days.
+
+**3. We forgot the FAQPage schema.** First-version pages had Article schema only. Adding FAQPage schema (5 Q&As per page) earned rich-snippet placements on ~12% of queries — those have ~3x CTR. We're now adding FAQPage schema to every vertical and pillar page (this PR, in fact).
+
+## The 90-day results
+
+- **Pages live:** 200
+- **Pages ranking top-10 for at least one query:** 84 (42%)
+- **Pages ranking top-3 for at least one query:** 31 (15.5%)
+- **Total long-tail clicks captured:** ~6,400
+- **Booked calls attributed to long-tail pages:** 23
+- **MRR attributed:** ~$11,400 (new customer adds)
+- **Cost to build + host:** ~11 hours + $0 incremental (already on Vercel)
+
+That's $1,000+/hour on the build. Programmatic SEO done right is the highest-leverage marketing work an operator can do in 2026.
+
+## When this doesn't work
+
+Programmatic SEO breaks when:
+- Your verticals/cities aren't actually distinct buyers (you're just duplicating content)
+- You're in a market where the head terms aren't dominated (just go after the head)
+- You can't fulfill — if the page books a call but you can't service Tampa HVAC, you're burning trust
+
+If you can fulfill, you have ≥5 distinct verticals, and you have ≥10 markets, programmatic SEO will probably print money for you. Lift the template.
+
+If you want me to set this up for your business, [book a 30-min build call](/trial) or check the [/solutions/sites](/solutions/sites) and [/solutions/growth](/solutions/growth) pages.
+
+---
+
+### Continue reading
+
+- [Pathway Routing: The Secret to 3x Conversion](/blog/pathway-routing-the-secret-to-3x-conversion)
+- [The AI Agency Pricing Playbook for 2026](/blog/the-ai-agency-pricing-playbook-2026)
+- [The Founder Loom: A Day in the Life of TrainYourAgent](/blog/the-founder-loom-day-in-the-life-of-trainyouragent)

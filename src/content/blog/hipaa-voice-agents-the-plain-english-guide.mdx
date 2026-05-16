@@ -1,0 +1,156 @@
+---
+title: "HIPAA Voice Agents: The Plain-English Guide for Builders & Operators"
+slug: "hipaa-voice-agents-the-plain-english-guide"
+date: "2026-05-16"
+author: "Alexander Mills"
+excerpt: "Most 'HIPAA-compliant' voice AI vendors don't know what they're claiming. Here's the actual difference between Covered Entity and Business Associate, what a BAA covers, where most stacks leak PHI, and the BAA + DPA combo you actually need."
+category: "AI Infrastructure"
+heroImage: "/api/og?title=HIPAA+Voice+Agents+%E2%80%94+Plain-English+Guide&subtitle=TrainYourAgent"
+tags: ["hipaa", "healthcare", "voice", "compliance", "phi", "baa"]
+readingTime: "10 min read"
+---
+
+Half the voice-AI vendors I've seen list "HIPAA compliant" on their pricing page. Roughly two of them mean it.
+
+The phrase has been so abused it's borderline meaningless. There's no such thing as a "HIPAA-certified" product — HIPAA is a law, not a certification. What exists is a chain of legal agreements (BAAs) and a stack of technical controls that, taken together, make it lawful for a covered healthcare entity to use the product without breaking the law.
+
+I build voice agents for healthcare clients at TrainYourAgent. We've signed BAAs with five healthcare providers in 2026 alone. This is the guide I wish existed when we started — plain English, no lawyer-speak, what actually matters when you're building or buying.
+
+## What HIPAA actually is
+
+HIPAA (1996, updated by HITECH 2009) regulates how **Protected Health Information** — PHI — can be created, stored, shared, and destroyed by entities that handle it.
+
+PHI is **any health information tied to an identifiable individual**. Name + diagnosis is PHI. Phone number + appointment reason is PHI. A recording of a patient saying "I have diabetes" is PHI.
+
+The law splits the world into two roles:
+
+- **Covered Entity (CE)** — healthcare providers, health plans, healthcare clearinghouses. The dentist's office. The 200-doc primary care group. The hospital.
+- **Business Associate (BA)** — any vendor that *creates, receives, maintains, or transmits PHI on behalf of* a Covered Entity. Your billing software. Your fax service. Your AI voice agent.
+
+You're almost certainly a BA, not a CE. **That matters** — your obligations are different.
+
+## What a BAA is (and isn't)
+
+A **Business Associate Agreement** is a contract between a Covered Entity and its Business Associate. It does three things:
+
+1. Permits the BA to handle PHI on the CE's behalf
+2. Binds the BA to specific safeguards (encryption, access logging, breach notification)
+3. Establishes joint and several liability if either side messes up
+
+Signing a BAA is not "becoming HIPAA-compliant." Signing a BAA is *agreeing to operate to HIPAA standards for that specific customer*. You can have a BAA with one client and not another. You can be compliant with one customer's PHI flows and not another's.
+
+What a BAA does NOT do:
+- It does not certify your product
+- It does not absolve you of breach liability — it *creates* breach liability
+- It does not cover non-PHI data (so don't bother BAAing a non-healthcare client)
+
+## The HIPAA voice-agent stack
+
+A voice agent that handles PHI touches at minimum:
+
+- **Telephony** (Twilio, Telnyx) — the audio
+- **STT** (Deepgram, Whisper) — the transcript
+- **LLM** (OpenAI, Anthropic, Google) — the reasoning + memory
+- **TTS** (ElevenLabs, Cartesia) — the spoken response
+- **Storage** (Supabase, S3, your own DB) — recordings, transcripts, structured outputs
+- **Orchestration** (Pipecat, LiveKit, Vapi) — the glue
+
+Every one of those vendors must sign a BAA with **you** if PHI flows through them. If even one in the chain refuses or can't, that link is your weak point. The whole agent is non-compliant.
+
+As of May 2026, here's the state of BAA availability for the common stack:
+
+| Vendor | BAA available? | Notes |
+|---|---|---|
+| Twilio | Yes | "Twilio HIPAA" SKU, must enable |
+| Deepgram | Yes | On Enterprise tier |
+| OpenAI | Yes | Enterprise + Zero Data Retention required |
+| Anthropic | Yes | Enterprise contract |
+| Google Vertex AI | Yes | With HIPAA-eligible services list |
+| ElevenLabs | Yes (2025+) | Enterprise tier |
+| Cartesia | Limited | Case-by-case; not standard SKU |
+| Vapi | Yes | Enterprise plan only |
+| Bland.ai | Yes | Enterprise / custom |
+| Retell | Yes | Enterprise plan |
+| Supabase | Yes | Team or Enterprise tier |
+| Vercel | Yes | Enterprise; Edge functions excluded |
+
+If a vendor refuses to sign or says "we're HIPAA-aware" — that's a no. Move on.
+
+## What "HIPAA-compliant" actually means in voice AI
+
+Stripped of marketing, a voice agent is compliant when all of the following are true:
+
+1. **Every vendor in the data flow has a signed BAA** with the operator of the agent
+2. **PHI is encrypted in transit and at rest** (TLS 1.2+ on the wire, AES-256 at rest)
+3. **Access is logged and auditable** — who accessed which patient's record when
+4. **Breach notification process is in place** — 60-day clock starts when a breach is discovered
+5. **The minimum necessary standard is followed** — agents don't see more PHI than they need to do their job
+6. **PHI doesn't go where it shouldn't** — analytics tools, log aggregators, error trackers must not ingest PHI
+
+That last one trips up the most builds. Sentry, PostHog, Datadog, LogRocket — none of those have HIPAA BAAs by default. Send a patient's name to Sentry in an error message and you've just created a breach.
+
+## The BAA + DPA combo
+
+If you have customers outside the US too, one BAA isn't enough. You need:
+
+- **BAA** for any US healthcare PHI flows
+- **DPA (Data Processing Agreement)** for any EU/UK personal data flows under GDPR
+- **SCCs (Standard Contractual Clauses)** if data crosses the Atlantic
+
+Healthcare clients with international footprint expect both. We ship a combined BAA + DPA template that takes 15 minutes to redline instead of two weeks. If your vendor only offers one, that's a flag — most enterprise legal teams will push back.
+
+> **Want the redline-ready BAA + DPA template we use?** Email us at trainyouragent@gmail.com or [book a 30-min compliance call](/trial) — we'll send the same docs we use with our healthcare customers.
+
+## The five common myths
+
+**Myth 1: "HIPAA-certified" is a thing.** It is not. HHS does not certify products. Anyone claiming a HIPAA certification is selling you a vendor-paid audit, not legal compliance.
+
+**Myth 2: Using AWS / Azure / GCP makes you HIPAA-compliant.** Wrong. They sign BAAs for *specific services* on their HIPAA-eligible lists. AWS S3 with a BAA + correct config? Eligible. AWS S3 with a BAA but logs going to non-eligible CloudWatch? Breach risk.
+
+**Myth 3: "We don't store PHI, so we don't need a BAA."** Wrong. *Transmitting* PHI requires a BAA. The call audio passing through your servers — even if not stored — is PHI transmission.
+
+**Myth 4: "OpenAI is HIPAA-compliant."** Misleading. OpenAI signs BAAs *only* on Enterprise contracts with Zero Data Retention enabled. The default ChatGPT API plan is not BAA-eligible.
+
+**Myth 5: "Voice clones don't trigger HIPAA."** Wrong. If the cloned voice is reading patient data back to a patient, the rendered audio is PHI. The TTS provider needs a BAA same as the LLM provider.
+
+## What we actually do at TrainYourAgent
+
+We are NOT a Covered Entity. We are a Business Associate to our healthcare customers. Our standard healthcare deployment:
+
+- **BAA signed with the customer** before any PHI flows
+- **Twilio HIPAA SKU** for telephony
+- **Deepgram Enterprise + BAA** for STT
+- **OpenAI Enterprise with ZDR** OR **Anthropic Enterprise** for LLM (customer choice)
+- **ElevenLabs Enterprise** for TTS
+- **Supabase with HIPAA add-on** for storage, with RLS by customer + by patient
+- **PHI redaction layer** before any data hits Sentry / PostHog / our internal logs
+- **Audit log table** that records every access to a patient record, retained 7 years
+- **Breach response runbook** with 60-day notification clock automation
+
+That's the floor. Each deployment also gets a security review with the customer's IT or compliance lead before go-live. We do not skip this even for small practices — it's the thing that lets us sleep at night.
+
+## The actual compliance checklist (steal this)
+
+If you're scoping a HIPAA-eligible voice agent, this is the order:
+
+1. Confirm the customer is a Covered Entity (most healthcare orgs are)
+2. Sign the BAA before any PHI flows — even test data
+3. Map every vendor in your data path; verify each has a BAA available
+4. Disable any tool in the path that doesn't have a BAA (or replace it)
+5. Set up PHI redaction for logs, errors, analytics
+6. Implement access logging and a 7-year retention policy
+7. Document your breach response runbook
+8. Do a tabletop breach drill with the customer's compliance lead before go-live
+9. Annual review of every BAA in the chain
+
+If you skip step 1 you're building blind. If you skip step 8 you find out about gaps during a real breach, which is the wrong time.
+
+If you're building a healthcare voice agent and want to skip the trial-and-error, [check the healthcare vertical page](/healthcare) or [book a 30-min build call](/trial). We'll send the BAA + DPA combo for review before the call.
+
+---
+
+### Continue reading
+
+- [The Real Cost of AI Voice Agents in 2026](/blog/the-real-cost-of-ai-voice-agents-in-2026)
+- [Bland vs Synthflow vs Vapi — The Honest Comparison](/blog/bland-vs-synthflow-vs-vapi-the-honest-comparison)
+- [The Founder Loom: A Day in the Life of TrainYourAgent](/blog/the-founder-loom-day-in-the-life-of-trainyouragent)

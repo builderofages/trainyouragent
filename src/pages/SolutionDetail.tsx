@@ -474,6 +474,47 @@ const SolutionDetail = () => {
       el.setAttribute("content", c);
     };
     setMeta("description", pillar.tagline);
+
+    // v40a: Service + FAQPage + BreadcrumbList JSON-LD per pillar
+    const schemaId = "tya-schema-pillar";
+    document.getElementById(schemaId)?.remove();
+    const url = `https://trainyouragent.com/solutions/${pillar.slug}`;
+    const s = document.createElement("script");
+    s.id = schemaId;
+    s.type = "application/ld+json";
+    s.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Service",
+          "@id": `${url}#service`,
+          serviceType: pillar.label,
+          name: `${pillar.label} — TrainYourAgent`,
+          description: pillar.tagline,
+          provider: { "@id": "https://trainyouragent.com/#org" },
+          areaServed: { "@type": "Country", name: "United States" },
+        },
+        {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://trainyouragent.com" },
+            { "@type": "ListItem", position: 2, name: "Solutions", item: "https://trainyouragent.com/solutions" },
+            { "@type": "ListItem", position: 3, name: pillar.label, item: url },
+          ],
+        },
+        {
+          "@type": "FAQPage",
+          "@id": `${url}#faq`,
+          mainEntity: pillar.faqs.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        },
+      ],
+    });
+    document.head.appendChild(s);
+    return () => { document.getElementById(schemaId)?.remove(); };
   }, [pillar]);
 
   if (!pillar) {

@@ -1,0 +1,154 @@
+---
+title: "The Founder Loom — A Day in the Life of TrainYourAgent"
+slug: "the-founder-loom-day-in-the-life-of-trainyouragent"
+date: "2026-05-16"
+author: "Alexander Mills"
+excerpt: "What I actually do in a day building voice agents for SMB customers. The tools, the time blocks, the rituals, the things that make the work compound — and the things I had to stop doing to make any of it work."
+category: "Founder Notes"
+heroImage: "/api/og?title=The+Founder+Loom+%E2%80%94+A+Day+in+the+Life&subtitle=TrainYourAgent"
+tags: ["founder", "operator", "tools", "build-in-public", "day-in-the-life"]
+readingTime: "6 min read"
+---
+
+People ask me what I actually do all day. The honest answer is "less than you'd expect, and more on the things that matter." Here's a representative weekday at TrainYourAgent in May 2026 — the tools, the time blocks, the rituals.
+
+This is not a productivity manifesto. It's a snapshot of what's working right now for an operator running a ~$20K MRR voice-AI shop with no team. Some of it will be obsolete by Q4. Some of it will compound for years.
+
+## 6:15 AM — Coffee and the inbox triage
+
+I'm up before the kid. First 15 minutes is coffee + Superhuman, processing overnight email. Not replying — sorting. Three buckets:
+
+- **Customer issues** — anything that says "agent didn't book," "agent said something weird," "billing." These get a 90-second reply with an ETA, then go on the work list.
+- **Sales / inbound** — anyone who booked a Cal.com slot or replied to a sequence. Calendly reschedule links, prep notes.
+- **Everything else** — newsletter signups, Stripe receipts, Vercel deploy emails. Archive batch.
+
+Inbox at zero by 6:30 every morning, six days a week. The rule is process, not respond. Responses happen in batches during the day.
+
+## 7:00 AM — The dashboard check
+
+Two browser tabs, every morning:
+
+- **Sentry + PostHog** — any alerts on production agents from the overnight. ~3-4 days a week there's nothing. The other days it's usually a single agent that needed a prompt tweak.
+- **Stripe + Supabase admin** — MRR check, new signups, churn. 30 seconds.
+
+If a customer's agent had a bad call overnight, I listen to the recording and fix the prompt before the customer ever notices. This is the single highest-leverage thing I do all day. Customers who tell me "your agent answered every call perfectly" are customers I never lose.
+
+## 7:30 AM – 11:30 AM — Build block
+
+Four hours, phone in another room, Slack closed, IDE open. This is where actual product gets built. Current rotation looks like:
+
+- Mondays — new customer build kickoffs (~half the day)
+- Tuesdays — feature work on the platform (`/start` flow, new vertical templates, etc.)
+- Wednesdays — content / blog / SEO (this post was a Wednesday)
+- Thursdays — customer iterations (prompt tuning, integrations, edge cases)
+- Fridays — refactor + cleanup + automation work
+
+Tools in this block:
+- **VS Code + Cursor** — primary IDE. Cursor's tab-complete is too good to pass on.
+- **Claude Code in agent mode** — for any task longer than 20 minutes
+- **GitHub PRs** — even solo, every change is a PR with a self-review
+- **Vercel + Supabase + Fly.io** — the deploy targets
+- **Linear** — single-engineer Kanban, mostly to keep "things I forgot" out of my head
+
+## 11:30 AM — Sales call #1
+
+I take one or two sales calls a day, never more. Calls are 30 min on Cal.com. Format:
+
+- 5 min: their context (what they do, current phone setup, biggest pain)
+- 10 min: live demo against their actual scenario
+- 10 min: scope + price
+- 5 min: next step (build kickoff or follow-up)
+
+I close ~40-50% of qualified calls. The qualifying happens before the call (pathway routing, form questions, my own LinkedIn check). Unqualified people don't get on the calendar.
+
+Tools:
+- **Cal.com** for booking
+- **Fathom** for transcript + summary (auto-posts to my CRM)
+- **HubSpot Free** as the CRM
+- **DocuSign** if it's a same-day close (rare but happens)
+
+## 12:30 PM — Lunch and the longest walk of the day
+
+90 minutes, no laptop. Walk + lunch + family time. The hardest discipline I've built. Used to skip it. Skipping made every afternoon worse and every Wednesday I'd realize I hadn't talked to my wife in three days. Now it's a hard block.
+
+I do read on the walk — usually one essay from a builder I respect. Currently going through old David Cain, Patrick McKenzie, Brian Lui posts. Operator-brain food.
+
+## 2:00 PM – 5:00 PM — Customer block
+
+This is the part of the day that pays the bills. Three hours of customer work:
+
+- Prompt tuning based on yesterday's call recordings
+- Integration work (Hubspot, ServiceTitan, Cal.com webhooks)
+- Customer Loom recordings (5-10 min, sent same-day, showing them what changed)
+- Slack replies in their channels
+
+A typical afternoon I'll send 4-6 Looms. Customers eat them up. The Loom replaces the "weekly check-in call" everyone else's vendor schedules. They feel cared for; I don't lose a 30-min slot of calendar.
+
+Tools:
+- **Loom** (obviously)
+- **Slack Connect** for active customer channels
+- **Postman** for hitting their APIs
+- **Bland / Vapi / our self-hosted Pipecat** depending on which platform the customer is on
+
+## 5:00 PM — Sales call #2 (sometimes)
+
+If there's a second sales call it sits here. Same format, same close rate. After 5:30 the day is done for paid work.
+
+## 5:30 PM – 8:00 PM — Family time
+
+Hard block. Phone face-down. Watch is off. The work will be there tomorrow.
+
+## 8:00 PM – 9:30 PM — Build-in-public hour
+
+This is the hour I write, ship public artifacts, or work on the parts of the business that don't have an immediate dollar attached. Recently:
+
+- Blog posts (this one)
+- Twitter / LinkedIn — one substantial post per platform per day, mostly the same content
+- Programmatic SEO experiments
+- Newsletter prep — TrainYourAgent ships weekly on Wednesday morning
+
+It's not glamorous. It's the compound-interest hour. Almost nothing I do here pays off in the same week. Most of what I do here pays off 90 days out, and pays off again 18 months out.
+
+## The tools, in one list
+
+For the people who skipped to the bottom:
+
+- **Cursor + Claude Code** — IDE + agent coding
+- **Linear** — single-eng kanban
+- **GitHub** — every change in a PR
+- **Vercel + Supabase + Fly.io** — production
+- **Sentry + PostHog** — observability
+- **Superhuman** — email
+- **Cal.com + Fathom** — sales calls
+- **HubSpot Free + Stripe** — CRM + billing
+- **Loom + Slack Connect** — customer comms
+- **Notion + Apple Notes** — anything that needs to be written down
+- **beehiiv** — newsletter
+
+## What I had to stop doing
+
+Three things I stopped, in order of how much time they returned:
+
+1. **Group chats with other founders.** Slack DMs with friends-of-friends in similar businesses ate 90 min/day. The signal-to-noise was bad. I'm in two Discords now, both with hard mute on every channel except announcements.
+2. **Looking at metrics more than twice a day.** Stripe MRR, web traffic, signups — checking these is dopamine, not work. Twice a day. Morning, after lunch. That's it.
+3. **Saying yes to "quick podcast appearances."** A 30-min podcast is a 90-min commitment by the time you account for prep, recording, the social post, the follow-up. I do one a month if it has the right audience. Three years ago I'd do six.
+
+## The compounding rituals
+
+Three things I started, in order of how much they paid back:
+
+1. **Every customer call recording listened to within 24h.** Catches problems before they're complaints.
+2. **One Loom per week to every active customer, even if there's nothing to report.** Single biggest retention lever I have.
+3. **A weekly Friday "what compounded this week" note in Notion.** 10 minutes. Forces me to notice the small wins that would otherwise blur.
+
+That's the loom of the day. Boring, mostly. Repeatable, mostly. Compounding, hopefully.
+
+If you want to talk shop, [book a call](/trial) or follow [the build-in-public thread](https://www.linkedin.com/in/alexandermillsai). I'll usually reply same day.
+
+---
+
+### Continue reading
+
+- [The Real Cost of AI Voice Agents in 2026](/blog/the-real-cost-of-ai-voice-agents-in-2026)
+- [The AI Agency Pricing Playbook for 2026](/blog/the-ai-agency-pricing-playbook-2026)
+- [How We Shipped 200 SEO Landing Pages in a Weekend](/blog/how-we-shipped-200-seo-landing-pages-in-a-weekend)

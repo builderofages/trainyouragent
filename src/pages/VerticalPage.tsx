@@ -366,6 +366,71 @@ const LANE_OVERLAY: Record<LaneId, LaneOverlay> = {
 };
 const LANE_IDS: LaneId[] = ["startup","smb","agency","ops"];
 
+/* ------------------------------------------------------------------ */
+/* v40a: FAQPage JSON-LD per vertical — earns Google rich snippets    */
+/* 5 industry-specific Q&As per top vertical (HVAC, Healthcare,       */
+/* Real Estate, Legal, Roofing, Solar, E-commerce, Hospitality).       */
+/* ------------------------------------------------------------------ */
+type FAQ = { q: string; a: string };
+const FAQ_BY_VERTICAL: Record<string, FAQ[]> = {
+  "/hvac": [
+    { q: "How much does an AI voice agent cost for an HVAC company?", a: "Our HVAC Operators plan is $799/mo with a $2,950 build fee. That includes after-hours emergency triage, dispatch sync with ServiceTitan or Housecall Pro, and 3,000 included minutes per month (about 5x what most 14-truck shops use). Custom multi-location builds run $1,499–$2,500/mo." },
+    { q: "Can the agent handle emergency after-hours dispatch?", a: "Yes. The agent triages emergency vs routine inside the first 20 seconds using your pricing logic, captures address and system type, pages the on-call tech over SMS, and confirms ETA back to the caller within 60 seconds. PagerDuty escalation kicks in if the tech doesn't acknowledge in 4 minutes." },
+    { q: "Does it integrate with ServiceTitan or Housecall Pro?", a: "Native integration with both, plus Jobber, FieldEdge, and Service Fusion. The agent reads tech availability in real time, books the dispatch directly into the schedule, and creates the work order with full customer history — no double-entry, no manual ticket creation." },
+    { q: "How long does it take to train the agent on our pricing?", a: "14 days from kickoff to live traffic. Day 1 we scope your dispatch fees, after-hours premiums, and service area zip codes. Days 2–7 we build and tune. Days 8–10 sandbox testing with your team. Days 11–14 we shadow your existing intake, then cut over." },
+    { q: "What if a customer asks something the agent doesn't know?", a: "The agent uses a strict 'I'll have a human follow up' fallback when it hits a question outside its scope, captures the question and customer details, and pages your CSR's Slack with the full context. Customer always gets a callback inside the SLA you set — usually under 30 minutes during business hours." },
+  ],
+  "/healthcare": [
+    { q: "Is the agent HIPAA-compliant?", a: "Yes — for customers who sign a BAA with us. We are not a Covered Entity, we operate as a Business Associate. Our stack uses BAA-eligible vendors only: Twilio HIPAA SKU, Deepgram Enterprise, OpenAI Enterprise with Zero Data Retention or Anthropic Enterprise, ElevenLabs Enterprise, and Supabase with the HIPAA add-on. PHI is encrypted in transit and at rest, redacted before any analytics layer, and access-logged for 7 years." },
+    { q: "Will it work with Athena, eClinicalWorks, or Epic?", a: "Yes. We have native integrations with Athena, eClinicalWorks, DrChrono, and any EHR with an open FHIR API including Epic. The agent reads provider schedules, books into the right panel based on payor mix and acuity, and verifies insurance eligibility against the payor before booking." },
+    { q: "Can it triage urgent symptoms to a live nurse?", a: "Yes. We build escalation rules with your clinical lead — chest pain, suicidal ideation, severe bleeding, etc. — that immediately transfer the call to your on-call clinician with full context, or route directly to 911 instructions when criteria are met. You control the escalation thresholds." },
+    { q: "How long does setup take for a multi-location practice?", a: "Typical timeline: 21 days for a single location, 35–45 days for a multi-location group. The longer timeline accounts for BAA negotiation, payor list configuration per location, and provider panel mapping. The agent goes live in shadow mode first, then full cutover." },
+    { q: "What happens to no-shows and recall outreach?", a: "The agent runs the 24-hour confirm, 2-hour reminder, and same-day rebook flow over voice and SMS. Most clinics see no-show rates drop 30–50% in the first 60 days. Recall cadence is fully configurable — annual exams, 6-month cleanings, post-procedure follow-ups." },
+  ],
+  "/real-estate": [
+    { q: "How fast does the agent respond to a Zillow or Realtor.com lead?", a: "Under 30 seconds, 24/7. We hook directly into your lead source webhooks (Zillow, Realtor.com, Facebook lead forms, your site) so the moment a lead drops, the agent calls and texts in parallel. Speed-to-lead under 5 minutes triples your contact rate vs the industry average of 4+ hours." },
+    { q: "Does it integrate with Follow Up Boss or KvCORE?", a: "Native two-way sync with Follow Up Boss, KvCORE, Sierra Interactive, Boomtown, and CINC. Lead source, full conversation transcript, qualification answers, and booked showings all land in the right CRM stage automatically. No webhook duct-tape." },
+    { q: "Can it qualify pre-approval before booking a showing?", a: "Yes. The agent asks pre-approval status, price range, and timeline as part of intake. If they're not pre-approved, the agent routes them to your lender partner or your team's qualification flow. If they are, it books the showing directly with your or your team's calendar." },
+    { q: "What about long-cycle leads who aren't ready to buy yet?", a: "The agent runs the 30/60/90/180-day nurture cadence over voice and SMS automatically. Most leads aren't ready today — the agent keeps them warm so when they are, they call you, not the next agent who pitched them." },
+    { q: "How much does it cost for a single agent vs a team?", a: "Single agent / solo: $499/mo + $1,950 build. Team (3–10 agents): $1,499/mo + $4,950 build with per-agent CRM routing. Brokerage tier with custom branding and per-team reporting: $2,500+/mo, scoped per office." },
+  ],
+  "/legal": [
+    { q: "Can the agent run a conflict check before booking the intake?", a: "Yes. The agent queries your CMS (Clio, MyCase, PracticePanther, Lawmatics) against the caller's name and any opposing party they mention. Conflicts are flagged before the call ends; clean intakes route directly to the right attorney's calendar with a full intake summary attached." },
+    { q: "How does it handle jurisdiction and practice-area filters?", a: "We configure the agent with your jurisdictions, practice areas, and matter-type rules during build. The agent qualifies the caller's location and matter, then either books with the right attorney or politely declines and refers — no partner time wasted on unqualified intakes." },
+    { q: "Does it work with Clio, MyCase, or PracticePanther?", a: "Native integration with all three, plus Lawmatics for intake, DocuSign for engagement letters, and LawPay for retainer collection. The agent creates the contact, opens the matter, attaches the intake summary, and triggers the engagement-letter automation — all before the lead's coffee gets cold." },
+    { q: "What about attorney-client privilege on the call?", a: "Recordings and transcripts are stored under your firm's tenant with role-based access control. We can configure attorney-only access on specific matter types. Per-call audit logs satisfy most state bar record-keeping requirements; we can also set automatic deletion after your retention period." },
+    { q: "How much do firms typically spend on this?", a: "Solo and small firms: $799/mo + $2,950 build. Multi-attorney PI or family firms: $1,499/mo + $4,950 build with conflict-check integration. Most firms recover the cost inside the first month by stopping partners from answering intake calls." },
+  ],
+  "/roofing": [
+    { q: "Can the agent handle storm-surge call volume without dropping calls?", a: "Yes. Our infrastructure auto-scales to 10x normal volume during named storm events. We've shipped agents that absorbed 800+ calls in a single hail-event afternoon without a missed call. Your CSRs handle the white-glove customers; the agent absorbs the surge." },
+    { q: "Does it integrate with AccuLynx, JobNimbus, or Roofr?", a: "Native integration with all three, plus CompanyCam for damage photo capture and Hover for measurements. The agent books the inspection, captures damage description, and creates the job in your CRM with the right tags for insurance vs cash routing." },
+    { q: "How does it qualify insurance vs cash repairs?", a: "First-line question after the damage description. Insurance claims get routed to your insurance specialist with claim status capture (filed, not filed, adjuster scheduled). Cash repairs get fast-tracked to your sales team with a pre-qualified inspection slot." },
+    { q: "Can it capture damage details and photos before the inspection?", a: "Yes. The agent walks the homeowner through a structured damage description (areas affected, age of roof, leak status) and texts a photo upload link they can use from their phone before the truck rolls. Saves your inspector 15+ minutes per visit." },
+    { q: "How long does setup take during peak storm season?", a: "We can ship an emergency build in 7 days if you're already in a named storm event. Standard timeline is 14 days from kickoff. Most roofers onboard us in spring before the season starts." },
+  ],
+  "/solar": [
+    { q: "Can the agent qualify leads from Meta or Google ads?", a: "Yes. The agent qualifies utility provider, average monthly bill, roof orientation, and homeownership inside the first 90 seconds. Qualified leads book a site survey directly with your installer's calendar; unqualified leads get a polite decline and a referral to financing partners if appropriate." },
+    { q: "Does it integrate with Aurora, Enerflo, or OpenSolar?", a: "Native integration with Aurora Solar, Enerflo, Solo, and OpenSolar. The agent passes utility, bill, and roof data into your design pipeline so your designers walk into a fully-scoped site survey with everything they need." },
+    { q: "How does it handle the long sales cycle for solar?", a: "Solar has a 60–180 day average close cycle. The agent runs a structured nurture cadence: site survey confirmation, post-proposal check-in, financing follow-up, install scheduling reminders. Most installers see contact rate on warm leads stay above 70% across the cycle." },
+    { q: "What's the typical cost for a solar installer?", a: "Single-location installers: $799/mo + $2,950 build. Multi-state installers with HubSpot or Salesforce integration: $1,499/mo + $4,950 build. EPC and larger consumer brands: $2,500+/mo, scoped per company." },
+    { q: "Can it follow up if the call drops or the homeowner hangs up?", a: "Yes. Dropped or hung-up calls automatically trigger an SMS follow-up inside 60 seconds, a second SMS at 24 hours, and a third call attempt at 48 hours. Most solar leads are intercepted by competitors who didn't follow up — this is the highest-leverage feature for the vertical." },
+  ],
+  "/ecommerce": [
+    { q: "How much does an AI chat agent cost for a Shopify store?", a: "Our DTC plan starts at $499/mo + $2,950 build. That covers the on-site chat widget, SMS, and WhatsApp under one shared brain, plus native Shopify, Klaviyo, and Gorgias integrations. Volume above 15,000 chats/mo moves to the $1,499/mo Operators+ tier." },
+    { q: "Will it cut WISMO (where is my order) tickets?", a: "Yes — typically 60–80% reduction in tier-1 ticket volume within 60 days. The agent resolves WISMO, processes refunds and exchanges against your policy, and triggers the right Klaviyo flow, all without a CX agent touching the ticket. Real escalations get human attention faster because tier-1 isn't clogging the queue." },
+    { q: "Does it work with Gorgias, Zendesk, or Klaviyo?", a: "Native integration with Gorgias, Zendesk, Klaviyo, Recharge, and ShipStation. Conversations and resolutions sync back to your helpdesk; subscription changes hit Recharge directly; abandoned-cart and post-purchase flows trigger the right Klaviyo journey based on the conversation outcome." },
+    { q: "What languages does it support out of the box?", a: "English, Spanish, French, German, and Portuguese in baseline. The agent auto-detects language on first message and stays in that language. Additional languages (Italian, Dutch, Japanese) available on Operators+ tier." },
+    { q: "Can it handle pre-purchase questions in the cart?", a: "Yes — this is where it pays for itself fastest. The agent answers sizing, fit, shipping windows, return policy, and discount-code questions in the cart with full SKU and policy context. Most stores see AOV lift 5–12% from the upsell and recovery surface area." },
+  ],
+  "/hospitality": [
+    { q: "Can the agent answer the phone during the dinner rush?", a: "Yes — that's exactly the use case. When your host is in the weeds, the agent picks up, books reservations into SevenRooms / Resy / OpenTable / Tock, manages the waitlist, and sends 'your table is up' SMS messages. The host stays focused on the guest standing in front of them." },
+    { q: "Does it integrate with SevenRooms, Resy, or OpenTable?", a: "Native two-way integration with SevenRooms, Resy, OpenTable, Tock, and Toast. Live availability, table-hold logic, deposit collection on prime times, and full guest history (last visit, preferences, special occasions) all sync automatically." },
+    { q: "Can it handle direct hotel bookings instead of OTA fees?", a: "Yes. The agent answers concierge questions (parking, breakfast, check-in, late checkout) in your brand tone, then converts the looker into a direct booking via your PMS (Cloudbeds, Mews, Opera Cloud). Most boutique properties recover 8–15% of OTA-bound revenue this way." },
+    { q: "What languages does the agent speak for international guests?", a: "English, Spanish, French, and Portuguese in baseline. Voice cloning means each language sounds like the same brand person, not five different voices. Additional languages on Operators+ tier — most properties add Mandarin and German." },
+    { q: "How does it handle no-shows and cancellation policies?", a: "Configurable per restaurant. The agent enforces your deposit and cancellation policy at booking time, runs a 24-hour confirm + 2-hour reminder cadence, and automatically rebooks the table from the waitlist if the guest cancels inside the window." },
+  ],
+};
+
 const VerticalPage = () => {
   const location = useLocation();
   const config = V[location.pathname] || V["/solutions"];
@@ -406,34 +471,48 @@ const VerticalPage = () => {
     const s = document.createElement("script");
     s.id = schemaId;
     s.type = "application/ld+json";
+    const verticalFaqs = FAQ_BY_VERTICAL[slug] || [];
+    const graph: Record<string, unknown>[] = [
+      {
+        "@type": "Service",
+        "@id": `${url}#service`,
+        serviceType: `${config.label} AI Voice Agent`,
+        name: `${config.label} AI agents`,
+        description: config.sub,
+        provider: { "@id": "https://trainyouragent.com/#org" },
+        areaServed: { "@type": "Country", name: "United States" },
+        offers: {
+          "@type": "Offer",
+          url: "https://trainyouragent.com/pricing",
+          priceCurrency: "USD",
+          price: "799",
+          availability: "https://schema.org/InStock",
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://trainyouragent.com" },
+          { "@type": "ListItem", position: 2, name: "Industries", item: "https://trainyouragent.com/solutions" },
+          { "@type": "ListItem", position: 3, name: config.label, item: url },
+        ],
+      },
+    ];
+    // v40a: per-vertical FAQPage for rich snippet eligibility
+    if (verticalFaqs.length > 0) {
+      graph.push({
+        "@type": "FAQPage",
+        "@id": `${url}#faq`,
+        mainEntity: verticalFaqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      });
+    }
     s.textContent = JSON.stringify({
       "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Service",
-          "@id": `${url}#service`,
-          serviceType: `${config.label} AI Voice Agent`,
-          name: `${config.label} AI agents`,
-          description: config.sub,
-          provider: { "@id": "https://trainyouragent.com/#org" },
-          areaServed: { "@type": "Country", name: "United States" },
-          offers: {
-            "@type": "Offer",
-            url: "https://trainyouragent.com/pricing",
-            priceCurrency: "USD",
-            price: "799",
-            availability: "https://schema.org/InStock",
-          },
-        },
-        {
-          "@type": "BreadcrumbList",
-          itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Home", item: "https://trainyouragent.com" },
-            { "@type": "ListItem", position: 2, name: "Industries", item: "https://trainyouragent.com/solutions" },
-            { "@type": "ListItem", position: 3, name: config.label, item: url },
-          ],
-        },
-      ],
+      "@graph": graph,
     });
     document.head.appendChild(s);
     return () => { document.getElementById(schemaId)?.remove(); };
