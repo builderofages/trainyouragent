@@ -60,4 +60,25 @@ export default defineConfig(({ mode }) => ({
     // fbq() with confidence. Empty string when unset.
     "import.meta.env.VITE_META_PIXEL_ID": JSON.stringify(process.env.META_PIXEL_ID || ""),
   },
+  // v41: manual chunks — keep the main entry small. React + router into
+  // `vendor-react`, lucide-react / framer-motion into `vendor-ui`.
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (!id.includes("node_modules")) return;
+          if (
+            id.includes("/react/") ||
+            id.includes("/react-dom/") ||
+            id.includes("/react-router") ||
+            id.includes("/scheduler/")
+          ) return "vendor-react";
+          if (
+            id.includes("lucide-react") ||
+            id.includes("framer-motion")
+          ) return "vendor-ui";
+        },
+      },
+    },
+  },
 }));

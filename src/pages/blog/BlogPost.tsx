@@ -11,6 +11,9 @@ import {
 } from "@/lib/blog";
 import NewsletterCapture from "@/components/NewsletterCapture";
 import NewsletterFloater from "@/components/NewsletterFloater";
+import BlogReadCost from "@/components/BlogReadCost";
+import BlogShareBar from "@/components/BlogShareBar";
+import BlogAuthorCard from "@/components/BlogAuthorCard";
 
 const FONT = "'Inter Tight', system-ui, sans-serif";
 const NAVY = "#042C53";
@@ -121,8 +124,16 @@ export default function BlogPost() {
         >
           {post.title}
         </h1>
-        <div className="text-[14px] text-slate-500 mb-10">
+        <div className="text-[14px] text-slate-500 mb-4">
           {post.author} · {formatDate(post.date)}
+        </div>
+
+        {/* v41: read-cost widget */}
+        <BlogReadCost text={typeof post.excerpt === "string" ? post.excerpt : ""} slug={post.slug} />
+
+        {/* v41: share bar (above the fold) */}
+        <div className="mb-10">
+          <BlogShareBar title={post.title} slug={post.slug} />
         </div>
 
         {post.heroImage && (
@@ -167,6 +178,14 @@ export default function BlogPost() {
             </div>
           </div>
         )}
+
+        {/* v41: share again at end */}
+        <div className="mt-12">
+          <BlogShareBar title={post.title} slug={post.slug} />
+        </div>
+
+        {/* v41: author card */}
+        <BlogAuthorCard />
 
         {/* Newsletter CTA */}
         <div className="mt-16">

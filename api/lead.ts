@@ -20,6 +20,7 @@
 
 import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
 import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors.js";
+import { recordLead } from "./_lib/lead-store.js";
 
 export const config = { runtime: "edge" };
 
@@ -63,6 +64,15 @@ const ALLOWED_SOURCES = new Set([
   "demo-request",
   "roi-calc",
   "pathway-router",
+  // v41: free-tool lead magnets
+  "tool:cost-estimator",
+  "tool:roi-calculator",
+  "tool:prompt-critic",
+  "tool:scenario-generator",
+  "tool:latency-simulator",
+  // v41: community + partners
+  "community-win",
+  "partner-apply",
 ]);
 
 const MAX_BODY_BYTES = 16 * 1024; // 16 KB is plenty for a lead form
@@ -144,6 +154,11 @@ export default async function handler(req: Request) {
   if (wantsNewsletter && BEEHIIV_KEY && BEEHIIV_PUB) {
     tasks.push(forwardToBeehiiv(body));
   }
+
+  // v41: record in admin store so /api/admin/* surfaces it.
+  try {
+    recordLead({ email: body.email, source: body.source, path: body.path, ip });
+  } catch { /* never block the lead path on store errors */ }
 
   await Promise.allSettled(tasks);
   return json({ ok: true }, 200, { ...cors.headers, ...rl.headers });
