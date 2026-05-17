@@ -42,7 +42,9 @@ export default async function handler(req: Request) {
   if (cors.isPreflight) return preflightResponse(cors.headers);
 
   if (req.method !== "POST") return json({ ok: false, error: "method" }, 405, cors.headers);
-  if (!PIXEL_ID || !CAPI_TOKEN) return json({ ok: false, error: "meta-not-configured" }, 500, cors.headers);
+  // v46b: when Meta CAPI isn't configured, treat as a no-op (200) so the
+  // client-side pixel can still fire without a noisy 500 in DevTools.
+  if (!PIXEL_ID || !CAPI_TOKEN) return json({ ok: true, skipped: "meta-not-configured" }, 200, cors.headers);
 
   const ip = ipFromRequest(req);
   const rl = rateLimit(`meta:${ip}`, { limit: 60, windowMs: 60 * 60 * 1000 });

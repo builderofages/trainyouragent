@@ -18,7 +18,9 @@ export const config = { runtime: "edge" };
 const MAX_INPUT_CHARS = 4000;
 const MAX_MESSAGES = 16;
 const MAX_OUTPUT_TOKENS = 800;
-const MODEL = "claude-haiku-4-5-20251001"; // cost-optimized default
+// v46b: switch from dated snapshot to floating alias so a deprecated snapshot
+// doesn't break the entire chat surface. Allow override via env for testing.
+const MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5";
 
 const SYSTEMS: Record<string, string> = {
   assistant:
@@ -99,8 +101,24 @@ export default async function handler(req: Request) {
   }
 
   if (!r.ok) {
-    try { await r.text(); } catch { /* ignore */ }
-    return text("upstream-error", 502, cors.headers);
+    // v46b: capture upstream status code in the response so we can debug from
+    // the client side without leaking the body (which may contain the API key
+    // in error contexts).
+    let upstreamMsg = "";
+    try {
+      const body = await r.text();
+      // Strip any potential leaked secret; only surface error type
+      try {
+        const j = JSON.parse(body) as { error?: { type?: string; message?: string } };
+        if (j?.error?.type) upstreamMsg = String(j.error.type).slice(0, 80);
+      } catch {
+        upstreamMsg = body.slice(0, 80).replace(/[\r\n]+/g, " ");
+      }
+    } catch { /* ignore */ }
+    const msg = upstreamMsg
+      ? `upstream-error ${r.status} ${upstreamMsg}`
+      : `upstream-error ${r.status}`;
+    return text(msg, 502, cors.headers);
   }
 
   let body: { content?: { type: string; text?: string }[] };

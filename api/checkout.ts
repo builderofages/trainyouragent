@@ -45,7 +45,10 @@ export default async function handler(req: Request) {
   if (cors.isPreflight) return preflightResponse(cors.headers);
 
   if (req.method !== "POST") return json({ error: "method" }, 405, cors.headers);
-  if (!STRIPE_KEY) return json({ error: "stripe-not-configured" }, 500, cors.headers);
+  // v46b: return 200 (not 500) when Stripe isn't configured so the UI can
+  // gracefully fall back to a contact-sales flow instead of treating it as
+  // a server error.
+  if (!STRIPE_KEY) return json({ ok: false, error: "stripe-not-configured" }, 200, cors.headers);
 
   const ip = ipFromRequest(req);
   const rl = rateLimit(`checkout:${ip}`, { limit: 10, windowMs: 60 * 60 * 1000 });
@@ -58,7 +61,7 @@ export default async function handler(req: Request) {
   if (!planMeta) return json({ error: "unknown-plan" }, 400, cors.headers);
 
   const priceId = body.plan === "operators" ? PRICE_OPERATORS : PRICE_FOUNDERS;
-  if (!priceId) return json({ error: "plan-not-configured" }, 500, cors.headers);
+  if (!priceId) return json({ ok: false, error: "plan-not-configured" }, 200, cors.headers);
 
   const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
   if (email && (!EMAIL_RE.test(email) || email.length > 254)) {

@@ -61,6 +61,7 @@ const ALLOWED_SOURCES = new Set([
   "blog-cta",
   "buyers-guide",
   "contact",
+  "contact-form",
   "demo-request",
   "roi-calc",
   "pathway-router",
@@ -82,6 +83,17 @@ const ALLOWED_SOURCES = new Set([
   "demo:objections",
   "demo:sop",
   "demo:seo",
+  // v46b: discovered missing — wired in src/ but rejected by allowlist
+  "agency-partner",
+  "trial-request",
+  "research-partners",
+  "status-subscribe",
+  "industry_faq",
+  "implementation_timeline",
+  "multi_step_form",
+  "exit_popup",
+  "lead_gate_completion",
+  "faq_section",
 ]);
 
 const MAX_BODY_BYTES = 16 * 1024; // 16 KB is plenty for a lead form
