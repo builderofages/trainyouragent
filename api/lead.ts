@@ -21,6 +21,7 @@
 import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
 import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors.js";
 import { recordLead } from "./_lib/lead-store.js";
+import { sendEmail, leadMagnetEmailHtml } from "./_lib/resend.js";
 
 export const config = { runtime: "edge" };
 
@@ -115,6 +116,24 @@ const ALLOWED_SOURCES = new Set([
   "portal-magic-link",
   "portal-preferences",
   "roadmap-suggestion",
+  // v52a: lead-magnet PDF opt-ins (auto-emails the playbook via Resend)
+  "lead-magnet-buyers-guide",
+  "lead-magnet-hvac-playbook",
+  "lead-magnet-healthcare-playbook",
+  "lead-magnet-legal-playbook",
+  "lead-magnet-roofing-playbook",
+  "lead-magnet-solar-playbook",
+  "lead-magnet-accounting-playbook",
+  "lead-magnet-real-estate-playbook",
+  "lead-magnet-automotive-playbook",
+  "lead-magnet-spas-playbook",
+  "lead-magnet-hotels-playbook",
+  "lead-magnet-gym-playbook",
+  "lead-magnet-bars-nightclubs-playbook",
+  "lead-magnet-logistics-playbook",
+  "lead-magnet-ecommerce-playbook",
+  "lead-magnet-hospitality-playbook",
+  "lead-magnet-state-of-ai-ops-2026",
 ]);
 
 const MAX_BODY_BYTES = 16 * 1024; // 16 KB is plenty for a lead form
@@ -208,6 +227,30 @@ export default async function handler(req: Request) {
   const wantsNewsletter = body.subscribeToNewsletter === true || NEWSLETTER_SOURCES.has(body.source);
   if (wantsNewsletter && BEEHIIV_KEY && BEEHIIV_PUB) {
     tasks.push(forwardToBeehiiv(body));
+  }
+
+  // v52a: lead-magnet auto-delivery. Fire-and-forget so we never block the
+  // success response. If RESEND_API_KEY isn't configured, sendEmail() is a
+  // graceful no-op and the user still sees the "check your inbox" confirmation —
+  // we'll send the PDF link manually from the admin console in that case.
+  if (RESEND_KEY && body.source && body.source.startsWith("lead-magnet-")) {
+    const pdfUrl =
+      body.source === "lead-magnet-state-of-ai-ops-2026"
+        ? "https://www.trainyouragent.com/api/state-of-ai-ops-pdf"
+        : "https://www.trainyouragent.com/api/buyers-guide-pdf";
+    const { subject: lmSubject, html: lmHtml } = leadMagnetEmailHtml({
+      firstName: body.name?.split(/\s+/)[0],
+      pdfUrl,
+      source: body.source,
+    });
+    tasks.push(
+      sendEmail({
+        to: body.email,
+        subject: lmSubject,
+        html: lmHtml,
+        tag: "lead-magnet",
+      })
+    );
   }
 
   // v41: record in admin store so /api/admin/* surfaces it.

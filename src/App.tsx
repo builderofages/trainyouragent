@@ -126,6 +126,10 @@ const Roadmap              = lazy(() => import("./pages/Roadmap"));
 const PlaybooksIndex       = lazy(() => import("./pages/PlaybooksIndex"));
 const PlaybookPage         = lazy(() => import("./pages/PlaybookPage"));
 
+// v52a: free in-browser voice agent demo + branded 500 page
+const VoiceDemo            = lazy(() => import("./pages/VoiceDemo"));
+const ServerError          = lazy(() => import("./pages/ServerError"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -272,6 +276,9 @@ const App = () => {
             {/* v51B: niche playbook system — /playbooks hub + 15 niche playbooks */}
             <Route path="/playbooks" element={<PlaybooksIndex />} />
             <Route path="/playbooks/:slug" element={<PlaybookPage />} />
+            {/* v52a: free voice agent demo + branded 500 page */}
+            <Route path="/voice-demo" element={<VoiceDemo />} />
+            <Route path="/500" element={<ServerError />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#042C53"/>
+      <stop offset="100%" stop-color="#0A3E73"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="22%" cy="42%" r="38%">
+      <stop offset="0%" stop-color="#185FA5" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#185FA5" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <g transform="translate(140 215) scale(3.125)" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+    <g stroke-width="4"><path d="M 32 6 L 58 32 L 32 58 L 6 32 Z"/></g>
+    <g stroke-width="2.4"><path d="M 32 6 L 32 58"/><path d="M 6 32 L 58 32"/></g>
+    <circle cx="32" cy="32" r="3" fill="#FFFFFF" stroke="none"/>
+  </g>
+
+  <g transform="translate(440 240)">
+    <text x="0" y="0" font-family="'Inter Tight', Inter, system-ui, sans-serif" font-weight="700" font-size="78" fill="#FFFFFF" letter-spacing="-2">TrainYourAgent</text>
+    <text x="0" y="76" font-family="'Inter Tight', Inter, system-ui, sans-serif" font-weight="500" font-size="28" fill="#E6F1FB" letter-spacing="-0.3">Everything-AI for SMBs &amp; Startups</text>
+    <text x="0" y="178" font-family="'Playfair Display', Georgia, serif" font-style="italic" font-weight="500" font-size="44" fill="#FFFFFF" letter-spacing="-0.5">Voice and chat agents that</text>
+    <text x="0" y="232" font-family="'Playfair Display', Georgia, serif" font-style="italic" font-weight="500" font-size="44" fill="#FFFFFF" letter-spacing="-0.5">actually run your business.</text>
+  </g>
+
+  <g transform="translate(140 560)">
+    <rect x="0" y="0" width="920" height="2" fill="#185FA5" opacity="0.7"/>
+    <text x="0" y="40" font-family="'Inter Tight', Inter, system-ui, sans-serif" font-weight="500" font-size="22" fill="#E6F1FB" letter-spacing="0.5">trainyouragent.com</text>
+  </g>
+</svg>
