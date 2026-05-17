@@ -13,6 +13,7 @@ import HeroIllustration from "@/components/HeroIllustration";
 import FooterV44 from "@/components/FooterV44";
 import SectionDivider from "@/components/SectionDivider";
 import { useCountUp } from "@/hooks/useCountUp";
+import NetworkIllo from "@/components/illustrations/NetworkIllo";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
@@ -88,6 +89,24 @@ const Index = () => {
       document.head.appendChild(l);
     }
     document.title = "TrainYourAgent — Everything-AI for SMBs & Startups";
+
+    // v48: dynamic OG image override
+    {
+      const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent("TrainYourAgent · Everything-AI for SMBs & Startups")}&subtitle=${encodeURIComponent("Voice + chat agents that actually run your business")}&type=page`;
+      const setMP = (n: string, c: string) => {
+        let el = document.querySelector(`meta[property='${n}']`) as HTMLMetaElement | null;
+        if (!el) { el = document.createElement("meta"); el.setAttribute("property", n); document.head.appendChild(el); }
+        el.setAttribute("content", c);
+      };
+      const setMN = (n: string, c: string) => {
+        let el = document.querySelector(`meta[name='${n}']`) as HTMLMetaElement | null;
+        if (!el) { el = document.createElement("meta"); el.setAttribute("name", n); document.head.appendChild(el); }
+        el.setAttribute("content", c);
+      };
+      setMP("og:image", ogImage);
+      setMN("twitter:image", ogImage);
+      setMN("twitter:card", "summary_large_image");
+    }
 
     // v47A: organization + person JSON-LD on the home page
     injectJsonLdMany([
@@ -227,11 +246,16 @@ const Index = () => {
       {/* CAPABILITIES */}
       <section className="px-5 sm:px-8 py-24">
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-3xl mb-12">
-            <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Everything AI</div>
-            <h2 className="text-[34px] sm:text-[48px] leading-[1.05] tracking-tight font-semibold text-[#042C53]">
-              Not a chatbot company. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>The operating layer</span> for everything AI in your business.
-            </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-[1.7fr_1fr] gap-10 items-center mb-12">
+            <div className="max-w-3xl">
+              <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Everything AI</div>
+              <h2 className="text-[34px] sm:text-[48px] leading-[1.05] tracking-tight font-semibold text-[#042C53]">
+                Not a chatbot company. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>The operating layer</span> for everything AI in your business.
+              </h2>
+            </div>
+            <div className="hidden lg:block">
+              <NetworkIllo style={{ width: "100%", maxWidth: 360, height: "auto", margin: "0 auto" }} />
+            </div>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {CAPABILITIES.map((c, i) => (

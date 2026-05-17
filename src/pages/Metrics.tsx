@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
 import SectionDivider from "@/components/SectionDivider";
+import DashboardIllo from "@/components/illustrations/DashboardIllo";
 
 const NAVY = "#042C53";
 const BLUE = "#185FA5";
@@ -49,6 +50,13 @@ export default function Metrics() {
   useEffect(() => {
     if (typeof document !== "undefined") {
       document.title = "Public metrics — TrainYourAgent";
+      {
+        const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent("Built in public — real numbers")}&subtitle=${encodeURIComponent("Live MRR, leads, uptime — no inflation")}&type=trust&badge=METRICS`;
+        const sM = (sel: string, a: "name"|"property", k: string, v: string) => { let el = document.querySelector(sel) as HTMLMetaElement | null; if (!el) { el = document.createElement("meta"); el.setAttribute(a, k); document.head.appendChild(el); } el.setAttribute("content", v); };
+        sM("meta[property='og:image']", "property", "og:image", ogImage);
+        sM("meta[name='twitter:image']", "name", "twitter:image", ogImage);
+        sM("meta[name='twitter:card']", "name", "twitter:card", "summary_large_image");
+      }
       if (!document.getElementById("tya-fonts")) {
         const l = document.createElement("link");
         l.id = "tya-fonts";
@@ -92,6 +100,9 @@ export default function Metrics() {
           <p className="mt-5 text-[17px] text-slate-600 max-w-2xl">
             Real metrics from the live lead store. We don't inflate numbers, invent customers, or fake activity. If a number is small, it's small.
           </p>
+          <div className="mt-8 max-w-xl opacity-90">
+            <DashboardIllo style={{ width: "100%", height: "auto" }} />
+          </div>
         </section>
 
         <SectionDivider className="my-10 max-w-6xl mx-auto" />

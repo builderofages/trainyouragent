@@ -4,6 +4,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import ToolEmailGate from "@/pages/tools/ToolEmailGate";
+import ChatIllo from "@/components/illustrations/ChatIllo";
 
 const NAVY = "#042C53";
 const BLUE = "#185FA5";
@@ -18,6 +19,13 @@ export default function SopWriter() {
 
   useEffect(() => {
     document.title = "SOP Writer — Live Demo · TrainYourAgent";
+    {
+      const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent("SOP Writer")}&subtitle=${encodeURIComponent("Live AI demo — process → SOP in 30s")}&type=tool&badge=DEMO`;
+      const sM = (sel: string, a: "name"|"property", k: string, v: string) => { let el = document.querySelector(sel) as HTMLMetaElement | null; if (!el) { el = document.createElement("meta"); el.setAttribute(a, k); document.head.appendChild(el); } el.setAttribute("content", v); };
+      sM("meta[property='og:image']", "property", "og:image", ogImage);
+      sM("meta[name='twitter:image']", "name", "twitter:image", ogImage);
+      sM("meta[name='twitter:card']", "name", "twitter:card", "summary_large_image");
+    }
     if (!document.getElementById("tya-fonts")) {
       const l = document.createElement("link");
       l.id = "tya-fonts"; l.rel = "stylesheet";
@@ -74,9 +82,12 @@ export default function SopWriter() {
         <h1 className="text-[34px] sm:text-[44px] font-semibold leading-tight mb-3" style={{ color: NAVY }}>
           SOP writer
         </h1>
-        <p className="text-[16px] text-slate-600 leading-relaxed mb-8 max-w-2xl">
+        <p className="text-[16px] text-slate-600 leading-relaxed mb-6 max-w-2xl">
           Describe a business process in one or two sentences. The agent returns a numbered SOP with roles, timing, tools, and the most common failure mode at every step.
         </p>
+        <div className="mb-8 max-w-md opacity-90">
+          <ChatIllo style={{ width: "100%", height: "auto" }} />
+        </div>
 
         <form onSubmit={submit} className="mb-6">
           <label htmlFor="sop-input" className="sr-only">Process</label>

@@ -32,7 +32,21 @@ export default function ToolLayout({ eyebrow, title, italicTail, subtitle, child
         "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
       document.head.appendChild(l);
     }
-  }, [title]);
+    // v48: dynamic OG image for every tool page
+    const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent(title + (italicTail ? " " + italicTail : ""))}&subtitle=${encodeURIComponent(subtitle || "Free tool — TrainYourAgent")}&type=tool`;
+    const sM = (sel: string, a: "name"|"property", k: string, v: string) => {
+      let el = document.querySelector(sel) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.setAttribute(a, k); document.head.appendChild(el); }
+      el.setAttribute("content", v);
+    };
+    sM("meta[property='og:title']", "property", "og:title", `${title} — TrainYourAgent`);
+    if (subtitle) sM("meta[property='og:description']", "property", "og:description", subtitle);
+    sM("meta[property='og:image']", "property", "og:image", ogImage);
+    sM("meta[property='og:image:width']", "property", "og:image:width", "1200");
+    sM("meta[property='og:image:height']", "property", "og:image:height", "630");
+    sM("meta[name='twitter:card']", "name", "twitter:card", "summary_large_image");
+    sM("meta[name='twitter:image']", "name", "twitter:image", ogImage);
+  }, [title, italicTail, subtitle]);
 
   return (
     <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: FONT }}>

@@ -6,6 +6,7 @@ import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
 import SectionDivider from "@/components/SectionDivider";
 import { injectJsonLdMany, organizationLd, breadcrumbLd } from "@/lib/jsonld";
+import TrustShieldIllo from "@/components/illustrations/TrustShieldIllo";
 
 const SECURITY_EMAIL = "security@trainyouragent.com";
 
@@ -99,6 +100,13 @@ export default function Security() {
   useEffect(() => {
     if (typeof document === "undefined") return;
     document.title = "Security · TrainYourAgent";
+    {
+      const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent("Security — TLS, SOC 2, key management")}&subtitle=${encodeURIComponent("Operator-grade controls, no hand-waving")}&type=trust&badge=SECURITY`;
+      const sM = (sel: string, a: "name"|"property", k: string, v: string) => { let el = document.querySelector(sel) as HTMLMetaElement | null; if (!el) { el = document.createElement("meta"); el.setAttribute(a, k); document.head.appendChild(el); } el.setAttribute("content", v); };
+      sM("meta[property='og:image']", "property", "og:image", ogImage);
+      sM("meta[name='twitter:image']", "name", "twitter:image", ogImage);
+      sM("meta[name='twitter:card']", "name", "twitter:card", "summary_large_image");
+    }
     if (!document.getElementById("tya-fonts")) {
       const l = document.createElement("link"); l.id = "tya-fonts"; l.rel = "stylesheet";
       l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
@@ -120,14 +128,19 @@ export default function Security() {
 
       {/* HERO */}
       <section className="px-5 sm:px-8 pt-32 pb-16">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Security</div>
-          <h1 className="text-[42px] sm:text-[68px] lg:text-[80px] leading-[1.02] tracking-tight font-semibold text-[#042C53]">
-            Our security posture, <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>in plain English.</span>
-          </h1>
-          <p className="mt-6 text-[18px] sm:text-[20px] text-slate-700 max-w-3xl leading-relaxed">
-            Here's what we do, what we use, and what we promise. No jargon, no certifications we don't have, no hand-waving. If something matters to your security team and isn't listed here, email <a href={`mailto:${SECURITY_EMAIL}`} className="underline text-[#185FA5]">{SECURITY_EMAIL}</a> — we'll either answer the question or explain why we can't.
-          </p>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1.7fr_1fr] gap-10 items-center">
+          <div>
+            <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Security</div>
+            <h1 className="text-[42px] sm:text-[68px] lg:text-[80px] leading-[1.02] tracking-tight font-semibold text-[#042C53]">
+              Our security posture, <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>in plain English.</span>
+            </h1>
+            <p className="mt-6 text-[18px] sm:text-[20px] text-slate-700 max-w-3xl leading-relaxed">
+              Here's what we do, what we use, and what we promise. No jargon, no certifications we don't have, no hand-waving. If something matters to your security team and isn't listed here, email <a href={`mailto:${SECURITY_EMAIL}`} className="underline text-[#185FA5]">{SECURITY_EMAIL}</a> — we'll either answer the question or explain why we can't.
+            </p>
+          </div>
+          <div className="hidden lg:block">
+            <TrustShieldIllo style={{ width: "100%", maxWidth: 300, height: "auto", margin: "0 auto" }} />
+          </div>
         </div>
       </section>
 

@@ -1,11 +1,34 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import RoiCalculator from "@/components/RoiCalculator";
 import SmartPriceReveal from "@/components/SmartPriceReveal";
 import NewsletterCapture from "@/components/NewsletterCapture";
 import CalEmbed from "@/components/CalEmbed";
 import ToastHost, { toast } from "@/components/Toast";
 import SiteNav from "@/components/SiteNav";
+import DashboardIllo from "@/components/illustrations/DashboardIllo";
+import { ogUrl } from "@/lib/og";
+
+// v48: vertical → recommended plan map for smart pricing.
+// Used when /pricing?for=<slug> is present.
+const FOR_MAP: Record<string, { plan: "founders" | "operators" | "scale"; label: string; reason: string }> = {
+  hvac:          { plan: "operators", label: "HVAC operators",          reason: "weekend storm spikes + emergency call volume" },
+  roofing:       { plan: "operators", label: "Roofing companies",       reason: "storm-season inbound bursts that bury a human receptionist" },
+  legal:         { plan: "operators", label: "Law firms",               reason: "after-hours intake + qualified consultations" },
+  "law-firm":    { plan: "operators", label: "Law firms",               reason: "after-hours intake + qualified consultations" },
+  healthcare:    { plan: "operators", label: "Healthcare practices",    reason: "appointment scheduling + no-show reduction" },
+  ecom:          { plan: "founders",  label: "Early-stage ecom",        reason: "pay-as-you-go fits low ticket + high inquiry volume" },
+  ecommerce:     { plan: "founders",  label: "Early-stage ecom",        reason: "pay-as-you-go fits low ticket + high inquiry volume" },
+  saas:          { plan: "founders",  label: "Pre-revenue SaaS",        reason: "build now, pay when calls come in" },
+  startup:       { plan: "founders",  label: "Startup teams",           reason: "deferred build fee + founder Slack channel" },
+  accounting:    { plan: "operators", label: "Accounting firms",        reason: "tax-season overflow + client onboarding" },
+  agency:        { plan: "scale",     label: "Agencies",                reason: "multi-brand or multi-location call volume" },
+  enterprise:    { plan: "scale",     label: "Enterprise ops",          reason: "SLA, dedicated engineer, custom integrations" },
+  multilocation: { plan: "scale",     label: "Multi-location operators", reason: "shared brand voice across sites + analytics roll-up" },
+  hotels:        { plan: "operators", label: "Independent hotels",      reason: "24/7 reservations + concierge overflow" },
+  restaurants:   { plan: "operators", label: "Restaurants",             reason: "reservation + takeout call volume during service" },
+  gym:           { plan: "operators", label: "Gyms & studios",          reason: "trial-class booking + membership inquiries" },
+};
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
@@ -120,6 +143,9 @@ const DELIVERABLES = [
 const Pricing = () => {
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchParams] = useSearchParams();
+  const forKey = (searchParams.get("for") || "").toLowerCase();
+  const recommendation = useMemo(() => FOR_MAP[forKey] || null, [forKey]);
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -129,13 +155,35 @@ const Pricing = () => {
       l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
       document.head.appendChild(l);
     }
-    document.title = "Pricing — TrainYourAgent";
+    const title = recommendation
+      ? `Pricing for ${recommendation.label} — TrainYourAgent`
+      : "Pricing — TrainYourAgent";
+    document.title = title;
     const setMeta = (n: string, c: string) => {
       let el = document.querySelector(`meta[name='${n}']`) as HTMLMetaElement | null;
       if (!el) { el = document.createElement("meta"); el.setAttribute("name", n); document.head.appendChild(el); }
       el.setAttribute("content", c);
     };
-    setMeta("description", "Three honest lanes: Founders, Operators, Scale. Pay for what runs through your agent, not for tier-feature theater. Free 7-day live trial.");
+    const setMetaProp = (n: string, c: string) => {
+      let el = document.querySelector(`meta[property='${n}']`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.setAttribute("property", n); document.head.appendChild(el); }
+      el.setAttribute("content", c);
+    };
+    const desc = "Three honest lanes: Founders, Operators, Scale. Pay for what runs through your agent, not for tier-feature theater. Free 7-day live trial.";
+    setMeta("description", desc);
+
+    const ogImage = ogUrl({
+      title: recommendation ? `Pricing for ${recommendation.label}` : "Pricing that scales with you",
+      subtitle: "Founders · Operators · Scale — three honest lanes",
+      type: "page",
+    });
+    setMetaProp("og:title", title);
+    setMetaProp("og:description", desc);
+    setMetaProp("og:image", ogImage);
+    setMetaProp("og:image:width", "1200");
+    setMetaProp("og:image:height", "630");
+    setMeta("twitter:card", "summary_large_image");
+    setMeta("twitter:image", ogImage);
 
     // v33a: Product/Offer schema for the three pricing lanes.
     const id = "tya-schema-pricing";
@@ -187,7 +235,7 @@ const Pricing = () => {
     });
     document.head.appendChild(s);
     return () => { document.getElementById(id)?.remove(); };
-  }, []);
+  }, [recommendation]);
 
   useEffect(() => {
     const onScroll = () => setNavScrolled(window.scrollY > 20);
@@ -205,21 +253,62 @@ const Pricing = () => {
       <section className="pt-32 pb-12 px-5 sm:px-8">
         <div className="max-w-5xl mx-auto text-center">
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Pricing</div>
-          <h1 className="text-[44px] sm:text-[72px] leading-[1.02] tracking-tight font-semibold text-[#042C53]">
-            Three lanes. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Zero theater.</span>
-          </h1>
-          <p className="mt-6 text-[18px] sm:text-[20px] text-slate-700 max-w-3xl mx-auto leading-relaxed">
-            We charge for what your agent actually does — calls answered, appointments booked, problems solved. Not tier-feature checkboxes you'll never use.
-          </p>
+          {recommendation ? (
+            <>
+              <h1 className="text-[40px] sm:text-[64px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+                Pricing for{" "}
+                <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
+                  {recommendation.label.toLowerCase()}.
+                </span>
+              </h1>
+              <p className="mt-6 text-[18px] sm:text-[20px] text-slate-700 max-w-3xl mx-auto leading-relaxed">
+                Same three honest lanes. We just point you at the one most teams in your shape land on.
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-[44px] sm:text-[72px] leading-[1.02] tracking-tight font-semibold text-[#042C53]">
+                Three lanes. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Zero theater.</span>
+              </h1>
+              <p className="mt-6 text-[18px] sm:text-[20px] text-slate-700 max-w-3xl mx-auto leading-relaxed">
+                We charge for what your agent actually does — calls answered, appointments booked, problems solved. Not tier-feature checkboxes you'll never use.
+              </p>
+            </>
+          )}
+          {recommendation && (
+            <div
+              className="mt-7 mx-auto max-w-3xl rounded-2xl bg-[#E6F1FB] border border-[#185FA5]/20 px-5 py-4 text-left flex items-start gap-3"
+              role="note"
+            >
+              <span
+                aria-hidden="true"
+                className="flex-shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#185FA5] text-white text-[14px] font-bold mt-0.5"
+              >
+                ★
+              </span>
+              <div className="text-[14.5px] text-[#042C53] leading-relaxed">
+                <span className="font-semibold">Recommended for {recommendation.label}:</span>{" "}
+                <span className="font-semibold capitalize">{recommendation.plan}</span> — based on typical {recommendation.reason}.
+              </div>
+            </div>
+          )}
+          <div className="mt-10 max-w-2xl mx-auto opacity-90">
+            <DashboardIllo style={{ width: "100%", height: "auto" }} />
+          </div>
         </div>
       </section>
 
       <section className="px-5 sm:px-8 pb-20">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-5">
-          {PLANS.map((p) => (
-            <div key={p.id} className={`relative rounded-3xl p-8 border transition-all duration-300 ${p.accent ? "bg-[#042C53] text-white border-[#042C53] shadow-2xl shadow-[#042C53]/15 lg:scale-[1.02] hover:shadow-[0_30px_60px_-15px_rgba(24,95,165,0.45)]" : "bg-white text-[#0B1B2B] border-slate-200 hover:border-[#185FA5] hover:shadow-[0_20px_50px_-15px_rgba(24,95,165,0.25)] hover:-translate-y-0.5"}`}>
+          {PLANS.map((p) => {
+            const isRecommended = recommendation && recommendation.plan === p.id;
+            return (
+            <div key={p.id} className={`relative rounded-3xl p-8 border transition-all duration-300 ${p.accent ? "bg-[#042C53] text-white border-[#042C53] shadow-2xl shadow-[#042C53]/15 lg:scale-[1.02] hover:shadow-[0_30px_60px_-15px_rgba(24,95,165,0.45)]" : "bg-white text-[#0B1B2B] border-slate-200 hover:border-[#185FA5] hover:shadow-[0_20px_50px_-15px_rgba(24,95,165,0.25)] hover:-translate-y-0.5"} ${isRecommended ? "ring-4 ring-[#22A36C]/40 ring-offset-2 ring-offset-white" : ""}`}>
               {p.accent && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#22A36C] text-white text-[11px] font-semibold tracking-[0.12em] uppercase shadow-lg">Most Popular</div>
+              )}
+              {isRecommended && !p.accent && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#22A36C] text-white text-[11px] font-semibold tracking-[0.12em] uppercase shadow-lg">Recommended for you</div>
               )}
               <div className={`text-[12px] uppercase tracking-[0.18em] font-semibold mb-2 ${p.accent ? "text-[#9CC4EC]" : "text-[#185FA5]"}`}>{p.label}</div>
               <div className={`text-[15px] leading-relaxed mb-6 ${p.accent ? "text-white/85" : "text-slate-700"}`}>{p.forWho}</div>
@@ -253,7 +342,8 @@ const Pricing = () => {
                 {p.cta} →
               </a>
             </div>
-          ))}
+          );
+          })}
         </div>
       </section>
 

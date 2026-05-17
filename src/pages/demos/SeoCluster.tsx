@@ -18,6 +18,13 @@ export default function SeoCluster() {
 
   useEffect(() => {
     document.title = "SEO Cluster Generator — Live Demo · TrainYourAgent";
+    {
+      const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent("SEO Cluster Generator")}&subtitle=${encodeURIComponent("Live AI demo — topic → cluster map")}&type=tool&badge=DEMO`;
+      const sM = (sel: string, a: "name"|"property", k: string, v: string) => { let el = document.querySelector(sel) as HTMLMetaElement | null; if (!el) { el = document.createElement("meta"); el.setAttribute(a, k); document.head.appendChild(el); } el.setAttribute("content", v); };
+      sM("meta[property='og:image']", "property", "og:image", ogImage);
+      sM("meta[name='twitter:image']", "name", "twitter:image", ogImage);
+      sM("meta[name='twitter:card']", "name", "twitter:card", "summary_large_image");
+    }
     if (!document.getElementById("tya-fonts")) {
       const l = document.createElement("link");
       l.id = "tya-fonts"; l.rel = "stylesheet";

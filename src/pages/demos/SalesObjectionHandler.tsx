@@ -4,6 +4,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import ToolEmailGate from "@/pages/tools/ToolEmailGate";
+import VoiceWaveIllo from "@/components/illustrations/VoiceWaveIllo";
 
 const NAVY = "#042C53";
 const BLUE = "#185FA5";
@@ -18,6 +19,13 @@ export default function SalesObjectionHandler() {
 
   useEffect(() => {
     document.title = "Sales Objection Handler — Live Demo · TrainYourAgent";
+    {
+      const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent("Sales Objection Handler")}&subtitle=${encodeURIComponent("Live AI demo — paste, get rebuttals")}&type=tool&badge=DEMO`;
+      const sM = (sel: string, a: "name"|"property", k: string, v: string) => { let el = document.querySelector(sel) as HTMLMetaElement | null; if (!el) { el = document.createElement("meta"); el.setAttribute(a, k); document.head.appendChild(el); } el.setAttribute("content", v); };
+      sM("meta[property='og:image']", "property", "og:image", ogImage);
+      sM("meta[name='twitter:image']", "name", "twitter:image", ogImage);
+      sM("meta[name='twitter:card']", "name", "twitter:card", "summary_large_image");
+    }
     if (!document.getElementById("tya-fonts")) {
       const l = document.createElement("link");
       l.id = "tya-fonts"; l.rel = "stylesheet";
@@ -75,9 +83,12 @@ export default function SalesObjectionHandler() {
         <h1 className="text-[34px] sm:text-[44px] font-semibold leading-tight mb-3" style={{ color: NAVY }}>
           Sales objection handler
         </h1>
-        <p className="text-[16px] text-slate-600 leading-relaxed mb-8 max-w-2xl">
+        <p className="text-[16px] text-slate-600 leading-relaxed mb-6 max-w-2xl">
           Paste a real sales objection your prospect raised. The agent returns three reframes with the underlying psychology behind each — the same playbook our highest-converting customers use on discovery calls.
         </p>
+        <div className="mb-8 max-w-md opacity-90">
+          <VoiceWaveIllo style={{ width: "100%", height: "auto" }} />
+        </div>
 
         <form onSubmit={submit} className="mb-6">
           <label htmlFor="objection-input" className="sr-only">Objection text</label>

@@ -147,6 +147,13 @@ export default function PodcastGuest() {
   useEffect(() => {
     if (typeof document === "undefined") return;
     document.title = "Book Alexander as a podcast guest · TrainYourAgent";
+    {
+      const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent("Book Alexander as a podcast guest")}&subtitle=${encodeURIComponent("Stories from 300+ shipped AI agents")}&type=trust&badge=PODCAST`;
+      const sM = (sel: string, a: "name"|"property", k: string, v: string) => { let el = document.querySelector(sel) as HTMLMetaElement | null; if (!el) { el = document.createElement("meta"); el.setAttribute(a, k); document.head.appendChild(el); } el.setAttribute("content", v); };
+      sM("meta[property='og:image']", "property", "og:image", ogImage);
+      sM("meta[name='twitter:image']", "name", "twitter:image", ogImage);
+      sM("meta[name='twitter:card']", "name", "twitter:card", "summary_large_image");
+    }
     if (!document.getElementById("tya-fonts")) {
       const l = document.createElement("link"); l.id = "tya-fonts"; l.rel = "stylesheet";
       l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";

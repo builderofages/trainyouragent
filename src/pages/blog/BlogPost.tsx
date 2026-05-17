@@ -41,9 +41,11 @@ export default function BlogPost() {
           property="og:image"
           content={
             post.heroImage ||
-            `https://trainyouragent.com/api/og?title=${encodeURIComponent(post.title)}&subtitle=${encodeURIComponent("TrainYourAgent · Blog")}`
+            `https://trainyouragent.com/api/og?title=${encodeURIComponent(post.title)}&subtitle=${encodeURIComponent("By " + post.author + " · TrainYourAgent")}&type=post`
           }
         />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={`https://trainyouragent.com/blog/${post.slug}`} />
         <meta property="article:published_time" content={post.date} />
@@ -58,7 +60,7 @@ export default function BlogPost() {
           name="twitter:image"
           content={
             post.heroImage ||
-            `https://trainyouragent.com/api/og?title=${encodeURIComponent(post.title)}&subtitle=${encodeURIComponent("TrainYourAgent · Blog")}`
+            `https://trainyouragent.com/api/og?title=${encodeURIComponent(post.title)}&subtitle=${encodeURIComponent("By " + post.author + " · TrainYourAgent")}&type=post`
           }
         />
         {/* v33a: Article + BreadcrumbList + Author JSON-LD */}

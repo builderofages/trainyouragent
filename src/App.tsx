@@ -107,6 +107,9 @@ const MediaKit          = lazy(() => import("./pages/MediaKit"));
 const LocalIndex        = lazy(() => import("./pages/LocalIndex"));
 const LocalPage         = lazy(() => import("./pages/LocalPage"));
 
+// v48: polished booking page wrapping Cal.com embed
+const Book              = lazy(() => import("./pages/Book"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -235,6 +238,8 @@ const App = () => (
             {/* v47B: programmatic local SEO — /local hub + /local/:citySlug/:verticalSlug */}
             <Route path="/local" element={<LocalIndex />} />
             <Route path="/local/:citySlug/:verticalSlug" element={<LocalPage />} />
+            {/* v48: dedicated booking page */}
+            <Route path="/book" element={<Book />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />

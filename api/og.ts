@@ -1,25 +1,26 @@
-// api/og.ts
+// api/og.ts — v48
 // Open Graph image generator (Vercel Edge function).
-// Returns a 1200x630 PNG-equivalent image for any page.
+// Returns an SVG (1200x630) honored by every major OG crawler. We avoid
+// @vercel/og + satori to keep the function bundle <50KB and ship fast.
 //
-// Usage:
-//   /api/og?title=My%20Page%20Title
-//   /api/og?title=...&subtitle=...&theme=navy
+// Query params:
+//   title    (required, capped 120) — main headline
+//   subtitle (optional, capped 120) — secondary line / byline
+//   type     (optional)             — page | post | tool | local | trust
+//   badge    (optional, capped 24)  — pill text override
 //
-// Implementation note: We return SVG (Content-Type: image/svg+xml) instead
-// of pulling in @vercel/og + the satori/wasm payload. SVG is honored by
-// every major OG crawler (Facebook, X, LinkedIn, Slack, Discord). It also
-// keeps the function bundle <50KB and avoids adding heavy deps.
-//
-// If a downstream platform demands raw PNG (rare in 2026), wrap this with
-// a single-call rasterizer behind a CDN cache; the SVG payload is the same.
+// 5-min CDN cache, longer browser cache.
 
 export const config = { runtime: "edge" };
 
 const NAVY = "#042C53";
-const PAPER = "#F7F5F0";
+const NAVY_DEEP = "#0A3D6E";
+const TINT = "#E6F1FB";
 const ACCENT = "#185FA5";
-const TEXT_LIGHT = "#FFFFFF";
+const BLUE_SOFT = "#9CC4EC";
+const WHITE = "#FFFFFF";
+
+type Type = "page" | "post" | "tool" | "local" | "trust";
 
 function escapeXml(unsafe: string): string {
   return unsafe.replace(/[<>&'"]/g, (ch) => {
@@ -34,8 +35,12 @@ function escapeXml(unsafe: string): string {
   });
 }
 
-/** Naive line-wrap so titles don't run off the canvas. */
-function wrap(text: string, maxCharsPerLine: number): string[] {
+function clip(s: string | null | undefined, n = 120): string {
+  if (!s) return "";
+  return s.length > n ? s.slice(0, n - 1) + "…" : s;
+}
+
+function wrap(text: string, maxCharsPerLine: number, maxLines = 3): string[] {
   const words = text.split(/\s+/).filter(Boolean);
   const lines: string[] = [];
   let cur = "";
@@ -48,95 +53,157 @@ function wrap(text: string, maxCharsPerLine: number): string[] {
     }
   }
   if (cur) lines.push(cur);
-  return lines.slice(0, 4); // never more than 4 lines
+  return lines.slice(0, maxLines);
 }
 
-function renderSvg(title: string, subtitle: string, theme: "navy" | "paper") {
-  const isNavy = theme === "navy";
-  const bg = isNavy ? NAVY : PAPER;
-  const fg = isNavy ? TEXT_LIGHT : NAVY;
-  const muted = isNavy ? "rgba(255,255,255,0.7)" : "rgba(4,44,83,0.65)";
-  const accentRing = isNavy ? "rgba(156,196,236,0.5)" : "rgba(24,95,165,0.45)";
+// Pull out a "brand word" to italicize for visual rhythm.
+function splitForItalic(line: string): { head: string; tail: string } {
+  const words = line.trim().split(/\s+/);
+  if (words.length < 2) return { head: line, tail: "" };
+  const tail = words[words.length - 1];
+  const head = words.slice(0, -1).join(" ");
+  return { head, tail };
+}
 
-  const lines = wrap(title, 28);
-  const lineHeight = 88;
-  const startY = 280 - ((lines.length - 1) * lineHeight) / 2;
+function badgeFor(type: Type | undefined, override: string): { label: string; bg: string; fg: string } | null {
+  if (override) {
+    return { label: override.toUpperCase(), bg: BLUE_SOFT, fg: NAVY };
+  }
+  switch (type) {
+    case "tool":  return { label: "TOOL",  bg: "#9CC4EC", fg: NAVY };
+    case "post":  return { label: "BLOG",  bg: "#FFFFFF", fg: NAVY };
+    case "local": return { label: "LOCAL", bg: "#22A36C", fg: WHITE };
+    case "trust": return { label: "TRUST", bg: "#F5C26B", fg: NAVY };
+    case "page":  return null;
+    default:      return null;
+  }
+}
+
+function renderSvg(
+  title: string,
+  subtitle: string,
+  type: Type | undefined,
+  badgeOverride: string,
+): string {
+  const titleLines = wrap(title, 26, 3);
+  // Italicize the final word of the last line for the brand accent.
+  const lastIdx = titleLines.length - 1;
+  const split = splitForItalic(titleLines[lastIdx] || "");
+
+  const lineHeight = 90;
+  // vertical centering around y=355
+  const blockHeight = titleLines.length * lineHeight;
+  const startY = 360 - blockHeight / 2 + 70;
+
+  const badge = badgeFor(type, badgeOverride);
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="${escapeXml(title)}">
   <defs>
     <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="${bg}"/>
-      <stop offset="1" stop-color="${isNavy ? "#0A3D6E" : "#FFFFFF"}"/>
+      <stop offset="0" stop-color="${NAVY}"/>
+      <stop offset="0.55" stop-color="${NAVY_DEEP}"/>
+      <stop offset="1" stop-color="#0E4A88"/>
     </linearGradient>
-    <radialGradient id="glow" cx="0.85" cy="0.15" r="0.8">
-      <stop offset="0" stop-color="${ACCENT}" stop-opacity="${isNavy ? 0.35 : 0.18}"/>
+    <radialGradient id="glow1" cx="0.88" cy="0.12" r="0.7">
+      <stop offset="0" stop-color="${ACCENT}" stop-opacity="0.45"/>
       <stop offset="1" stop-color="${ACCENT}" stop-opacity="0"/>
     </radialGradient>
+    <radialGradient id="glow2" cx="0.05" cy="0.95" r="0.55">
+      <stop offset="0" stop-color="${BLUE_SOFT}" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="${BLUE_SOFT}" stop-opacity="0"/>
+    </radialGradient>
     <style>
-      .title { font-family: 'Inter Tight', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-               font-weight: 700; fill: ${fg}; letter-spacing: -0.025em; }
-      .sub   { font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 500;
-               fill: ${muted}; letter-spacing: 0.01em; }
-      .brand { font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 600; fill: ${fg}; }
-      .foot  { font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 500; fill: ${muted};
-               font-size: 22px; letter-spacing: 0.02em; }
-      .eyebrow { font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 600; fill: ${accentRing};
-                 font-size: 18px; letter-spacing: 0.18em; text-transform: uppercase; }
+      .title    { font-family: 'Inter Tight', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+                  font-weight: 700; fill: ${WHITE}; letter-spacing: -0.025em; }
+      .titleIt  { font-family: 'Playfair Display', Georgia, serif;
+                  font-style: italic; font-weight: 500; fill: ${BLUE_SOFT}; letter-spacing: -0.01em; }
+      .sub      { font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 500;
+                  fill: rgba(255,255,255,0.78); letter-spacing: 0.01em; }
+      .brand    { font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 600; fill: ${WHITE}; }
+      .foot     { font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 500;
+                  fill: rgba(255,255,255,0.75); font-size: 22px; letter-spacing: 0.02em; }
+      .eyebrow  { font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 700;
+                  font-size: 18px; letter-spacing: 0.22em; text-transform: uppercase; }
+      .badgeTxt { font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 700;
+                  font-size: 16px; letter-spacing: 0.22em; }
     </style>
   </defs>
 
   <rect width="1200" height="630" fill="url(#bgGrad)"/>
-  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect width="1200" height="630" fill="url(#glow1)"/>
+  <rect width="1200" height="630" fill="url(#glow2)"/>
 
-  <!-- Prism Node logo, top-left -->
-  <g transform="translate(60,60)" stroke="${fg}" fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <g stroke-width="4">
+  <!-- corner border lines for editorial feel -->
+  <g stroke="${BLUE_SOFT}" stroke-opacity="0.18" stroke-width="1">
+    <line x1="0"    y1="80"  x2="1200" y2="80"/>
+    <line x1="0"    y1="550" x2="1200" y2="550"/>
+  </g>
+
+  <!-- Prism Node logo, top-right -->
+  <g transform="translate(1080,38)" stroke="${WHITE}" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <g stroke-width="3.4">
       <path d="M 32 6 L 58 32 L 32 58 L 6 32 Z"/>
     </g>
-    <g stroke-width="2.4">
+    <g stroke-width="2.2" stroke-opacity="0.85">
       <path d="M 32 6 L 32 58"/>
       <path d="M 6 32 L 58 32"/>
     </g>
-    <circle cx="32" cy="32" r="3" fill="${fg}" stroke="none"/>
+    <circle cx="32" cy="32" r="3" fill="${WHITE}" stroke="none"/>
   </g>
-  <text x="140" y="100" class="brand" font-size="28">TrainYourAgent</text>
+  <text x="1060" y="62" class="brand" font-size="22" text-anchor="end">TrainYourAgent</text>
 
-  <!-- Eyebrow -->
-  <text x="60" y="190" class="eyebrow">${escapeXml(subtitle || "AI Voice Agents · Built for Operators")}</text>
+  ${badge ? `
+  <!-- badge pill, top-left -->
+  <g transform="translate(60,42)">
+    <rect x="0" y="0" rx="999" ry="999" width="${Math.max(80, badge.label.length * 12 + 28)}" height="34" fill="${badge.bg}"/>
+    <text x="${(Math.max(80, badge.label.length * 12 + 28)) / 2}" y="22" class="badgeTxt" fill="${badge.fg}" text-anchor="middle">${escapeXml(badge.label)}</text>
+  </g>
+  ` : `
+  <!-- eyebrow, top-left -->
+  <text x="60" y="62" class="eyebrow" fill="${BLUE_SOFT}">TRAINYOURAGENT</text>
+  `}
 
-  <!-- Title (multi-line) -->
-  ${lines
-    .map(
-      (line, i) =>
-        `<text x="60" y="${startY + i * lineHeight}" class="title" font-size="76">${escapeXml(line)}</text>`
-    )
+  <!-- Title (multi-line, last word italicized) -->
+  ${titleLines
+    .map((line, i) => {
+      if (i === lastIdx && split.tail) {
+        return `<text x="60" y="${startY + i * lineHeight}" font-size="78"><tspan class="title">${escapeXml(split.head)} </tspan><tspan class="titleIt">${escapeXml(split.tail)}</tspan></text>`;
+      }
+      return `<text x="60" y="${startY + i * lineHeight}" class="title" font-size="78">${escapeXml(line)}</text>`;
+    })
     .join("\n  ")}
 
+  ${subtitle ? `<text x="60" y="${startY + titleLines.length * lineHeight + 18}" class="sub" font-size="26">${escapeXml(subtitle)}</text>` : ""}
+
   <!-- Footer -->
-  <line x1="60" y1="540" x2="1140" y2="540" stroke="${fg}" stroke-opacity="0.18" stroke-width="1"/>
-  <text x="60" y="585" class="foot">trainyouragent.com  ·  Tampa Bay, FL</text>
-  <text x="1140" y="585" class="foot" text-anchor="end">Live agents in production</text>
+  <text x="60"   y="590" class="foot">trainyouragent.com</text>
+  <text x="1140" y="590" class="foot" text-anchor="end">Tampa Bay · Built for operators</text>
 </svg>`;
 }
 
 export default async function handler(req: Request): Promise<Response> {
   const url = new URL(req.url);
-  const titleRaw = url.searchParams.get("title") || "AI agents that actually run your business by morning.";
-  const subtitle = url.searchParams.get("subtitle") || "AI Voice Agents · Built for Operators";
-  const theme = (url.searchParams.get("theme") || "navy").toLowerCase() === "paper" ? "paper" : "navy";
 
-  // Cap title length to keep SVG bounded.
-  const title = titleRaw.slice(0, 140);
+  const titleRaw = url.searchParams.get("title");
+  if (!titleRaw) {
+    return new Response("Missing required `title` query parameter.", { status: 400 });
+  }
+  const title    = clip(titleRaw, 120);
+  const subtitle = clip(url.searchParams.get("subtitle"), 120);
+  const typeRaw  = (url.searchParams.get("type") || "").toLowerCase() as Type;
+  const type: Type | undefined =
+    ["page", "post", "tool", "local", "trust"].includes(typeRaw) ? typeRaw : undefined;
+  const badge    = clip(url.searchParams.get("badge"), 24);
 
-  const svg = renderSvg(title, subtitle, theme);
+  const svg = renderSvg(title, subtitle, type, badge);
 
   return new Response(svg, {
     status: 200,
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
-      // Cache aggressively at the CDN — OG content rarely changes per URL.
-      "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
+      // 5-min edge cache per spec, with longer SWR for crawler hits.
+      "Cache-Control": "public, max-age=300, s-maxage=300, stale-while-revalidate=86400",
       "X-Content-Type-Options": "nosniff",
     },
   });

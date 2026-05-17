@@ -6,6 +6,7 @@ import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
 import SectionDivider from "@/components/SectionDivider";
 import { injectJsonLdMany, organizationLd, breadcrumbLd } from "@/lib/jsonld";
+import TrustShieldIllo from "@/components/illustrations/TrustShieldIllo";
 
 const SECURITY_EMAIL = "security@trainyouragent.com";
 
@@ -87,6 +88,13 @@ export default function TrustCenter() {
   useEffect(() => {
     if (typeof document === "undefined") return;
     document.title = "Trust Center · TrainYourAgent";
+    {
+      const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent("Trust Center — security, uptime, audits")}&subtitle=${encodeURIComponent("Everything procurement asks for, in one place")}&type=trust&badge=TRUST`;
+      const sM = (sel: string, a: "name"|"property", k: string, v: string) => { let el = document.querySelector(sel) as HTMLMetaElement | null; if (!el) { el = document.createElement("meta"); el.setAttribute(a, k); document.head.appendChild(el); } el.setAttribute("content", v); };
+      sM("meta[property='og:image']", "property", "og:image", ogImage);
+      sM("meta[name='twitter:image']", "name", "twitter:image", ogImage);
+      sM("meta[name='twitter:card']", "name", "twitter:card", "summary_large_image");
+    }
     if (!document.getElementById("tya-fonts")) {
       const l = document.createElement("link"); l.id = "tya-fonts"; l.rel = "stylesheet";
       l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
@@ -107,14 +115,19 @@ export default function TrustCenter() {
       <span id="main" tabIndex={-1} aria-hidden="true" />
 
       <section className="px-5 sm:px-8 pt-32 pb-16">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Trust Center</div>
-          <h1 className="text-[42px] sm:text-[68px] lg:text-[80px] leading-[1.02] tracking-tight font-semibold text-[#042C53]">
-            One place for security, compliance, <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>privacy, accessibility, and uptime.</span>
-          </h1>
-          <p className="mt-6 text-[18px] sm:text-[20px] text-slate-700 max-w-3xl leading-relaxed">
-            Everything procurement, security, legal, and IT teams need to evaluate TrainYourAgent — in one place, with honest answers, and a real person on the other end of every email.
-          </p>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-10 items-center">
+          <div>
+            <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Trust Center</div>
+            <h1 className="text-[42px] sm:text-[68px] lg:text-[80px] leading-[1.02] tracking-tight font-semibold text-[#042C53]">
+              One place for security, compliance, <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>privacy, accessibility, and uptime.</span>
+            </h1>
+            <p className="mt-6 text-[18px] sm:text-[20px] text-slate-700 max-w-3xl leading-relaxed">
+              Everything procurement, security, legal, and IT teams need to evaluate TrainYourAgent — in one place, with honest answers, and a real person on the other end of every email.
+            </p>
+          </div>
+          <div className="hidden lg:block">
+            <TrustShieldIllo style={{ width: "100%", maxWidth: 320, height: "auto", margin: "0 auto" }} />
+          </div>
         </div>
       </section>
 

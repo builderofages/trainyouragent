@@ -11,6 +11,7 @@ import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
 import { CITIES, getCity, citiesInRegion } from "@/lib/cities";
 import { VERTICALS, getVertical, FAQ_POOL } from "@/lib/verticals";
+import { ogUrl } from "@/lib/og";
 
 const SITE_URL = "https://trainyouragent.com";
 const CAL_URL = "https://cal.com/trainyouragent/30min";
@@ -177,15 +178,26 @@ export default function LocalPage() {
     const title = `${vertical.displayName} in ${city.displayName}, ${city.statePostal} — TrainYourAgent`;
     const desc = `AI ${vertical.displayName.toLowerCase()} built for ${city.displayName} ${city.industries[0]} and ${city.industries[1]} businesses. ${vertical.outcomeMetric.charAt(0).toUpperCase() + vertical.outcomeMetric.slice(1)} starts at ${vertical.pricingAnchor}. Tampa-built, deployed nationwide.`;
 
+    const ogImage = ogUrl({
+      title: `AI ${vertical.displayName} in ${city.displayName}, ${city.statePostal}`,
+      subtitle: vertical.oneLine,
+      type: "local",
+      badge: city.region.toUpperCase(),
+    });
+
     document.title = title;
     setMeta(`meta[name='description']`, "name", "description", desc);
     setMeta(`meta[property='og:title']`, "property", "og:title", title);
     setMeta(`meta[property='og:description']`, "property", "og:description", desc);
     setMeta(`meta[property='og:url']`, "property", "og:url", url);
     setMeta(`meta[property='og:type']`, "property", "og:type", "website");
+    setMeta(`meta[property='og:image']`, "property", "og:image", ogImage);
+    setMeta(`meta[property='og:image:width']`, "property", "og:image:width", "1200");
+    setMeta(`meta[property='og:image:height']`, "property", "og:image:height", "630");
     setMeta(`meta[name='twitter:card']`, "name", "twitter:card", "summary_large_image");
     setMeta(`meta[name='twitter:title']`, "name", "twitter:title", title);
     setMeta(`meta[name='twitter:description']`, "name", "twitter:description", desc);
+    setMeta(`meta[name='twitter:image']`, "name", "twitter:image", ogImage);
     setCanonical(url);
 
     const jsonLd = {
