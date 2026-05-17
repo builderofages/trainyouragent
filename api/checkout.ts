@@ -21,6 +21,10 @@ export const config = { runtime: "edge" };
 const STRIPE_KEY = process.env.STRIPE_SECRET_KEY;
 const PRICE_OPERATORS = process.env.STRIPE_PRICE_OPERATORS || "";
 const PRICE_FOUNDERS  = process.env.STRIPE_PRICE_FOUNDERS_BUILD || "";
+// v50A: new plan tier env vars seeded by /api/stripe-setup
+const PRICE_STARTER  = process.env.STRIPE_PRICE_STARTER  || "";
+const PRICE_OPERATOR = process.env.STRIPE_PRICE_OPERATOR || "";
+const PRICE_SCALE    = process.env.STRIPE_PRICE_SCALE    || "";
 
 // Hardcoded success/cancel URLs — never accept these from the client.
 // v38: success URL routes to /onboarding so new customers land in the
@@ -37,7 +41,22 @@ const EMAIL_RE = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']{2,}$/;
 const PLANS: Record<string, { priceEnv: string; mode: "subscription" | "payment" }> = {
   operators: { priceEnv: "STRIPE_PRICE_OPERATORS", mode: "subscription" },
   founders:  { priceEnv: "STRIPE_PRICE_FOUNDERS_BUILD", mode: "payment" },
+  // v50A: tiers seeded by /api/stripe-setup
+  starter:   { priceEnv: "STRIPE_PRICE_STARTER",  mode: "subscription" },
+  operator:  { priceEnv: "STRIPE_PRICE_OPERATOR", mode: "subscription" },
+  scale:     { priceEnv: "STRIPE_PRICE_SCALE",    mode: "subscription" },
 };
+
+function resolvePriceId(plan: string): string {
+  switch (plan) {
+    case "operators": return PRICE_OPERATORS;
+    case "founders":  return PRICE_FOUNDERS;
+    case "starter":   return PRICE_STARTER;
+    case "operator":  return PRICE_OPERATOR;
+    case "scale":     return PRICE_SCALE;
+    default: return "";
+  }
+}
 
 export default async function handler(req: Request) {
   const cors = corsCheck(req);
@@ -60,8 +79,14 @@ export default async function handler(req: Request) {
   const planMeta = body.plan ? PLANS[body.plan] : undefined;
   if (!planMeta) return json({ error: "unknown-plan" }, 400, cors.headers);
 
-  const priceId = body.plan === "operators" ? PRICE_OPERATORS : PRICE_FOUNDERS;
-  if (!priceId) return json({ ok: false, error: "plan-not-configured" }, 200, cors.headers);
+  const priceId = resolvePriceId(body.plan || "");
+  if (!priceId) {
+    return json({
+      ok: false,
+      error: "plan-not-configured",
+      hint: "Run POST /api/stripe-setup?init_token=tya-init-2026 to seed Stripe products, then set the returned price IDs as Vercel env vars.",
+    }, 200, cors.headers);
+  }
 
   const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
   if (email && (!EMAIL_RE.test(email) || email.length > 254)) {

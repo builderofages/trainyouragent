@@ -1,6 +1,7 @@
 // api/chat.ts — Vercel edge function.
-// Non-streaming Claude response — returns the full text body once.
-// REQUIRES env: ANTHROPIC_API_KEY
+// v50A: Multi-provider fallback chain — Anthropic → Groq → Gemini.
+// If all fail (or no keys configured), returns a friendly "temporarily offline"
+// message so demos NEVER go dark.
 //
 // Hardening:
 //   - System prompts hardcoded server-side (client picks `mode`)
@@ -8,19 +9,18 @@
 //   - CORS allowlist
 //   - Max 4 KB input, max 16 messages
 //   - max_tokens capped at 800
-//   - ANTHROPIC_API_KEY never logged or echoed in errors
+//   - Provider keys never logged or echoed in errors
+//   - Surfaces which provider answered via `x-llm-provider` response header
 
 import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
 import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors.js";
+import { chat as llmChat } from "./_lib/llm.js";
 
 export const config = { runtime: "edge" };
 
 const MAX_INPUT_CHARS = 4000;
 const MAX_MESSAGES = 16;
 const MAX_OUTPUT_TOKENS = 800;
-// v46b: switch from dated snapshot to floating alias so a deprecated snapshot
-// doesn't break the entire chat surface. Allow override via env for testing.
-const MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5";
 
 const SYSTEMS: Record<string, string> = {
   assistant:
@@ -43,9 +43,6 @@ export default async function handler(req: Request) {
   if (cors.isPreflight) return preflightResponse(cors.headers);
 
   if (req.method !== "POST") return text("method", 405, cors.headers);
-
-  const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) return text("not-configured", 500, cors.headers);
 
   const ip = ipFromRequest(req);
   const rl = rateLimit(`chat:${ip}`, { limit: 30, windowMs: 60 * 60 * 1000 });
@@ -80,66 +77,15 @@ export default async function handler(req: Request) {
   }
   if (messages.length === 0) return text("no-valid-messages", 400, cors.headers);
 
-  let r: Response;
-  try {
-    r = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "x-api-key": key,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: MAX_OUTPUT_TOKENS,
-        system,
-        messages,
-      }),
-    });
-  } catch {
-    return text("upstream-fetch-failed", 502, cors.headers);
-  }
-
-  if (!r.ok) {
-    // v46b: capture upstream status code in the response so we can debug from
-    // the client side without leaking the body (which may contain the API key
-    // in error contexts).
-    let upstreamMsg = "";
-    try {
-      const body = await r.text();
-      // Strip any potential leaked secret; only surface error type+message
-      try {
-        const j = JSON.parse(body) as { error?: { type?: string; message?: string } };
-        const t = j?.error?.type ? String(j.error.type) : "";
-        const m = j?.error?.message ? String(j.error.message) : "";
-        upstreamMsg = `${t} ${m}`.trim().slice(0, 160);
-      } catch {
-        upstreamMsg = body.slice(0, 160).replace(/[\r\n]+/g, " ");
-      }
-    } catch { /* ignore */ }
-    const msg = upstreamMsg
-      ? `upstream-error ${r.status} ${upstreamMsg}`
-      : `upstream-error ${r.status}`;
-    return text(msg, 502, cors.headers);
-  }
-
-  let body: { content?: { type: string; text?: string }[] };
-  try {
-    body = await r.json();
-  } catch {
-    return text("upstream-bad-json", 502, cors.headers);
-  }
-
-  const out = (body.content || [])
-    .filter((c) => c && c.type === "text" && typeof c.text === "string")
-    .map((c) => c.text)
-    .join("");
+  // Multi-provider fallback chain — Anthropic → Groq → Gemini → friendly offline.
+  const { text: out, provider } = await llmChat(system, messages, MAX_OUTPUT_TOKENS);
 
   return new Response(out, {
     status: 200,
     headers: {
       "content-type": "text/plain; charset=utf-8",
       "cache-control": "no-cache, no-transform",
+      "x-llm-provider": provider,
       ...cors.headers,
       ...rl.headers,
     },

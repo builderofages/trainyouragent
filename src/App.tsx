@@ -118,6 +118,10 @@ const MissionPage          = lazy(() => import("./pages/MissionPage"));
 const InvestPage           = lazy(() => import("./pages/InvestPage"));
 const AffiliateProgramPage = lazy(() => import("./pages/AffiliateProgramPage"));
 
+// v50A: customer portal + public roadmap
+const Portal               = lazy(() => import("./pages/Portal"));
+const Roadmap              = lazy(() => import("./pages/Roadmap"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -257,6 +261,10 @@ const App = () => {
             <Route path="/mission" element={<MissionPage />} />
             <Route path="/invest" element={<InvestPage />} />
             <Route path="/affiliate-program" element={<AffiliateProgramPage />} />
+
+            {/* v50A: customer portal + public roadmap */}
+            <Route path="/portal" element={<Portal />} />
+            <Route path="/roadmap" element={<Roadmap />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />

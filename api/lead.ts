@@ -111,6 +111,10 @@ const ALLOWED_SOURCES = new Set([
   "investor-inquiry",
   "affiliate-application",
   "careers-self-pitch",
+  // v50A: portal + roadmap
+  "portal-magic-link",
+  "portal-preferences",
+  "roadmap-suggestion",
 ]);
 
 const MAX_BODY_BYTES = 16 * 1024; // 16 KB is plenty for a lead form

@@ -29,6 +29,8 @@ const ALLOWED_EVENT_TYPES = new Set([
   "demo_used",
   "report_view",
   "pricing_view",
+  // v50A: public roadmap voting
+  "roadmap_upvote",
 ]);
 
 type Body = {
