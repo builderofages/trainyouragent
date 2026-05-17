@@ -103,6 +103,10 @@ const TrustCenter       = lazy(() => import("./pages/TrustCenter"));
 const Uptime            = lazy(() => import("./pages/Uptime"));
 const MediaKit          = lazy(() => import("./pages/MediaKit"));
 
+// v47B: programmatic local SEO (30 cities x 4 verticals = 120 pages)
+const LocalIndex        = lazy(() => import("./pages/LocalIndex"));
+const LocalPage         = lazy(() => import("./pages/LocalPage"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -228,6 +232,9 @@ const App = () => (
             <Route path="/trust-center" element={<TrustCenter />} />
             <Route path="/uptime" element={<Uptime />} />
             <Route path="/media-kit" element={<MediaKit />} />
+            {/* v47B: programmatic local SEO — /local hub + /local/:citySlug/:verticalSlug */}
+            <Route path="/local" element={<LocalIndex />} />
+            <Route path="/local/:citySlug/:verticalSlug" element={<LocalPage />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />

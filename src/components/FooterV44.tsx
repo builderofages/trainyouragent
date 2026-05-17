@@ -17,6 +17,7 @@ const RESOURCES = [
   { label: "Case studies", to: "/case-studies" },
   { label: "Blog", to: "/blog" },
   { label: "Learn AI", to: "/learn" },
+  { label: "Cities (Local)", to: "/local" },
   { label: "Buyer's guide", to: "/resources" },
   { label: "State of AI Ops 2026", to: "/report/state-of-ai-ops-2026" },
 ];

@@ -101,6 +101,8 @@ const ALLOWED_SOURCES = new Set([
   "security-questionnaire-request",
   "gdpr-deletion-request",
   "enterprise-security-call",
+  // v47B: local SEO city request
+  "local-city-request",
 ]);
 
 const MAX_BODY_BYTES = 16 * 1024; // 16 KB is plenty for a lead form

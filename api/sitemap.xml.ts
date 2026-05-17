@@ -50,6 +50,27 @@ const STATIC_PAGES: { path: string; priority: number; changefreq: string }[] = [
   { path: "/careers",                   priority: 0.55, changefreq: "monthly" },
   { path: "/press",                     priority: 0.55, changefreq: "monthly" },
   { path: "/agency-partner",            priority: 0.7,  changefreq: "monthly" },
+  // v47A: trust + authority
+  { path: "/speaking",                  priority: 0.65, changefreq: "monthly" },
+  { path: "/podcast-guest",             priority: 0.6,  changefreq: "monthly" },
+  { path: "/compliance",                priority: 0.8,  changefreq: "monthly" },
+  { path: "/accessibility",             priority: 0.6,  changefreq: "monthly" },
+  { path: "/trust-center",              priority: 0.85, changefreq: "monthly" },
+  { path: "/uptime",                    priority: 0.55, changefreq: "weekly"  },
+  { path: "/media-kit",                 priority: 0.55, changefreq: "monthly" },
+  // v41/v44: community + partners + tools + metrics
+  { path: "/community",                 priority: 0.65, changefreq: "weekly"  },
+  { path: "/partners",                  priority: 0.65, changefreq: "monthly" },
+  { path: "/metrics",                   priority: 0.7,  changefreq: "weekly"  },
+  { path: "/tools",                     priority: 0.75, changefreq: "monthly" },
+  { path: "/tools/cost-estimator",      priority: 0.6,  changefreq: "monthly" },
+  { path: "/tools/roi-calculator",      priority: 0.6,  changefreq: "monthly" },
+  { path: "/tools/prompt-critic",       priority: 0.6,  changefreq: "monthly" },
+  { path: "/tools/scenario-generator",  priority: 0.6,  changefreq: "monthly" },
+  { path: "/tools/latency-simulator",   priority: 0.6,  changefreq: "monthly" },
+  { path: "/tools/prompt-library",      priority: 0.6,  changefreq: "monthly" },
+  { path: "/tools/model-selector",      priority: 0.6,  changefreq: "monthly" },
+  { path: "/tools/automation-roi",      priority: 0.6,  changefreq: "monthly" },
   // Legal (low priority)
   { path: "/privacy",                   priority: 0.5,  changefreq: "yearly"  },
   { path: "/terms",                     priority: 0.5,  changefreq: "yearly"  },
@@ -102,6 +123,17 @@ const ALT_VERTICALS = [
   "solar","ecommerce","hospitality","accounting","automotive",
 ];
 
+// ---- v47B: LOCAL /local/{citySlug}/{verticalSlug} (120 LPs + /local hub) --
+const LOCAL_CITIES = [
+  "tampa","orlando","miami","jacksonville","atlanta","charlotte","raleigh",
+  "nashville","austin","dallas","houston","san-antonio","phoenix","las-vegas",
+  "denver","salt-lake-city","boise","portland","seattle","san-diego","sacramento",
+  "minneapolis","indianapolis","columbus","cleveland","pittsburgh","philadelphia",
+  "boston","new-york","chicago",
+];
+const LOCAL_VERTICALS = ["voice-agents","chat-agents","ai-receptionist","ai-sales-agent"];
+
+
 function urlNode(loc: string, priority: number, changefreq: string, lastmod: string): string {
   return `  <url><loc>${SITE}${loc}</loc><lastmod>${lastmod}</lastmod><changefreq>${changefreq}</changefreq><priority>${priority.toFixed(2)}</priority></url>`;
 }
@@ -146,6 +178,14 @@ export default async function handler(_req: Request): Promise<Response> {
   for (const c of ALT_COMPETITORS) {
     for (const v of ALT_VERTICALS) {
       lines.push(urlNode(`/alternatives/${c}-for-${v}`, 0.7, "monthly", today));
+    }
+  }
+
+  // v47B: /local hub + 120 city x vertical LPs
+  lines.push(urlNode(`/local`, 0.85, "weekly", today));
+  for (const city of LOCAL_CITIES) {
+    for (const v of LOCAL_VERTICALS) {
+      lines.push(urlNode(`/local/${city}/${v}`, 0.65, "monthly", today));
     }
   }
 
