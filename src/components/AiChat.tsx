@@ -1,26 +1,23 @@
 // src/components/AiChat.tsx
 // Floating AI chat widget powered by your Claude/GPT instance via /api/chat.
 // Drops bottom-right on every page. Streams responses.
+// v53: clean UTF-8 source (kills mojibake), uses FloatersProvider mutex,
+//      passes visitor niche to /api/chat for personalized answers.
 
 import { useEffect, useRef, useState } from "react";
+import { useFloaters } from "@/lib/floaters";
+import { useVisitor } from "@/lib/visitorContext";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const SYSTEM = `You are TrainYourAgent's website assistant. You help visitors understand:
-- TrainYourAgent builds AI voice + messaging agents for SMBs and startups
-- Founders Lane ($0 build Â· $0.18/min Â· $25/booking), Operators ($4,950 build Â· $799/mo), Scale (custom)
-- 4 yrs in AI, $20K+/mo recurring, 14 verticals supported
-- Founded by Alexander Mills, Tampa Bay
-- BAA per healthcare customer, SOC 2 in evaluation, zero training on customer data
-- Live demo: ElevenLabs widget on the page, or call live phone number
-- Cal.com: cal.com/trainyouragent/30min for 30-min build call
-Be direct, no preamble, no marketing fluff. Give specific numbers when relevant. If asked about pricing, give the real number. If asked something you don't know, say "Best to ask Alexander on a 30-min call: cal.com/trainyouragent/30min".`;
+const INTRO = "Hey \u{1F44B} I'm TrainYourAgent's AI. Ask me anything about how this works, what we build, what it costs. I'll be direct.";
 
 export default function AiChat() {
-  const [open, setOpen] = useState(false);
-  const [msgs, setMsgs] = useState<Msg[]>([
-    { role: "assistant", content: "Hey â I'm TrainYourAgent's AI. Ask me anything about how this works, what we build, what it costs. I'll be direct." },
-  ]);
+  const { open: floaterOpen, set: setFloater, toggle } = useFloaters();
+  const open = floaterOpen === "chat";
+  const { niche } = useVisitor();
+
+  const [msgs, setMsgs] = useState<Msg[]>([{ role: "assistant", content: INTRO }]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -39,11 +36,11 @@ export default function AiChat() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode: "assistant", messages: next }),
+        body: JSON.stringify({ mode: "assistant", messages: next, niche: niche || undefined }),
       });
       if (!res.ok || !res.body) throw new Error("Chat unavailable");
       const reader = res.body.getReader();
-      const decoder = new TextDecoder();
+      const decoder = new TextDecoder("utf-8");
       let acc = "";
       setMsgs((m) => [...m, { role: "assistant", content: "" }]);
       while (true) {
@@ -57,7 +54,7 @@ export default function AiChat() {
         });
       }
     } catch {
-      setMsgs((m) => [...m, { role: "assistant", content: "I'm offline right now. Easiest path: book 30 min at cal.com/trainyouragent/30min â Alexander will answer directly." }]);
+      setMsgs((m) => [...m, { role: "assistant", content: "I'm offline right now. Easiest path: book 30 min at cal.com/trainyouragent/30min — Alexander will answer directly." }]);
     } finally {
       setStreaming(false);
     }
@@ -66,7 +63,7 @@ export default function AiChat() {
   return (
     <>
       {!open && (
-        <button onClick={() => setOpen(true)} aria-label="Chat with our AI"
+        <button onClick={() => toggle("chat")} aria-label="Chat with our AI"
                 className="fixed bottom-24 right-5 z-[90] w-14 h-14 rounded-full bg-[#042C53] text-white shadow-[0_10px_30px_-8px_rgba(4,44,83,0.5)] hover:bg-[#0A3D6E] transition flex items-center justify-center group"
                 style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
           <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -76,24 +73,24 @@ export default function AiChat() {
         </button>
       )}
       {open && (
-        <div className="fixed bottom-24 right-5 z-[90] w-[min(380px,calc(100vw-2rem))] h-[min(560px,calc(100vh-2rem))] rounded-3xl bg-white border border-slate-200 shadow-[0_30px_80px_-20px_rgba(4,44,83,0.55)] flex flex-col overflow-hidden"
+        <div className="fixed bottom-24 right-5 z-[95] w-[min(380px,calc(100vw-2rem))] h-[min(560px,calc(100vh-2rem))] rounded-3xl bg-white border border-slate-200 shadow-[0_30px_80px_-20px_rgba(4,44,83,0.55)] flex flex-col overflow-hidden"
              style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 bg-[#042C53] text-white">
             <div className="flex items-center gap-2.5">
               <span className="w-2 h-2 rounded-full bg-[#22A36C] animate-pulse" />
               <div>
                 <div className="text-[14px] font-semibold leading-tight">TrainYourAgent AI</div>
-                <div className="text-[11px] text-white/70 leading-tight">Direct answers Â· No marketing</div>
+                <div className="text-[11px] text-white/70 leading-tight">Direct answers · No marketing</div>
               </div>
             </div>
-            <button aria-label="Close" onClick={() => setOpen(false)} className="text-white/70 hover:text-white text-[20px] leading-none">Ã</button>
+            <button aria-label="Close" onClick={() => setFloater(null)} className="text-white/70 hover:text-white text-[20px] leading-none">×</button>
           </div>
 
           <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
             {msgs.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-[14px] leading-relaxed whitespace-pre-wrap ${m.role === "user" ? "bg-[#042C53] text-white rounded-br-md" : "bg-[#F6FAFE] text-[#0B1B2B] border border-slate-200 rounded-bl-md"}`}>
-                  {m.content || (streaming && i === msgs.length - 1 ? "â¦" : "")}
+                  {m.content || (streaming && i === msgs.length - 1 ? "…" : "")}
                 </div>
               </div>
             ))}
@@ -103,14 +100,25 @@ export default function AiChat() {
             <div className="flex gap-2">
               <input value={input} onChange={(e) => setInput(e.target.value)}
                      onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
-                     placeholder="Ask about pricing, builds, integrationsâ¦"
+                     placeholder="Ask about pricing, builds, integrations…"
                      className="flex-1 px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-[14px] focus:outline-none focus:border-[#185FA5]" />
               <button onClick={send} disabled={streaming || !input.trim()}
                       className="px-4 py-2.5 rounded-xl bg-[#042C53] text-white text-[13px] font-semibold hover:bg-[#0A3D6E] disabled:opacity-40">
-                {streaming ? "â¦" : "Send"}
+                {streaming ? "…" : "Send"}
               </button>
             </div>
-            <div className="mt-2 text-[10px] text-slate-500 text-center">Powered by Claude Â· Answers based on TrainYourAgent docs</div>
+            <div className="mt-2 flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => setFloater("human")}
+                className="text-[11px] text-[#185FA5] hover:text-[#042C53] underline decoration-[#185FA5]/30 sm:hidden"
+              >
+                Talk to a human instead →
+              </button>
+              <div className="ml-auto text-[10px] text-slate-500 text-center sm:mx-auto">
+                Powered by Claude · Answers based on TrainYourAgent docs
+              </div>
+            </div>
           </div>
         </div>
       )}

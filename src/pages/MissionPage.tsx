@@ -88,15 +88,15 @@ export default function MissionPage() {
       <section className="px-5 sm:px-8 py-16">
         <div className="max-w-3xl mx-auto">
           <div className="text-[11px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-3">Why us</div>
-          <h2 className="text-[28px] sm:text-[40px] font-semibold text-[#042C53] mb-5 leading-tight">A welder who became an AI founder is the right person to build this.</h2>
+          <h2 className="text-[28px] sm:text-[40px] font-semibold text-[#042C53] mb-5 leading-tight">An operator who's built across categories most founders never touch.</h2>
           <p className="text-[16px] text-slate-700 leading-[1.75] mb-4">
-            Alexander Mills is the founder of TrainYourAgent. His operating background spans manufacturing, capital markets, and digital media — including leading social strategy at one of the world's largest social media marketing agencies in Los Angeles. He started shipping AI software because the businesses he worked with — service companies, contractors, clinics, dispatch operations — were drowning in repetitive computer work that nobody had the time or budget to fix.
+            Alexander Mills is the founder of TrainYourAgent. Before AI, he built across categories most founders never touch: shipping social campaigns for global brands and household-name talent at one of the world's largest social media marketing agencies in Los Angeles, then founding EndCreations to build infrastructure for the gaming industry. The pattern: walk into industries the polished operators ignore, learn how the work actually gets done, and rebuild it.
           </p>
           <p className="text-[16px] text-slate-700 leading-[1.75] mb-4">
-            He spent four years building AI agents before the rest of the market noticed there was a market. He has scoped, built, and shipped agents for dozens of operators. He answers his own customer support email. He still answers a real customer call every week, and the company will lose a great deal more than it gains the day he stops.
+            He's now four years deep in applied AI — through every model release, every tool shift, every capability jump — and ships the same way he always has: faster than anyone you've met, with a thesis you can argue with. He's scoped, built, and shipped agents for dozens of operators. He still answers his own customer support email and a real customer call every week, and the company will lose more than it gains the day he stops.
           </p>
           <p className="text-[16px] text-slate-700 leading-[1.75]">
-            That perspective matters here. Most of the AI agent market is being built by people who have never been on the receiving end of a half-built tool. We have. The instinct to build software that operators actually deploy, rather than software that demos well at a conference, is the difference between the platforms that survive this cycle and the ones that do not.
+            That perspective matters here. Most of the AI agent market is being built by people who've never been on the receiving end of a half-built tool. We have. The instinct to build software that operators actually deploy, rather than software that demos well at a conference, is the difference between the platforms that survive this cycle and the ones that do not.
           </p>
         </div>
       </section>

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
-const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
   return (
@@ -148,29 +148,30 @@ const Team = () => {
             </div>
             <div className="text-[15px] text-slate-700 leading-[1.75] space-y-3">
               <p>
-                Operator across multiple industries before AI. Led social
-                strategy at one of the world's largest social media marketing
-                agencies in Los Angeles, shipping for global brands and
-                household-name talent. Founded EndCreations, an infrastructure
-                company in the gaming industry.
+                Founder of TrainYourAgent — a Tampa-based AI company building
+                the voice and chat agents that actually run service businesses.
               </p>
               <p>
-                Now runs TrainYourAgent — $20K+/mo recurring across voice,
-                chat, and infrastructure builds — alongside a portfolio of
-                ventures shipping in parallel. CNNCT for messaging clients,
-                content engines, and a handful of consumer products. Same
-                operating philosophy across all of them: ship the thing, watch
-                what works, double down.
+                Before AI, Alexander built across categories most founders
+                never touch: shipping social campaigns for global brands and
+                household-name talent at one of the world's largest social
+                media marketing agencies in Los Angeles, then founding
+                EndCreations to build infrastructure for the gaming industry.
+                The pattern: walk into industries the polished operators
+                ignore, learn how the work actually gets done, and rebuild it.
               </p>
               <p>
-                Four years deep in applied AI, through every major model shift
-                since 2022. Builds the systems he wants to exist and ships them
-                at operator speed.
+                He's now four years deep in applied AI — through every model
+                release, every tool shift, every capability jump — and runs
+                TrainYourAgent ($20K+/mo recurring) alongside a portfolio of
+                related ventures from Tampa Bay. He ships the same way he
+                always has: faster than anyone you've met, with a thesis you
+                can argue with.
               </p>
               <p className="text-[#042C53] font-medium border-l-2 border-[#185FA5] pl-4 italic">
-                "AI is the evolutionary step that takes humans out of cubicles.
-                The job for the next decade is wiring it into every business
-                that's still running on phone tag and spreadsheets."
+                "AI isn't a feature. It's the evolutionary step that takes
+                humans out of cubicles. The next decade of business gets won
+                by the operators who wire it into the work first."
               </p>
             </div>
           </div>

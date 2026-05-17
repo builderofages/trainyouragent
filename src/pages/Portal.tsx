@@ -190,7 +190,7 @@ export default function Portal() {
                   <span className={`px-2.5 py-0.5 rounded-full border font-semibold ${STATUS_PILL[b.status]}`}>{b.status}</span>
                   <span className="text-slate-600">{b.updatedAt}</span>
                 </div>
-                <a href="#" className="mt-4 inline-block text-[13px] text-[#185FA5] hover:underline">View progress &rarr;</a>
+                <Link to="/contact" className="mt-4 inline-block text-[13px] text-[#185FA5] hover:underline">View progress &rarr;</Link>
               </div>
             ))}
           </div>
@@ -248,7 +248,7 @@ export default function Portal() {
                     <td className="px-4 py-3 text-slate-700">{inv.date}</td>
                     <td className="px-4 py-3 font-semibold">{inv.amount}</td>
                     <td className="px-4 py-3"><span className={`px-2 py-0.5 rounded-md border text-[11px] font-semibold ${INVOICE_PILL[inv.status]}`}>{inv.status}</span></td>
-                    <td className="px-4 py-3"><a href="#" className="text-[#185FA5] hover:underline">Download PDF &rarr;</a></td>
+                    <td className="px-4 py-3"><a href="mailto:billing@trainyouragent.com?subject=Invoice%20PDF%20request" className="text-[#185FA5] hover:underline">Download PDF &rarr;</a></td>
                   </tr>
                 ))}
               </tbody>
@@ -270,7 +270,7 @@ export default function Portal() {
             </div>
             <div className="text-[13px] text-slate-700 space-y-1">
               <div>Email: <a href="mailto:alexander@trainyouragent.com" className="text-[#185FA5] hover:underline">alexander@trainyouragent.com</a></div>
-              <div>Slack: <a href="#" className="text-[#185FA5] hover:underline">#{customerName.toLowerCase().replace(/\s+/g, "-")}-tya</a></div>
+              <div>Slack: <span className="text-[#185FA5]">#{customerName.toLowerCase().replace(/\s+/g, "-")}-tya</span></div>
             </div>
           </div>
           <div className="rounded-2xl border border-slate-200 p-6">

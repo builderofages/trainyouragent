@@ -4,7 +4,7 @@
 //   useEffect(() => injectJsonLd("org-home", organizationLd()), []);
 
 const SITE_URL = "https://trainyouragent.com";
-const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills";
 
 export type Json = Record<string, unknown> | Array<Record<string, unknown>>;
 

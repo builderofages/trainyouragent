@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
-const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
   return (

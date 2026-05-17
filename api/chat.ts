@@ -22,6 +22,34 @@ const MAX_INPUT_CHARS = 4000;
 const MAX_MESSAGES = 16;
 const MAX_OUTPUT_TOKENS = 800;
 
+// v53: allowlist of niche slugs that may augment the system prompt with
+// industry-specific context. Mirrors src/lib/playbooks.ts. Anything not
+// in this list is silently ignored — defense against prompt injection
+// via the `niche` field.
+const NICHE_ALLOWLIST = new Set<string>([
+  "hvac", "roofing", "plumbing", "electrical", "landscaping",
+  "dental", "med-spa", "law-firm", "real-estate", "property-management",
+  "restaurant", "auto-repair", "insurance", "fitness", "pest-control",
+]);
+
+const NICHE_DISPLAY: Record<string, string> = {
+  "hvac": "HVAC contractor",
+  "roofing": "roofing contractor",
+  "plumbing": "plumbing contractor",
+  "electrical": "electrical contractor",
+  "landscaping": "landscaping company",
+  "dental": "dental practice",
+  "med-spa": "med spa",
+  "law-firm": "law firm",
+  "real-estate": "real estate brokerage",
+  "property-management": "property management company",
+  "restaurant": "restaurant",
+  "auto-repair": "auto repair shop",
+  "insurance": "insurance agency",
+  "fitness": "gym or fitness studio",
+  "pest-control": "pest control company",
+};
+
 const SYSTEMS: Record<string, string> = {
   assistant:
     "You are TrainYourAgent's website assistant. Help visitors understand the product (custom AI voice + chat agents for service businesses), pricing, integrations, and how to book a call. Stay on topic. If asked anything off-topic or harmful, politely redirect to booking a call at /contact. Keep replies under 5 sentences.",
@@ -50,7 +78,7 @@ export default async function handler(req: Request) {
   const rl = rateLimit(`chat:${ip}`, { limit: 30, windowMs: 60 * 60 * 1000 });
   if (!rl.ok) return text("rate-limited", 429, { ...cors.headers, ...rl.headers });
 
-  let parsed: { mode?: string; messages?: { role: string; content: string }[] };
+  let parsed: { mode?: string; messages?: { role: string; content: string }[]; niche?: string };
   try {
     parsed = await req.json();
   } catch {
@@ -65,7 +93,15 @@ export default async function handler(req: Request) {
     parsed.mode === "seo"                ? "seo"                :
     parsed.mode === "voice-receptionist" ? "voice-receptionist" :
     "assistant";
-  const system = SYSTEMS[mode];
+  let system = SYSTEMS[mode];
+
+  // v53: per-niche system prompt augmentation. Only the assistant mode is
+  // niche-aware (other modes are tightly scoped already). Niche must be on
+  // the allowlist or it's dropped silently.
+  if (mode === "assistant" && typeof parsed.niche === "string" && NICHE_ALLOWLIST.has(parsed.niche)) {
+    const display = NICHE_DISPLAY[parsed.niche] || parsed.niche;
+    system = `${system} The visitor identifies as a ${display} operator. Tailor your examples, ROI math, and integration suggestions to that industry whenever it fits the question.`;
+  }
 
   const inMsgs = Array.isArray(parsed.messages) ? parsed.messages : [];
   if (inMsgs.length === 0) return text("no-messages", 400, cors.headers);

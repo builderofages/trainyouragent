@@ -8,7 +8,7 @@ import SiteNav from "@/components/SiteNav";
 // v38: ship log embedded above the service grid
 import BuiltInPublic from "@/components/BuiltInPublic";
 
-const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills";
 
 function BrainLogo({ size = 28 }: { size?: number }) {
   return (

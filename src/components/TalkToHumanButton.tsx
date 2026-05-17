@@ -1,14 +1,17 @@
 // src/components/TalkToHumanButton.tsx
-// v46a: Persistent "Talk to a human" floating button.
-// NOT a chatbot. Links to Cal.com (and a mailto fallback).
-// Bottom-right on every page, mounted via App.tsx.
+// v53: Mutex-coordinated with AiChat via FloatersProvider. Sits bottom-LEFT
+// on desktop so it never collides with the chat bubble in the bottom-right.
+// On mobile (<640px) it stays hidden — the chat bubble's "Talk to a human"
+// link is the entry point instead, per the v53 spec.
 
 import { useEffect, useState } from "react";
+import { useFloaters } from "@/lib/floaters";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 
 export default function TalkToHumanButton() {
-  const [open, setOpen] = useState(false);
+  const { open: floaterOpen, toggle } = useFloaters();
+  const open = floaterOpen === "human";
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -20,7 +23,7 @@ export default function TalkToHumanButton() {
 
   return (
     <div
-      className="fixed z-[60] bottom-5 right-5 sm:bottom-6 sm:right-6"
+      className="hidden sm:block fixed z-[60] bottom-5 left-5 sm:bottom-6 sm:left-6"
       style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}
     >
       {open && (
@@ -28,6 +31,7 @@ export default function TalkToHumanButton() {
           role="dialog"
           aria-label="Talk to a human"
           className="mb-3 rounded-2xl bg-white shadow-[0_24px_60px_-20px_rgba(4,44,83,0.45)] border border-slate-200 w-[280px] sm:w-[320px] overflow-hidden"
+          style={{ zIndex: 95 }}
         >
           <div className="px-5 pt-5 pb-4 border-b border-slate-100">
             <div className="text-[11px] uppercase tracking-[0.18em] font-semibold text-[#185FA5] mb-1">
@@ -65,7 +69,7 @@ export default function TalkToHumanButton() {
       )}
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => toggle("human")}
         aria-label={open ? "Close talk-to-human menu" : "Talk to a human"}
         aria-expanded={open}
         className="flex items-center gap-2 px-4 sm:px-5 h-12 rounded-full bg-[#042C53] text-white text-[14px] font-semibold shadow-[0_18px_40px_-12px_rgba(4,44,83,0.55)] hover:bg-[#0A3D6E] focus:outline-none focus:ring-2 focus:ring-[#185FA5] focus:ring-offset-2 min-h-[44px]"
@@ -77,9 +81,9 @@ export default function TalkToHumanButton() {
           <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-70 animate-ping" />
           <span className="relative inline-flex w-2.5 h-2.5 rounded-full bg-emerald-400" />
         </span>
-        <span className="hidden sm:inline">Talk to a human</span>
-        <span className="sm:hidden">Talk to us</span>
+        <span>Talk to a human</span>
       </button>
+      <span hidden aria-hidden="true">{floaterOpen}</span>
     </div>
   );
 }

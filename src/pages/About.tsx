@@ -6,7 +6,7 @@ import BuiltInPublic from "@/components/BuiltInPublic";
 import ShipsCounter from "@/components/ShipsCounter";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
-const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
   return (
@@ -62,7 +62,7 @@ const About = () => {
           jobTitle: "Founder",
           url: "https://trainyouragent.com/about",
           sameAs: [
-            "https://www.linkedin.com/in/alexandermillsai",
+            "https://www.linkedin.com/in/agentmills/",
           ],
           worksFor: { "@id": "https://trainyouragent.com/#org" },
           address: {
@@ -178,11 +178,11 @@ const About = () => {
                 Alexander <em className="italic font-normal" style={{ color: "#185FA5" }}>Mills.</em>
               </h2>
               <div className="text-[#0B1B2B] text-[16.5px] leading-[1.7] space-y-4 mb-8">
-                <p>I'm the founder of TrainYourAgent, a Tampa-based AI company building voice and chat agents for service businesses.</p>
-                <p>My career spans operations, capital markets, and digital media. In Los Angeles I led social strategy at one of the world's largest social media marketing agencies, shipping work for global brands and household-name talent. I then founded EndCreations, an infrastructure company in the gaming industry, before turning full-time to applied AI.</p>
-                <p>Four years deep in the model shift — through every major release and tool stack — I build the systems I want to exist and ship them at operator speed. I run TrainYourAgent and a portfolio of related ventures from Tampa Bay.</p>
-                <p>Four years deep in AI — through every major model shift. I build the things I want to exist and ship them faster than anyone you've met. When you sign with TYA, you don't get an SDR or an account manager — you get me on discovery, scoping, and at every monthly check-in after.</p>
-                <p>DM the word <code className="font-mono text-[15px] bg-slate-100 px-2 py-0.5 rounded">AGENT</code> on LinkedIn for a live build walkthrough — I'll record one for you on the spot.</p>
+                <p>I'm the founder of TrainYourAgent — a Tampa-based AI company building the voice and chat agents that actually run service businesses.</p>
+                <p>Before AI, I built across categories most founders never touch: shipping social campaigns for global brands and household-name talent at one of the world's largest social media marketing agencies in Los Angeles, then founding EndCreations to build infrastructure for the gaming industry. The pattern: walk into industries the polished operators ignore, learn how the work actually gets done, and rebuild it.</p>
+                <p>I'm now four years deep in applied AI — through every model release, every tool shift, every capability jump — and I ship the same way I always have: faster than anyone you've met, with a thesis you can argue with.</p>
+                <p>That thesis: AI isn't a feature. It's the evolutionary step that takes humans out of cubicles. The next decade of business gets won by the operators who wire it into the work first. TrainYourAgent is the agency that wires it for them.</p>
+                <p>When you sign with TYA, you don't get an SDR or an account manager — you get me on discovery, scoping, and at every monthly check-in after. DM the word <code className="font-mono text-[15px] bg-slate-100 px-2 py-0.5 rounded">AGENT</code> on LinkedIn and I'll record a live build walkthrough for you on the spot.</p>
               </div>
               <div className="flex gap-3 flex-wrap">
                 <a href={CAL_URL} target="_blank" rel="noopener" className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] text-[15px] font-semibold text-white bg-[#185FA5] hover:bg-[#0C447C] transition rounded-full">Book 30 min with me →</a>

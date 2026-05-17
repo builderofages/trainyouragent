@@ -8,6 +8,8 @@ import ToastHost, { toast } from "@/components/Toast";
 import SiteNav from "@/components/SiteNav";
 import DashboardIllo from "@/components/illustrations/DashboardIllo";
 import { ogUrl } from "@/lib/og";
+// v53: visitor context for niche-aware recommendations
+import { useVisitor, nicheDisplayName } from "@/lib/visitorContext";
 
 // v48: vertical → recommended plan map for smart pricing.
 // Used when /pricing?for=<slug> is present.
@@ -31,7 +33,7 @@ const FOR_MAP: Record<string, { plan: "founders" | "operators" | "scale"; label:
 };
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
-const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
 const HERO_PHONE_DISPLAY = "Book a 15-min Zoom";
 const HERO_PHONE_TEL = "https://cal.com/trainyouragent/30min";
 
@@ -144,7 +146,9 @@ const Pricing = () => {
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchParams] = useSearchParams();
-  const forKey = (searchParams.get("for") || "").toLowerCase();
+  const { niche: visitorNiche } = useVisitor();
+  // v53: prefer ?for= query param, fall back to visitor-context niche.
+  const forKey = ((searchParams.get("for") || visitorNiche || "") as string).toLowerCase();
   const recommendation = useMemo(() => FOR_MAP[forKey] || null, [forKey]);
 
   useEffect(() => {

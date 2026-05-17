@@ -16,8 +16,32 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fireEvent } from "@/lib/event";
+import { useVisitor, type VisitorLane } from "@/lib/visitorContext";
+import { PLAYBOOK_SLUGS } from "@/lib/playbooks";
 
 const FORM_ENDPOINT = "/api/lead";
+
+// Map the NICHES `slug` (page route like "/hvac") to a playbook slug
+// ("hvac") so the visitor context system can pick it up. Anything that
+// isn't a real playbook just gets null and falls through to lane-only
+// personalization.
+const ROUTE_TO_PLAYBOOK: Record<string, string> = {
+  "/hvac": "hvac",
+  "/roofing": "roofing",
+  "/healthcare": "dental",          // closest playbook for medical/dental
+  "/legal": "law-firm",
+  "/real-estate": "real-estate",
+  "/restaurants": "restaurant",
+  "/automotive": "auto-repair",
+  "/gym": "fitness",
+  "/spas": "med-spa",
+};
+function playbookSlugFromRoute(route: string | undefined): string | null {
+  if (!route) return null;
+  if (ROUTE_TO_PLAYBOOK[route]) return ROUTE_TO_PLAYBOOK[route];
+  const cleaned = route.replace(/^\//, "");
+  return PLAYBOOK_SLUGS.includes(cleaned) ? cleaned : null;
+}
 
 /* ------------------------------------------------------------------ */
 /*  Prism Node Logo                                                   */
@@ -169,6 +193,7 @@ function routeFor(p: Pathway): string {
 /* ================================================================== */
 export default function Start() {
   const navigate = useNavigate();
+  const visitor = useVisitor();
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [pathway, setPathway] = useState<Pathway>({});
   const [email, setEmail] = useState("");
@@ -200,6 +225,12 @@ export default function Start() {
     const next = { ...pathway, lane, branch: undefined, branchSlug: undefined };
     setPathway(next);
     savePathway(next);
+    // v53: mirror into shared VisitorContext so other pages re-skin.
+    const visitorLane: VisitorLane =
+      lane === "smb" || lane === "startup" || lane === "agency" ? lane : null;
+    visitor.setLane(visitorLane);
+    // Wipe any previous niche when the lane changes — they may not be SMB anymore.
+    if (lane !== "smb") visitor.setNiche(null);
     setStep(2);
     void fireEvent("router_lane_chosen", { lane });
   };
@@ -208,6 +239,11 @@ export default function Start() {
     const next = { ...pathway, branch, branchSlug };
     setPathway(next);
     savePathway(next);
+    // v53: if this is an SMB niche pick and the slug maps to a real playbook,
+    // record it. Otherwise just clear any stale niche.
+    if (pathway.lane === "smb") {
+      visitor.setNiche(playbookSlugFromRoute(branchSlug));
+    }
     setStep(3);
   };
 

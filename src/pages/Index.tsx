@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
 import { injectJsonLdMany, organizationLd, personLd } from "@/lib/jsonld";
 import PathwayRouter from "@/components/PathwayRouter";
+// v53: visitor-context personalization — Home re-skins per niche/lane.
+import { useVisitor, nicheDisplayName } from "@/lib/visitorContext";
+import { getPlaybook } from "@/lib/playbooks";
 // v38: trust signals — testimonial wall, ship counter, built-in-public.
 import WallOfLove from "@/components/WallOfLove";
 import ShipsCounter from "@/components/ShipsCounter";
@@ -18,7 +21,7 @@ import NetworkIllo from "@/components/illustrations/NetworkIllo";
 import LeadMagnetForm from "@/components/LeadMagnetForm";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
-const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
+const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
   return (
@@ -80,6 +83,10 @@ function AnimatedStat({ value, suffix = "", prefix = "", label, decimals = 0 }: 
 }
 
 const Index = () => {
+  const { niche } = useVisitor();
+  const playbook = niche ? getPlaybook(niche) : undefined;
+  const nicheName = playbook ? playbook.displayName : nicheDisplayName(niche);
+
   useEffect(() => {
     fireSiteVisitOnce();
     if (typeof document === "undefined") return;
@@ -160,8 +167,26 @@ const Index = () => {
               The AI that's <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>actually running</span> your business by morning.
             </h1>
             <p className="mt-7 text-[18px] sm:text-[20px] text-slate-700 leading-relaxed max-w-2xl">
-              Voice agents, lead gen, creative, infrastructure — built by operators who've shipped 300+ projects across four years in AI. <span className="text-[#042C53] font-medium">$20K+/mo recurring</span> from SMBs and startups already running on us.
+              {playbook ? (
+                <>
+                  AI voice and chat agents for <span className="text-[#042C53] font-medium">{nicheName} operators</span> — built by people who've shipped 300+ projects across four years in AI. <span className="text-[#042C53] font-medium">$20K+/mo recurring</span> from SMBs already running on us.
+                </>
+              ) : (
+                <>
+                  Voice agents, lead gen, creative, infrastructure — built by operators who've shipped 300+ projects across four years in AI. <span className="text-[#042C53] font-medium">$20K+/mo recurring</span> from SMBs and startups already running on us.
+                </>
+              )}
             </p>
+            {playbook && (
+              <div className="mt-6">
+                <Link
+                  to={`/playbooks/${playbook.slug}`}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#042C53] text-white text-[13px] font-semibold hover:bg-[#0A3D6E] shadow"
+                >
+                  Built for {nicheName} → see the playbook
+                </Link>
+              </div>
+            )}
             {/* v38: live ship-counter — pulls commit count from GitHub */}
             <div className="mt-5">
               <ShipsCounter variant="hero" />
@@ -251,6 +276,89 @@ const Index = () => {
       </section>
 
       <SectionDivider />
+
+      {/* v53: NICHE STATS — only renders when a niche is set in VisitorContext */}
+      {playbook && (
+        <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-b border-slate-200/70">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">
+              {nicheName} · industry signal
+            </div>
+            <h2 className="text-[28px] sm:text-[40px] leading-tight font-semibold text-[#042C53] mb-8 max-w-3xl">
+              Three numbers that explain why your phones are the bottleneck.
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {playbook.stats.slice(0, 3).map((s, i) => (
+                <div key={i} className="rounded-2xl bg-white border border-slate-200 p-5">
+                  <div className="text-[14px] text-slate-700 leading-relaxed">{s.label}</div>
+                  <div className="mt-3 text-[11px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold">
+                    Source · {s.source}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* v53: HELL → HEAVEN — niche-specific pain vs outcome */}
+      {playbook && (
+        <section className="px-5 sm:px-8 py-20 bg-white border-b border-slate-200/70">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">
+              {nicheName} · before vs after
+            </div>
+            <h2 className="text-[32px] sm:text-[48px] leading-[1.04] tracking-tight font-semibold text-[#042C53] mb-10 max-w-4xl">
+              From the hell most {nicheName.toLowerCase()} shops are stuck in{" "}
+              <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
+                to the heaven a built agent puts you in.
+              </span>
+            </h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="rounded-3xl bg-slate-50 border border-slate-200 p-7">
+                <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500 font-semibold mb-4">
+                  Today (the hell)
+                </div>
+                <ul className="space-y-4">
+                  {playbook.comparison.slice(0, 4).map((c, i) => (
+                    <li key={i} className="flex gap-3 text-[14px] text-slate-700 leading-relaxed">
+                      <span aria-hidden="true" className="flex-shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-slate-400" />
+                      <span><span className="font-semibold text-slate-800">{c.row}:</span> {c.without}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="rounded-3xl bg-[#042C53] text-white p-7 shadow-[0_30px_80px_-20px_rgba(4,44,83,0.45)]">
+                <div className="text-[11px] uppercase tracking-[0.16em] text-[#9CC4EC] font-semibold mb-4">
+                  With a TrainYourAgent build (the heaven)
+                </div>
+                <ul className="space-y-4">
+                  {playbook.comparison.slice(0, 4).map((c, i) => (
+                    <li key={i} className="flex gap-3 text-[14px] leading-relaxed text-white/90">
+                      <span aria-hidden="true" className="flex-shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      <span><span className="font-semibold text-white">{c.row}:</span> {c.withTya}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-7 pt-5 border-t border-white/15 flex flex-col sm:flex-row gap-3">
+                  <Link
+                    to={`/playbooks/${playbook.slug}`}
+                    className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white text-[#042C53] text-[13px] font-semibold hover:bg-slate-100"
+                  >
+                    Read the {nicheName} playbook →
+                  </Link>
+                  <Link
+                    to={`/book?utm_source=context&utm_campaign=${playbook.slug}`}
+                    className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white/10 border border-white/20 text-white text-[13px] font-semibold hover:bg-white/15"
+                  >
+                    Talk to a {nicheName} AI builder →
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* v38: WALL OF LOVE — sits between proof strip and Capabilities */}
       <WallOfLove
@@ -364,9 +472,11 @@ const Index = () => {
               Built by someone who's <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>been shipping for a decade.</span>
             </h2>
             <div className="text-[16px] text-slate-700 leading-[1.75] space-y-4">
-              <p>Alexander Mills is the founder of TrainYourAgent, a Tampa-based AI company building voice and chat agents for service businesses.</p>
-              <p>His career spans operations, capital markets, and digital media — from leading social strategy at one of the world's largest social media marketing agencies in Los Angeles, where his team shipped for global brands and household-name talent, to founding EndCreations, an infrastructure company in the gaming industry.</p>
-              <p>Four years deep in applied AI — through every major model release, every tool stack, every shift in capability — he builds the systems he wants to exist and ships them at operator speed. He runs TrainYourAgent and a portfolio of related ventures from Tampa Bay.</p>
+              <p>Alexander Mills is the founder of TrainYourAgent — a Tampa-based AI company building the voice and chat agents that actually run service businesses.</p>
+              <p>Before AI, Alexander built across categories most founders never touch: shipping social campaigns for global brands and household-name talent at one of the world's largest social media marketing agencies in Los Angeles, then founding EndCreations to build infrastructure for the gaming industry. The pattern: walk into industries the polished operators ignore, learn how the work actually gets done, and rebuild it.</p>
+              <p>He's now four years deep in applied AI — through every model release, every tool shift, every capability jump — and ships the same way he always has: faster than anyone you've met, with a thesis you can argue with.</p>
+              <p>That thesis: AI isn't a feature. It's the evolutionary step that takes humans out of cubicles. The next decade of business gets won by the operators who wire it into the work first. TrainYourAgent is the agency that wires it for them.</p>
+              <p>Alexander runs TrainYourAgent and a portfolio of related ventures from Tampa Bay, Florida.</p>
             </div>
           </div>
         </div>
@@ -447,7 +557,12 @@ const Index = () => {
           </p>
           <div className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
             <Link to="/voice-demo" className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 transition shadow-lg">Talk to our AI agent (live, in your browser) →</Link>
-            <a href={CAL_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition">Book a 30-min build call</a>
+            <Link
+              to={playbook ? `/book?utm_source=context&utm_campaign=${playbook.slug}` : "/book"}
+              className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition"
+            >
+              {playbook ? `Talk to a ${nicheName} AI builder` : "Book a 30-min build call"}
+            </Link>
             <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition">Or DM AGENT on LinkedIn</a>
           </div>
         </div>

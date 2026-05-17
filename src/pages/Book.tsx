@@ -10,6 +10,9 @@ import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
 import CalEmbed from "@/components/CalEmbed";
 import { ogUrl, injectOgMeta } from "@/lib/og";
+// v53: niche-aware booking copy
+import { useVisitor } from "@/lib/visitorContext";
+import { getPlaybook } from "@/lib/playbooks";
 
 const SITE_URL = "https://trainyouragent.com";
 
@@ -44,6 +47,14 @@ const PROMISES = [
 ];
 
 export default function Book() {
+  const { niche } = useVisitor();
+  const playbook = niche ? getPlaybook(niche) : undefined;
+  const nicheName = playbook?.displayName || "";
+  // 3 niche-specific Day-1 promises pulled from the playbook comparison rows.
+  const nichePromises = playbook
+    ? playbook.comparison.slice(0, 3).map((c) => `${c.row}: ${c.withTya}`)
+    : null;
+
   useEffect(() => {
     const url = `${SITE_URL}/book`;
     injectOgMeta({
@@ -89,23 +100,29 @@ export default function Book() {
           {/* HERO */}
           <section className="text-center mb-10">
             <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">
-              Book a call
+              {playbook ? `Book a ${nicheName} build call` : "Book a call"}
             </div>
             <h1 className="text-[40px] sm:text-[60px] leading-[1.04] tracking-tight font-semibold text-[#042C53] max-w-4xl mx-auto">
-              Pick a 30-min slot —{" "}
-              <span
-                style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontStyle: "italic",
-                  fontWeight: 500,
-                }}
-              >
-                Tampa Bay or Zoom.
-              </span>
+              {playbook ? (
+                <>
+                  Book your {nicheName} build call —{" "}
+                  <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
+                    Tampa Bay or Zoom.
+                  </span>
+                </>
+              ) : (
+                <>
+                  Pick a 30-min slot —{" "}
+                  <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
+                    Tampa Bay or Zoom.
+                  </span>
+                </>
+              )}
             </h1>
             <p className="mt-5 text-[17px] sm:text-[19px] text-slate-700 max-w-2xl mx-auto leading-relaxed">
-              You walk through your call patterns with a real builder, not an SDR.
-              Pricing on the call, written scope in your inbox the same day.
+              {playbook
+                ? `30 minutes with a real builder who's shipped agents for ${nicheName.toLowerCase()} shops before. Pricing on the call, written scope in your inbox the same day.`
+                : "You walk through your call patterns with a real builder, not an SDR. Pricing on the call, written scope in your inbox the same day."}
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-2">
               {TRUST_PILLS.map((t) => (
@@ -135,7 +152,7 @@ export default function Book() {
                 What you can hold us to from the first call.
               </h2>
               <ul className="space-y-4">
-                {PROMISES.map((p, i) => (
+                {(nichePromises || PROMISES).map((p, i) => (
                   <li key={i} className="flex gap-3 text-[14.5px] leading-snug text-white/90">
                     <span
                       aria-hidden="true"

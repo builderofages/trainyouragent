@@ -19,6 +19,10 @@ import LiveActivity from "@/components/LiveActivity";
 import LiveActivityTicker from "@/components/LiveActivityTicker";
 import PageTransition from "@/components/PageTransition";
 import TalkToHumanButton from "@/components/TalkToHumanButton";
+// v53: shared floating-widget mutex + visitor personalization context
+import { FloatersProvider } from "@/lib/floaters";
+import { VisitorProvider } from "@/lib/visitorContext";
+import ContextPill from "@/components/ContextPill";
 
 // v41: everything else is lazy-loaded to keep main entry chunk small.
 const Dashboard           = lazy(() => import("./pages/Dashboard"));
@@ -166,6 +170,9 @@ const App = () => {
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <VisitorProvider>
+        <FloatersProvider>
+        <ContextPill />
         <Suspense fallback={<RouteFallback />}>
           <PageTransition>
           <Routes>
@@ -307,6 +314,8 @@ const App = () => {
         <LiveActivity />
         <LiveActivityTicker />
         <TalkToHumanButton />
+        </FloatersProvider>
+        </VisitorProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
