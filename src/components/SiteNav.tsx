@@ -94,7 +94,7 @@ const RESOURCES: LinkItem[] = [
 type DropdownKey = "solutions" | "industries" | "resources" | null;
 
 export type SiteNavProps = {
-  active?: "solutions" | "industries" | "resources" | "pricing" | "about" | "trial" | "comparisons";
+  active?: "solutions" | "industries" | "resources" | "pricing" | "about" | "trial" | "comparisons" | "playbooks";
 };
 
 export default function SiteNav({ active }: SiteNavProps) {
@@ -178,6 +178,16 @@ export default function SiteNav({ active }: SiteNavProps) {
               items={INDUSTRIES}
               columns={2}
             />
+            {/* v51B: niche playbook system, surfaced top-level */}
+            <Link
+              to="/playbooks"
+              className={`hover:text-[#042C53] inline-flex items-center gap-1.5 ${active === "playbooks" ? "text-[#042C53] font-semibold" : ""}`}
+            >
+              Playbooks
+              <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[10px] uppercase tracking-[0.1em] font-semibold">
+                New
+              </span>
+            </Link>
             {/* Resources */}
             <DesktopDropdown
               label="Resources"
@@ -273,6 +283,16 @@ export default function SiteNav({ active }: SiteNavProps) {
                 items={RESOURCES}
                 onNavigate={() => setMobileOpen(false)}
               />
+              <Link
+                to="/playbooks"
+                onClick={() => setMobileOpen(false)}
+                className="px-3 py-3 rounded-lg text-[#042C53] font-medium hover:bg-[#F6FAFE] inline-flex items-center gap-2"
+              >
+                Playbooks
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[10px] uppercase tracking-[0.1em] font-semibold">
+                  New
+                </span>
+              </Link>
               <Link
                 to="/pricing"
                 onClick={() => setMobileOpen(false)}

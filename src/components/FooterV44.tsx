@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 const PRODUCT = [
   { label: "Solutions", to: "/solutions" },
+  { label: "Playbooks (15 niches)", to: "/playbooks" },
   { label: "Pricing", to: "/pricing" },
   { label: "Trial", to: "/trial" },
   { label: "Integrations", to: "/integrations" },

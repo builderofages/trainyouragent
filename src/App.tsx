@@ -122,6 +122,10 @@ const AffiliateProgramPage = lazy(() => import("./pages/AffiliateProgramPage"));
 const Portal               = lazy(() => import("./pages/Portal"));
 const Roadmap              = lazy(() => import("./pages/Roadmap"));
 
+// v51B: niche playbook system — /playbooks hub + /playbooks/:slug (15 niches)
+const PlaybooksIndex       = lazy(() => import("./pages/PlaybooksIndex"));
+const PlaybookPage         = lazy(() => import("./pages/PlaybookPage"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -265,6 +269,9 @@ const App = () => {
             {/* v50A: customer portal + public roadmap */}
             <Route path="/portal" element={<Portal />} />
             <Route path="/roadmap" element={<Roadmap />} />
+            {/* v51B: niche playbook system — /playbooks hub + 15 niche playbooks */}
+            <Route path="/playbooks" element={<PlaybooksIndex />} />
+            <Route path="/playbooks/:slug" element={<PlaybookPage />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />

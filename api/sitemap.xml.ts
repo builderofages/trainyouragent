@@ -80,6 +80,9 @@ const STATIC_PAGES: { path: string; priority: number; changefreq: string }[] = [
   // v49: existing pages that were never in the sitemap — add them now
   { path: "/book",                      priority: 0.85, changefreq: "monthly" },
   { path: "/dashboard",                 priority: 0.4,  changefreq: "weekly"  },
+  { path: "/onboarding",                priority: 0.55, changefreq: "monthly" },
+  { path: "/portal",                    priority: 0.6,  changefreq: "monthly" },
+  { path: "/roadmap",                   priority: 0.7,  changefreq: "weekly"  },
   // Legal (low priority)
   { path: "/privacy",                   priority: 0.5,  changefreq: "yearly"  },
   { path: "/terms",                     priority: 0.5,  changefreq: "yearly"  },
@@ -218,6 +221,13 @@ const LOCAL_CITIES = [
 ];
 const LOCAL_VERTICALS = ["voice-agents","chat-agents","ai-receptionist","ai-sales-agent"];
 
+// ---- v51B: PLAYBOOKS /playbooks/{niche} (15 niche playbooks + index) ------
+const PLAYBOOK_NICHES = [
+  "hvac","roofing","plumbing","electrical","landscaping",
+  "dental","med-spa","law-firm","real-estate","property-management",
+  "restaurant","auto-repair","insurance","fitness","pest-control",
+];
+
 
 function urlNode(loc: string, priority: number, changefreq: string, lastmod: string): string {
   return `  <url><loc>${SITE}${loc}</loc><lastmod>${lastmod}</lastmod><changefreq>${changefreq}</changefreq><priority>${priority.toFixed(2)}</priority></url>`;
@@ -277,6 +287,12 @@ export default async function handler(_req: Request): Promise<Response> {
   // v49: 12 docs
   for (const slug of DOC_SLUGS) {
     lines.push(urlNode(`/docs/${slug}`, 0.7, "monthly", today));
+  }
+
+  // v51B: /playbooks hub + 15 niche playbook URLs
+  lines.push(urlNode(`/playbooks`, 0.9, "weekly", today));
+  for (const niche of PLAYBOOK_NICHES) {
+    lines.push(urlNode(`/playbooks/${niche}`, 0.85, "monthly", today));
   }
 
   const xml =
