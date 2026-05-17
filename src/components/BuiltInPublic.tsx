@@ -131,7 +131,7 @@ export default function BuiltInPublic({
         <h2 className="text-[26px] sm:text-[36px] leading-tight font-semibold text-[#042C53] mb-2">
           {title}
         </h2>
-        <p className="text-[14px] text-slate-500 mb-8">
+        <p className="text-[14px] text-slate-600 mb-8">
           Every ship is pushed to{" "}
           <a
             href="https://github.com/builderofages/trainyouragent"
@@ -145,10 +145,10 @@ export default function BuiltInPublic({
         </p>
 
         {loading && list.length === 0 && (
-          <div className="text-[13px] text-slate-500">Loading ship log…</div>
+          <div className="text-[13px] text-slate-600">Loading ship log…</div>
         )}
         {!loading && error && list.length === 0 && (
-          <div className="text-[13px] text-slate-500">
+          <div className="text-[13px] text-slate-600">
             Couldn't reach GitHub right now — the ship log will reload on the next try.
           </div>
         )}

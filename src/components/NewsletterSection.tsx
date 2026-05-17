@@ -93,7 +93,7 @@ const NewsletterSection = () => {
                   </span>
                 </h2>
                 <p className="text-lg md:text-xl text-muted-foreground">
-                  Get exclusive insights, case studies, and early access to revolutionary AI features
+                  Get exclusive insights, case studies, and early access to early access to new features
                 </p>
               </motion.div>
 

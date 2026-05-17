@@ -208,7 +208,7 @@ const Team = () => {
                 <div className="text-[16px] font-semibold text-[#042C53] mb-1">
                   {j.role}
                 </div>
-                <div className="text-[12px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-2">
+                <div className="text-[12px] uppercase tracking-[0.14em] text-slate-600 font-semibold mb-2">
                   {j.loc}
                 </div>
                 <div className="text-[13px] text-slate-700">{j.stack}</div>
@@ -256,7 +256,7 @@ const Team = () => {
       </section>
 
       <footer className="bg-white border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-600">
           <div className="flex items-center gap-2.5">
             <BrainLogo size={28} />
             <span className="font-semibold text-[#042C53]">TrainYourAgent</span>

@@ -316,15 +316,15 @@ const Pricing = () => {
               <div className={`grid grid-cols-3 gap-3 mb-8 pb-6 border-b ${p.accent ? "border-white/15" : "border-slate-200"}`}>
                 <div>
                   <div className={`text-[24px] font-semibold tracking-tight ${p.accent ? "text-white" : "text-[#042C53]"}`}>{p.upfront}</div>
-                  <div className={`text-[11px] mt-1 ${p.accent ? "text-white/65" : "text-slate-500"}`}>{p.upfrontNote}</div>
+                  <div className={`text-[11px] mt-1 ${p.accent ? "text-white/65" : "text-slate-600"}`}>{p.upfrontNote}</div>
                 </div>
                 <div>
                   <div className={`text-[24px] font-semibold tracking-tight ${p.accent ? "text-white" : "text-[#042C53]"}`}>{p.monthly}</div>
-                  <div className={`text-[11px] mt-1 ${p.accent ? "text-white/65" : "text-slate-500"}`}>{p.monthlyUnit}</div>
+                  <div className={`text-[11px] mt-1 ${p.accent ? "text-white/65" : "text-slate-600"}`}>{p.monthlyUnit}</div>
                 </div>
                 <div>
                   <div className={`text-[24px] font-semibold tracking-tight ${p.accent ? "text-white" : "text-[#042C53]"}`}>{p.booking}</div>
-                  <div className={`text-[11px] mt-1 ${p.accent ? "text-white/65" : "text-slate-500"}`}>{p.bookingNote}</div>
+                  <div className={`text-[11px] mt-1 ${p.accent ? "text-white/65" : "text-slate-600"}`}>{p.bookingNote}</div>
                 </div>
               </div>
 

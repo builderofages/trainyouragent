@@ -157,7 +157,7 @@ export default function Roadmap() {
             <div key={col.id} className="rounded-2xl border border-slate-200 bg-white p-5">
               <div className="mb-4">
                 <h2 className="text-[18px] font-semibold text-[#042C53]">{col.title}</h2>
-                <p className="text-[12px] text-slate-500 mt-1">{col.subtitle}</p>
+                <p className="text-[12px] text-slate-600 mt-1">{col.subtitle}</p>
                 <div className="mt-2 text-[11px] uppercase tracking-[0.14em] text-slate-400 font-semibold">{byColumn[col.id].length} item{byColumn[col.id].length === 1 ? "" : "s"}</div>
               </div>
               <div className="space-y-3">
@@ -200,19 +200,19 @@ export default function Roadmap() {
           <p className="text-[14px] text-slate-600 mb-6">Missing from the list? Tell us. We read every one and reply if it's a fit.</p>
           <form onSubmit={submitSuggestion} className="rounded-2xl border border-slate-200 p-6 space-y-4 bg-[#E6F1FB]/20">
             <label className="block">
-              <span className="text-[12px] uppercase tracking-[0.14em] text-slate-500 font-semibold">Title</span>
+              <span className="text-[12px] uppercase tracking-[0.14em] text-slate-600 font-semibold">Title</span>
               <input type="text" required value={suggestion.title} onChange={(e) => setSuggestion((s) => ({ ...s, title: e.target.value }))} placeholder="Short, action-oriented (e.g. 'Native Salesforce sync')" className="mt-2 w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-[#185FA5] focus:outline-none text-[14px]" />
             </label>
             <label className="block">
-              <span className="text-[12px] uppercase tracking-[0.14em] text-slate-500 font-semibold">Description</span>
+              <span className="text-[12px] uppercase tracking-[0.14em] text-slate-600 font-semibold">Description</span>
               <textarea value={suggestion.description} onChange={(e) => setSuggestion((s) => ({ ...s, description: e.target.value }))} placeholder="What problem does it solve? Who needs it?" rows={4} className="mt-2 w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-[#185FA5] focus:outline-none text-[14px]" />
             </label>
             <label className="block">
-              <span className="text-[12px] uppercase tracking-[0.14em] text-slate-500 font-semibold">Your email</span>
+              <span className="text-[12px] uppercase tracking-[0.14em] text-slate-600 font-semibold">Your email</span>
               <input type="email" required value={suggestion.email} onChange={(e) => setSuggestion((s) => ({ ...s, email: e.target.value }))} placeholder="you@company.com" className="mt-2 w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-[#185FA5] focus:outline-none text-[14px]" />
             </label>
             <div className="flex items-center justify-between">
-              <span className="text-[12px] text-slate-500">We'll reply if it's a fit. No mailing list.</span>
+              <span className="text-[12px] text-slate-600">We'll reply if it's a fit. No mailing list.</span>
               <button type="submit" disabled={suggestState === "sending"} className="px-5 py-2.5 rounded-xl bg-[#042C53] text-white font-semibold hover:bg-[#0A3D6E] disabled:opacity-60">
                 {suggestState === "sending" ? "Sending..." : suggestState === "sent" ? "Thanks — we'll be in touch" : "Send suggestion"}
               </button>
@@ -223,7 +223,7 @@ export default function Roadmap() {
       </section>
 
       <footer className="bg-white border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-600">
           <div className="flex items-center gap-2.5"><BrainLogo size={28} /><span className="font-semibold text-[#042C53]">TrainYourAgent</span></div>
           <div className="flex items-center gap-6">
             <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>

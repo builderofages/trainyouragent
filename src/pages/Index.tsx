@@ -379,7 +379,7 @@ const Index = () => {
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#185FA5] to-[#042C53] flex-shrink-0" aria-hidden="true" />
             <div>
               <div className="text-[15px] font-semibold text-[#042C53]">Alexander Mills</div>
-              <div className="text-[12px] text-slate-500 tracking-wide">Founder · TrainYourAgent · Tampa Bay, FL</div>
+              <div className="text-[12px] text-slate-600 tracking-wide">Founder · TrainYourAgent · Tampa Bay, FL</div>
             </div>
           </div>
         </div>

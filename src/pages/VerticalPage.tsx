@@ -707,7 +707,7 @@ const VerticalPage = () => {
                 >
                   "{rc.caseStudy}"
                 </blockquote>
-                <div className="mt-5 text-[12px] text-slate-500 tracking-[0.12em] uppercase">
+                <div className="mt-5 text-[12px] text-slate-600 tracking-[0.12em] uppercase">
                   Production deployment · {config.label}
                 </div>
               </div>
@@ -777,7 +777,7 @@ const VerticalPage = () => {
       </section>
 
       <footer className="bg-white border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-600">
           <div className="flex items-center gap-2.5">
             <BrainLogo size={28} />
             <span className="font-semibold text-[#042C53]">TrainYourAgent</span>

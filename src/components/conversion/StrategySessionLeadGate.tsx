@@ -258,7 +258,7 @@ export const StrategySessionLeadGate = ({
       return `${industryData.displayName} businesses lose ${industryData.afterHoursImportance} after-hours. AI can be live in ${industryData.setupTime} and starts capturing every call immediately.`;
     }
     
-    return `AI can be deployed in ${industryData.setupTime} for ${industryData.displayName}, with ${industryData.nativeCRMIntegrations} for seamless data flow.`;
+    return `AI can be deployed in ${industryData.setupTime} for ${industryData.displayName}, with ${industryData.nativeCRMIntegrations} for clean data flow.`;
   };
 
   const getTimelineInsight = (timeline: string): string => {

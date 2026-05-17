@@ -173,7 +173,7 @@ export const commonFAQs = {
     },
     {
       question: "Does the AI integrate with gym management software?",
-      answer: "Yes, we integrate with major gym software including Mindbody, Glofox, Zen Planner, and ClubReady for seamless member management and booking.",
+      answer: "Yes, we integrate with major gym software including Mindbody, Glofox, Zen Planner, and ClubReady for synced member management and booking.",
     },
   ],
 };

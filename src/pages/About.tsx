@@ -221,7 +221,7 @@ const About = () => {
             <BrainLogo size={36} />
             <div>
               <div className="text-[15px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</div>
-              <div className="text-slate-500 text-[12px]">AI that thinks like your business. Tampa Bay, FL.</div>
+              <div className="text-slate-600 text-[12px]">AI that thinks like your business. Tampa Bay, FL.</div>
             </div>
           </Link>
           <div className="flex gap-6 text-[13px] text-slate-600 flex-wrap">

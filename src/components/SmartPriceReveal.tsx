@@ -106,12 +106,12 @@ export default function SmartPriceReveal() {
           </div>
           <div className="grid sm:grid-cols-2 gap-4 mb-4">
             <div>
-              <div className="text-[11px] uppercase tracking-wider text-slate-500 mb-1">Build fee (one time)</div>
+              <div className="text-[11px] uppercase tracking-wider text-slate-600 mb-1">Build fee (one time)</div>
               <div className="text-[28px] font-semibold" style={{ color: NAVY }}>${price.build.toLocaleString()}</div>
             </div>
             <div>
-              <div className="text-[11px] uppercase tracking-wider text-slate-500 mb-1">Monthly retainer</div>
-              <div className="text-[28px] font-semibold" style={{ color: NAVY }}>${price.retainer.toLocaleString()}<span className="text-[14px] font-normal text-slate-500">/mo</span></div>
+              <div className="text-[11px] uppercase tracking-wider text-slate-600 mb-1">Monthly retainer</div>
+              <div className="text-[28px] font-semibold" style={{ color: NAVY }}>${price.retainer.toLocaleString()}<span className="text-[14px] font-normal text-slate-600">/mo</span></div>
             </div>
           </div>
           <div className="text-[13px] text-slate-600 leading-relaxed">

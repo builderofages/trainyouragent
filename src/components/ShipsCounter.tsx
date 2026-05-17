@@ -120,7 +120,7 @@ export default function ShipsCounter({
 
   const isHero = variant === "hero";
   const numberColor = isHero ? "#042C53" : "#FFFFFF";
-  const labelColor = isHero ? "text-slate-500" : "text-white/70";
+  const labelColor = isHero ? "text-slate-600" : "text-white/70";
   const tickColor = isHero ? "bg-[#22A36C]" : "bg-[#22A36C]";
 
   return (

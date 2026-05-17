@@ -76,6 +76,14 @@ export default function Portal() {
       document.head.appendChild(l);
     }
     document.title = token ? `Portal — ${customerName} · TrainYourAgent` : "Customer portal — TrainYourAgent";
+    // v51c: portal is private — noindex
+    let robots = document.querySelector("meta[name='robots']") as HTMLMetaElement | null;
+    if (!robots) { robots = document.createElement("meta"); robots.setAttribute("name", "robots"); document.head.appendChild(robots); }
+    robots.setAttribute("content", "noindex, nofollow, noarchive");
+    return () => {
+      const r = document.querySelector("meta[name='robots']") as HTMLMetaElement | null;
+      if (r) r.setAttribute("content", "index, follow, max-image-preview:large, max-snippet:-1");
+    };
   }, [token, customerName]);
   useEffect(() => { const f = () => setNavScrolled(window.scrollY > 20); window.addEventListener("scroll", f); return () => window.removeEventListener("scroll", f); }, []);
 
@@ -134,7 +142,7 @@ export default function Portal() {
             <p className="mt-4 text-[15px] text-slate-600">We'll email you a one-time sign-in link. No password to remember.</p>
             <form onSubmit={sendMagicLink} className="mt-8 space-y-4">
               <label className="block">
-                <span className="text-[12px] uppercase tracking-[0.14em] text-slate-500 font-semibold">Work email</span>
+                <span className="text-[12px] uppercase tracking-[0.14em] text-slate-600 font-semibold">Work email</span>
                 <input type="email" required value={signinEmail} onChange={(e) => setSigninEmail(e.target.value)} placeholder="you@company.com" className="mt-2 w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-[#185FA5] focus:outline-none text-[15px]" />
               </label>
               <button type="submit" disabled={signinState === "sending"} className="w-full px-5 py-3 rounded-xl bg-[#042C53] text-white font-semibold hover:bg-[#0A3D6E] disabled:opacity-60">
@@ -142,7 +150,7 @@ export default function Portal() {
               </button>
               {signinState === "error" && <div className="text-[13px] text-rose-600">Something went wrong — try again or email support@trainyouragent.com.</div>}
             </form>
-            <div className="mt-8 text-[13px] text-slate-500">
+            <div className="mt-8 text-[13px] text-slate-600">
               Don't have an account yet? <Link to="/pricing" className="text-[#185FA5] underline">See pricing</Link> or <a href={CAL_URL} target="_blank" rel="noopener" className="text-[#185FA5] underline">book a call</a>.
             </div>
             <div className="mt-10 p-4 rounded-xl bg-amber-50 border border-amber-200 text-[13px] text-amber-900">
@@ -180,7 +188,7 @@ export default function Portal() {
                 <div className="text-[15px] font-semibold text-[#042C53] mb-3 leading-snug">{b.name}</div>
                 <div className="flex items-center justify-between text-[12px]">
                   <span className={`px-2.5 py-0.5 rounded-full border font-semibold ${STATUS_PILL[b.status]}`}>{b.status}</span>
-                  <span className="text-slate-500">{b.updatedAt}</span>
+                  <span className="text-slate-600">{b.updatedAt}</span>
                 </div>
                 <a href="#" className="mt-4 inline-block text-[13px] text-[#185FA5] hover:underline">View progress &rarr;</a>
               </div>
@@ -205,7 +213,7 @@ export default function Portal() {
               <tbody>
                 {DEMO_ACTIVITY.map((a, i) => (
                   <tr key={i} className="border-t border-slate-100 hover:bg-[#E6F1FB]/40">
-                    <td className="px-4 py-3 text-slate-500">{a.when}</td>
+                    <td className="px-4 py-3 text-slate-600">{a.when}</td>
                     <td className="px-4 py-3">
                       <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold uppercase tracking-wide ${a.channel === "voice" ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800"}`}>{a.channel}</span>
                     </td>
@@ -283,11 +291,11 @@ export default function Portal() {
           <h2 className="text-[20px] font-semibold text-[#042C53] mb-4">Update preferences</h2>
           <form onSubmit={savePrefs} className="rounded-2xl border border-slate-200 p-6 grid md:grid-cols-2 gap-6">
             <label className="block">
-              <span className="text-[12px] uppercase tracking-[0.14em] text-slate-500 font-semibold">Email on file</span>
+              <span className="text-[12px] uppercase tracking-[0.14em] text-slate-600 font-semibold">Email on file</span>
               <input type="email" required value={prefsEmail} onChange={(e) => setPrefsEmail(e.target.value)} placeholder="you@company.com" className="mt-2 w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-[#185FA5] focus:outline-none text-[14px]" />
             </label>
             <label className="block">
-              <span className="text-[12px] uppercase tracking-[0.14em] text-slate-500 font-semibold">Email digest frequency</span>
+              <span className="text-[12px] uppercase tracking-[0.14em] text-slate-600 font-semibold">Email digest frequency</span>
               <select value={prefsFreq} onChange={(e) => setPrefsFreq(e.target.value)} className="mt-2 w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-[#185FA5] focus:outline-none text-[14px] bg-white">
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
@@ -304,7 +312,7 @@ export default function Portal() {
               <span>Receive security alerts at this email (new sign-ins, key rotations, integration changes)</span>
             </label>
             <div className="md:col-span-2 flex items-center justify-between">
-              <span className="text-[12px] text-slate-500">We never sell your email. <Link to="/privacy" className="underline">Privacy policy</Link>.</span>
+              <span className="text-[12px] text-slate-600">We never sell your email. <Link to="/privacy" className="underline">Privacy policy</Link>.</span>
               <button type="submit" disabled={prefsState === "sending"} className="px-5 py-2.5 rounded-xl bg-[#042C53] text-white font-semibold hover:bg-[#0A3D6E] disabled:opacity-60">
                 {prefsState === "sending" ? "Saving..." : prefsState === "saved" ? "Saved" : "Save preferences"}
               </button>
@@ -315,7 +323,7 @@ export default function Portal() {
       </section>
 
       <footer className="bg-white border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-600">
           <div className="flex items-center gap-2.5"><BrainLogo size={28} /><span className="font-semibold text-[#042C53]">TrainYourAgent</span></div>
           <div className="flex items-center gap-6">
             <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>

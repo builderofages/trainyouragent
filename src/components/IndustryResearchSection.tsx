@@ -135,7 +135,7 @@ const IndustryResearchSection = () => {
             <span className="text-gradient">Leading Research</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Our solutions are informed by the latest industry studies and research from world-class institutions
+            Our solutions are informed by the latest industry studies and research from leading institutions
           </p>
         </motion.div>
 

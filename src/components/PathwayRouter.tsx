@@ -268,14 +268,14 @@ export default function PathwayRouter({ className = "" }: { className?: string }
           {step > 1 && step < 4 ? (
             <button
               onClick={goBack}
-              className="text-[10px] uppercase tracking-[0.18em] text-slate-500 hover:text-[#042C53]"
+              className="text-[10px] uppercase tracking-[0.18em] text-slate-600 hover:text-[#042C53]"
             >
               ← Back
             </button>
           ) : (
             <Link
               to="/start"
-              className="text-[10px] uppercase tracking-[0.18em] text-slate-500 hover:text-[#042C53]"
+              className="text-[10px] uppercase tracking-[0.18em] text-slate-600 hover:text-[#042C53]"
             >
               Open full →
             </Link>
@@ -407,7 +407,7 @@ export default function PathwayRouter({ className = "" }: { className?: string }
                 Couldn't reach the server — sending you to your plan anyway.
               </div>
             )}
-            <div className="mt-2 text-[10px] text-slate-500">
+            <div className="mt-2 text-[10px] text-slate-600">
               No spam. One-click unsubscribe.
             </div>
           </Fade>

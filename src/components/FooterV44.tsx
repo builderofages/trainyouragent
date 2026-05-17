@@ -54,6 +54,8 @@ const CONNECT = [
   { label: "Status", to: "/status" },
   { label: "Community", to: "/community" },
   { label: "Partners", to: "/partners" },
+  { label: "Roadmap", to: "/roadmap" },
+  { label: "Customer portal", to: "/portal" },
 ];
 
 function PrismMark({ size = 32 }: { size?: number }) {

@@ -212,7 +212,7 @@ function DocsIndex() {
                   <li key={d.slug}>
                     <Link to={`/docs/${d.slug}`} className="group block">
                       <div className="text-[16px] font-semibold text-[#042C53] group-hover:text-[#185FA5] transition-colors">{d.title}</div>
-                      <div className="text-[13px] text-slate-500 leading-snug mt-0.5">{d.summary}</div>
+                      <div className="text-[13px] text-slate-600 leading-snug mt-0.5">{d.summary}</div>
                     </Link>
                   </li>
                 ))}

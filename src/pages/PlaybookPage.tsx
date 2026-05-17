@@ -78,8 +78,23 @@ export default function PlaybookPage() {
         { "@type": "ListItem", position: 3, name: pb.displayName, item: `${SITE_URL}/playbooks/${pb.slug}` },
       ],
     };
+    // v51c: HowTo schema — playbooks are operator workflows
+    const howTo = {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      name: `Deploy AI for ${pb.plural} in 21 days`,
+      description: `Operator playbook for installing AI voice and chat agents in a ${pb.displayName.toLowerCase()} business.`,
+      totalTime: "P21D",
+      step: pb.useCases.slice(0, 6).map((u, i) => ({
+        "@type": "HowToStep",
+        position: i + 1,
+        name: u.title,
+        text: u.problem || u.howAi || u.title,
+      })),
+    };
     let s1 = document.getElementById("playbook-ld") as HTMLScriptElement | null;
     let s2 = document.getElementById("playbook-bc") as HTMLScriptElement | null;
+    let s3 = document.getElementById("playbook-howto") as HTMLScriptElement | null;
     if (!s1) {
       s1 = document.createElement("script");
       s1.id = "playbook-ld";
@@ -92,8 +107,15 @@ export default function PlaybookPage() {
       s2.type = "application/ld+json";
       document.head.appendChild(s2);
     }
+    if (!s3) {
+      s3 = document.createElement("script");
+      s3.id = "playbook-howto";
+      s3.type = "application/ld+json";
+      document.head.appendChild(s3);
+    }
     s1.text = JSON.stringify(ld);
     s2.text = JSON.stringify(breadcrumb);
+    s3.text = JSON.stringify(howTo);
   }, [pb, navigate]);
 
   if (!pb) return null;

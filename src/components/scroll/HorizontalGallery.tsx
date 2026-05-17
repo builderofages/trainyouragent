@@ -30,7 +30,7 @@ const features = [
   {
     icon: Globe,
     title: "Multi-Channel",
-    description: "Deploy across web, SMS, email, and social media seamlessly."
+    description: "Deploy across web, SMS, email, and social media across the channels."
   },
   {
     icon: Sparkles,
