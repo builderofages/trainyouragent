@@ -70,6 +70,10 @@ const ALLOWED_SOURCES = new Set([
   "tool:prompt-critic",
   "tool:scenario-generator",
   "tool:latency-simulator",
+  // v44: three new client-side tools
+  "tool:prompt-library",
+  "tool:model-selector",
+  "tool:automation-roi",
   // v41: community + partners
   "community-win",
   "partner-apply",

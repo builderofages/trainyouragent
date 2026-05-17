@@ -99,6 +99,8 @@ const FAQ = [
   { q: "Free trial?", a: "Yes. Seven business days of live calls handled by your agent before the first invoice. If it doesn't perform, you walk and we keep nothing." },
   { q: "What about overage?", a: "Operators plan includes 4,000 minutes/mo. Overage is $0.18/min answered. Booked-appointment fee only applies on top of the included pool. No surprise invoices — your dashboard shows usage in real time." },
   { q: "Do you take equity?", a: "Sometimes, for the right startup. Defer cash, take a small piece, build the agent, ride the growth. Mention it on the call." },
+  { q: "Refund policy?", a: "Build fee is refundable in full during the 7-day trial if your agent doesn't perform to spec. After the trial, monthly fees are pay-as-you-go — cancel any time, no clawback. Booking and per-minute fees are non-refundable once incurred." },
+  { q: "Migrating from another vendor — what's involved?", a: "We can usually port a working agent in 5-7 business days. Bring your scripts, knowledge base, integrations list, and recent call recordings if you have them. We re-tune the agent to your voice tier and keep your existing phone number." },
 ];
 
 const Pricing = () => {
@@ -201,9 +203,9 @@ const Pricing = () => {
       <section className="px-5 sm:px-8 pb-20">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-5">
           {PLANS.map((p) => (
-            <div key={p.id} className={`relative rounded-3xl p-8 border transition ${p.accent ? "bg-[#042C53] text-white border-[#042C53] shadow-2xl shadow-[#042C53]/15 lg:scale-[1.02]" : "bg-white text-[#0B1B2B] border-slate-200 hover:border-[#185FA5]"}`}>
+            <div key={p.id} className={`relative rounded-3xl p-8 border transition-all duration-300 ${p.accent ? "bg-[#042C53] text-white border-[#042C53] shadow-2xl shadow-[#042C53]/15 lg:scale-[1.02] hover:shadow-[0_30px_60px_-15px_rgba(24,95,165,0.45)]" : "bg-white text-[#0B1B2B] border-slate-200 hover:border-[#185FA5] hover:shadow-[0_20px_50px_-15px_rgba(24,95,165,0.25)] hover:-translate-y-0.5"}`}>
               {p.accent && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#22A36C] text-white text-[11px] font-semibold tracking-[0.12em] uppercase">Most chosen</div>
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#22A36C] text-white text-[11px] font-semibold tracking-[0.12em] uppercase shadow-lg">Most Popular</div>
               )}
               <div className={`text-[12px] uppercase tracking-[0.18em] font-semibold mb-2 ${p.accent ? "text-[#9CC4EC]" : "text-[#185FA5]"}`}>{p.label}</div>
               <div className={`text-[15px] leading-relaxed mb-6 ${p.accent ? "text-white/85" : "text-slate-700"}`}>{p.forWho}</div>

@@ -1,5 +1,5 @@
 // src/pages/tools/ToolsIndex.tsx
-// v41: /tools — index of 5 free tools (lead magnets).
+// v44: /tools — index of 8 free tools (lead magnets).
 
 import { Link } from "react-router-dom";
 import ToolLayout, { NAVY, BLUE } from "./ToolLayout";
@@ -35,13 +35,32 @@ const TOOLS = [
     blurb: "Watch the side-by-side: 800ms (us) vs 3.5s (every competitor). Visceral demo of why latency wins deals.",
     minutes: "30 sec",
   },
+  // v44 — three new client-side tools
+  {
+    slug: "prompt-library",
+    title: "60-Prompt Production Library",
+    blurb: "Searchable, copy-paste-ready prompts for sales, ops, marketing, and support. Real, not placeholders.",
+    minutes: "browse",
+  },
+  {
+    slug: "model-selector",
+    title: "LLM Model Selector",
+    blurb: "Four questions → the right LLM for your task. The same decision tree we use internally.",
+    minutes: "45 sec",
+  },
+  {
+    slug: "automation-roi",
+    title: "Automation ROI Calculator",
+    blurb: "Hours saved, annual labor savings, 3-year ROI. Downloadable PDF for your CFO.",
+    minutes: "1 min",
+  },
 ];
 
 export default function ToolsIndex() {
   return (
     <ToolLayout
       eyebrow="Free tools"
-      title="Five tools you can use"
+      title="Eight tools you can use"
       italicTail="right now."
       subtitle="No signup. Each one solves something specific — and if you like how they work, the agents we build are the same brain underneath."
     >

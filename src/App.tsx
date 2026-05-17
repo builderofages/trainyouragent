@@ -16,6 +16,7 @@ import ExitIntent from "@/components/ExitIntent";
 import LeadMagnetModal from "@/components/LeadMagnetModal";
 import LiveActivity from "@/components/LiveActivity";
 import LiveActivityTicker from "@/components/LiveActivityTicker";
+import PageTransition from "@/components/PageTransition";
 
 // v41: everything else is lazy-loaded to keep main entry chunk small.
 const Dashboard           = lazy(() => import("./pages/Dashboard"));
@@ -86,6 +87,12 @@ const SeoCluster            = lazy(() => import("./pages/demos/SeoCluster"));
 // v42: lead-magnet report page
 const StateOfAiOps2026  = lazy(() => import("./pages/StateOfAiOps2026"));
 
+// v44: three new tools + public metrics dashboard
+const PromptLibrary     = lazy(() => import("./pages/tools/PromptLibrary"));
+const ModelSelector     = lazy(() => import("./pages/tools/ModelSelector"));
+const AutomationRoi     = lazy(() => import("./pages/tools/AutomationRoi"));
+const Metrics           = lazy(() => import("./pages/Metrics"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -113,6 +120,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Suspense fallback={<RouteFallback />}>
+          <PageTransition>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/start" element={<Start />} />
@@ -190,6 +198,12 @@ const App = () => (
             <Route path="/tools/prompt-critic" element={<PromptCritic />} />
             <Route path="/tools/scenario-generator" element={<ScenarioGenerator />} />
             <Route path="/tools/latency-simulator" element={<LatencySimulator />} />
+            {/* v44: three new client-side tools */}
+            <Route path="/tools/prompt-library" element={<PromptLibrary />} />
+            <Route path="/tools/model-selector" element={<ModelSelector />} />
+            <Route path="/tools/automation-roi" element={<AutomationRoi />} />
+            {/* v44: public metrics — built-in-public */}
+            <Route path="/metrics" element={<Metrics />} />
             {/* v42: live AI demos */}
             <Route path="/demos/sales-objection-handler" element={<SalesObjectionHandler />} />
             <Route path="/demos/sop-writer" element={<SopWriter />} />
@@ -200,6 +214,7 @@ const App = () => (
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </PageTransition>
         </Suspense>
         <AiChat />
         <ExitIntent>

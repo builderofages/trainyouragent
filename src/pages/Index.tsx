@@ -7,6 +7,11 @@ import WallOfLove from "@/components/WallOfLove";
 import ShipsCounter from "@/components/ShipsCounter";
 // v42: site-visit funnel event
 import { fireSiteVisitOnce } from "@/lib/event";
+// v44: hero illustration, footer redesign, animated dividers, count-up
+import HeroIllustration from "@/components/HeroIllustration";
+import FooterV44 from "@/components/FooterV44";
+import SectionDivider from "@/components/SectionDivider";
+import { useCountUp } from "@/hooks/useCountUp";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
@@ -56,6 +61,19 @@ const FAQ_ITEMS = [
   { q: "Will my agent sound like a robot?", a: "No. We use top-tier voice models with prosody tuning. Most callers don't realize. We disclose 'AI assistant' on the open when your industry requires it." },
   { q: "What about data + security?",       a: "TLS in transit, AES-256 at rest, US hosting, zero training on your data, HIPAA BAA available, SOC 2 in evaluation." },
 ];
+
+function AnimatedStat({ value, suffix = "", prefix = "", label, decimals = 0 }: { value: number; suffix?: string; prefix?: string; label: string; decimals?: number }) {
+  const { value: v, ref } = useCountUp(value, 1500);
+  const display = decimals > 0 ? v.toFixed(decimals) : Math.round(v).toLocaleString();
+  return (
+    <div>
+      <div ref={ref} className="text-[40px] sm:text-[56px] leading-none tracking-tight font-semibold text-[#042C53]" style={{ fontFamily: "'Playfair Display', serif" }}>
+        {prefix}{display}{suffix}
+      </div>
+      <div className="mt-2 text-[13px] text-slate-600 leading-snug">{label}</div>
+    </div>
+  );
+}
 
 const Index = () => {
   useEffect(() => {
@@ -143,9 +161,12 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Pathway Router (embedded — hero right column on desktop, stacks
-              below the copy on mobile via grid order) */}
+          {/* Pathway Router with animated Prism illustration behind it.
+              Desktop: illustration sits beside card. Mobile: illustration is
+              absolutely positioned with low opacity behind the headline. */}
           <div className="relative flex items-center justify-center lg:justify-end">
+            <HeroIllustration className="hidden lg:block absolute -right-10 -top-10 w-[420px] h-[420px] pointer-events-none opacity-90 -z-10" />
+            <HeroIllustration className="lg:hidden absolute inset-0 pointer-events-none opacity-30 -z-10" />
             <div className="relative w-full max-w-md">
               {/* Soft halo behind the card to keep it floating in the brand hero */}
               <div
@@ -161,22 +182,20 @@ const Index = () => {
         </div>
       </section>
 
-      {/* PROOF STRIP */}
+      {/* v44: animated section divider */}
+      <SectionDivider />
+
+      {/* PROOF STRIP — count-up animated */}
       <section className="px-5 sm:px-8 py-14 border-y border-slate-200 bg-white">
         <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
-          {[
-            { n: "4 yrs",  l: "In AI, through every major model shift" },
-            { n: "300+",   l: "Projects shipped" },
-            { n: "$20K+",  l: "Monthly recurring" },
-            { n: "14",     l: "Verticals supported" },
-          ].map((s, i) => (
-            <div key={i}>
-              <div className="text-[40px] sm:text-[56px] leading-none tracking-tight font-semibold text-[#042C53]" style={{ fontFamily: "'Playfair Display', serif" }}>{s.n}</div>
-              <div className="mt-2 text-[13px] text-slate-600 leading-snug">{s.l}</div>
-            </div>
-          ))}
+          <AnimatedStat value={4}    suffix=" yrs" label="In AI, through every major model shift" />
+          <AnimatedStat value={300}  suffix="+"    label="Projects shipped" />
+          <AnimatedStat value={20}   prefix="$"  suffix="K+" label="Monthly recurring" />
+          <AnimatedStat value={14}               label="Verticals supported" />
         </div>
       </section>
+
+      <SectionDivider />
 
       {/* v38: WALL OF LOVE — sits between proof strip and Capabilities */}
       <WallOfLove
@@ -342,31 +361,8 @@ const Index = () => {
 
       </main>
 
-      {/* FOOTER */}
-      <footer className="bg-white border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
-          <div className="flex items-center gap-2.5">
-            <BrainLogo size={28} />
-            <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
-            <span className="text-slate-400">— Tampa Bay, FL</span>
-          </div>
-          <div className="flex items-center gap-x-6 gap-y-2 flex-wrap justify-center">
-            <Link to="/about" className="hover:text-[#042C53]">About</Link>
-            <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
-            <Link to="/trial" className="hover:text-[#042C53]">Trial</Link>
-            <Link to="/customers" className="hover:text-[#042C53]">Customers</Link>
-            <Link to="/testimonials" className="hover:text-[#042C53]">Testimonials</Link>
-            <Link to="/learn" className="hover:text-[#042C53]">Learn</Link>
-            <Link to="/careers" className="hover:text-[#042C53]">Careers</Link>
-            <Link to="/status" className="hover:text-[#042C53]">Status</Link>
-            <Link to="/press" className="hover:text-[#042C53]">Press</Link>
-            <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
-            <a href={CAL_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">Book a call</a>
-            <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">LinkedIn</a>
-          </div>
-          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
-        </div>
-      </footer>
+      {/* v44: redesigned footer */}
+      <FooterV44 />
     </div>
   );
 };

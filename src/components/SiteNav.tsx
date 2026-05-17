@@ -209,6 +209,17 @@ export default function SiteNav({ active }: SiteNavProps) {
             >
               About
             </Link>
+            <Link
+              to="/metrics"
+              className="hover:text-[#042C53] inline-flex items-center gap-1.5"
+              aria-label="Public metrics dashboard"
+            >
+              <span className="relative inline-flex w-1.5 h-1.5">
+                <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-75 animate-ping" />
+                <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              </span>
+              Live
+            </Link>
             <a
               href={CAL_URL}
               target="_blank"
@@ -285,6 +296,14 @@ export default function SiteNav({ active }: SiteNavProps) {
                 className="px-3 py-3 rounded-lg text-[#042C53] font-medium hover:bg-[#F6FAFE]"
               >
                 About
+              </Link>
+              <Link
+                to="/metrics"
+                onClick={() => setMobileOpen(false)}
+                className="px-3 py-3 rounded-lg text-[#042C53] font-medium hover:bg-[#F6FAFE] inline-flex items-center gap-2"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Live metrics
               </Link>
               <a
                 href={CAL_URL}
