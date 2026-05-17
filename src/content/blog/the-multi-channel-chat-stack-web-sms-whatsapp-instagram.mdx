@@ -1,0 +1,93 @@
+---
+title: "The Multi-Channel Chat Stack: Web, SMS, WhatsApp, Instagram"
+slug: "the-multi-channel-chat-stack-web-sms-whatsapp-instagram"
+date: "2026-02-16"
+author: "Alexander Mills"
+excerpt: "One agent, four channels, one inbox. The architecture diagram, the gotchas per channel, and what we ship for clients that need omnichannel without losing context."
+category: "AI Infrastructure"
+heroImage: "/api/og?title=The+Multi-Channel+Chat+Stack+Web+SMS+WhatsApp+Instagram&subtitle=TrainYourAgent"
+tags: ["chat", "omnichannel", "whatsapp", "sms", "instagram"]
+readingTime: "6 min read"
+---
+
+Customers do not care which channel they messaged you on. They care that the agent knows what they said yesterday on a different channel. Most chat platforms still treat each channel as a separate inbox. Here is the architecture that unifies them without losing context.
+
+## Why this is harder than it looks
+
+The most common failure mode with chat for omnichannel businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## The stack we actually use
+
+Below is the production stack we ship for this category. It is opinionated. Other stacks work. This one ships in 72 hours and survives a real-world Monday morning.
+
+- **Orchestration layer.** Pipecat for voice, a thin Express service for chat, deployed on Fly.io or Render. We avoid Vercel for anything stateful.
+- **LLM.** Default to Claude 3.7 Haiku for the chat layer and Claude 3.7 Sonnet for the planning and tool-use steps. Fall back to GPT-4.1-mini when Anthropic has capacity pressure.
+- **Embeddings + retrieval.** Voyage 3 large for embeddings, Pinecone for the index. Re-rank with Cohere on the top 30.
+- **Telephony or transport.** Twilio for voice, native widget plus webhook for chat, vendor SDKs (WhatsApp Cloud API, etc) for everything else.
+- **Observability.** Langfuse for trace, Helicone for cost, Honeycomb for the underlying HTTP. Three dashboards, one Slack channel.
+- **Eval harness.** A custom Vitest-style runner that lives in the same repo as the prompts. Every PR runs the regression eval before merge.
+
+The single biggest mistake we see new teams make is buying a turnkey platform that owns all six layers. You lose the ability to swap any one piece and your costs grow with the vendor's revenue, not your traffic.
+
+## The unified-session architecture
+
+The hard part of multi-channel is not the channels. It is keeping context unified when the same customer talks to you on web today and SMS tomorrow.
+
+Our architecture:
+
+- **Identity layer.** Phone, email, or customer ID resolves to a single customer record. All four channels write into the same conversation thread keyed on that record.
+- **Session timeout per channel.** Web: 30 min. SMS: 24 hr. WhatsApp: 24 hr. Instagram: 24 hr. Cross-channel continuity uses the customer record, not the session.
+- **Channel-aware prompt fragments.** Same base prompt, with channel-specific formatting rules injected: web chat allows markdown links, SMS does not, WhatsApp uses native template messages for re-engagement after 24 hours.
+- **One inbox.** Helpscout or Intercom view that merges all channels. Humans see one thread per customer, not one thread per channel.
+
+Channel-specific gotchas:
+- WhatsApp: the 24-hour customer-service window matters. After that, you can only send template messages. Architect for it.
+- Instagram: media-heavy conversations are common; have a fallback path for image-heavy customer DMs.
+- SMS: keep replies under 160 chars when possible. Long replies fragment unpredictably across carriers.
+
+Build this layer once and you can add channels in days.
+
+## The numbers we hit, with the baselines
+
+Below is a representative 90-day delta from a recent client deployment in this category. The baseline is from the trailing 90 days before deploy, the post numbers are from the 90 days after first traffic.
+
+| Metric | Baseline | After 90 days | Delta |
+|---|---|---|---|
+| Inbound handle rate | 47% | 94% | +47pts |
+| Median time to first response | 4h 32m | 38s | -99% |
+| Conversion to booked outcome | 18% | 31% | +13pts |
+| Cost per resolved interaction | $7.10 | $1.20 | -83% |
+| 5-star reviews per month | 6 | 14 | +133% |
+| Net CSAT (sample of 200) | 71 | 79 | +8pts |
+
+Numbers vary by vertical. The pattern does not. Once you get the data pipeline right and the eval gate in place, handle rate jumps 40-60 percentage points within the first month, conversion follows two to four weeks later as the prompts get tuned, and cost-per-interaction drops as caching and model routing kick in.
+
+The CSAT delta is the one that surprises new operators. The conventional wisdom that customers hate AI is mostly wrong when the AI works. Customers hate broken IVRs and 9-hour callbacks. An AI that answers in under a minute and gets the job done is preferred to a human callback two-thirds of the time in our data.
+
+## The failure modes we have learned to engineer around
+
+Five failure modes show up in this category over and over. Each has a specific fix.
+
+1. **Drift in prompt voice.** A prompt that worked in week one starts producing off-brand replies by week four because the model behind it silently versioned. Fix: pin the model version, run a weekly voice-drift eval against 50 canonical scenarios, alert on a 3-point deviation.
+
+2. **Stale retrieval.** The KB updated, the embeddings did not. The agent confidently quotes last quarter's pricing. Fix: a freshness-check job that compares KB modified timestamps against embedding job runs hourly, and a hard ceiling that prevents serving any answer grounded in a document older than the freshness window.
+
+3. **Quiet hallucinations.** The agent invents a policy or a part number with high confidence. Fix: every customer-facing answer must cite at least one source from retrieval, and the eval set includes 25 adversarial questions designed to bait hallucinations. No source, no answer.
+
+4. **Escalation breakdown.** The agent escalates to a human, but the handoff context is one sentence and the customer has to start over. Fix: structured handoff payload (intent + history + sentiment + suggested next action), and a human eval pass on every 50th handoff.
+
+5. **Silent integration failure.** The CRM webhook 500s, the agent acts as if it succeeded, the customer thinks the appointment is booked. Fix: synchronous confirmation back to the agent before it tells the customer anything is done, and a retry queue with paging on persistent failures.
+
+## Closing
+
+This post is the short version. The long version takes 90 minutes and a whiteboard. If you want the long version, [grab a slot](/book) and bring your worst metric. We will work backward from there.
+
+Or, if you are still in the read-and-think phase, our [docs](/docs) and [comparisons](/comparisons) pages have most of the answers in writing.
+
+

@@ -1,0 +1,91 @@
+---
+title: "Building An Internal AI Champion: The Role Most SMBs Skip"
+slug: "building-an-internal-ai-champion-the-role-most-smbs-skip"
+date: "2026-04-29"
+author: "Alexander Mills"
+excerpt: "Without an internal champion, the AI stack you bought is dead in 90 days. Here is the JD, the comp, and the 30-60-90 we hand them."
+category: "AI Strategy"
+heroImage: "/api/og?title=Building+An+Internal+AI+Champion+The+Role+Most+SMBs+Skip&subtitle=TrainYourAgent"
+tags: ["champion", "roles", "people", "rollout", "ownership"]
+readingTime: "6 min read"
+---
+
+Almost every AI deployment that died in the first 90 days died for the same reason. Nobody owned it after the implementer left. The fix is a named internal champion. Below: the job description, the comp range, the 30-60-90 plan we hand them.
+
+## The tradeoffs we made and why
+
+Every architecture choice in this category is a tradeoff. Here are the ones we have made consciously, and the alternative we did not pick.
+
+We use Pipecat instead of building our own orchestration. The win is months of saved engineering. The cost is being a release behind on a few model integrations.
+
+We use Anthropic as the default LLM with OpenAI failover, not the other way around. The win is consistently lower hallucination rates in our eval set. The cost is slightly higher cost-per-token at the equivalent model tier.
+
+We run a custom eval harness instead of using a vendor product. The win is the eval set lives in the same Git repo as the prompts, so PRs that change prompts fail the build if they break an eval. The cost is we own the upkeep.
+
+We use Twilio over a cheaper telephony provider. The win is concurrency ceiling and the depth of the diagnostic tools. The cost is roughly 18 percent more per minute.
+
+We deploy on Fly.io, not Vercel. The win is real persistent connections and global edge POPs that survive long-lived voice sessions. The cost is more devops overhead.
+
+These tradeoffs are not laws. They are starting points. If you tell us you have an existing GCP estate, we will adapt the stack. The principles do not move; the implementations do.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## The JD, the comp, and the 30-60-90
+
+**Job description.** Internal AI champion. 4-8 hrs/wk. Reports to COO or owner. Owns prompt tuning, vendor relationships, eval review, and team training. Does not need to code.
+
+**Comp.** $200-500/mo bonus or a 3-5% comp bump. For larger SMBs, sometimes a 0.25 FTE role.
+
+**30-60-90 plan.**
+- **30 days:** Read every customer interaction the AI handled. Build a personal taxonomy of failure modes. Meet weekly with the implementer.
+- **60 days:** Take over the weekly prompt review. Run one A/B test per week. Present results to leadership.
+- **90 days:** Own the vendor relationship. Own the budget review. Propose the next two use cases for the AI stack.
+
+Hiring profile: not necessarily technical. The best champions we have seen are dispatch leads, office managers, or CS leads with 3+ years tenure. They know the business and the customers; the AI is just a new tool.
+
+Companies that name a champion before deploy retain the AI at 90 days at roughly 4x the rate of companies that do not. This is the single highest-ROI move you can make to make your AI stick.
+
+## Why this is harder than it looks
+
+The most common failure mode with champion for roles businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## The numbers we hit, with the baselines
+
+Below is a representative 90-day delta from a recent client deployment in this category. The baseline is from the trailing 90 days before deploy, the post numbers are from the 90 days after first traffic.
+
+| Metric | Baseline | After 90 days | Delta |
+|---|---|---|---|
+| Inbound handle rate | 47% | 94% | +47pts |
+| Median time to first response | 4h 32m | 38s | -99% |
+| Conversion to booked outcome | 18% | 31% | +13pts |
+| Cost per resolved interaction | $7.10 | $1.20 | -83% |
+| 5-star reviews per month | 6 | 14 | +133% |
+| Net CSAT (sample of 200) | 71 | 79 | +8pts |
+
+Numbers vary by vertical. The pattern does not. Once you get the data pipeline right and the eval gate in place, handle rate jumps 40-60 percentage points within the first month, conversion follows two to four weeks later as the prompts get tuned, and cost-per-interaction drops as caching and model routing kick in.
+
+The CSAT delta is the one that surprises new operators. The conventional wisdom that customers hate AI is mostly wrong when the AI works. Customers hate broken IVRs and 9-hour callbacks. An AI that answers in under a minute and gets the job done is preferred to a human callback two-thirds of the time in our data.
+
+## Next step
+
+If you want to pressure-test the numbers above against your business, [book a call](/book). It is free and we do not bring slides.
+
+Prefer to read more first? Our [case studies](/case-studies) walk through three full deployments: what worked, what we would do differently, and what each one cost.
+
+

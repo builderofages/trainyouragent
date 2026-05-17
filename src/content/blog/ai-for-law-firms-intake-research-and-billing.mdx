@@ -1,0 +1,98 @@
+---
+title: "AI For Law Firms: Intake, Research, And Billing"
+slug: "ai-for-law-firms-intake-research-and-billing"
+date: "2026-03-15"
+author: "Alexander Mills"
+excerpt: "Solos and small firms. The three places AI moves the needle, the malpractice traps to avoid, and the Clio or MyCase integration spec."
+category: "Vertical Playbooks"
+heroImage: "/api/og?title=AI+For+Law+Firms+Intake+Research+And+Billing&subtitle=TrainYourAgent"
+tags: ["legal", "vertical", "intake", "research", "clio"]
+readingTime: "6 min read"
+---
+
+Solo and small-firm lawyers have three places where AI moves real revenue: intake, research, and billing. The malpractice traps are real but well-understood. Below: the three workflows, the Clio or MyCase integration spec, and what each pays back.
+
+## The stack we actually use
+
+Below is the production stack we ship for this category. It is opinionated. Other stacks work. This one ships in 72 hours and survives a real-world Monday morning.
+
+- **Orchestration layer.** Pipecat for voice, a thin Express service for chat, deployed on Fly.io or Render. We avoid Vercel for anything stateful.
+- **LLM.** Default to Claude 3.7 Haiku for the chat layer and Claude 3.7 Sonnet for the planning and tool-use steps. Fall back to GPT-4.1-mini when Anthropic has capacity pressure.
+- **Embeddings + retrieval.** Voyage 3 large for embeddings, Pinecone for the index. Re-rank with Cohere on the top 30.
+- **Telephony or transport.** Twilio for voice, native widget plus webhook for chat, vendor SDKs (WhatsApp Cloud API, etc) for everything else.
+- **Observability.** Langfuse for trace, Helicone for cost, Honeycomb for the underlying HTTP. Three dashboards, one Slack channel.
+- **Eval harness.** A custom Vitest-style runner that lives in the same repo as the prompts. Every PR runs the regression eval before merge.
+
+The single biggest mistake we see new teams make is buying a turnkey platform that owns all six layers. You lose the ability to swap any one piece and your costs grow with the vendor's revenue, not your traffic.
+
+## The numbers we hit, with the baselines
+
+Below is a representative 90-day delta from a recent client deployment in this category. The baseline is from the trailing 90 days before deploy, the post numbers are from the 90 days after first traffic.
+
+| Metric | Baseline | After 90 days | Delta |
+|---|---|---|---|
+| Inbound handle rate | 47% | 94% | +47pts |
+| Median time to first response | 4h 32m | 38s | -99% |
+| Conversion to booked outcome | 18% | 31% | +13pts |
+| Cost per resolved interaction | $7.10 | $1.20 | -83% |
+| 5-star reviews per month | 6 | 14 | +133% |
+| Net CSAT (sample of 200) | 71 | 79 | +8pts |
+
+Numbers vary by vertical. The pattern does not. Once you get the data pipeline right and the eval gate in place, handle rate jumps 40-60 percentage points within the first month, conversion follows two to four weeks later as the prompts get tuned, and cost-per-interaction drops as caching and model routing kick in.
+
+The CSAT delta is the one that surprises new operators. The conventional wisdom that customers hate AI is mostly wrong when the AI works. Customers hate broken IVRs and 9-hour callbacks. An AI that answers in under a minute and gets the job done is preferred to a human callback two-thirds of the time in our data.
+
+## The 3 workflows with malpractice notes
+
+**1. Intake.** AI handles the initial intake call or chat. Captures who, what, when, conflict-check inputs. Does NOT give legal advice. Hands off to a paralegal for case opening.
+- Malpractice trap: never let the AI characterize the legal merits. Use language like 'an attorney will review and reach out within 4 business hours'.
+
+**2. Research.** Internal copilot for attorneys, sitting on top of Westlaw or Lexis. Drafts case summaries, suggests citations, flags unfavorable precedent. Always with citation links.
+- Malpractice trap: every AI output is a draft. No exception. Mark it clearly in the UI.
+
+**3. Billing.** Drafts time entries from calendar + email metadata. Attorney reviews and submits.
+- Malpractice trap: never auto-submit. Always require human review and signoff.
+
+Clio integration: pull matters, write time entries (draft only), write notes. We do NOT have the AI write to billable hours or invoices without human approval.
+
+Typical ROI: 4-8 attorney hours/week recovered at $250-400/hr. Pays for the stack many times over.
+
+## The 72-hour deploy plan
+
+We ship most projects in this category on a 72-hour clock. Here is the breakdown.
+
+**Hour 0-8.** Kickoff. Interview the two people who do this job today. Pull 50 sample inputs (calls, chats, tickets). Establish baseline metrics. Identify the three top customer intents.
+
+**Hour 8-24.** First-pass prompt. Wire the orchestration. Stand up the eval harness with 25 cases drawn from the sample inputs. The eval harness has to exist before the first prompt does.
+
+**Hour 24-40.** Integrations. CRM webhook, calendar booking, payment link if relevant. Each integration ships with a synchronous confirmation path.
+
+**Hour 40-56.** Internal QA. The two people we interviewed in hour 0 spend 90 minutes running the agent through their hardest scenarios. Their feedback drives the second-pass prompt.
+
+**Hour 56-68.** Shadow traffic. Real customer interactions, AI answers, human reviews before the answer is sent. We are looking for any case where the AI's draft is worse than the human's draft.
+
+**Hour 68-72.** Cutover. We flip the routing rule, monitor for the first hour, and hand off the on-call rotation to the client's champion. The implementer stays on standby for 7 days.
+
+> **Operator note:** The 72-hour clock is real but it assumes the client has decided on success criteria before we start. If success criteria are unclear at hour 0, the clock does not start until they are. This is the single biggest cause of pilot drift we see.
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## Where to go next
+
+The fastest way to know if any of this applies is a [20-minute call](/book). Bring your numbers and we will do the math live. If you would rather poke around first, our [tools page](/tools) has a half-dozen free calculators that take five minutes each.
+
+No newsletter funnel, no pitch deck. Just the math.
+
+

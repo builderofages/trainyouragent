@@ -1,0 +1,94 @@
+---
+title: "Building A Multi-Tenant Agent Platform: The Architecture"
+slug: "building-a-multi-tenant-agent-platform-the-architecture"
+date: "2026-02-21"
+author: "Alexander Mills"
+excerpt: "Per-tenant prompts, per-tenant data isolation, per-tenant rate limits. The architecture that lets one codebase serve 200 customers without leaking."
+category: "AI Infrastructure"
+heroImage: "/api/og?title=Building+A+Multi-Tenant+Agent+Platform+The+Architecture&subtitle=TrainYourAgent"
+tags: ["multi-tenant", "architecture", "saas", "isolation", "engineering"]
+readingTime: "6 min read"
+---
+
+Multi-tenant agent platforms have three hard problems: prompt isolation, data isolation, and per-tenant rate limits. Get any one of them wrong and you have a leak that ends the company. Below: the architecture we shipped for a platform serving 200 customers.
+
+## The 72-hour deploy plan
+
+We ship most projects in this category on a 72-hour clock. Here is the breakdown.
+
+**Hour 0-8.** Kickoff. Interview the two people who do this job today. Pull 50 sample inputs (calls, chats, tickets). Establish baseline metrics. Identify the three top customer intents.
+
+**Hour 8-24.** First-pass prompt. Wire the orchestration. Stand up the eval harness with 25 cases drawn from the sample inputs. The eval harness has to exist before the first prompt does.
+
+**Hour 24-40.** Integrations. CRM webhook, calendar booking, payment link if relevant. Each integration ships with a synchronous confirmation path.
+
+**Hour 40-56.** Internal QA. The two people we interviewed in hour 0 spend 90 minutes running the agent through their hardest scenarios. Their feedback drives the second-pass prompt.
+
+**Hour 56-68.** Shadow traffic. Real customer interactions, AI answers, human reviews before the answer is sent. We are looking for any case where the AI's draft is worse than the human's draft.
+
+**Hour 68-72.** Cutover. We flip the routing rule, monitor for the first hour, and hand off the on-call rotation to the client's champion. The implementer stays on standby for 7 days.
+
+> **Operator note:** The 72-hour clock is real but it assumes the client has decided on success criteria before we start. If success criteria are unclear at hour 0, the clock does not start until they are. This is the single biggest cause of pilot drift we see.
+
+## The tradeoffs we made and why
+
+Every architecture choice in this category is a tradeoff. Here are the ones we have made consciously, and the alternative we did not pick.
+
+We use Pipecat instead of building our own orchestration. The win is months of saved engineering. The cost is being a release behind on a few model integrations.
+
+We use Anthropic as the default LLM with OpenAI failover, not the other way around. The win is consistently lower hallucination rates in our eval set. The cost is slightly higher cost-per-token at the equivalent model tier.
+
+We run a custom eval harness instead of using a vendor product. The win is the eval set lives in the same Git repo as the prompts, so PRs that change prompts fail the build if they break an eval. The cost is we own the upkeep.
+
+We use Twilio over a cheaper telephony provider. The win is concurrency ceiling and the depth of the diagnostic tools. The cost is roughly 18 percent more per minute.
+
+We deploy on Fly.io, not Vercel. The win is real persistent connections and global edge POPs that survive long-lived voice sessions. The cost is more devops overhead.
+
+These tradeoffs are not laws. They are starting points. If you tell us you have an existing GCP estate, we will adapt the stack. The principles do not move; the implementations do.
+
+## The 3-layer isolation
+
+**Layer 1: Prompt isolation.** Each tenant has their own prompt set, versioned, stored in a tenant-scoped store. No cross-tenant prompt access ever. The orchestrator loads only the requesting tenant's prompts.
+
+**Layer 2: Data isolation.** Vector index is per-tenant or namespace-isolated. Conversation history, customer records, all in tenant-scoped tables with row-level security at the DB layer.
+
+**Layer 3: Compute isolation.** Per-tenant rate limits enforced at the gateway. Per-tenant cost ceilings. Per-tenant model routing (some tenants pay for Sonnet, some for Haiku).
+
+The architecture in pieces:
+- **API gateway** authenticates and stamps tenant_id on every request
+- **Orchestrator** loads tenant config and prompts at request time, never caches across tenants
+- **Vector DB** namespace per tenant
+- **Postgres** RLS policy enforces tenant scoping at the query layer
+- **Observability** every span tagged with tenant_id; dashboards filter on it
+
+The single biggest leakage risk is in the prompt-loading layer. We run an automated test that fires a request as tenant A but mutates the prompt-load to load tenant B's prompts. The orchestrator must reject. We have caught two regressions this way.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## Why this is harder than it looks
+
+The most common failure mode with multi-tenant for architecture businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## Closing
+
+If you want help putting this into your business, [book a 20-minute strategy call](/book) and we will sketch the stack on the call. Or run the numbers through our [ROI calculator](/tools/roi-calculator) and see what the payback looks like for your shop.
+
+We do not pitch on the call. If we are not the right fit, we will tell you and point you somewhere that is.
+
+

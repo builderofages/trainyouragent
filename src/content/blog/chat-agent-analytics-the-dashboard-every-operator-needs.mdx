@@ -1,0 +1,98 @@
+---
+title: "Chat Agent Analytics: The Dashboard Every Operator Needs"
+slug: "chat-agent-analytics-the-dashboard-every-operator-needs"
+date: "2026-03-22"
+author: "Alexander Mills"
+excerpt: "The 9 charts I check every Monday: deflection by topic, escalation reasons, off-brand hits, cost per resolution. With the SQL we use."
+category: "AI Strategy"
+heroImage: "/api/og?title=Chat+Agent+Analytics+The+Dashboard+Every+Operator+Needs&subtitle=TrainYourAgent"
+tags: ["chat", "analytics", "dashboards", "sql", "metrics"]
+readingTime: "6 min read"
+---
+
+Most chat agent dashboards are designed for the vendor's marketing, not for the operator's Monday morning. After 14 months of running chat agents in production, here are the nine charts I actually check, and the SQL behind each.
+
+## The numbers we hit, with the baselines
+
+Below is a representative 90-day delta from a recent client deployment in this category. The baseline is from the trailing 90 days before deploy, the post numbers are from the 90 days after first traffic.
+
+| Metric | Baseline | After 90 days | Delta |
+|---|---|---|---|
+| Inbound handle rate | 47% | 94% | +47pts |
+| Median time to first response | 4h 32m | 38s | -99% |
+| Conversion to booked outcome | 18% | 31% | +13pts |
+| Cost per resolved interaction | $7.10 | $1.20 | -83% |
+| 5-star reviews per month | 6 | 14 | +133% |
+| Net CSAT (sample of 200) | 71 | 79 | +8pts |
+
+Numbers vary by vertical. The pattern does not. Once you get the data pipeline right and the eval gate in place, handle rate jumps 40-60 percentage points within the first month, conversion follows two to four weeks later as the prompts get tuned, and cost-per-interaction drops as caching and model routing kick in.
+
+The CSAT delta is the one that surprises new operators. The conventional wisdom that customers hate AI is mostly wrong when the AI works. Customers hate broken IVRs and 9-hour callbacks. An AI that answers in under a minute and gets the job done is preferred to a human callback two-thirds of the time in our data.
+
+## The failure modes we have learned to engineer around
+
+Five failure modes show up in this category over and over. Each has a specific fix.
+
+1. **Drift in prompt voice.** A prompt that worked in week one starts producing off-brand replies by week four because the model behind it silently versioned. Fix: pin the model version, run a weekly voice-drift eval against 50 canonical scenarios, alert on a 3-point deviation.
+
+2. **Stale retrieval.** The KB updated, the embeddings did not. The agent confidently quotes last quarter's pricing. Fix: a freshness-check job that compares KB modified timestamps against embedding job runs hourly, and a hard ceiling that prevents serving any answer grounded in a document older than the freshness window.
+
+3. **Quiet hallucinations.** The agent invents a policy or a part number with high confidence. Fix: every customer-facing answer must cite at least one source from retrieval, and the eval set includes 25 adversarial questions designed to bait hallucinations. No source, no answer.
+
+4. **Escalation breakdown.** The agent escalates to a human, but the handoff context is one sentence and the customer has to start over. Fix: structured handoff payload (intent + history + sentiment + suggested next action), and a human eval pass on every 50th handoff.
+
+5. **Silent integration failure.** The CRM webhook 500s, the agent acts as if it succeeded, the customer thinks the appointment is booked. Fix: synchronous confirmation back to the agent before it tells the customer anything is done, and a retry queue with paging on persistent failures.
+
+## The 9 charts
+
+1. **Deflection rate week-over-week.** Single line, 13 weeks. Spot regressions fast.
+2. **Deflection rate by intent (top 10).** Bar chart. Spot where retrieval or prompts need work.
+3. **Escalation reasons mix.** Stacked bar, weekly. Shifts here are leading indicators.
+4. **Median + p95 time-to-resolution.** Two lines, daily. p95 matters more than median for outlier hunting.
+5. **Off-brand replies caught by eval.** Daily count + sample table. Zero is the goal.
+6. **Cost per resolved interaction.** Daily. Includes LLM, STT/TTS if voice, embeddings, observability.
+7. **CSAT score on resolved chats.** Sample of 100 per week. Trend the median.
+8. **Customer re-contact within 7 days.** Counter-metric to deflection. Should be below 8%.
+9. **Active sessions by channel.** Real-time gauge. Helps with on-call sizing.
+
+SQL for each lives in the repo. We rebuild the dashboard quarterly because new metrics get useful as the product grows.
+
+## The 72-hour deploy plan
+
+We ship most projects in this category on a 72-hour clock. Here is the breakdown.
+
+**Hour 0-8.** Kickoff. Interview the two people who do this job today. Pull 50 sample inputs (calls, chats, tickets). Establish baseline metrics. Identify the three top customer intents.
+
+**Hour 8-24.** First-pass prompt. Wire the orchestration. Stand up the eval harness with 25 cases drawn from the sample inputs. The eval harness has to exist before the first prompt does.
+
+**Hour 24-40.** Integrations. CRM webhook, calendar booking, payment link if relevant. Each integration ships with a synchronous confirmation path.
+
+**Hour 40-56.** Internal QA. The two people we interviewed in hour 0 spend 90 minutes running the agent through their hardest scenarios. Their feedback drives the second-pass prompt.
+
+**Hour 56-68.** Shadow traffic. Real customer interactions, AI answers, human reviews before the answer is sent. We are looking for any case where the AI's draft is worse than the human's draft.
+
+**Hour 68-72.** Cutover. We flip the routing rule, monitor for the first hour, and hand off the on-call rotation to the client's champion. The implementer stays on standby for 7 days.
+
+> **Operator note:** The 72-hour clock is real but it assumes the client has decided on success criteria before we start. If success criteria are unclear at hour 0, the clock does not start until they are. This is the single biggest cause of pilot drift we see.
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## Where to go next
+
+The fastest way to know if any of this applies is a [20-minute call](/book). Bring your numbers and we will do the math live. If you would rather poke around first, our [tools page](/tools) has a half-dozen free calculators that take five minutes each.
+
+No newsletter funnel, no pitch deck. Just the math.
+
+

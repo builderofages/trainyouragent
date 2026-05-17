@@ -1,0 +1,93 @@
+---
+title: "AI For Roofing Companies: Lead Qualification To Job Scheduling"
+slug: "ai-for-roofing-companies-lead-qualification-to-job-scheduling"
+date: "2026-04-04"
+author: "Alexander Mills"
+excerpt: "Storm-chase season is brutal. Here is how we automate intake, qualification, photo review, and scheduling for roofers without losing the close."
+category: "Vertical Playbooks"
+heroImage: "/api/og?title=AI+For+Roofing+Companies+Lead+Qualification+To+Job+Scheduling&subtitle=TrainYourAgent"
+tags: ["roofing", "vertical", "qualification", "scheduling", "storm"]
+readingTime: "6 min read"
+---
+
+Storm season at a roofing company is brutal. Lead volume spikes 10x in 72 hours, the close rate drops because nobody can call back fast enough, and the wrong leads get scheduled while the right ones go to the competitor. Below: the AI stack we built for two storm-chase roofers.
+
+## The 72-hour deploy plan
+
+We ship most projects in this category on a 72-hour clock. Here is the breakdown.
+
+**Hour 0-8.** Kickoff. Interview the two people who do this job today. Pull 50 sample inputs (calls, chats, tickets). Establish baseline metrics. Identify the three top customer intents.
+
+**Hour 8-24.** First-pass prompt. Wire the orchestration. Stand up the eval harness with 25 cases drawn from the sample inputs. The eval harness has to exist before the first prompt does.
+
+**Hour 24-40.** Integrations. CRM webhook, calendar booking, payment link if relevant. Each integration ships with a synchronous confirmation path.
+
+**Hour 40-56.** Internal QA. The two people we interviewed in hour 0 spend 90 minutes running the agent through their hardest scenarios. Their feedback drives the second-pass prompt.
+
+**Hour 56-68.** Shadow traffic. Real customer interactions, AI answers, human reviews before the answer is sent. We are looking for any case where the AI's draft is worse than the human's draft.
+
+**Hour 68-72.** Cutover. We flip the routing rule, monitor for the first hour, and hand off the on-call rotation to the client's champion. The implementer stays on standby for 7 days.
+
+> **Operator note:** The 72-hour clock is real but it assumes the client has decided on success criteria before we start. If success criteria are unclear at hour 0, the clock does not start until they are. This is the single biggest cause of pilot drift we see.
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## Storm-season playbook
+
+When a storm hits, you go from 30 leads/wk to 300 in 72 hours. The shops that win the storm capture the leads that the slow shops drop.
+
+**The stack:**
+1. **Lead intake AI** (voice + chat) on the website AND on the storm landing pages
+2. **Qualification** in under 90 seconds: address, roof age, insurance, decision-maker present
+3. **Auto-scheduling** of inspection within 48 hrs based on inspector calendar availability
+4. **Photo intake** via SMS link — homeowner sends 4 photos, AI flags obvious issues
+5. **Inspector arrival** with full pre-brief on their phone
+
+**The numbers from one Texas storm-chase roofer:**
+- Pre-AI: 31% of leads got a call back within 24 hours. 19% closed.
+- Post-AI: 94% of leads got a response within 5 min. 27% closed.
+- Net: 47 incremental contracts in a 6-week storm window. Average contract ~$14K.
+
+The key insight: in storm season, response time is everything. The shop that calls back first usually wins, even if they are not the lowest bid.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## Why this is harder than it looks
+
+The most common failure mode with roofing for vertical businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## Next step
+
+If you want to pressure-test the numbers above against your business, [book a call](/book). It is free and we do not bring slides.
+
+Prefer to read more first? Our [case studies](/case-studies) walk through three full deployments: what worked, what we would do differently, and what each one cost.
+
+

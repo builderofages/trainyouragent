@@ -1,0 +1,120 @@
+---
+title: "The SMB AI Readiness Scorecard"
+slug: "the-smb-ai-readiness-scorecard"
+date: "2026-05-11"
+author: "Alexander Mills"
+excerpt: "A 27-question scorecard you can run in 20 minutes that tells you whether your business is ready to deploy AI or needs to fix data, ops, and ownership first."
+category: "AI Strategy"
+heroImage: "/api/og?title=The+SMB+AI+Readiness+Scorecard&subtitle=TrainYourAgent"
+tags: ["smb", "scorecard", "readiness", "strategy", "assessment"]
+readingTime: "6 min read"
+---
+
+Most SMBs that fail at AI did not fail because of the AI. They failed because they were not ready for it. The data was a mess, nobody owned it, the ops team did not have bandwidth, and the founder thought a demo was a deployment. This scorecard surfaces all of that in 20 minutes.
+
+## The 72-hour deploy plan
+
+We ship most projects in this category on a 72-hour clock. Here is the breakdown.
+
+**Hour 0-8.** Kickoff. Interview the two people who do this job today. Pull 50 sample inputs (calls, chats, tickets). Establish baseline metrics. Identify the three top customer intents.
+
+**Hour 8-24.** First-pass prompt. Wire the orchestration. Stand up the eval harness with 25 cases drawn from the sample inputs. The eval harness has to exist before the first prompt does.
+
+**Hour 24-40.** Integrations. CRM webhook, calendar booking, payment link if relevant. Each integration ships with a synchronous confirmation path.
+
+**Hour 40-56.** Internal QA. The two people we interviewed in hour 0 spend 90 minutes running the agent through their hardest scenarios. Their feedback drives the second-pass prompt.
+
+**Hour 56-68.** Shadow traffic. Real customer interactions, AI answers, human reviews before the answer is sent. We are looking for any case where the AI's draft is worse than the human's draft.
+
+**Hour 68-72.** Cutover. We flip the routing rule, monitor for the first hour, and hand off the on-call rotation to the client's champion. The implementer stays on standby for 7 days.
+
+> **Operator note:** The 72-hour clock is real but it assumes the client has decided on success criteria before we start. If success criteria are unclear at hour 0, the clock does not start until they are. This is the single biggest cause of pilot drift we see.
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## The 27-question scorecard, scored 0-2 each
+
+**Data (8 questions, 16 pts)**
+1. Is your customer data in one system?
+2. Can you export the last 12 months of inbound contacts?
+3. Do you tag/categorize contacts by intent?
+4. Do you have call recordings (if voice is relevant)?
+5. Is your KB current within the last 90 days?
+6. Do you have a privacy policy referencing automated processing?
+7. Do you know your inbound contact volume per channel?
+8. Do you know your average ticket value per customer?
+
+**Ops (7 questions, 14 pts)**
+9. Is there a named owner for customer comms?
+10. Can you change a phone tree or chat flow today without IT?
+11. Do you have a documented escalation path?
+12. Do you track first-response time?
+13. Do you have a CRM that integrates with email and calendar?
+14. Do you do weekly ops reviews of customer comms?
+15. Is your team comfortable with a Slack-like tool?
+
+**Strategy (6 questions, 12 pts)**
+16. Has leadership picked a success metric for AI?
+17. Is there budget allocated for the next 12 months?
+18. Is there a champion identified internally?
+19. Have you talked to a peer who has shipped AI?
+20. Have you written down 3 specific use cases?
+21. Have you set a kill criteria for the pilot?
+
+**Risk (6 questions, 12 pts)**
+22. Are you in a regulated vertical?
+23. Do you handle PHI/PCI/financial data?
+24. Is there a privacy review process?
+25. Have you signed a BAA with a vendor before?
+26. Do you have cyber insurance?
+27. Is there C-suite sign-off?
+
+**Scoring.** 0-25: not ready, fix data and ops first. 26-40: pilot-ready in narrow scope. 41+: ship.
+
+## The tradeoffs we made and why
+
+Every architecture choice in this category is a tradeoff. Here are the ones we have made consciously, and the alternative we did not pick.
+
+We use Pipecat instead of building our own orchestration. The win is months of saved engineering. The cost is being a release behind on a few model integrations.
+
+We use Anthropic as the default LLM with OpenAI failover, not the other way around. The win is consistently lower hallucination rates in our eval set. The cost is slightly higher cost-per-token at the equivalent model tier.
+
+We run a custom eval harness instead of using a vendor product. The win is the eval set lives in the same Git repo as the prompts, so PRs that change prompts fail the build if they break an eval. The cost is we own the upkeep.
+
+We use Twilio over a cheaper telephony provider. The win is concurrency ceiling and the depth of the diagnostic tools. The cost is roughly 18 percent more per minute.
+
+We deploy on Fly.io, not Vercel. The win is real persistent connections and global edge POPs that survive long-lived voice sessions. The cost is more devops overhead.
+
+These tradeoffs are not laws. They are starting points. If you tell us you have an existing GCP estate, we will adapt the stack. The principles do not move; the implementations do.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## Closing
+
+If you want help putting this into your business, [book a 20-minute strategy call](/book) and we will sketch the stack on the call. Or run the numbers through our [ROI calculator](/tools/roi-calculator) and see what the payback looks like for your shop.
+
+We do not pitch on the call. If we are not the right fit, we will tell you and point you somewhere that is.
+
+

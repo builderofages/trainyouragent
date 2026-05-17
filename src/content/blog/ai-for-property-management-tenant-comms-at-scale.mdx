@@ -1,0 +1,103 @@
+---
+title: "AI For Property Management: Tenant Comms At Scale"
+slug: "ai-for-property-management-tenant-comms-at-scale"
+date: "2026-04-05"
+author: "Alexander Mills"
+excerpt: "Maintenance triage, rent reminders, lease renewals. The AI stack for a property manager running 500-plus units without adding headcount."
+category: "Vertical Playbooks"
+heroImage: "/api/og?title=AI+For+Property+Management+Tenant+Comms+At+Scale&subtitle=TrainYourAgent"
+tags: ["property-management", "vertical", "tenants", "maintenance", "appfolio"]
+readingTime: "5 min read"
+---
+
+A property manager running 500-plus units gets the same 20 questions over and over. Maintenance status, rent due dates, lease renewal terms, lockout assistance. Below: the AI stack that handles 80 percent of those without losing the human-touch moments that matter.
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## The 4-channel tenant comms stack
+
+**Maintenance triage (voice + chat).**
+- Tenant describes the problem; AI classifies urgency
+- Emergency: page on-call maintenance with PagerDuty
+- Routine: book a window in AppFolio or Buildium
+- Tracks: 84% of routine maintenance handled without staff involvement
+
+**Rent comms (SMS + email).**
+- Day -5: friendly reminder
+- Day +1: gentle nudge with payment link
+- Day +5: human handoff with payment plan offer
+- Tracks: 22% reduction in late payments at a 500-unit portfolio
+
+**Lease renewals (SMS + email).**
+- 90 days out: outreach with personalized offer
+- 60 days out: AI handles common questions (rent increase justification, lease terms)
+- 30 days out: human handoff for negotiation
+- Tracks: 8-12pt lift in renewal rate
+
+**Lockout assistance (voice, 24/7).**
+- Verifies tenant identity, dispatches locksmith with cost transparency
+- Tracks: 30 min average resolution vs 2+ hrs pre-AI
+
+Total stack at 500 units: ~$1,800/mo. Headcount savings: roughly half an FTE plus on-call burden.
+
+## Why this is harder than it looks
+
+The most common failure mode with property-management for vertical businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## The stack we actually use
+
+Below is the production stack we ship for this category. It is opinionated. Other stacks work. This one ships in 72 hours and survives a real-world Monday morning.
+
+- **Orchestration layer.** Pipecat for voice, a thin Express service for chat, deployed on Fly.io or Render. We avoid Vercel for anything stateful.
+- **LLM.** Default to Claude 3.7 Haiku for the chat layer and Claude 3.7 Sonnet for the planning and tool-use steps. Fall back to GPT-4.1-mini when Anthropic has capacity pressure.
+- **Embeddings + retrieval.** Voyage 3 large for embeddings, Pinecone for the index. Re-rank with Cohere on the top 30.
+- **Telephony or transport.** Twilio for voice, native widget plus webhook for chat, vendor SDKs (WhatsApp Cloud API, etc) for everything else.
+- **Observability.** Langfuse for trace, Helicone for cost, Honeycomb for the underlying HTTP. Three dashboards, one Slack channel.
+- **Eval harness.** A custom Vitest-style runner that lives in the same repo as the prompts. Every PR runs the regression eval before merge.
+
+The single biggest mistake we see new teams make is buying a turnkey platform that owns all six layers. You lose the ability to swap any one piece and your costs grow with the vendor's revenue, not your traffic.
+
+## Closing
+
+This post is the short version. The long version takes 90 minutes and a whiteboard. If you want the long version, [grab a slot](/book) and bring your worst metric. We will work backward from there.
+
+Or, if you are still in the read-and-think phase, our [docs](/docs) and [comparisons](/comparisons) pages have most of the answers in writing.
+
+
+
+
+## A note on getting started
+
+The fastest way to validate this for your business is to pull 30 days of relevant call, chat, or interaction logs and run them past whatever stack you are considering. The vendors who can show you, on your data, what their agent would have done are the ones worth a second meeting. The vendors who want to skip that and jump straight to a pricing call are not.
+
+If you want help running that exercise, [book a 20-minute call](/book) and we will walk through it on the call. We do not bill for the working session and we do not pitch on it. Bring your own data; leave with your own conclusions. If you would rather poke at the math yourself first, the [ROI calculator](/tools/roi-calculator) and the [cost estimator](/tools/cost-estimator) cover most of the common scenarios in five minutes each.

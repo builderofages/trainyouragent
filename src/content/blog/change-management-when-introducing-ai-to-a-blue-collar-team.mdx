@@ -1,0 +1,98 @@
+---
+title: "Change Management When Introducing AI To A Blue-Collar Team"
+slug: "change-management-when-introducing-ai-to-a-blue-collar-team"
+date: "2026-03-20"
+author: "Alexander Mills"
+excerpt: "Most AI rollouts fail at the trades because the implementer talks down. Here is the change-management playbook we use with HVAC, roofing, and plumbing teams."
+category: "AI Strategy"
+heroImage: "/api/og?title=Change+Management+When+Introducing+AI+To+A+Blue-Collar+Team&subtitle=TrainYourAgent"
+tags: ["change-management", "blue-collar", "trades", "rollout", "people"]
+readingTime: "6 min read"
+---
+
+Most AI implementers come from a software background and they talk to trades teams like they are software teams. It does not work. The HVAC dispatcher who has been dispatching for 22 years is not going to take prompt-engineering advice from a 26-year-old with a Vapi account. Here is the change-management playbook that does work.
+
+## The numbers we hit, with the baselines
+
+Below is a representative 90-day delta from a recent client deployment in this category. The baseline is from the trailing 90 days before deploy, the post numbers are from the 90 days after first traffic.
+
+| Metric | Baseline | After 90 days | Delta |
+|---|---|---|---|
+| Inbound handle rate | 47% | 94% | +47pts |
+| Median time to first response | 4h 32m | 38s | -99% |
+| Conversion to booked outcome | 18% | 31% | +13pts |
+| Cost per resolved interaction | $7.10 | $1.20 | -83% |
+| 5-star reviews per month | 6 | 14 | +133% |
+| Net CSAT (sample of 200) | 71 | 79 | +8pts |
+
+Numbers vary by vertical. The pattern does not. Once you get the data pipeline right and the eval gate in place, handle rate jumps 40-60 percentage points within the first month, conversion follows two to four weeks later as the prompts get tuned, and cost-per-interaction drops as caching and model routing kick in.
+
+The CSAT delta is the one that surprises new operators. The conventional wisdom that customers hate AI is mostly wrong when the AI works. Customers hate broken IVRs and 9-hour callbacks. An AI that answers in under a minute and gets the job done is preferred to a human callback two-thirds of the time in our data.
+
+## The 72-hour deploy plan
+
+We ship most projects in this category on a 72-hour clock. Here is the breakdown.
+
+**Hour 0-8.** Kickoff. Interview the two people who do this job today. Pull 50 sample inputs (calls, chats, tickets). Establish baseline metrics. Identify the three top customer intents.
+
+**Hour 8-24.** First-pass prompt. Wire the orchestration. Stand up the eval harness with 25 cases drawn from the sample inputs. The eval harness has to exist before the first prompt does.
+
+**Hour 24-40.** Integrations. CRM webhook, calendar booking, payment link if relevant. Each integration ships with a synchronous confirmation path.
+
+**Hour 40-56.** Internal QA. The two people we interviewed in hour 0 spend 90 minutes running the agent through their hardest scenarios. Their feedback drives the second-pass prompt.
+
+**Hour 56-68.** Shadow traffic. Real customer interactions, AI answers, human reviews before the answer is sent. We are looking for any case where the AI's draft is worse than the human's draft.
+
+**Hour 68-72.** Cutover. We flip the routing rule, monitor for the first hour, and hand off the on-call rotation to the client's champion. The implementer stays on standby for 7 days.
+
+> **Operator note:** The 72-hour clock is real but it assumes the client has decided on success criteria before we start. If success criteria are unclear at hour 0, the clock does not start until they are. This is the single biggest cause of pilot drift we see.
+
+## The 4 moves that make rollouts stick
+
+1. **Lead with their problem, not your solution.** Sit on the dispatch desk for a shift. Watch what frustrates them. Build for that. The dispatcher who says 'this thing actually helps me' is the spreader.
+
+2. **No new screens.** If the AI requires opening a new app, it dies. We always pipe into Slack, ServiceTitan, or whatever the team already uses every day. New surface = dead feature.
+
+3. **Make the AI's failures visible to the team.** When the AI escalates, the team should see why. Hide failures and they assume you are hiding more.
+
+4. **Pay the champion.** The internal person who is going to spend 4 hrs/wk owning the AI deserves a $200/mo bonus or a comp bump. Otherwise the role is unpaid extra work and it lapses in 60 days.
+
+The talking-down trap: do not call them 'end users'. They are operators. They know the business better than you do. The AI is theirs, not yours.
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## The tradeoffs we made and why
+
+Every architecture choice in this category is a tradeoff. Here are the ones we have made consciously, and the alternative we did not pick.
+
+We use Pipecat instead of building our own orchestration. The win is months of saved engineering. The cost is being a release behind on a few model integrations.
+
+We use Anthropic as the default LLM with OpenAI failover, not the other way around. The win is consistently lower hallucination rates in our eval set. The cost is slightly higher cost-per-token at the equivalent model tier.
+
+We run a custom eval harness instead of using a vendor product. The win is the eval set lives in the same Git repo as the prompts, so PRs that change prompts fail the build if they break an eval. The cost is we own the upkeep.
+
+We use Twilio over a cheaper telephony provider. The win is concurrency ceiling and the depth of the diagnostic tools. The cost is roughly 18 percent more per minute.
+
+We deploy on Fly.io, not Vercel. The win is real persistent connections and global edge POPs that survive long-lived voice sessions. The cost is more devops overhead.
+
+These tradeoffs are not laws. They are starting points. If you tell us you have an existing GCP estate, we will adapt the stack. The principles do not move; the implementations do.
+
+## Closing
+
+If you want help putting this into your business, [book a 20-minute strategy call](/book) and we will sketch the stack on the call. Or run the numbers through our [ROI calculator](/tools/roi-calculator) and see what the payback looks like for your shop.
+
+We do not pitch on the call. If we are not the right fit, we will tell you and point you somewhere that is.
+
+

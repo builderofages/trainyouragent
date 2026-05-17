@@ -1,0 +1,87 @@
+---
+title: "Claude vs GPT vs Llama vs Gemini: When Each Wins (2026)"
+slug: "claude-vs-gpt-vs-llama-vs-gemini-when-each-wins-2026"
+date: "2026-04-02"
+author: "Alexander Mills"
+excerpt: "After 8 months of side-by-side production traffic, here is the honest 2026 model-by-use-case breakdown: voice, chat, agents, summarization, code."
+category: "AI Infrastructure"
+heroImage: "/api/og?title=Claude+vs+GPT+vs+Llama+vs+Gemini+When+Each+Wins+2026&subtitle=TrainYourAgent"
+tags: ["models", "claude", "gpt", "llama", "gemini"]
+readingTime: "6 min read"
+---
+
+We have routed real production traffic across all four model families for eight months. The differences are not what the benchmarks say. Below: the honest 2026 breakdown by use case.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## Why this is harder than it looks
+
+The most common failure mode with models for claude businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## Use-case-by-use-case
+
+| Use case | Winner | Why |
+|---|---|---|
+| Voice agent main loop | Claude 3.7 Haiku | Best instruction-following at low latency |
+| Voice agent planner | Claude 3.7 Sonnet | Better tool selection in tests |
+| Chat agent (default) | Claude 3.7 Haiku | Same; voice + chat consistency is nice |
+| Code generation | Claude 3.7 Sonnet | Still ahead in our eval |
+| Summarization (long-context) | Gemini 2.5 Pro | 1M+ token context handling |
+| Cheap classification | Llama 3.3 70B | Self-hosted unbeatable cost |
+| Image-heavy multimodal | GPT-4.1 | Better vision in our tests |
+| Hallucination-sensitive (legal, medical) | Claude 3.7 Sonnet | Most willing to say I do not know |
+| Pure cost optimization at scale | Llama 3.3 self-hosted | If you have the infra |
+| OpenAI-native ecosystems (Assistants) | GPT-4.1 | Tooling integration |
+
+We default to Anthropic for the customer-facing layers and route specific intents to other providers where the eval justifies it. The default-then-route pattern is the only one we trust at scale.
+
+## The stack we actually use
+
+Below is the production stack we ship for this category. It is opinionated. Other stacks work. This one ships in 72 hours and survives a real-world Monday morning.
+
+- **Orchestration layer.** Pipecat for voice, a thin Express service for chat, deployed on Fly.io or Render. We avoid Vercel for anything stateful.
+- **LLM.** Default to Claude 3.7 Haiku for the chat layer and Claude 3.7 Sonnet for the planning and tool-use steps. Fall back to GPT-4.1-mini when Anthropic has capacity pressure.
+- **Embeddings + retrieval.** Voyage 3 large for embeddings, Pinecone for the index. Re-rank with Cohere on the top 30.
+- **Telephony or transport.** Twilio for voice, native widget plus webhook for chat, vendor SDKs (WhatsApp Cloud API, etc) for everything else.
+- **Observability.** Langfuse for trace, Helicone for cost, Honeycomb for the underlying HTTP. Three dashboards, one Slack channel.
+- **Eval harness.** A custom Vitest-style runner that lives in the same repo as the prompts. Every PR runs the regression eval before merge.
+
+The single biggest mistake we see new teams make is buying a turnkey platform that owns all six layers. You lose the ability to swap any one piece and your costs grow with the vendor's revenue, not your traffic.
+
+## The failure modes we have learned to engineer around
+
+Five failure modes show up in this category over and over. Each has a specific fix.
+
+1. **Drift in prompt voice.** A prompt that worked in week one starts producing off-brand replies by week four because the model behind it silently versioned. Fix: pin the model version, run a weekly voice-drift eval against 50 canonical scenarios, alert on a 3-point deviation.
+
+2. **Stale retrieval.** The KB updated, the embeddings did not. The agent confidently quotes last quarter's pricing. Fix: a freshness-check job that compares KB modified timestamps against embedding job runs hourly, and a hard ceiling that prevents serving any answer grounded in a document older than the freshness window.
+
+3. **Quiet hallucinations.** The agent invents a policy or a part number with high confidence. Fix: every customer-facing answer must cite at least one source from retrieval, and the eval set includes 25 adversarial questions designed to bait hallucinations. No source, no answer.
+
+4. **Escalation breakdown.** The agent escalates to a human, but the handoff context is one sentence and the customer has to start over. Fix: structured handoff payload (intent + history + sentiment + suggested next action), and a human eval pass on every 50th handoff.
+
+5. **Silent integration failure.** The CRM webhook 500s, the agent acts as if it succeeded, the customer thinks the appointment is booked. Fix: synchronous confirmation back to the agent before it tells the customer anything is done, and a retry queue with paging on persistent failures.
+
+## What now
+
+If something here tripped a wire, [grab time on the calendar](/book). We do a free 20-minute working session where we map your current flow and circle the two places AI moves the needle this quarter.
+
+You can also [browse the rest of the blog](/blog) for 40-plus posts in the same operator voice, no fluff.
+
+

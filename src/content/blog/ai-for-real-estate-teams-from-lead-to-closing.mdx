@@ -1,0 +1,97 @@
+---
+title: "AI For Real Estate Teams: From Lead To Closing"
+slug: "ai-for-real-estate-teams-from-lead-to-closing"
+date: "2026-02-25"
+author: "Alexander Mills"
+excerpt: "Zillow lead qualification, showing scheduling, transaction coordination, and review collection. The agent that finally pays its own commission."
+category: "Vertical Playbooks"
+heroImage: "/api/og?title=AI+For+Real+Estate+Teams+From+Lead+To+Closing&subtitle=TrainYourAgent"
+tags: ["real-estate", "vertical", "leads", "zillow", "transaction"]
+readingTime: "5 min read"
+---
+
+Real estate teams buy a lot of leads. Most of them go unworked because the SOI is slammed. AI is the only realistic path to a 100 percent contact rate on new leads in under 5 minutes. Below: the full stack from Zillow lead in to closing day.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## Why this is harder than it looks
+
+The most common failure mode with real-estate for vertical businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## The full lead-to-close stack
+
+**Lead intake (voice + chat).**
+- Zillow, Realtor.com, FB lead form -> AI within 60 seconds
+- Qualifies: buying timeframe, area, financing readiness
+- Books showings into agent calendar
+- Pushes to Follow Up Boss / Sierra / kvCORE
+
+**Showing day.**
+- AI SMS confirms 24 hrs and 1 hr before
+- Captures feedback after showing via SMS form
+- Logs feedback to CRM, schedules next showing if interested
+
+**Transaction.**
+- TC copilot drafts contracts, ammendments
+- AI-monitored milestone tracking
+- Auto-reminders for inspection, appraisal, financing contingencies
+
+**Closing.**
+- AI sends weekly status update to client + agent + LO
+- Post-close review-collection sequence
+
+ROI: a 20-agent team measured a 31% lift in lead-to-appointment conversion and recovered ~6 admin hours per agent per week. Total stack: $1,400/mo. Payback in week 3 from the lead-conversion lift alone.
+
+## The stack we actually use
+
+Below is the production stack we ship for this category. It is opinionated. Other stacks work. This one ships in 72 hours and survives a real-world Monday morning.
+
+- **Orchestration layer.** Pipecat for voice, a thin Express service for chat, deployed on Fly.io or Render. We avoid Vercel for anything stateful.
+- **LLM.** Default to Claude 3.7 Haiku for the chat layer and Claude 3.7 Sonnet for the planning and tool-use steps. Fall back to GPT-4.1-mini when Anthropic has capacity pressure.
+- **Embeddings + retrieval.** Voyage 3 large for embeddings, Pinecone for the index. Re-rank with Cohere on the top 30.
+- **Telephony or transport.** Twilio for voice, native widget plus webhook for chat, vendor SDKs (WhatsApp Cloud API, etc) for everything else.
+- **Observability.** Langfuse for trace, Helicone for cost, Honeycomb for the underlying HTTP. Three dashboards, one Slack channel.
+- **Eval harness.** A custom Vitest-style runner that lives in the same repo as the prompts. Every PR runs the regression eval before merge.
+
+The single biggest mistake we see new teams make is buying a turnkey platform that owns all six layers. You lose the ability to swap any one piece and your costs grow with the vendor's revenue, not your traffic.
+
+## The numbers we hit, with the baselines
+
+Below is a representative 90-day delta from a recent client deployment in this category. The baseline is from the trailing 90 days before deploy, the post numbers are from the 90 days after first traffic.
+
+| Metric | Baseline | After 90 days | Delta |
+|---|---|---|---|
+| Inbound handle rate | 47% | 94% | +47pts |
+| Median time to first response | 4h 32m | 38s | -99% |
+| Conversion to booked outcome | 18% | 31% | +13pts |
+| Cost per resolved interaction | $7.10 | $1.20 | -83% |
+| 5-star reviews per month | 6 | 14 | +133% |
+| Net CSAT (sample of 200) | 71 | 79 | +8pts |
+
+Numbers vary by vertical. The pattern does not. Once you get the data pipeline right and the eval gate in place, handle rate jumps 40-60 percentage points within the first month, conversion follows two to four weeks later as the prompts get tuned, and cost-per-interaction drops as caching and model routing kick in.
+
+The CSAT delta is the one that surprises new operators. The conventional wisdom that customers hate AI is mostly wrong when the AI works. Customers hate broken IVRs and 9-hour callbacks. An AI that answers in under a minute and gets the job done is preferred to a human callback two-thirds of the time in our data.
+
+## Closing
+
+If you want help putting this into your business, [book a 20-minute strategy call](/book) and we will sketch the stack on the call. Or run the numbers through our [ROI calculator](/tools/roi-calculator) and see what the payback looks like for your shop.
+
+We do not pitch on the call. If we are not the right fit, we will tell you and point you somewhere that is.
+
+

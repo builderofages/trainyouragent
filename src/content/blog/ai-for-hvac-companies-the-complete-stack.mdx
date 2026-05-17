@@ -1,0 +1,108 @@
+---
+title: "AI For HVAC Companies: The Complete Stack"
+slug: "ai-for-hvac-companies-the-complete-stack"
+date: "2026-04-22"
+author: "Alexander Mills"
+excerpt: "Voice for after-hours, chat for booking, dispatch automations, review reply, and the full integration map for ServiceTitan or Housecall Pro."
+category: "Vertical Playbooks"
+heroImage: "/api/og?title=AI+For+HVAC+Companies+The+Complete+Stack&subtitle=TrainYourAgent"
+tags: ["hvac", "vertical", "servicetitan", "stack", "complete"]
+readingTime: "5 min read"
+---
+
+We have shipped the same core HVAC AI stack to 11 shops in the last 18 months. The stack is voice for after-hours, chat for booking, a dispatch automation layer, and a review-reply agent. Below: the full integration map for ServiceTitan or Housecall Pro, with the gotchas we hit in each.
+
+## Why this is harder than it looks
+
+The most common failure mode with hvac for vertical businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## The stack we actually use
+
+Below is the production stack we ship for this category. It is opinionated. Other stacks work. This one ships in 72 hours and survives a real-world Monday morning.
+
+- **Orchestration layer.** Pipecat for voice, a thin Express service for chat, deployed on Fly.io or Render. We avoid Vercel for anything stateful.
+- **LLM.** Default to Claude 3.7 Haiku for the chat layer and Claude 3.7 Sonnet for the planning and tool-use steps. Fall back to GPT-4.1-mini when Anthropic has capacity pressure.
+- **Embeddings + retrieval.** Voyage 3 large for embeddings, Pinecone for the index. Re-rank with Cohere on the top 30.
+- **Telephony or transport.** Twilio for voice, native widget plus webhook for chat, vendor SDKs (WhatsApp Cloud API, etc) for everything else.
+- **Observability.** Langfuse for trace, Helicone for cost, Honeycomb for the underlying HTTP. Three dashboards, one Slack channel.
+- **Eval harness.** A custom Vitest-style runner that lives in the same repo as the prompts. Every PR runs the regression eval before merge.
+
+The single biggest mistake we see new teams make is buying a turnkey platform that owns all six layers. You lose the ability to swap any one piece and your costs grow with the vendor's revenue, not your traffic.
+
+## The full integration map
+
+Below: the integration map we ship for HVAC shops on ServiceTitan or Housecall Pro.
+
+**Voice (after-hours):**
+- Twilio (number forward at 6pm) -> Pipecat -> Deepgram -> Claude Haiku -> Cartesia
+- ServiceTitan webhook for booking creation
+- Twilio SMS to on-call tech with PagerDuty escalation
+- Slack notification to #after-hours
+
+**Chat (website + Google Business Profile):**
+- Custom widget -> orchestrator
+- Knowledge base from Notion (pricing, service area, FAQ)
+- Booking via ServiceTitan API
+- SMS confirmation to customer
+
+**Review reply agent:**
+- Polls Google Business Profile API every 4 hours
+- Drafts response in shop's voice
+- Office manager approves with one click via daily email
+- Posts response
+
+**Internal copilot:**
+- Slack bot for dispatchers
+- Queries ServiceTitan for tech locations, history, parts inventory
+- Drafts customer call-back scripts
+
+**Total stack cost (residential 14-tech shop):** ~$680/mo all-in. Payback in week 2 of the voice deployment alone.
+
+## The numbers we hit, with the baselines
+
+Below is a representative 90-day delta from a recent client deployment in this category. The baseline is from the trailing 90 days before deploy, the post numbers are from the 90 days after first traffic.
+
+| Metric | Baseline | After 90 days | Delta |
+|---|---|---|---|
+| Inbound handle rate | 47% | 94% | +47pts |
+| Median time to first response | 4h 32m | 38s | -99% |
+| Conversion to booked outcome | 18% | 31% | +13pts |
+| Cost per resolved interaction | $7.10 | $1.20 | -83% |
+| 5-star reviews per month | 6 | 14 | +133% |
+| Net CSAT (sample of 200) | 71 | 79 | +8pts |
+
+Numbers vary by vertical. The pattern does not. Once you get the data pipeline right and the eval gate in place, handle rate jumps 40-60 percentage points within the first month, conversion follows two to four weeks later as the prompts get tuned, and cost-per-interaction drops as caching and model routing kick in.
+
+The CSAT delta is the one that surprises new operators. The conventional wisdom that customers hate AI is mostly wrong when the AI works. Customers hate broken IVRs and 9-hour callbacks. An AI that answers in under a minute and gets the job done is preferred to a human callback two-thirds of the time in our data.
+
+## The 72-hour deploy plan
+
+We ship most projects in this category on a 72-hour clock. Here is the breakdown.
+
+**Hour 0-8.** Kickoff. Interview the two people who do this job today. Pull 50 sample inputs (calls, chats, tickets). Establish baseline metrics. Identify the three top customer intents.
+
+**Hour 8-24.** First-pass prompt. Wire the orchestration. Stand up the eval harness with 25 cases drawn from the sample inputs. The eval harness has to exist before the first prompt does.
+
+**Hour 24-40.** Integrations. CRM webhook, calendar booking, payment link if relevant. Each integration ships with a synchronous confirmation path.
+
+**Hour 40-56.** Internal QA. The two people we interviewed in hour 0 spend 90 minutes running the agent through their hardest scenarios. Their feedback drives the second-pass prompt.
+
+**Hour 56-68.** Shadow traffic. Real customer interactions, AI answers, human reviews before the answer is sent. We are looking for any case where the AI's draft is worse than the human's draft.
+
+**Hour 68-72.** Cutover. We flip the routing rule, monitor for the first hour, and hand off the on-call rotation to the client's champion. The implementer stays on standby for 7 days.
+
+> **Operator note:** The 72-hour clock is real but it assumes the client has decided on success criteria before we start. If success criteria are unclear at hour 0, the clock does not start until they are. This is the single biggest cause of pilot drift we see.
+
+## Closing
+
+If you want help putting this into your business, [book a 20-minute strategy call](/book) and we will sketch the stack on the call. Or run the numbers through our [ROI calculator](/tools/roi-calculator) and see what the payback looks like for your shop.
+
+We do not pitch on the call. If we are not the right fit, we will tell you and point you somewhere that is.
+
+

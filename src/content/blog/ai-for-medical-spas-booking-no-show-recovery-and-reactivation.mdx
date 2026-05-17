@@ -1,0 +1,98 @@
+---
+title: "AI For Medical Spas: Booking, No-Show Recovery, And Reactivation"
+slug: "ai-for-medical-spas-booking-no-show-recovery-and-reactivation"
+date: "2026-04-14"
+author: "Alexander Mills"
+excerpt: "Med spa economics live and die on chair utilization. Here is the AI stack that fills the chair, recovers no-shows, and reactivates lapsed clients."
+category: "Vertical Playbooks"
+heroImage: "/api/og?title=AI+For+Medical+Spas+Booking+No-Show+Recovery+And+Reactivation&subtitle=TrainYourAgent"
+tags: ["medical-spa", "vertical", "booking", "no-show", "reactivation"]
+readingTime: "6 min read"
+---
+
+Med spas live and die on chair utilization. A 5 percent no-show rate eats the month. A 15 percent reactivation rate makes the year. AI is the only realistic way to push both numbers in the right direction at SMB scale. Below: the stack.
+
+## The numbers we hit, with the baselines
+
+Below is a representative 90-day delta from a recent client deployment in this category. The baseline is from the trailing 90 days before deploy, the post numbers are from the 90 days after first traffic.
+
+| Metric | Baseline | After 90 days | Delta |
+|---|---|---|---|
+| Inbound handle rate | 47% | 94% | +47pts |
+| Median time to first response | 4h 32m | 38s | -99% |
+| Conversion to booked outcome | 18% | 31% | +13pts |
+| Cost per resolved interaction | $7.10 | $1.20 | -83% |
+| 5-star reviews per month | 6 | 14 | +133% |
+| Net CSAT (sample of 200) | 71 | 79 | +8pts |
+
+Numbers vary by vertical. The pattern does not. Once you get the data pipeline right and the eval gate in place, handle rate jumps 40-60 percentage points within the first month, conversion follows two to four weeks later as the prompts get tuned, and cost-per-interaction drops as caching and model routing kick in.
+
+The CSAT delta is the one that surprises new operators. The conventional wisdom that customers hate AI is mostly wrong when the AI works. Customers hate broken IVRs and 9-hour callbacks. An AI that answers in under a minute and gets the job done is preferred to a human callback two-thirds of the time in our data.
+
+## The 72-hour deploy plan
+
+We ship most projects in this category on a 72-hour clock. Here is the breakdown.
+
+**Hour 0-8.** Kickoff. Interview the two people who do this job today. Pull 50 sample inputs (calls, chats, tickets). Establish baseline metrics. Identify the three top customer intents.
+
+**Hour 8-24.** First-pass prompt. Wire the orchestration. Stand up the eval harness with 25 cases drawn from the sample inputs. The eval harness has to exist before the first prompt does.
+
+**Hour 24-40.** Integrations. CRM webhook, calendar booking, payment link if relevant. Each integration ships with a synchronous confirmation path.
+
+**Hour 40-56.** Internal QA. The two people we interviewed in hour 0 spend 90 minutes running the agent through their hardest scenarios. Their feedback drives the second-pass prompt.
+
+**Hour 56-68.** Shadow traffic. Real customer interactions, AI answers, human reviews before the answer is sent. We are looking for any case where the AI's draft is worse than the human's draft.
+
+**Hour 68-72.** Cutover. We flip the routing rule, monitor for the first hour, and hand off the on-call rotation to the client's champion. The implementer stays on standby for 7 days.
+
+> **Operator note:** The 72-hour clock is real but it assumes the client has decided on success criteria before we start. If success criteria are unclear at hour 0, the clock does not start until they are. This is the single biggest cause of pilot drift we see.
+
+## The 3 workflows that fill the chair
+
+**Booking.** Voice + chat agent for inbound. Knows the menu, knows pricing, knows package deals. Books directly into the practice management system (Mindbody, Boulevard, Aesthetic Record).
+
+**No-show recovery.** Within 2 hrs of a no-show, AI calls + texts to rebook. Offers a 10% discount (configurable) for booking within 48 hrs. Recovers ~42% of no-shows in our data.
+
+**Reactivation.** Quarterly outreach to clients who have not booked in 90+ days. Personalized to last service: 'time for your next botox?', 'how is your skin since the last facial?'. Conversion 8-15%, which at med spa AVG ticket ($380) is significant.
+
+ROI math for a $1.2M annual revenue med spa:
+- Booking lift: +12% on inbound = +$60K/yr
+- No-show recovery: ~$48K/yr in recovered visits
+- Reactivation: ~$72K/yr in re-engaged client revenue
+- Total annualized: ~$180K
+- Stack cost: $1,100/mo all-in
+- Payback: under 8 weeks
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## Next step
+
+If you want to pressure-test the numbers above against your business, [book a call](/book). It is free and we do not bring slides.
+
+Prefer to read more first? Our [case studies](/case-studies) walk through three full deployments: what worked, what we would do differently, and what each one cost.
+
+

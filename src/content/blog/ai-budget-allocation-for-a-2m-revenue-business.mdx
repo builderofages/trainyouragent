@@ -1,0 +1,94 @@
+---
+title: "AI Budget Allocation For A $2M Revenue Business"
+slug: "ai-budget-allocation-for-a-2m-revenue-business"
+date: "2026-03-28"
+author: "Alexander Mills"
+excerpt: "How a 2M revenue service business should split 40K of AI budget across voice, chat, internal tools, and pilots. With the actual line items."
+category: "AI Strategy"
+heroImage: "/api/og?title=AI+Budget+Allocation+For+A+$2M+Revenue+Business&subtitle=TrainYourAgent"
+tags: ["smb", "budget", "allocation", "finance", "strategy"]
+readingTime: "5 min read"
+---
+
+A 2M revenue service business asked me how to spend 40K on AI this year. Below is the line-item budget we built. It is not the only right answer, but it is the one I have seen pay back the fastest across about 60 deals.
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## The tradeoffs we made and why
+
+Every architecture choice in this category is a tradeoff. Here are the ones we have made consciously, and the alternative we did not pick.
+
+We use Pipecat instead of building our own orchestration. The win is months of saved engineering. The cost is being a release behind on a few model integrations.
+
+We use Anthropic as the default LLM with OpenAI failover, not the other way around. The win is consistently lower hallucination rates in our eval set. The cost is slightly higher cost-per-token at the equivalent model tier.
+
+We run a custom eval harness instead of using a vendor product. The win is the eval set lives in the same Git repo as the prompts, so PRs that change prompts fail the build if they break an eval. The cost is we own the upkeep.
+
+We use Twilio over a cheaper telephony provider. The win is concurrency ceiling and the depth of the diagnostic tools. The cost is roughly 18 percent more per minute.
+
+We deploy on Fly.io, not Vercel. The win is real persistent connections and global edge POPs that survive long-lived voice sessions. The cost is more devops overhead.
+
+These tradeoffs are not laws. They are starting points. If you tell us you have an existing GCP estate, we will adapt the stack. The principles do not move; the implementations do.
+
+## The $40K line-item budget
+
+| Line item | $ | Notes |
+|---|---|---|
+| Voice agent (after-hours pilot) | $8,400 | $700/mo all-in for 12 months |
+| Chat agent (web + SMS) | $6,000 | $500/mo |
+| Internal AI tools (Claude/ChatGPT seats) | $3,600 | 15 seats x $20/mo |
+| Implementation + setup | $9,000 | One-time, voice + chat |
+| Eval harness + observability | $2,400 | $200/mo |
+| Training (team) | $1,800 | 2 sessions, internal |
+| Contingency / experimentation | $4,800 | Discovery for project #3 |
+| Annual review + tuning | $4,000 | Quarterly tuning passes |
+| **Total** | **$40,000** | |
+
+Recoverable cost (revenue lifts and saved hours):
+- Voice agent: +$58K annualized at 90-day pace from a comparable client
+- Chat agent: +$22K (lead recovery + saved CS hours)
+- Internal tools: ~5 hrs/wk x 15 = 75 hrs/wk recovered; valued at $25 fully loaded = $1,875/wk = $97K/yr
+
+Net: ~$135K of impact for $40K spend. Payback under 4 months. Numbers vary; pattern holds.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## Why this is harder than it looks
+
+The most common failure mode with smb for budget businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## Where to go next
+
+The fastest way to know if any of this applies is a [20-minute call](/book). Bring your numbers and we will do the math live. If you would rather poke around first, our [tools page](/tools) has a half-dozen free calculators that take five minutes each.
+
+No newsletter funnel, no pitch deck. Just the math.
+
+

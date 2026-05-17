@@ -1,0 +1,90 @@
+---
+title: "AI Vendor Due Diligence: The 12 Questions To Ask"
+slug: "ai-vendor-due-diligence-the-12-questions-to-ask"
+date: "2026-02-18"
+author: "Alexander Mills"
+excerpt: "BAA, data residency, eval transparency, model versioning. The 12 due-diligence questions that surface a bad vendor in under an hour."
+category: "AI Strategy"
+heroImage: "/api/og?title=AI+Vendor+Due+Diligence+The+12+Questions+To+Ask&subtitle=TrainYourAgent"
+tags: ["vendors", "due-diligence", "procurement", "compliance", "questions"]
+readingTime: "6 min read"
+---
+
+Most AI vendor RFPs are 60 questions long and miss the 12 that matter. Below are the 12 questions that surface a bad vendor in under an hour. We run this list on every platform before we recommend it to a client.
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## The tradeoffs we made and why
+
+Every architecture choice in this category is a tradeoff. Here are the ones we have made consciously, and the alternative we did not pick.
+
+We use Pipecat instead of building our own orchestration. The win is months of saved engineering. The cost is being a release behind on a few model integrations.
+
+We use Anthropic as the default LLM with OpenAI failover, not the other way around. The win is consistently lower hallucination rates in our eval set. The cost is slightly higher cost-per-token at the equivalent model tier.
+
+We run a custom eval harness instead of using a vendor product. The win is the eval set lives in the same Git repo as the prompts, so PRs that change prompts fail the build if they break an eval. The cost is we own the upkeep.
+
+We use Twilio over a cheaper telephony provider. The win is concurrency ceiling and the depth of the diagnostic tools. The cost is roughly 18 percent more per minute.
+
+We deploy on Fly.io, not Vercel. The win is real persistent connections and global edge POPs that survive long-lived voice sessions. The cost is more devops overhead.
+
+These tradeoffs are not laws. They are starting points. If you tell us you have an existing GCP estate, we will adapt the stack. The principles do not move; the implementations do.
+
+## The 12 questions
+
+1. Show me a real production recording or transcript from a named customer in my vertical.
+2. What is your p50 and p99 latency or response time?
+3. Can I see your eval harness and the most recent results?
+4. What is your runbook when your underlying LLM provider has an outage?
+5. What is the all-in cost per interaction, including telephony/transport, model, observability, and your margin?
+6. What is your SLA for prompt changes, and what is the rollback procedure?
+7. Where are call recordings and transcripts stored, in what format, and for how long?
+8. Do you sign BAAs? What sub-processors are in scope?
+9. Which 3 integrations do you ship into production weekly?
+10. What is the concurrency ceiling per customer, and what happens when it is hit?
+11. Who is on-call after hours, by name, with what response SLA?
+12. Will you give me 3 callable references in my vertical?
+
+If the vendor cannot answer in under an hour, the answer is no. We have run this list on every platform we recommend. Two of 18 pass cleanly.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## Why this is harder than it looks
+
+The most common failure mode with vendors for due-diligence businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## What now
+
+If something here tripped a wire, [grab time on the calendar](/book). We do a free 20-minute working session where we map your current flow and circle the two places AI moves the needle this quarter.
+
+You can also [browse the rest of the blog](/blog) for 40-plus posts in the same operator voice, no fluff.
+
+

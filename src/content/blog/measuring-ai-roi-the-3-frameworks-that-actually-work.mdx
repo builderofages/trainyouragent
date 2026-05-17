@@ -1,0 +1,101 @@
+---
+title: "Measuring AI ROI: The 3 Frameworks That Actually Work"
+slug: "measuring-ai-roi-the-3-frameworks-that-actually-work"
+date: "2026-03-19"
+author: "Alexander Mills"
+excerpt: "Hours saved, error rate, and revenue per call. The three measurement frameworks that hold up to a CFO. Plus the two that do not."
+category: "AI Strategy"
+heroImage: "/api/og?title=Measuring+AI+ROI+The+3+Frameworks+That+Actually+Work&subtitle=TrainYourAgent"
+tags: ["roi", "measurement", "metrics", "frameworks", "cfo"]
+readingTime: "6 min read"
+---
+
+CFOs do not care about token cost. They care about three things: hours saved (measurable), error rate (measurable), and revenue per touch (measurable). Below are the three ROI frameworks that hold up to a CFO, plus the two that do not.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## Why this is harder than it looks
+
+The most common failure mode with roi for measurement businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## The 3 frameworks
+
+**Framework 1: Hours saved x loaded rate.** For internal tools and CS deflection.
+- Measure: hours of human work no longer required, monthly
+- Multiply: fully-loaded hourly rate of the person who was doing it
+- Subtract: AI cost
+- Result: monthly cost saving
+- Honest about: assumes the saved hours go to higher-value work, which is sometimes true
+
+**Framework 2: Error rate reduction x cost per error.** For quality-improvement use cases.
+- Measure: errors per 1000 transactions, before and after
+- Multiply by cost per error (cost of correction, refund, reputation)
+- Result: monthly error-cost avoided
+- Honest about: cost-per-error is hard to estimate; use ranges
+
+**Framework 3: Conversion lift x average transaction value.** For revenue-touching use cases.
+- Measure: % conversion lift on the workflow, holding other things constant
+- Multiply: monthly volume x AVG transaction value x lift
+- Result: monthly incremental revenue
+- Honest about: attribution is messy; use a true A/B if you can
+
+The two frameworks that do NOT hold up to a CFO: 'productivity gains' (handwavy) and 'time saved on tasks' (often theoretical). Stick to the three above.
+
+## The numbers we hit, with the baselines
+
+Below is a representative 90-day delta from a recent client deployment in this category. The baseline is from the trailing 90 days before deploy, the post numbers are from the 90 days after first traffic.
+
+| Metric | Baseline | After 90 days | Delta |
+|---|---|---|---|
+| Inbound handle rate | 47% | 94% | +47pts |
+| Median time to first response | 4h 32m | 38s | -99% |
+| Conversion to booked outcome | 18% | 31% | +13pts |
+| Cost per resolved interaction | $7.10 | $1.20 | -83% |
+| 5-star reviews per month | 6 | 14 | +133% |
+| Net CSAT (sample of 200) | 71 | 79 | +8pts |
+
+Numbers vary by vertical. The pattern does not. Once you get the data pipeline right and the eval gate in place, handle rate jumps 40-60 percentage points within the first month, conversion follows two to four weeks later as the prompts get tuned, and cost-per-interaction drops as caching and model routing kick in.
+
+The CSAT delta is the one that surprises new operators. The conventional wisdom that customers hate AI is mostly wrong when the AI works. Customers hate broken IVRs and 9-hour callbacks. An AI that answers in under a minute and gets the job done is preferred to a human callback two-thirds of the time in our data.
+
+## The 72-hour deploy plan
+
+We ship most projects in this category on a 72-hour clock. Here is the breakdown.
+
+**Hour 0-8.** Kickoff. Interview the two people who do this job today. Pull 50 sample inputs (calls, chats, tickets). Establish baseline metrics. Identify the three top customer intents.
+
+**Hour 8-24.** First-pass prompt. Wire the orchestration. Stand up the eval harness with 25 cases drawn from the sample inputs. The eval harness has to exist before the first prompt does.
+
+**Hour 24-40.** Integrations. CRM webhook, calendar booking, payment link if relevant. Each integration ships with a synchronous confirmation path.
+
+**Hour 40-56.** Internal QA. The two people we interviewed in hour 0 spend 90 minutes running the agent through their hardest scenarios. Their feedback drives the second-pass prompt.
+
+**Hour 56-68.** Shadow traffic. Real customer interactions, AI answers, human reviews before the answer is sent. We are looking for any case where the AI's draft is worse than the human's draft.
+
+**Hour 68-72.** Cutover. We flip the routing rule, monitor for the first hour, and hand off the on-call rotation to the client's champion. The implementer stays on standby for 7 days.
+
+> **Operator note:** The 72-hour clock is real but it assumes the client has decided on success criteria before we start. If success criteria are unclear at hour 0, the clock does not start until they are. This is the single biggest cause of pilot drift we see.
+
+## Closing
+
+This post is the short version. The long version takes 90 minutes and a whiteboard. If you want the long version, [grab a slot](/book) and bring your worst metric. We will work backward from there.
+
+Or, if you are still in the read-and-think phase, our [docs](/docs) and [comparisons](/comparisons) pages have most of the answers in writing.
+
+

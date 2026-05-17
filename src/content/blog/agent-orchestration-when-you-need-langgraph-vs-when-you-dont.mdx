@@ -1,0 +1,95 @@
+---
+title: "Agent Orchestration: When You Need LangGraph vs When You Do Not"
+slug: "agent-orchestration-when-you-need-langgraph-vs-when-you-dont"
+date: "2026-03-29"
+author: "Alexander Mills"
+excerpt: "LangGraph, CrewAI, Mastra, plain function-calling. The decision tree we use to pick orchestration, and the cost of picking wrong."
+category: "AI Infrastructure"
+heroImage: "/api/og?title=Agent+Orchestration+When+You+Need+LangGraph+vs+When+You+Do+Not&subtitle=TrainYourAgent"
+tags: ["orchestration", "langgraph", "crewai", "architecture", "engineering"]
+readingTime: "6 min read"
+---
+
+Orchestration frameworks are a fashion industry. LangGraph this quarter, CrewAI last quarter, Mastra next quarter. Most teams ship the framework before they understand whether they needed one. Below: the decision tree we use, and the cost of picking wrong.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## Why this is harder than it looks
+
+The most common failure mode with orchestration for langgraph businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## The decision tree
+
+**Use plain function-calling when:**
+- Single-turn or shallow multi-turn
+- Fewer than 6 tools
+- No long-running state between turns
+
+**Use a lightweight orchestrator (Mastra, custom Express) when:**
+- 6-12 tools
+- Some persistent state (carts, sessions, half-completed flows)
+- You need to swap models per step but not parallel-fan-out
+
+**Use LangGraph when:**
+- Complex multi-agent topology with shared state
+- Parallel tool calls with merge points
+- Explicit checkpointing and human-in-the-loop steps
+- You can afford the framework's learning curve
+
+**Use CrewAI when:**
+- Quick multi-agent prototyping
+- You are comfortable with a more opinionated framework
+- Not for production-critical paths until you have read the source
+
+Cost of picking wrong: weeks of refactor. We have built systems on LangGraph that should have been a 200-line Express service and vice versa. The honest test is whether you can sketch the agent topology on a napkin in under 90 seconds. If yes, do not reach for a framework.
+
+## The stack we actually use
+
+Below is the production stack we ship for this category. It is opinionated. Other stacks work. This one ships in 72 hours and survives a real-world Monday morning.
+
+- **Orchestration layer.** Pipecat for voice, a thin Express service for chat, deployed on Fly.io or Render. We avoid Vercel for anything stateful.
+- **LLM.** Default to Claude 3.7 Haiku for the chat layer and Claude 3.7 Sonnet for the planning and tool-use steps. Fall back to GPT-4.1-mini when Anthropic has capacity pressure.
+- **Embeddings + retrieval.** Voyage 3 large for embeddings, Pinecone for the index. Re-rank with Cohere on the top 30.
+- **Telephony or transport.** Twilio for voice, native widget plus webhook for chat, vendor SDKs (WhatsApp Cloud API, etc) for everything else.
+- **Observability.** Langfuse for trace, Helicone for cost, Honeycomb for the underlying HTTP. Three dashboards, one Slack channel.
+- **Eval harness.** A custom Vitest-style runner that lives in the same repo as the prompts. Every PR runs the regression eval before merge.
+
+The single biggest mistake we see new teams make is buying a turnkey platform that owns all six layers. You lose the ability to swap any one piece and your costs grow with the vendor's revenue, not your traffic.
+
+## The failure modes we have learned to engineer around
+
+Five failure modes show up in this category over and over. Each has a specific fix.
+
+1. **Drift in prompt voice.** A prompt that worked in week one starts producing off-brand replies by week four because the model behind it silently versioned. Fix: pin the model version, run a weekly voice-drift eval against 50 canonical scenarios, alert on a 3-point deviation.
+
+2. **Stale retrieval.** The KB updated, the embeddings did not. The agent confidently quotes last quarter's pricing. Fix: a freshness-check job that compares KB modified timestamps against embedding job runs hourly, and a hard ceiling that prevents serving any answer grounded in a document older than the freshness window.
+
+3. **Quiet hallucinations.** The agent invents a policy or a part number with high confidence. Fix: every customer-facing answer must cite at least one source from retrieval, and the eval set includes 25 adversarial questions designed to bait hallucinations. No source, no answer.
+
+4. **Escalation breakdown.** The agent escalates to a human, but the handoff context is one sentence and the customer has to start over. Fix: structured handoff payload (intent + history + sentiment + suggested next action), and a human eval pass on every 50th handoff.
+
+5. **Silent integration failure.** The CRM webhook 500s, the agent acts as if it succeeded, the customer thinks the appointment is booked. Fix: synchronous confirmation back to the agent before it tells the customer anything is done, and a retry queue with paging on persistent failures.
+
+## Where to go next
+
+The fastest way to know if any of this applies is a [20-minute call](/book). Bring your numbers and we will do the math live. If you would rather poke around first, our [tools page](/tools) has a half-dozen free calculators that take five minutes each.
+
+No newsletter funnel, no pitch deck. Just the math.
+
+

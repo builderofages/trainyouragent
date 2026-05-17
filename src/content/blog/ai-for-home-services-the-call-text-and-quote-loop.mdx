@@ -1,0 +1,93 @@
+---
+title: "AI For Home Services: The Call, Text, And Quote Loop"
+slug: "ai-for-home-services-the-call-text-and-quote-loop"
+date: "2026-05-08"
+author: "Alexander Mills"
+excerpt: "Plumbers, electricians, garage doors. The same three-step loop, and how AI runs it in under 8 minutes: call answered, text sent, quote delivered."
+category: "Vertical Playbooks"
+heroImage: "/api/og?title=AI+For+Home+Services+The+Call+Text+And+Quote+Loop&subtitle=TrainYourAgent"
+tags: ["home-services", "vertical", "quote", "call", "text"]
+readingTime: "6 min read"
+---
+
+Plumbers, electricians, garage door companies, appliance repair. The motion is the same. Call comes in, text goes out, quote comes back. The shops that compress this loop to under 8 minutes win the market. Below: how AI runs the loop.
+
+## The 72-hour deploy plan
+
+We ship most projects in this category on a 72-hour clock. Here is the breakdown.
+
+**Hour 0-8.** Kickoff. Interview the two people who do this job today. Pull 50 sample inputs (calls, chats, tickets). Establish baseline metrics. Identify the three top customer intents.
+
+**Hour 8-24.** First-pass prompt. Wire the orchestration. Stand up the eval harness with 25 cases drawn from the sample inputs. The eval harness has to exist before the first prompt does.
+
+**Hour 24-40.** Integrations. CRM webhook, calendar booking, payment link if relevant. Each integration ships with a synchronous confirmation path.
+
+**Hour 40-56.** Internal QA. The two people we interviewed in hour 0 spend 90 minutes running the agent through their hardest scenarios. Their feedback drives the second-pass prompt.
+
+**Hour 56-68.** Shadow traffic. Real customer interactions, AI answers, human reviews before the answer is sent. We are looking for any case where the AI's draft is worse than the human's draft.
+
+**Hour 68-72.** Cutover. We flip the routing rule, monitor for the first hour, and hand off the on-call rotation to the client's champion. The implementer stays on standby for 7 days.
+
+> **Operator note:** The 72-hour clock is real but it assumes the client has decided on success criteria before we start. If success criteria are unclear at hour 0, the clock does not start until they are. This is the single biggest cause of pilot drift we see.
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## The 8-minute loop
+
+The motion is the same across plumbing, electrical, garage doors, appliance repair: call answered, text sent, quote delivered. The shops that compress this loop to under 8 minutes win the market.
+
+**Minutes 0-2.** AI answers the call. Captures problem in plain language. Confirms address.
+
+**Minutes 2-3.** AI sends SMS with truck arrival window and a link to upload photos of the issue.
+
+**Minutes 3-6.** Homeowner uploads photos. AI runs them through a vision model to flag obvious issues and prep the tech.
+
+**Minutes 6-7.** AI looks up parts availability in the relevant supplier system, surfaces likely cost range to homeowner ('most jobs like this are $X-Y, tech will confirm on-site').
+
+**Minutes 7-8.** Tech is dispatched with a brief that includes the photos and the likely scope.
+
+By the time the tech arrives, the homeowner has been touched 4 times in less than 10 minutes. Conversion rate vs the 'voicemail and call back tomorrow' competitor is brutal.
+
+Stack: voice agent + SMS workflow + vision model + dispatch integration. ~$650/mo all-in for a 6-tech shop.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## Why this is harder than it looks
+
+The most common failure mode with home-services for vertical businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## Closing
+
+This post is the short version. The long version takes 90 minutes and a whiteboard. If you want the long version, [grab a slot](/book) and bring your worst metric. We will work backward from there.
+
+Or, if you are still in the read-and-think phase, our [docs](/docs) and [comparisons](/comparisons) pages have most of the answers in writing.
+
+

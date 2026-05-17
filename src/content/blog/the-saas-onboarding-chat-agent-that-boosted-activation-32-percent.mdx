@@ -1,0 +1,81 @@
+---
+title: "The SaaS Onboarding Chat Agent That Boosted Activation 32%"
+slug: "the-saas-onboarding-chat-agent-that-boosted-activation-32-percent"
+date: "2026-05-04"
+author: "Alexander Mills"
+excerpt: "How a Series A SaaS added an onboarding chat agent in 11 days, the 6 prompts that moved the needle, and the activation chart before and after."
+category: "AI Strategy"
+heroImage: "/api/og?title=The+SaaS+Onboarding+Chat+Agent+That+Boosted+Activation+32%&subtitle=TrainYourAgent"
+tags: ["chat", "saas", "onboarding", "activation", "case-study"]
+readingTime: "6 min read"
+---
+
+A Series A SaaS we worked with had an activation problem. Forty-one percent of signups did the first useful action. They wanted to get to 55 percent. We shipped an onboarding chat agent in 11 days. Eight weeks later, activation hit 54 percent. Here is what we did and which prompts moved the needle.
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## The 6 prompts that moved the needle
+
+1. **First-login welcome with single CTA.** Not 'tell me about your role'. One question with one clear next step.
+2. **Stalled-at-empty-state nudge.** If the user lands on a screen and does nothing for 45 seconds, agent asks if they want a 60-second guided demo.
+3. **Permission-denied recovery.** When the user hits a feature locked behind a plan or admin permission, agent surfaces who to ask or what to upgrade.
+4. **Integration unstuck.** When an OAuth flow fails (common), agent offers a screen-share or a direct link to the fix doc.
+5. **First-success congratulation.** When the user does the activation event, agent celebrates and proposes the second action.
+6. **Pre-churn intercept.** Users with low usage in week 2 get a 'what's blocking you' message with a link to book 15 min with CS.
+
+Activation lift came mostly from prompts 2, 3, and 4 — the friction-removers. Prompts 1, 5, 6 were rounding error. The lesson: spend 80% of your prompt design effort on the places where users are visibly stuck, not on welcoming them.
+
+## Why this is harder than it looks
+
+The most common failure mode with chat for saas businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## The stack we actually use
+
+Below is the production stack we ship for this category. It is opinionated. Other stacks work. This one ships in 72 hours and survives a real-world Monday morning.
+
+- **Orchestration layer.** Pipecat for voice, a thin Express service for chat, deployed on Fly.io or Render. We avoid Vercel for anything stateful.
+- **LLM.** Default to Claude 3.7 Haiku for the chat layer and Claude 3.7 Sonnet for the planning and tool-use steps. Fall back to GPT-4.1-mini when Anthropic has capacity pressure.
+- **Embeddings + retrieval.** Voyage 3 large for embeddings, Pinecone for the index. Re-rank with Cohere on the top 30.
+- **Telephony or transport.** Twilio for voice, native widget plus webhook for chat, vendor SDKs (WhatsApp Cloud API, etc) for everything else.
+- **Observability.** Langfuse for trace, Helicone for cost, Honeycomb for the underlying HTTP. Three dashboards, one Slack channel.
+- **Eval harness.** A custom Vitest-style runner that lives in the same repo as the prompts. Every PR runs the regression eval before merge.
+
+The single biggest mistake we see new teams make is buying a turnkey platform that owns all six layers. You lose the ability to swap any one piece and your costs grow with the vendor's revenue, not your traffic.
+
+## Closing
+
+This post is the short version. The long version takes 90 minutes and a whiteboard. If you want the long version, [grab a slot](/book) and bring your worst metric. We will work backward from there.
+
+Or, if you are still in the read-and-think phase, our [docs](/docs) and [comparisons](/comparisons) pages have most of the answers in writing.
+
+

@@ -1,0 +1,98 @@
+---
+title: "Voice Agent Compliance For Healthcare: The HIPAA Checklist"
+slug: "voice-agent-compliance-for-healthcare-the-hipaa-checklist"
+date: "2026-04-07"
+author: "Alexander Mills"
+excerpt: "BAAs, redaction, retention windows, on-call paging, and the exact 14 controls a healthcare voice agent needs to survive a HIPAA audit."
+category: "AI Voice"
+heroImage: "/api/og?title=Voice+Agent+Compliance+For+Healthcare+The+HIPAA+Checklist&subtitle=TrainYourAgent"
+tags: ["voice", "hipaa", "healthcare", "compliance", "security"]
+readingTime: "6 min read"
+---
+
+Healthcare voice agents are catching up to retail, but the compliance work is the part everyone underestimates. BAAs are the easy part. The hard part is the 14 specific controls that show up in an OCR audit. Here is the checklist.
+
+## The stack we actually use
+
+Below is the production stack we ship for this category. It is opinionated. Other stacks work. This one ships in 72 hours and survives a real-world Monday morning.
+
+- **Orchestration layer.** Pipecat for voice, a thin Express service for chat, deployed on Fly.io or Render. We avoid Vercel for anything stateful.
+- **LLM.** Default to Claude 3.7 Haiku for the chat layer and Claude 3.7 Sonnet for the planning and tool-use steps. Fall back to GPT-4.1-mini when Anthropic has capacity pressure.
+- **Embeddings + retrieval.** Voyage 3 large for embeddings, Pinecone for the index. Re-rank with Cohere on the top 30.
+- **Telephony or transport.** Twilio for voice, native widget plus webhook for chat, vendor SDKs (WhatsApp Cloud API, etc) for everything else.
+- **Observability.** Langfuse for trace, Helicone for cost, Honeycomb for the underlying HTTP. Three dashboards, one Slack channel.
+- **Eval harness.** A custom Vitest-style runner that lives in the same repo as the prompts. Every PR runs the regression eval before merge.
+
+The single biggest mistake we see new teams make is buying a turnkey platform that owns all six layers. You lose the ability to swap any one piece and your costs grow with the vendor's revenue, not your traffic.
+
+## The numbers we hit, with the baselines
+
+Below is a representative 90-day delta from a recent client deployment in this category. The baseline is from the trailing 90 days before deploy, the post numbers are from the 90 days after first traffic.
+
+| Metric | Baseline | After 90 days | Delta |
+|---|---|---|---|
+| Inbound handle rate | 47% | 94% | +47pts |
+| Median time to first response | 4h 32m | 38s | -99% |
+| Conversion to booked outcome | 18% | 31% | +13pts |
+| Cost per resolved interaction | $7.10 | $1.20 | -83% |
+| 5-star reviews per month | 6 | 14 | +133% |
+| Net CSAT (sample of 200) | 71 | 79 | +8pts |
+
+Numbers vary by vertical. The pattern does not. Once you get the data pipeline right and the eval gate in place, handle rate jumps 40-60 percentage points within the first month, conversion follows two to four weeks later as the prompts get tuned, and cost-per-interaction drops as caching and model routing kick in.
+
+The CSAT delta is the one that surprises new operators. The conventional wisdom that customers hate AI is mostly wrong when the AI works. Customers hate broken IVRs and 9-hour callbacks. An AI that answers in under a minute and gets the job done is preferred to a human callback two-thirds of the time in our data.
+
+## The 14 controls that survive an OCR audit
+
+1. Signed BAA with every PHI-handling vendor (LLM, STT, TTS, telephony, observability, hosting).
+2. Encryption in transit (TLS 1.3) and at rest (AES-256) on all PHI-touching paths.
+3. Recording retention policy documented and enforced. We default to 90 days unless contractually required longer.
+4. Transcript redaction for SSN, payment, and minor identifiers, run before transcript is written to storage.
+5. Access logs for every PHI read, with reviewer ID, timestamp, and purpose.
+6. Role-based access controls. The agent reads only the tenant's PHI; the engineer reads only redacted samples.
+7. Background-check requirement on any human who touches unredacted PHI.
+8. Annual HIPAA training for the same.
+9. Incident response runbook covering breach notification timelines (60 days for OCR).
+10. Sub-processor list maintained and shared with covered entity quarterly.
+11. Right of access workflow for patient requests (we ship this as an API endpoint).
+12. Right of deletion workflow with cryptographic erase if encryption keys can be rotated per-tenant.
+13. Off-shore data location restrictions where state law requires.
+14. Annual third-party penetration test on the PHI-touching surface.
+
+We ship this as a one-page compliance dashboard for the practice manager. They can hand it to their auditor. We have been through three audits with no findings on the voice-agent surface.
+
+## The failure modes we have learned to engineer around
+
+Five failure modes show up in this category over and over. Each has a specific fix.
+
+1. **Drift in prompt voice.** A prompt that worked in week one starts producing off-brand replies by week four because the model behind it silently versioned. Fix: pin the model version, run a weekly voice-drift eval against 50 canonical scenarios, alert on a 3-point deviation.
+
+2. **Stale retrieval.** The KB updated, the embeddings did not. The agent confidently quotes last quarter's pricing. Fix: a freshness-check job that compares KB modified timestamps against embedding job runs hourly, and a hard ceiling that prevents serving any answer grounded in a document older than the freshness window.
+
+3. **Quiet hallucinations.** The agent invents a policy or a part number with high confidence. Fix: every customer-facing answer must cite at least one source from retrieval, and the eval set includes 25 adversarial questions designed to bait hallucinations. No source, no answer.
+
+4. **Escalation breakdown.** The agent escalates to a human, but the handoff context is one sentence and the customer has to start over. Fix: structured handoff payload (intent + history + sentiment + suggested next action), and a human eval pass on every 50th handoff.
+
+5. **Silent integration failure.** The CRM webhook 500s, the agent acts as if it succeeded, the customer thinks the appointment is booked. Fix: synchronous confirmation back to the agent before it tells the customer anything is done, and a retry queue with paging on persistent failures.
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## Next step
+
+If you want to pressure-test the numbers above against your business, [book a call](/book). It is free and we do not bring slides.
+
+Prefer to read more first? Our [case studies](/case-studies) walk through three full deployments: what worked, what we would do differently, and what each one cost.
+
+

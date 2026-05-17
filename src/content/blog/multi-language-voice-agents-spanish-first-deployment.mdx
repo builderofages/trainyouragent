@@ -1,0 +1,91 @@
+---
+title: "Multi-Language Voice Agents: A Spanish-First Deployment"
+slug: "multi-language-voice-agents-spanish-first-deployment"
+date: "2026-03-17"
+author: "Alexander Mills"
+excerpt: "We built a Spanish-first voice agent for a Tampa roofing company. 41% of inbound calls switched to Spanish on offer. Here is the stack and the cost."
+category: "AI Voice"
+heroImage: "/api/og?title=Multi-Language+Voice+Agents+A+Spanish-First+Deployment&subtitle=TrainYourAgent"
+tags: ["voice", "spanish", "multilingual", "roofing", "case-study"]
+readingTime: "6 min read"
+---
+
+A Tampa roofing company we work with had a problem. Roughly 40 percent of their leads were Spanish-speaking, and the after-hours agent only worked in English. They were quietly losing every one of those calls. We rebuilt the agent Spanish-first. Here is the stack, the prompt design, and what it cost.
+
+## Why this is harder than it looks
+
+The most common failure mode with voice for spanish businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## The stack we actually use
+
+Below is the production stack we ship for this category. It is opinionated. Other stacks work. This one ships in 72 hours and survives a real-world Monday morning.
+
+- **Orchestration layer.** Pipecat for voice, a thin Express service for chat, deployed on Fly.io or Render. We avoid Vercel for anything stateful.
+- **LLM.** Default to Claude 3.7 Haiku for the chat layer and Claude 3.7 Sonnet for the planning and tool-use steps. Fall back to GPT-4.1-mini when Anthropic has capacity pressure.
+- **Embeddings + retrieval.** Voyage 3 large for embeddings, Pinecone for the index. Re-rank with Cohere on the top 30.
+- **Telephony or transport.** Twilio for voice, native widget plus webhook for chat, vendor SDKs (WhatsApp Cloud API, etc) for everything else.
+- **Observability.** Langfuse for trace, Helicone for cost, Honeycomb for the underlying HTTP. Three dashboards, one Slack channel.
+- **Eval harness.** A custom Vitest-style runner that lives in the same repo as the prompts. Every PR runs the regression eval before merge.
+
+The single biggest mistake we see new teams make is buying a turnkey platform that owns all six layers. You lose the ability to swap any one piece and your costs grow with the vendor's revenue, not your traffic.
+
+## The Spanish-first architecture
+
+The deployment was Tampa roofing, 41% Spanish-speaking caller mix, English-only agent missing them all. Below: the rebuild.
+
+**Language detection.** First-utterance language detection via Deepgram's multilingual model. 99.4% accurate in our eval. If detection is ambiguous, agent offers a bilingual greeting and lets the caller pick.
+
+**TTS.** Cartesia Sonic Spanish (es-US). Voice cloned from the dispatch lead's sister (we asked permission). Customer trust climbs noticeably when the voice carries the right accent for the region.
+
+**LLM.** Same Claude prompt, with the operating language injected at runtime. We tested separate English/Spanish prompts; combined prompt with language directive performed within 1% on the eval and is half the maintenance burden.
+
+**SMS receipt.** Sent in the detected language. We initially sent in English regardless and got 4 complaints in the first week.
+
+**Cost.** Identical to English-only stack, about $340/mo. The Spanish capture rate at this shop went from effectively 0% (voicemail in English) to 88% within 30 days. Estimated annual revenue recovery: $214,000.
+
+The post-mortem lesson: do not bolt on Spanish to an English-first agent. The branching, the few-shot examples, the address-validation logic all need a Spanish path designed in, not translated.
+
+## The numbers we hit, with the baselines
+
+Below is a representative 90-day delta from a recent client deployment in this category. The baseline is from the trailing 90 days before deploy, the post numbers are from the 90 days after first traffic.
+
+| Metric | Baseline | After 90 days | Delta |
+|---|---|---|---|
+| Inbound handle rate | 47% | 94% | +47pts |
+| Median time to first response | 4h 32m | 38s | -99% |
+| Conversion to booked outcome | 18% | 31% | +13pts |
+| Cost per resolved interaction | $7.10 | $1.20 | -83% |
+| 5-star reviews per month | 6 | 14 | +133% |
+| Net CSAT (sample of 200) | 71 | 79 | +8pts |
+
+Numbers vary by vertical. The pattern does not. Once you get the data pipeline right and the eval gate in place, handle rate jumps 40-60 percentage points within the first month, conversion follows two to four weeks later as the prompts get tuned, and cost-per-interaction drops as caching and model routing kick in.
+
+The CSAT delta is the one that surprises new operators. The conventional wisdom that customers hate AI is mostly wrong when the AI works. Customers hate broken IVRs and 9-hour callbacks. An AI that answers in under a minute and gets the job done is preferred to a human callback two-thirds of the time in our data.
+
+## The failure modes we have learned to engineer around
+
+Five failure modes show up in this category over and over. Each has a specific fix.
+
+1. **Drift in prompt voice.** A prompt that worked in week one starts producing off-brand replies by week four because the model behind it silently versioned. Fix: pin the model version, run a weekly voice-drift eval against 50 canonical scenarios, alert on a 3-point deviation.
+
+2. **Stale retrieval.** The KB updated, the embeddings did not. The agent confidently quotes last quarter's pricing. Fix: a freshness-check job that compares KB modified timestamps against embedding job runs hourly, and a hard ceiling that prevents serving any answer grounded in a document older than the freshness window.
+
+3. **Quiet hallucinations.** The agent invents a policy or a part number with high confidence. Fix: every customer-facing answer must cite at least one source from retrieval, and the eval set includes 25 adversarial questions designed to bait hallucinations. No source, no answer.
+
+4. **Escalation breakdown.** The agent escalates to a human, but the handoff context is one sentence and the customer has to start over. Fix: structured handoff payload (intent + history + sentiment + suggested next action), and a human eval pass on every 50th handoff.
+
+5. **Silent integration failure.** The CRM webhook 500s, the agent acts as if it succeeded, the customer thinks the appointment is booked. Fix: synchronous confirmation back to the agent before it tells the customer anything is done, and a retry queue with paging on persistent failures.
+
+## What now
+
+If something here tripped a wire, [grab time on the calendar](/book). We do a free 20-minute working session where we map your current flow and circle the two places AI moves the needle this quarter.
+
+You can also [browse the rest of the blog](/blog) for 40-plus posts in the same operator voice, no fluff.
+
+

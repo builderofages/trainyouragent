@@ -1,0 +1,96 @@
+---
+title: "Voice Agent Latency: A Deep Dive Into What Actually Matters"
+slug: "voice-agent-latency-deep-dive-what-actually-matters"
+date: "2026-03-13"
+author: "Alexander Mills"
+excerpt: "Time-to-first-audio is the only latency number that moves bookings. Here is how to measure it, what is broken about p95, and the 7 places we shave milliseconds."
+category: "AI Voice"
+heroImage: "/api/og?title=Voice+Agent+Latency+A+Deep+Dive+Into+What+Actually+Matters&subtitle=TrainYourAgent"
+tags: ["voice", "latency", "performance", "engineering", "deepgram"]
+readingTime: "6 min read"
+---
+
+Latency is the single most-cheated number in voice agent demos. Vendors quote p95 to hide their tail. They benchmark on the demo POP and run you on the cheap one. They start the clock from the wrong place. Below is the only latency number that moves bookings and how to actually measure it.
+
+## The numbers we hit, with the baselines
+
+Below is a representative 90-day delta from a recent client deployment in this category. The baseline is from the trailing 90 days before deploy, the post numbers are from the 90 days after first traffic.
+
+| Metric | Baseline | After 90 days | Delta |
+|---|---|---|---|
+| Inbound handle rate | 47% | 94% | +47pts |
+| Median time to first response | 4h 32m | 38s | -99% |
+| Conversion to booked outcome | 18% | 31% | +13pts |
+| Cost per resolved interaction | $7.10 | $1.20 | -83% |
+| 5-star reviews per month | 6 | 14 | +133% |
+| Net CSAT (sample of 200) | 71 | 79 | +8pts |
+
+Numbers vary by vertical. The pattern does not. Once you get the data pipeline right and the eval gate in place, handle rate jumps 40-60 percentage points within the first month, conversion follows two to four weeks later as the prompts get tuned, and cost-per-interaction drops as caching and model routing kick in.
+
+The CSAT delta is the one that surprises new operators. The conventional wisdom that customers hate AI is mostly wrong when the AI works. Customers hate broken IVRs and 9-hour callbacks. An AI that answers in under a minute and gets the job done is preferred to a human callback two-thirds of the time in our data.
+
+## The failure modes we have learned to engineer around
+
+Five failure modes show up in this category over and over. Each has a specific fix.
+
+1. **Drift in prompt voice.** A prompt that worked in week one starts producing off-brand replies by week four because the model behind it silently versioned. Fix: pin the model version, run a weekly voice-drift eval against 50 canonical scenarios, alert on a 3-point deviation.
+
+2. **Stale retrieval.** The KB updated, the embeddings did not. The agent confidently quotes last quarter's pricing. Fix: a freshness-check job that compares KB modified timestamps against embedding job runs hourly, and a hard ceiling that prevents serving any answer grounded in a document older than the freshness window.
+
+3. **Quiet hallucinations.** The agent invents a policy or a part number with high confidence. Fix: every customer-facing answer must cite at least one source from retrieval, and the eval set includes 25 adversarial questions designed to bait hallucinations. No source, no answer.
+
+4. **Escalation breakdown.** The agent escalates to a human, but the handoff context is one sentence and the customer has to start over. Fix: structured handoff payload (intent + history + sentiment + suggested next action), and a human eval pass on every 50th handoff.
+
+5. **Silent integration failure.** The CRM webhook 500s, the agent acts as if it succeeded, the customer thinks the appointment is booked. Fix: synchronous confirmation back to the agent before it tells the customer anything is done, and a retry queue with paging on persistent failures.
+
+## The 7 places we shave milliseconds
+
+Latency optimization is mostly boring infrastructure. Here are the seven places we have shaved real time, in priority order.
+
+1. **Endpointing tuned to the vertical.** Default VAD waits 600ms for silence. HVAC callers pause to think; legal callers pause less. Tune per vertical.
+2. **Streaming STT not batch.** Deepgram Nova-3 streaming gets you transcript chunks at 100-200ms intervals; batch waits for utterance complete.
+3. **First-token streaming on the LLM.** Anthropic's streaming API lets you start TTS on the first sentence boundary, not the full response.
+4. **TTS engine choice.** Cartesia Sonic is ~120ms TTFA; ElevenLabs Turbo is ~280ms; the difference is audible.
+5. **POP geography.** Telephony POP within 50ms of your LLM POP. Twilio Frankfurt + Anthropic Frankfurt = 18ms RTT. Mix coasts and you eat 80ms per hop.
+6. **Co-located orchestration.** Pipecat in the same region as both above, not on a $5/mo VPS in Singapore.
+7. **Skip the planner on common intents.** 60% of inbound calls have one of three intents. Match-and-respond without a planning LLM call drops 400ms.
+
+Combined, these seven took our p50 TTFA from 1,420ms to 540ms. p99 from 4,100ms to 1,200ms. The booking rate ticked up 9% on the same prompts.
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## The tradeoffs we made and why
+
+Every architecture choice in this category is a tradeoff. Here are the ones we have made consciously, and the alternative we did not pick.
+
+We use Pipecat instead of building our own orchestration. The win is months of saved engineering. The cost is being a release behind on a few model integrations.
+
+We use Anthropic as the default LLM with OpenAI failover, not the other way around. The win is consistently lower hallucination rates in our eval set. The cost is slightly higher cost-per-token at the equivalent model tier.
+
+We run a custom eval harness instead of using a vendor product. The win is the eval set lives in the same Git repo as the prompts, so PRs that change prompts fail the build if they break an eval. The cost is we own the upkeep.
+
+We use Twilio over a cheaper telephony provider. The win is concurrency ceiling and the depth of the diagnostic tools. The cost is roughly 18 percent more per minute.
+
+We deploy on Fly.io, not Vercel. The win is real persistent connections and global edge POPs that survive long-lived voice sessions. The cost is more devops overhead.
+
+These tradeoffs are not laws. They are starting points. If you tell us you have an existing GCP estate, we will adapt the stack. The principles do not move; the implementations do.
+
+## What now
+
+If something here tripped a wire, [grab time on the calendar](/book). We do a free 20-minute working session where we map your current flow and circle the two places AI moves the needle this quarter.
+
+You can also [browse the rest of the blog](/blog) for 40-plus posts in the same operator voice, no fluff.
+
+

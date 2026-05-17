@@ -1,0 +1,96 @@
+---
+title: "Chat Agent vs Decision-Tree Bot: When Each Wins"
+slug: "chat-agent-vs-decision-tree-bot-when-each-wins"
+date: "2026-04-11"
+author: "Alexander Mills"
+excerpt: "Intercom Fin vs the old Drift flows. The honest comparison: when LLM chat is overkill, and when a decision tree is malpractice."
+category: "AI Strategy"
+heroImage: "/api/og?title=Chat+Agent+vs+Decision-Tree+Bot+When+Each+Wins&subtitle=TrainYourAgent"
+tags: ["chat", "comparison", "intercom", "drift", "automation"]
+readingTime: "5 min read"
+---
+
+Intercom Fin replaced an old Drift decision-tree bot. Six months later, an analyst noticed that one entire customer segment was getting worse outcomes than they had under the decision tree. The reason: LLM chat is not better at everything. Here is the honest comparison.
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## The decision matrix
+
+| Scenario | Winner |
+|---|---|
+| Linear, regulated process (e.g. policy lookup) | Decision tree |
+| Free-form question with KB-grounded answer | LLM |
+| High-velocity, low-complexity (status check) | Decision tree |
+| Long-tail customer questions | LLM |
+| Sub-3-second latency required | Decision tree |
+| Audit trail of exact reasoning required | Decision tree |
+| Voice tone matters (brand) | LLM |
+| Multiple languages | LLM |
+| Below 10K interactions/month | Decision tree (cheaper to build) |
+| Above 50K interactions/month | LLM (cheaper to maintain) |
+
+The honest answer: in 2026 the winning shop usually runs both. Decision tree for the top 10 intents, LLM for everything else. We see roughly 40-55% of interactions land on the decision tree and 45-60% on the LLM in production data across 8 shops.
+
+The mistake most teams make is going all-LLM because LLMs are cool. The teams that survive their first quota review have a decision tree for the 'check order status' question that hits 80% of their volume.
+
+## Why this is harder than it looks
+
+The most common failure mode with chat for comparison businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## The stack we actually use
+
+Below is the production stack we ship for this category. It is opinionated. Other stacks work. This one ships in 72 hours and survives a real-world Monday morning.
+
+- **Orchestration layer.** Pipecat for voice, a thin Express service for chat, deployed on Fly.io or Render. We avoid Vercel for anything stateful.
+- **LLM.** Default to Claude 3.7 Haiku for the chat layer and Claude 3.7 Sonnet for the planning and tool-use steps. Fall back to GPT-4.1-mini when Anthropic has capacity pressure.
+- **Embeddings + retrieval.** Voyage 3 large for embeddings, Pinecone for the index. Re-rank with Cohere on the top 30.
+- **Telephony or transport.** Twilio for voice, native widget plus webhook for chat, vendor SDKs (WhatsApp Cloud API, etc) for everything else.
+- **Observability.** Langfuse for trace, Helicone for cost, Honeycomb for the underlying HTTP. Three dashboards, one Slack channel.
+- **Eval harness.** A custom Vitest-style runner that lives in the same repo as the prompts. Every PR runs the regression eval before merge.
+
+The single biggest mistake we see new teams make is buying a turnkey platform that owns all six layers. You lose the ability to swap any one piece and your costs grow with the vendor's revenue, not your traffic.
+
+## What now
+
+If something here tripped a wire, [grab time on the calendar](/book). We do a free 20-minute working session where we map your current flow and circle the two places AI moves the needle this quarter.
+
+You can also [browse the rest of the blog](/blog) for 40-plus posts in the same operator voice, no fluff.
+
+
+
+
+## A note on getting started
+
+The fastest way to validate this for your business is to pull 30 days of relevant call, chat, or interaction logs and run them past whatever stack you are considering. The vendors who can show you, on your data, what their agent would have done are the ones worth a second meeting. The vendors who want to skip that and jump straight to a pricing call are not.
+
+If you want help running that exercise, [book a 20-minute call](/book) and we will walk through it on the call. We do not bill for the working session and we do not pitch on it. Bring your own data; leave with your own conclusions. If you would rather poke at the math yourself first, the [ROI calculator](/tools/roi-calculator) and the [cost estimator](/tools/cost-estimator) cover most of the common scenarios in five minutes each.

@@ -1,0 +1,87 @@
+---
+title: "Connecting Your Knowledge Base To A Chat Agent: Step By Step"
+slug: "connecting-your-knowledge-base-to-a-chat-agent-step-by-step"
+date: "2026-04-25"
+author: "Alexander Mills"
+excerpt: "The full pipeline from Notion or Help Scout or Confluence to a chat agent that does not hallucinate. Chunking, embeddings, freshness checks, eval loops."
+category: "AI Infrastructure"
+heroImage: "/api/og?title=Connecting+Your+Knowledge+Base+To+A+Chat+Agent+Step+By+Step&subtitle=TrainYourAgent"
+tags: ["chat", "rag", "knowledge-base", "embeddings", "notion"]
+readingTime: "6 min read"
+---
+
+The chat agent demos beautifully because the demo content is curated. Then you point it at your real Notion or your real Help Scout, and the answers degrade in week one. The reason is almost always the same: the pipeline from KB to retrieval is naive. Below: the full step-by-step that prevents the degradation.
+
+## The 72-hour deploy plan
+
+We ship most projects in this category on a 72-hour clock. Here is the breakdown.
+
+**Hour 0-8.** Kickoff. Interview the two people who do this job today. Pull 50 sample inputs (calls, chats, tickets). Establish baseline metrics. Identify the three top customer intents.
+
+**Hour 8-24.** First-pass prompt. Wire the orchestration. Stand up the eval harness with 25 cases drawn from the sample inputs. The eval harness has to exist before the first prompt does.
+
+**Hour 24-40.** Integrations. CRM webhook, calendar booking, payment link if relevant. Each integration ships with a synchronous confirmation path.
+
+**Hour 40-56.** Internal QA. The two people we interviewed in hour 0 spend 90 minutes running the agent through their hardest scenarios. Their feedback drives the second-pass prompt.
+
+**Hour 56-68.** Shadow traffic. Real customer interactions, AI answers, human reviews before the answer is sent. We are looking for any case where the AI's draft is worse than the human's draft.
+
+**Hour 68-72.** Cutover. We flip the routing rule, monitor for the first hour, and hand off the on-call rotation to the client's champion. The implementer stays on standby for 7 days.
+
+> **Operator note:** The 72-hour clock is real but it assumes the client has decided on success criteria before we start. If success criteria are unclear at hour 0, the clock does not start until they are. This is the single biggest cause of pilot drift we see.
+
+## What to measure in the first 30 days
+
+Most teams measure too many things and then measure nothing. The 30-day measurement plan is short:
+
+- **Handle rate.** Of inbound contacts in the channel where AI is now answering, what percent did AI successfully complete versus escalate or drop. This is the deflection metric in chat language.
+- **Time-to-outcome.** Median minutes from first contact to whatever the business cares about: booked, ordered, refunded, qualified.
+- **Cost per completed interaction.** All-in, including telephony, STT, TTS, LLM, observability, and your eval and ops time amortized.
+- **Brand-voice score.** A weekly sample of 25 interactions, scored 1-5 by your marketing lead. Track the median and the bottom-quartile floor. The floor matters more than the median.
+- **Escalation reason mix.** Why are escalations happening, in 6-8 buckets, week over week. Anomalies here are leading indicators of prompt or KB issues.
+
+Five metrics, one dashboard, one Monday review. If the metric is not on the dashboard, it does not exist for the first 30 days.
+
+After 30 days you can add CSAT, conversion-to-revenue, and channel attribution. Adding them earlier just adds noise.
+
+## The 7-step pipeline, in order
+
+1. **Source.** Notion, Help Scout, Confluence, or Google Docs. Pull via official API, not scrape.
+2. **Normalize.** Convert to Markdown. Strip menus, footers, navigation. The signal is the body.
+3. **Chunk.** Semantic chunking, not fixed-size. We use a Claude-as-chunker prompt that splits on topic boundaries. Average chunk: 280-450 tokens.
+4. **Enrich.** Each chunk gets metadata: source URL, last-modified, owner, doc-type, audience. Filter at query time on metadata.
+5. **Embed.** Voyage 3 large for everything. Better than OpenAI for our eval.
+6. **Index.** Pinecone with metadata filtering enabled. Re-rank top 30 with Cohere down to top 5.
+7. **Eval.** A regression eval of 50 questions runs nightly. If grounding accuracy drops below 92%, we page on it.
+
+The freshness piece: a cron job compares source last-modified timestamps to embedding job timestamps every hour. If anything is more than 4 hours stale, the chunk is excluded from retrieval until re-embedded. We learned this the hard way after a help article was updated to reflect a price change and the agent quoted the old price for 19 hours.
+
+## What we would do differently next time
+
+Looking back at the last six deployments in this category, three things we would do differently:
+
+**Start the eval harness on day zero.** We have always said this and we have always slipped it. The first time we shipped without a regression eval, we caught a prompt change that silently degraded conversion by 11 percent for two weeks before anyone noticed. Now we treat the eval harness as the first deliverable, before the first prompt.
+
+**Get the executive sponsor in the first user-acceptance session.** Not the project manager, not the ops lead. The owner or the C-suite person whose name is on the budget. Their reaction to the first live test changes the trajectory of the project. Their feedback in week four is too late.
+
+**Document the human escalation paths before the AI ships.** Every project we have shipped that did not have written escalation procedures had a moment in week two when an unexpected case hit, the AI escalated, and nobody knew who was supposed to handle it. Documenting the human side before the AI ships is half a day of work that prevents a week of fire-fighting.
+
+If you want to talk through how any of this applies to your specific situation, [grab a 20-minute call](/book). We do not pitch on the call. If you would rather read more first, the [docs](/docs) and our [comparisons](/comparisons) cover most of the underlying technology choices in writing.
+
+## Why this is harder than it looks
+
+The most common failure mode with chat for rag businesses is treating the problem as a model selection problem. It is not. The model is the easy part. The hard parts are the data pipeline feeding it, the eval that catches regressions, and the human ownership layer that keeps the system honest after the implementer leaves the building.
+
+We have shipped this category of system enough times to recognize a few patterns. The teams that win allocate roughly 20 percent of project time to the model and prompts, 40 percent to data and integrations, 25 percent to evals and observability, and 15 percent to change management. The teams that lose flip those numbers, spend 70 percent on prompts, and end up with a great demo that nobody trusts.
+
+The good news is that none of this is novel engineering. The patterns are well-understood now. The discipline to follow them is the rare part.
+
+> **Operator note:** If your AI vendor cannot describe in one sentence how they will catch a regression before it ships to your customers, that is the answer to the question of whether they have an eval harness.
+
+## Where to go next
+
+The fastest way to know if any of this applies is a [20-minute call](/book). Bring your numbers and we will do the math live. If you would rather poke around first, our [tools page](/tools) has a half-dozen free calculators that take five minutes each.
+
+No newsletter funnel, no pitch deck. Just the math.
+
+
