@@ -1,6 +1,8 @@
-// src/pages/Metrics.tsx
-// v44: public metrics dashboard. Pulls /api/public-metrics, renders KPI cards,
-// 30-day SVG line chart, live status pills, last-10 events table.
+// src/pages/Metrics.tsx — v45 (HONEST)
+// Public metrics dashboard. Real numbers only — no baselines, no fake events.
+// Two clearly-labeled sections:
+//   (1) Business (founder-stated, snapshot of the WHOLE TrainYourAgent business)
+//   (2) Website (live, pulled from the lead store — may be 0)
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -10,18 +12,34 @@ import SectionDivider from "@/components/SectionDivider";
 
 const NAVY = "#042C53";
 const BLUE = "#185FA5";
-const TINT = "#E6F1FB";
 
-type Kpi = { signups: number; demosBooked: number; payingCustomers: number; mrrEstimate: number };
+type WebsiteKpi = {
+  leadsLast30d: number;
+  leadsLast7d: number;
+  leadsLast24h: number;
+  demosBookedLast30d: number;
+  purchasesLast30d: number;
+  storeSize: { leads: number; events: number };
+  backend: string;
+};
+type Business = {
+  yearsInAi: number;
+  mrrFloorUsd: number;
+  livePages: number;
+  blogPosts: number;
+  shipsThisYear: number;
+};
 type SeriesPoint = { day: string; count: number };
 type EventRow = { ts: number; type: string; maskedSource: string };
 type Payload = {
   ok: boolean;
   generatedAt: string;
-  kpi: Kpi;
+  business: Business;
+  websiteKpi: WebsiteKpi;
   signupSeries: SeriesPoint[];
-  live: { uptime: string; responseTimeMs: number; demosShippedThisWeek: number; openJobs: number };
+  live: { uptime: string; responseTimeMs: number };
   events: EventRow[];
+  meta: { source: string; note: string };
 };
 
 export default function Metrics() {
@@ -31,7 +49,6 @@ export default function Metrics() {
   useEffect(() => {
     if (typeof document !== "undefined") {
       document.title = "Public metrics — TrainYourAgent";
-      // Inject brand font
       if (!document.getElementById("tya-fonts")) {
         const l = document.createElement("link");
         l.id = "tya-fonts";
@@ -41,13 +58,9 @@ export default function Metrics() {
         document.head.appendChild(l);
       }
     }
-
     let cancelled = false;
     fetch("/api/public-metrics")
-      .then((r) => {
-        if (!r.ok) throw new Error("status " + r.status);
-        return r.json();
-      })
+      .then((r) => { if (!r.ok) throw new Error("status " + r.status); return r.json(); })
       .then((j: Payload) => { if (!cancelled) setData(j); })
       .catch((e) => { if (!cancelled) setErr(String(e?.message || e)); });
     return () => { cancelled = true; };
@@ -77,7 +90,7 @@ export default function Metrics() {
             </span>
           </h1>
           <p className="mt-5 text-[17px] text-slate-600 max-w-2xl">
-            Live signups, demos, customers, and MRR. The same dashboard we look at internally — no marketing fluff, no inflated metrics.
+            Real metrics from the live lead store. We don't inflate numbers, invent customers, or fake activity. If a number is small, it's small.
           </p>
         </section>
 
@@ -89,12 +102,46 @@ export default function Metrics() {
           </div>
         )}
 
-        {/* KPI grid */}
-        <section className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-3" aria-label="Key metrics">
-          <Kpi label="Signups" value={data?.kpi.signups} sub="all-time" />
-          <Kpi label="Demos booked" value={data?.kpi.demosBooked} sub="all-time" />
-          <Kpi label="Paying customers" value={data?.kpi.payingCustomers} sub="current" />
-          <Kpi label="MRR estimate" value={data?.kpi.mrrEstimate} sub="USD / month" money />
+        {/* Business snapshot */}
+        <section className="max-w-6xl mx-auto" aria-label="Business snapshot">
+          <div className="flex items-baseline justify-between mb-3">
+            <h2 className="text-[20px] font-semibold" style={{ color: NAVY }}>The business</h2>
+            <span className="text-[11px] uppercase tracking-[0.14em] text-slate-500 font-semibold">
+              Founder-stated
+            </span>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <Kpi label="Years in AI" value={data?.business.yearsInAi} sub="founder track record" />
+            <Kpi label="MRR (floor)" value={data?.business.mrrFloorUsd} sub="USD / month, conservative" money />
+            <Kpi label="Live pages" value={data?.business.livePages} sub="routes shipped" />
+            <Kpi label="Blog posts" value={data?.business.blogPosts} sub="long-form, published" />
+            <Kpi label="Ships this year" value={data?.business.shipsThisYear} sub="commits to main" />
+          </div>
+          <p className="mt-3 text-[12px] text-slate-500">
+            These are founder-stated metrics for the broader TrainYourAgent operation, not just this website. Source: latest public disclosure.
+          </p>
+        </section>
+
+        <SectionDivider className="my-10 max-w-6xl mx-auto" />
+
+        {/* Website KPIs (live, can be 0) */}
+        <section className="max-w-6xl mx-auto" aria-label="Live website metrics">
+          <div className="flex items-baseline justify-between mb-3">
+            <h2 className="text-[20px] font-semibold" style={{ color: NAVY }}>This website, right now</h2>
+            <span className="text-[11px] uppercase tracking-[0.14em] text-slate-500 font-semibold">
+              Live from the store ({data?.websiteKpi.backend ?? "loading…"})
+            </span>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <Kpi label="Leads 24h" value={data?.websiteKpi.leadsLast24h} sub="from this site" />
+            <Kpi label="Leads 7d" value={data?.websiteKpi.leadsLast7d} sub="from this site" />
+            <Kpi label="Leads 30d" value={data?.websiteKpi.leadsLast30d} sub="from this site" />
+            <Kpi label="Demos booked 30d" value={data?.websiteKpi.demosBookedLast30d} sub="via Cal.com" />
+            <Kpi label="Purchases 30d" value={data?.websiteKpi.purchasesLast30d} sub="via Stripe" />
+          </div>
+          <p className="mt-3 text-[12px] text-slate-500">
+            Pulled from {data?.websiteKpi.backend ?? "the store"} at request time. Today shows what's actually flowing through the site — even if that number is zero.
+          </p>
         </section>
 
         <SectionDivider className="my-10 max-w-6xl mx-auto" />
@@ -102,7 +149,7 @@ export default function Metrics() {
         {/* Chart */}
         <section className="max-w-6xl mx-auto">
           <div className="flex items-baseline justify-between mb-3">
-            <h2 className="text-[20px] font-semibold" style={{ color: NAVY }}>30-day signups</h2>
+            <h2 className="text-[20px] font-semibold" style={{ color: NAVY }}>30-day signups (real)</h2>
             <span className="text-[11px] uppercase tracking-[0.14em] text-slate-500 font-semibold">
               Daily count
             </span>
@@ -140,7 +187,7 @@ export default function Metrics() {
         {/* Live status pills */}
         <section className="max-w-6xl mx-auto" aria-label="Live status">
           <h2 className="text-[20px] font-semibold mb-3" style={{ color: NAVY }}>Live status</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <StatusPill
               label="Site uptime"
               value={data?.live.uptime === "operational" ? "Operational" : data?.live.uptime ?? "Loading…"}
@@ -151,17 +198,11 @@ export default function Metrics() {
               value={data ? `${data.live.responseTimeMs} ms` : "Loading…"}
               ok={!data ? undefined : data.live.responseTimeMs < 250}
             />
-            <StatusPill
-              label="Demos shipped this week"
-              value={data ? String(data.live.demosShippedThisWeek) : "—"}
-              ok={true}
-            />
             <Link to="/careers" className="rounded-xl border border-slate-200 bg-white p-4 hover:border-[#185FA5] block">
-              <div className="text-[11px] uppercase tracking-[0.14em] font-semibold text-slate-500">Open jobs</div>
-              <div className="mt-1 text-[20px] font-semibold" style={{ color: NAVY }}>
-                {data?.live.openJobs ?? "—"} →
+              <div className="text-[11px] uppercase tracking-[0.14em] font-semibold text-slate-500">Hiring?</div>
+              <div className="mt-1 text-[18px] font-semibold" style={{ color: NAVY }}>
+                View open roles →
               </div>
-              <div className="text-[12px] text-slate-500">View careers</div>
             </Link>
           </div>
         </section>
@@ -170,7 +211,7 @@ export default function Metrics() {
 
         {/* Last 10 events */}
         <section className="max-w-6xl mx-auto">
-          <h2 className="text-[20px] font-semibold mb-3" style={{ color: NAVY }}>Last 10 events</h2>
+          <h2 className="text-[20px] font-semibold mb-3" style={{ color: NAVY }}>Last 10 real events</h2>
           <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
             <table className="w-full text-[13px]">
               <thead className="bg-slate-50">
@@ -181,6 +222,13 @@ export default function Metrics() {
                 </tr>
               </thead>
               <tbody>
+                {data?.events.length === 0 && (
+                  <tr>
+                    <td className="px-4 py-8 text-slate-400 text-center" colSpan={3}>
+                      No real events yet. Be the first — try a <Link to="/tools" className="text-[#185FA5] underline">tool</Link> or <Link to="/contact" className="text-[#185FA5] underline">book a call</Link>.
+                    </td>
+                  </tr>
+                )}
                 {data?.events.map((e, i) => (
                   <tr key={i} className="border-t border-slate-100">
                     <td className="px-4 py-2.5 text-slate-700">{relTime(e.ts)}</td>
@@ -201,7 +249,7 @@ export default function Metrics() {
             </table>
           </div>
           <p className="mt-3 text-[12px] text-slate-500">
-            Sources are categorized, not identified. We never expose visitor emails or identities on this page.
+            Sources are categorized (e.g. <code>tool:cost-estimator</code>), never identified. We never expose visitor emails or identities here.
           </p>
         </section>
 
@@ -213,7 +261,7 @@ export default function Metrics() {
             Numbers go up when the product earns it.
           </h3>
           <p className="text-[14px] text-white/80 max-w-2xl mb-5">
-            We publish this page because we're confident in what we ship. Want to be on it next month?
+            We publish this page because we'd rather be honest about a small start than fake to look big.
           </p>
           <Link to="/contact" className="inline-flex items-center px-5 py-3 rounded-lg bg-white text-[#042C53] text-[14px] font-semibold min-h-[44px]">
             Book a 30-min build call →
@@ -226,8 +274,6 @@ export default function Metrics() {
   );
 }
 
-// ─────────────────────────── pieces ───────────────────────────
-
 function Kpi({ label, value, sub, money }: { label: string; value: number | undefined; sub: string; money?: boolean }) {
   const display = value == null
     ? "—"
@@ -237,7 +283,7 @@ function Kpi({ label, value, sub, money }: { label: string; value: number | unde
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-5">
       <div className="text-[11px] uppercase tracking-[0.14em] font-semibold text-slate-500">{label}</div>
-      <div className="mt-1 text-[30px] sm:text-[34px] font-semibold leading-none" style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}>
+      <div className="mt-1 text-[28px] sm:text-[30px] font-semibold leading-none" style={{ color: NAVY, fontFamily: "'Playfair Display', serif" }}>
         {display}
       </div>
       <div className="mt-2 text-[12px] text-slate-500">{sub}</div>
@@ -259,9 +305,7 @@ function StatusPill({ label, value, ok }: { label: string; value: string; ok?: b
 }
 
 function ChartSkeleton() {
-  return (
-    <div className="h-48 w-full bg-slate-50 rounded animate-pulse" />
-  );
+  return <div className="h-48 w-full bg-slate-50 rounded animate-pulse" />;
 }
 
 function SignupChart({ series }: { series: SeriesPoint[] }) {
@@ -281,7 +325,9 @@ function SignupChart({ series }: { series: SeriesPoint[] }) {
     raw: p,
   }));
   const path = pts.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
-  const area = `${path} L ${pts[pts.length - 1].x.toFixed(1)} ${padT + iH} L ${pts[0].x.toFixed(1)} ${padT + iH} Z`;
+  const area = pts.length > 1
+    ? `${path} L ${pts[pts.length - 1].x.toFixed(1)} ${padT + iH} L ${pts[0].x.toFixed(1)} ${padT + iH} Z`
+    : "";
   const total = series.reduce((a, b) => a + b.count, 0);
 
   return (
@@ -298,25 +344,17 @@ function SignupChart({ series }: { series: SeriesPoint[] }) {
           <stop offset="100%" stopColor={BLUE} stopOpacity="0" />
         </linearGradient>
       </defs>
-      {/* grid lines */}
       {[0.25, 0.5, 0.75].map((f) => (
         <line key={f} x1={padL} x2={padL + iW} y1={padT + iH * f} y2={padT + iH * f} stroke="#E2E8F0" strokeDasharray="3 4" strokeWidth="0.6" />
       ))}
       <line x1={padL} x2={padL + iW} y1={padT + iH} y2={padT + iH} stroke="#CBD5E1" strokeWidth="0.8" />
-
-      {/* y labels */}
       <text x="6" y={padT + 10} fontSize="10" fill="#5C6B82">{max}</text>
       <text x="6" y={padT + iH} fontSize="10" fill="#5C6B82">0</text>
-
-      {/* area */}
-      <path d={area} fill="url(#tya-area-grad)" />
-      {/* line */}
+      {area && <path d={area} fill="url(#tya-area-grad)" />}
       <path d={path} fill="none" stroke={BLUE} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
-      {/* dots */}
       {pts.map((p, i) => (
         <circle key={i} cx={p.x} cy={p.y} r="2" fill={NAVY} />
       ))}
-      {/* x-axis: show first / middle / last day */}
       {[0, Math.floor(series.length / 2), series.length - 1].map((i) => (
         <text key={i} x={pts[i].x} y={padT + iH + 14} fontSize="10" fill="#5C6B82" textAnchor="middle">
           {series[i].day.slice(5)}
