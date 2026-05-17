@@ -26,7 +26,17 @@ const COMPANY = [
   { label: "Team", to: "/team" },
   { label: "Careers", to: "/careers" },
   { label: "Press", to: "/press" },
+  { label: "Speaking", to: "/speaking" },
+  { label: "Podcast", to: "/podcast-guest" },
+  { label: "Media kit", to: "/media-kit" },
+];
+
+const TRUST = [
+  { label: "Trust Center", to: "/trust-center" },
   { label: "Security", to: "/security" },
+  { label: "Compliance", to: "/compliance" },
+  { label: "Accessibility", to: "/accessibility" },
+  { label: "Uptime", to: "/uptime" },
   { label: "Public metrics", to: "/metrics" },
 ];
 
@@ -75,7 +85,7 @@ export default function FooterV44() {
       style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr] gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr_1fr] gap-10">
           {/* Brand block */}
           <div>
             <Link to="/" className="inline-flex items-center gap-2.5 mb-4" aria-label="TrainYourAgent home">
@@ -114,6 +124,7 @@ export default function FooterV44() {
           <Col title="Product" items={PRODUCT} />
           <Col title="Resources" items={RESOURCES} />
           <Col title="Company" items={COMPANY} />
+          <Col title="Trust" items={TRUST} />
           <Col title="Connect" items={CONNECT} />
         </div>
 
@@ -122,6 +133,7 @@ export default function FooterV44() {
           <div className="flex flex-wrap gap-4">
             <Link to="/privacy" className="hover:text-white min-h-[24px] inline-block">Privacy</Link>
             <Link to="/terms" className="hover:text-white min-h-[24px] inline-block">Terms</Link>
+            <Link to="/trust-center" className="hover:text-white min-h-[24px] inline-block">Trust</Link>
             <Link to="/security" className="hover:text-white min-h-[24px] inline-block">Security</Link>
             <Link to="/status" className="hover:text-white min-h-[24px] inline-block">Status</Link>
             <Link to="/cookie-policy" className="hover:text-white min-h-[24px] inline-block">Cookies</Link>

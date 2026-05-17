@@ -94,6 +94,13 @@ const ALLOWED_SOURCES = new Set([
   "exit_popup",
   "lead_gate_completion",
   "faq_section",
+  // v47A: trust + authority infrastructure
+  "press-inquiry",
+  "speaking-request",
+  "podcast-guest-request",
+  "security-questionnaire-request",
+  "gdpr-deletion-request",
+  "enterprise-security-call",
 ]);
 
 const MAX_BODY_BYTES = 16 * 1024; // 16 KB is plenty for a lead form

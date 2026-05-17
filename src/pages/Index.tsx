@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
+import { injectJsonLdMany, organizationLd, personLd } from "@/lib/jsonld";
 import PathwayRouter from "@/components/PathwayRouter";
 // v38: trust signals — testimonial wall, ship counter, built-in-public.
 import WallOfLove from "@/components/WallOfLove";
@@ -87,6 +88,12 @@ const Index = () => {
       document.head.appendChild(l);
     }
     document.title = "TrainYourAgent — Everything-AI for SMBs & Startups";
+
+    // v47A: organization + person JSON-LD on the home page
+    injectJsonLdMany([
+      { id: "home-org", data: organizationLd() },
+      { id: "home-person", data: personLd() },
+    ]);
 
     // v33a: page-level FAQPage schema (Org + WebSite already in index.html).
     const id = "tya-schema-index";

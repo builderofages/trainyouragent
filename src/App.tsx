@@ -94,6 +94,15 @@ const ModelSelector     = lazy(() => import("./pages/tools/ModelSelector"));
 const AutomationRoi     = lazy(() => import("./pages/tools/AutomationRoi"));
 const Metrics           = lazy(() => import("./pages/Metrics"));
 
+// v47A: trust + authority infrastructure
+const Speaking          = lazy(() => import("./pages/Speaking"));
+const PodcastGuest      = lazy(() => import("./pages/PodcastGuest"));
+const Compliance        = lazy(() => import("./pages/Compliance"));
+const Accessibility     = lazy(() => import("./pages/Accessibility"));
+const TrustCenter       = lazy(() => import("./pages/TrustCenter"));
+const Uptime            = lazy(() => import("./pages/Uptime"));
+const MediaKit          = lazy(() => import("./pages/MediaKit"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -211,6 +220,14 @@ const App = () => (
             <Route path="/demos/seo-cluster" element={<SeoCluster />} />
             {/* v42: report (lead magnet) */}
             <Route path="/report/state-of-ai-ops-2026" element={<StateOfAiOps2026 />} />
+            {/* v47A: trust + authority infrastructure */}
+            <Route path="/speaking" element={<Speaking />} />
+            <Route path="/podcast-guest" element={<PodcastGuest />} />
+            <Route path="/compliance" element={<Compliance />} />
+            <Route path="/accessibility" element={<Accessibility />} />
+            <Route path="/trust-center" element={<TrustCenter />} />
+            <Route path="/uptime" element={<Uptime />} />
+            <Route path="/media-kit" element={<MediaKit />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />
