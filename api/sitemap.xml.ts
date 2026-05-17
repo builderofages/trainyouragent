@@ -71,10 +71,35 @@ const STATIC_PAGES: { path: string; priority: number; changefreq: string }[] = [
   { path: "/tools/prompt-library",      priority: 0.6,  changefreq: "monthly" },
   { path: "/tools/model-selector",      priority: 0.6,  changefreq: "monthly" },
   { path: "/tools/automation-roi",      priority: 0.6,  changefreq: "monthly" },
+  // v49: docs, api-docs, mission, invest, affiliate
+  { path: "/docs",                      priority: 0.85, changefreq: "weekly"  },
+  { path: "/api-docs",                  priority: 0.8,  changefreq: "monthly" },
+  { path: "/mission",                   priority: 0.85, changefreq: "monthly" },
+  { path: "/invest",                    priority: 0.7,  changefreq: "monthly" },
+  { path: "/affiliate-program",         priority: 0.7,  changefreq: "monthly" },
+  // v49: existing pages that were never in the sitemap — add them now
+  { path: "/book",                      priority: 0.85, changefreq: "monthly" },
+  { path: "/dashboard",                 priority: 0.4,  changefreq: "weekly"  },
   // Legal (low priority)
   { path: "/privacy",                   priority: 0.5,  changefreq: "yearly"  },
   { path: "/terms",                     priority: 0.5,  changefreq: "yearly"  },
   { path: "/cookie-policy",             priority: 0.5,  changefreq: "yearly"  },
+];
+
+// v49: DOCS — 12 articles
+const DOC_SLUGS = [
+  "what-trainyouragent-does",
+  "pricing-and-billing",
+  "your-first-seven-days",
+  "how-ai-voice-agents-work",
+  "voice-agent-best-practices",
+  "voice-agent-troubleshooting",
+  "choosing-chat-vs-voice",
+  "connecting-knowledge-base",
+  "chat-agent-metrics",
+  "integrating-with-hubspot",
+  "integrating-with-calendly-or-cal-com",
+  "integrating-with-stripe",
 ];
 
 // ---- VERTICAL HUB PAGES (15) ----------------------------------------------
@@ -187,6 +212,11 @@ export default async function handler(_req: Request): Promise<Response> {
     for (const v of LOCAL_VERTICALS) {
       lines.push(urlNode(`/local/${city}/${v}`, 0.65, "monthly", today));
     }
+  }
+
+  // v49: 12 docs
+  for (const slug of DOC_SLUGS) {
+    lines.push(urlNode(`/docs/${slug}`, 0.7, "monthly", today));
   }
 
   const xml =

@@ -65,7 +65,7 @@ const FAQ_ITEMS = [
 ];
 
 function AnimatedStat({ value, suffix = "", prefix = "", label, decimals = 0 }: { value: number; suffix?: string; prefix?: string; label: string; decimals?: number }) {
-  const { value: v, ref } = useCountUp(value, 1500);
+  const { value: v, ref } = useCountUp<HTMLDivElement>(value, 1500);
   const display = decimals > 0 ? v.toFixed(decimals) : Math.round(v).toLocaleString();
   return (
     <div>

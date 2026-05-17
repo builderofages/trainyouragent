@@ -3,7 +3,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import { initAttribution } from "@/lib/affiliate";
 
 // Critical / above-the-fold routes — eager.
 import Index from "./pages/Index";
@@ -110,6 +111,13 @@ const LocalPage         = lazy(() => import("./pages/LocalPage"));
 // v48: polished booking page wrapping Cal.com embed
 const Book              = lazy(() => import("./pages/Book"));
 
+// v49: docs, api-docs, mission, invest, affiliate
+const DocsPage             = lazy(() => import("./pages/DocsPage"));
+const ApiDocsPage          = lazy(() => import("./pages/ApiDocsPage"));
+const MissionPage          = lazy(() => import("./pages/MissionPage"));
+const InvestPage           = lazy(() => import("./pages/InvestPage"));
+const AffiliateProgramPage = lazy(() => import("./pages/AffiliateProgramPage"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -130,7 +138,9 @@ const RouteFallback = () => (
   </div>
 );
 
-const App = () => (
+const App = () => {
+  useEffect(() => { initAttribution(); }, []);
+  return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
@@ -240,6 +250,13 @@ const App = () => (
             <Route path="/local/:citySlug/:verticalSlug" element={<LocalPage />} />
             {/* v48: dedicated booking page */}
             <Route path="/book" element={<Book />} />
+            {/* v49: docs, api-docs, mission, invest, affiliate */}
+            <Route path="/docs" element={<DocsPage />} />
+            <Route path="/docs/:slug" element={<DocsPage />} />
+            <Route path="/api-docs" element={<ApiDocsPage />} />
+            <Route path="/mission" element={<MissionPage />} />
+            <Route path="/invest" element={<InvestPage />} />
+            <Route path="/affiliate-program" element={<AffiliateProgramPage />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />
@@ -256,6 +273,7 @@ const App = () => (
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;

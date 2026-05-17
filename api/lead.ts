@@ -34,6 +34,8 @@ type Lead = {
   path?: string;
   ts?: string;
   subscribeToNewsletter?: boolean;
+  // v49: first-touch UTM / affiliate attribution
+  attribution?: Record<string, unknown>;
   // Honeypots — must be empty/absent. Bots fill every visible field.
   website?: string;
   hp?: string;
@@ -103,6 +105,12 @@ const ALLOWED_SOURCES = new Set([
   "enterprise-security-call",
   // v47B: local SEO city request
   "local-city-request",
+  // v49: docs / api-docs / mission / invest / affiliate / careers
+  "docs-feedback",
+  "api-access-request",
+  "investor-inquiry",
+  "affiliate-application",
+  "careers-self-pitch",
 ]);
 
 const MAX_BODY_BYTES = 16 * 1024; // 16 KB is plenty for a lead form
@@ -152,6 +160,19 @@ export default async function handler(req: Request) {
   body.company = clean(body.company, 200);
   body.phone = clean(body.phone, 40);
   body.path = clean(body.path, 500);
+  // v49: fold first-touch attribution into payload.attribution so it persists with the lead
+  if (body.attribution && typeof body.attribution === "object") {
+    const sanitizedAttribution = sanitizePayload(body.attribution);
+    const existingPayload = body.payload;
+    if (existingPayload && typeof existingPayload === "object" && !Array.isArray(existingPayload)) {
+      body.payload = { ...(existingPayload as Record<string, unknown>), attribution: sanitizedAttribution };
+    } else if (existingPayload === undefined || existingPayload === null) {
+      body.payload = { attribution: sanitizedAttribution };
+    } else {
+      body.payload = { value: existingPayload, attribution: sanitizedAttribution };
+    }
+    delete body.attribution;
+  }
   body.payload = sanitizePayload(body.payload);
   body.ts = new Date().toISOString();
 

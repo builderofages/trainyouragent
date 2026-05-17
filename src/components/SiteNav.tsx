@@ -94,7 +94,7 @@ const RESOURCES: LinkItem[] = [
 type DropdownKey = "solutions" | "industries" | "resources" | null;
 
 export type SiteNavProps = {
-  active?: "solutions" | "industries" | "resources" | "pricing" | "about" | "trial";
+  active?: "solutions" | "industries" | "resources" | "pricing" | "about" | "trial" | "comparisons";
 };
 
 export default function SiteNav({ active }: SiteNavProps) {

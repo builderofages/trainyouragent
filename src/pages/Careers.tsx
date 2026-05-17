@@ -1,136 +1,138 @@
-// src/pages/Careers.tsx — v34
-// Hiring page. Signals scale + attracts builders. Roles are placeholder until
-// Alexander confirms titles/comp; structure is final.
+// src/pages/Careers.tsx — v49 (rewritten)
+// Real roles, real process, real self-pitch form.
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
+import FooterV44 from "@/components/FooterV44";
+import { withAttribution } from "@/lib/affiliate";
 
-const CAL_URL = "https://cal.com/trainyouragent/30min";
-const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
 const CAREERS_EMAIL = "careers@trainyouragent.com";
-
-function BrainLogo({ size = 28 }: { size?: number }) {
-  return (
-    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size, color: "#042C53" }} aria-hidden="true">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" style={{ width: size, height: size }} aria-hidden="true">
-        <g strokeWidth="4"><path d="M 32 6 L 58 32 L 32 58 L 6 32 Z" /></g>
-        <g strokeWidth="2.4"><path d="M 32 6 L 32 58" /><path d="M 6 32 L 58 32" /></g>
-        <circle cx="32" cy="32" r="3" fill="currentColor" stroke="none" />
-      </svg>
-    </span>
-  );
-}
 
 type Role = {
   id: string;
   title: string;
-  team: string;
+  status: string;
   location: string;
   comp: string;
-  description: string;
-  doing: string[];
-  looking: string[];
+  jd: string;
 };
 
 const ROLES: Role[] = [
   {
-    id: "senior-ai-eng-voice",
-    title: "Senior AI Engineer (Voice)",
-    team: "Engineering",
+    id: "founding-engineer",
+    title: "Founding Engineer",
+    status: "On the radar — we would talk to you now",
     location: "Tampa or remote (US)",
-    comp: "$170K–$220K + equity",
-    description: "Own the voice agent stack end-to-end — STT, TTS, telephony, prompt orchestration, latency budget. Ship real customer agents that take real calls.",
-    doing: [
-      "Design and ship production voice pipelines (Twilio + Deepgram + Anthropic + ElevenLabs) at sub-500ms TTFB",
-      "Run evals on every prompt change before it hits a customer line",
-      "Move our internal tooling from \"works\" to \"obvious\" — observability, replay, eval harness",
-    ],
-    looking: [
-      "5+ years backend or ML engineering, ideally with realtime audio or low-latency systems",
-      "You've shipped something that takes phone calls in production, not just prototyped one",
-      "You write English well — prompts, runbooks, and customer-visible artifacts are part of the job",
-    ],
+    comp: "$170K–$230K + meaningful equity",
+    jd: "You will own the platform end to end. Voice and chat orchestration, the eval harness, the customer-facing dashboards, and most of the internal tooling. Day one looks like shipping a fix to a production agent, scoping a new voice flow against a real customer transcript, and arguing about prompt structure with the founder for an hour. Day ninety looks like leading the build for our next two major agent products and hiring the second engineer. You write production TypeScript and at least one of Python or Go fluently, you have shipped systems that take real traffic, and you would rather ship one durable thing than three demos. You sit on customer calls. You answer the support email when it pings the engineering channel. We pay above market and we move fast because we are profitable, not because we are burning runway.",
   },
   {
-    id: "ai-solutions-engineer",
-    title: "AI Solutions Engineer (Founder-Facing)",
-    team: "GTM Engineering",
+    id: "ai-solutions-architect",
+    title: "AI Solutions Architect",
+    status: "On the radar — we would talk to you now",
     location: "Tampa or remote (US)",
-    comp: "$130K–$170K + equity + variable",
-    description: "Sit between Alexander and the customer. Scope agents on calls, build proofs in 48 hours, hand off to delivery. The customer should feel like they're working with the founder when they're working with you.",
-    doing: [
-      "Run discovery + scoping calls; turn a fuzzy ask into a one-page agent spec by end of day",
-      "Build sandbox demos in 48 hours using our internal templates",
-      "Own the handoff doc when a deal closes — delivery should never have a question about what was sold",
-    ],
-    looking: [
-      "You've sold or scoped technical work before (SE, FDE, founding AE, agency lead)",
-      "You can build in our stack (TypeScript, prompts, light backend) without engineering babysitting you",
-      "High agency, low ego, calm on a customer call when something on screen breaks",
-    ],
+    comp: "$140K–$190K + equity + variable",
+    jd: "You sit between Alexander and the customer during the build week. You take the fuzzy scoping call, you turn it into a one-page spec by end of day, you build the sandbox in 48 hours, and you hand off a documented, working agent to delivery. You have built systems with prompts before — ideally in production, not in a notebook — and you can write enough TypeScript and SQL to wire integrations without engineering hand-holding. You are calm on a customer call when something on screen breaks. You write in English well enough that the customer thinks they are still working with the founder. You have high agency, low ego, and the instinct to ship the working version over the elegant version. This role is the single highest-leverage hire we can make.",
   },
   {
-    id: "marketing-engineer",
-    title: "Marketing Engineer (Technical Content)",
-    team: "Growth",
+    id: "gtm-lead",
+    title: "GTM Lead",
+    status: "On the radar — we would talk to you now",
+    location: "Tampa or remote (US)",
+    comp: "$160K–$220K OTE + equity",
+    jd: "You build and run the entire go-to-market motion. Inbound qualification, outbound to operator-led SMBs, partner program ramp, pricing experiments, and the weekly forecast call. You have closed business in the $5K–$50K ACV range before, ideally selling something technical to a non-technical buyer. You can write a cold email a real human will reply to and you can stand in front of a service-company owner and explain a voice agent without sounding like a vendor. You have an opinion on which tools belong in the stack and a stronger opinion that the only metric that matters is paid customers. You will work directly with the founder for the first six months and then build the team from there.",
+  },
+  {
+    id: "customer-success-lead",
+    title: "Customer Success Lead",
+    status: "On the radar — we would talk to you now",
     location: "Tampa or remote (US)",
     comp: "$110K–$150K + equity",
-    description: "Turn what we ship into what the market sees. Build interactive demos, programmatic SEO machines, and the kind of technical content that makes operators DM the founder.",
-    doing: [
-      "Ship the weekly long-form post (with code, screenshots, and one runnable demo) on the blog",
-      "Build the programmatic SEO engine for the next 1,000 city/vertical landing pages",
-      "Own the dev-rel-ish surface — demos, sandboxes, the GitHub examples repo",
-    ],
-    looking: [
-      "You can write a 1,500-word technical post that doesn't put the reader to sleep",
-      "You can ship a Vite/React/Next page from idea to live in a week",
-      "You actually use the AI tools you're writing about — no editorialized hot takes",
-    ],
-  },
-  {
-    id: "founding-designer",
-    title: "Founding Designer (Brand + Product)",
-    team: "Design",
-    location: "Tampa or remote (US)",
-    comp: "$140K–$190K + meaningful equity",
-    description: "Own the visual and interaction language — marketing site, product UI, customer-facing dashboards, deck templates. Make this brand feel as crafted as the agents under it.",
-    doing: [
-      "Drive the brand system end-to-end (you'll own the Prism Node identity and where it can stretch)",
-      "Design product surfaces (dashboard, configurator, customer agent control plane)",
-      "Set up the rituals — design crits, motion guidelines, content templates — so the next 3 hires inherit a system",
-    ],
-    looking: [
-      "Portfolio with both brand work AND shipped product UI (not one or the other)",
-      "Strong opinions on type, motion, and density. Loose grip on those opinions when data shows up",
-      "Comfortable in Figma + at least readable in code (HTML/CSS, ideally Tailwind/React)",
-    ],
+    jd: "You own the post-launch relationship for every account. Weekly check-ins, monthly tuning reviews, escalation triage, and the quarterly business review that turns happy customers into multi-agent customers. You have run CS at a B2B SaaS or services company before and you know how to read a transcript, spot the agent's misses, and translate them into prompt updates. You are comfortable in our stack — you do not need to ship code but you do need to know which knob to turn. You answer the email yourself. You are the single point of contact for every account and you defend that boundary fiercely so customers always know exactly who to ping when something matters.",
   },
 ];
 
-const VALUES: { title: string; body: string }[] = [
-  { title: "We ship daily.",                          body: "If you went a week without a measurable change in production, that week was a planning week — and we don't have many of those." },
-  { title: "We answer calls ourselves.",              body: "Every founder answers a customer call every week. The day we can't is the day the company drifts." },
-  { title: "We never train models on customer data.", body: "Not opt-out, not aggregated, not \"with permission.\" Never. It's the line that separates us from the demo crowd." },
-  { title: "We pay above market for the top 1%.",     body: "We don't try to staff with B-players cheaply. We hire fewer, better, and pay them what they're worth — including upside." },
-  { title: "We work with you, not above you.",        body: "Customers are operators. So are we. No \"strategic partnership\" theater — we sit on your calls, we ship in your stack, we get judged on your number." },
+const VALUES = [
+  { title: "Remote-eligible from day one.", body: "Tampa is home base and we love when people come through, but every role is remote-friendly from day one. No relocation pressure ever." },
+  { title: "No-meeting Wednesdays.", body: "Wednesdays are heads-down. The only acceptable meeting on a Wednesday is a customer call that genuinely cannot move." },
+  { title: "Ship daily.", body: "If you went a week without a measurable change in production, that was a planning week. We do not have many of those." },
+  { title: "Equity for everyone.", body: "Every hire gets meaningful equity, vested on a standard 4-year schedule with a 1-year cliff. No second-class employees." },
+  { title: "Async-default.", body: "Default to written, async, and recorded. Real-time meetings exist for genuine collaboration, not for status updates that could be a Loom." },
 ];
+
+const HIRING_STEPS = [
+  { step: 1, title: "Portfolio review", body: "Send us links to two or three things you shipped. Code, writing, agents, products — whatever you are proudest of. We respond within 5 business days. If we are not a fit we will say so honestly. No black holes." },
+  { step: 2, title: "1-hour Alex call", body: "If your work resonates, you get a 60-minute video call with the founder. Two questions get asked: what is the best thing you have shipped, and what would you do in your first 30 days here. No trick questions, no behavioral framework theater." },
+  { step: 3, title: "Paid 4-hour test project", body: "A scoped, real project — something we would actually ship — that takes about four hours. You get paid market rate for the time, regardless of whether you get the offer. No whiteboarding, no take-home that turns into a 40-hour death march." },
+  { step: 4, title: "Team chat + decision", body: "A 45-minute call with the rest of the team you would work with. A decision in writing within 2 weeks of the first call. If we make an offer, it is final-stage — no last-minute compensation surprises." },
+];
+
+function SelfPitchForm() {
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [err, setErr] = useState("");
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    setState("sending");
+    try {
+      const r = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(withAttribution({
+          email: String(fd.get("email") || ""),
+          name: String(fd.get("name") || ""),
+          source: "careers-self-pitch",
+          path: "/careers",
+          payload: {
+            role_youd_build: String(fd.get("role") || ""),
+            why: String(fd.get("why") || ""),
+          },
+          website: "", hp: "",
+        })),
+      });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      setState("sent");
+      (e.currentTarget as HTMLFormElement).reset();
+    } catch (e2: any) { setState("error"); setErr(e2?.message || "Network error"); }
+  }
+  if (state === "sent") {
+    return <div className="rounded-2xl bg-[#E6F1FB] border border-[#185FA5]/30 p-6 text-[#042C53] text-[14px]">Thanks. Alexander reads every self-pitch personally. We respond within 5 business days, even if it is a polite no.</div>;
+  }
+  return (
+    <form onSubmit={onSubmit} className="grid sm:grid-cols-2 gap-3">
+      <input name="name" required placeholder="Name" className="rounded-xl border border-slate-200 px-4 py-3 text-[14px]" />
+      <input name="email" type="email" required placeholder="Email" className="rounded-xl border border-slate-200 px-4 py-3 text-[14px]" />
+      <input name="role" required placeholder="The role you would build" className="rounded-xl border border-slate-200 px-4 py-3 text-[14px] sm:col-span-2" />
+      <textarea name="why" rows={5} required placeholder="One paragraph — why you, why now?" className="rounded-xl border border-slate-200 px-4 py-3 text-[14px] sm:col-span-2" />
+      <div className="sm:col-span-2 flex items-center gap-3">
+        <button disabled={state === "sending"} className="px-6 py-3 rounded-2xl bg-[#042C53] text-white font-semibold text-[14px] hover:bg-[#0A3D6E] disabled:opacity-60">
+          {state === "sending" ? "Sending…" : "Send pitch →"}
+        </button>
+        {state === "error" && <span className="text-[12px] text-red-700">{err}</span>}
+      </div>
+    </form>
+  );
+}
 
 const Careers = () => {
   useEffect(() => {
     if (typeof document === "undefined") return;
-    if (!document.getElementById("tya-fonts")) {
-      const l = document.createElement("link"); l.id = "tya-fonts"; l.rel = "stylesheet";
-      l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
-      document.head.appendChild(l);
-    }
     document.title = "Careers — TrainYourAgent";
     const setMeta = (n: string, c: string) => {
       let el = document.querySelector(`meta[name='${n}']`) as HTMLMetaElement | null;
       if (!el) { el = document.createElement("meta"); el.setAttribute("name", n); document.head.appendChild(el); }
       el.setAttribute("content", c);
     };
-    setMeta("description", "We're hiring builders who want to ship the agency layer of AI. Open roles: AI engineering, solutions, marketing, design.");
+    setMeta("description", "We are hiring builders who want to ship the agency layer of AI. Founding Engineer, AI Solutions Architect, GTM Lead, Customer Success Lead.");
+    if (!document.getElementById("tya-fonts")) {
+      const l = document.createElement("link"); l.id = "tya-fonts"; l.rel = "stylesheet";
+      l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
+      document.head.appendChild(l);
+    }
+    let canonical = document.querySelector("link[rel='canonical']") as HTMLLinkElement | null;
+    if (!canonical) { canonical = document.createElement("link"); canonical.rel = "canonical"; document.head.appendChild(canonical); }
+    canonical.href = "https://trainyouragent.com/careers";
   }, []);
 
   return (
@@ -139,15 +141,14 @@ const Careers = () => {
       <SiteNav active="about" />
       <span id="main" tabIndex={-1} aria-hidden="true" />
 
-      {/* HERO */}
       <section className="px-5 sm:px-8 pt-32 pb-16">
         <div className="max-w-6xl mx-auto">
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Careers</div>
           <h1 className="text-[42px] sm:text-[68px] lg:text-[80px] leading-[1.02] tracking-tight font-semibold text-[#042C53]">
-            We're hiring builders who want to ship the <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>agency layer of AI.</span>
+            We are hiring builders who want to ship the <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>agency layer of AI.</span>
           </h1>
           <p className="mt-6 text-[18px] sm:text-[20px] text-slate-700 max-w-3xl leading-relaxed">
-            Tampa-based, remote-friendly, profitable from day one. We sell agents to real businesses and we deliver them end-to-end — no demo lab, no roadmap theater. If you'd rather ship one real thing than pitch ten, read on.
+            Tampa-based, remote-friendly, profitable from day one. We sell agents to real businesses and we deliver them end-to-end — no demo lab, no roadmap theater. If you would rather ship one real thing than pitch ten, read on.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <a href="#roles" className="px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] shadow-lg shadow-[#042C53]/15">See open roles →</a>
@@ -156,12 +157,11 @@ const Careers = () => {
         </div>
       </section>
 
-      {/* VALUES */}
       <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-y border-slate-200/70">
         <div className="max-w-6xl mx-auto">
-          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">How we work</div>
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Five honest commitments</div>
           <h2 className="text-[28px] sm:text-[44px] leading-tight font-semibold text-[#042C53] mb-10">
-            Five real values. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>None of them are "passion."</span>
+            How we work. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>None of them are "passion."</span>
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {VALUES.map((v, i) => (
@@ -175,94 +175,65 @@ const Careers = () => {
         </div>
       </section>
 
-      {/* OPEN ROLES */}
       <section id="roles" className="px-5 sm:px-8 py-16">
         <div className="max-w-6xl mx-auto">
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Open roles</div>
-          <h2 className="text-[28px] sm:text-[44px] leading-tight font-semibold text-[#042C53] mb-10">
-            Four ways in. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>All of them ship.</span>
+          <h2 className="text-[28px] sm:text-[44px] leading-tight font-semibold text-[#042C53] mb-3">
+            Four roles. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>All of them ship.</span>
           </h2>
-
+          <p className="text-[14.5px] text-slate-600 mb-10 max-w-2xl">We are pre-seed and growing carefully. Every role below is "on the radar — we would talk to you now." If your background lines up, do not wait for a job posting.</p>
           <div className="space-y-5">
             {ROLES.map((r) => (
               <article key={r.id} className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-[0_4px_40px_-12px_rgba(4,44,83,0.08)]">
                 <div className="flex flex-wrap items-baseline justify-between gap-4 mb-2">
                   <h3 className="text-[24px] font-semibold text-[#042C53]">{r.title}</h3>
-                  <a
-                    href={`mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent("Application — " + r.title)}`}
-                    className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[12px] font-semibold hover:bg-[#0A3D6E]"
-                  >
-                    Apply →
-                  </a>
+                  <a href={`mailto:${CAREERS_EMAIL}?subject=${encodeURIComponent("Application — " + r.title)}`} className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[12px] font-semibold hover:bg-[#0A3D6E]">Apply →</a>
                 </div>
                 <div className="flex flex-wrap gap-3 text-[12px] text-slate-500 mb-4">
-                  <span className="px-2.5 py-1 rounded-full bg-[#F6FAFE] border border-slate-200">{r.team}</span>
+                  <span className="px-2.5 py-1 rounded-full bg-[#F6FAFE] border border-slate-200">{r.status}</span>
                   <span className="px-2.5 py-1 rounded-full bg-[#F6FAFE] border border-slate-200">{r.location}</span>
                   <span className="px-2.5 py-1 rounded-full bg-[#F6FAFE] border border-slate-200">{r.comp}</span>
                 </div>
-                <p className="text-[14px] text-slate-700 leading-relaxed mb-5">{r.description}</p>
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <div>
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2">What you'll do</div>
-                    <ul className="space-y-2">
-                      {r.doing.map((d, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-[13px] text-slate-700 leading-relaxed">
-                          <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full mt-2 bg-[#185FA5]" />
-                          <span>{d}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="text-[11px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2">What we look for</div>
-                    <ul className="space-y-2">
-                      {r.looking.map((l, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-[13px] text-slate-700 leading-relaxed">
-                          <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full mt-2 bg-[#185FA5]" />
-                          <span>{l}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+                <p className="text-[14.5px] text-slate-700 leading-[1.75]">{r.jd}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* DON'T SEE YOUR ROLE */}
-      <section className="px-5 sm:px-8 py-20 bg-[#042C53] text-white">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-[28px] sm:text-[40px] leading-tight font-semibold mb-4">
-            Don't see your role? <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Email anyway.</span>
+      <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-y border-slate-200/70">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">How we hire</div>
+          <h2 className="text-[28px] sm:text-[44px] leading-tight font-semibold text-[#042C53] mb-3">
+            Four steps. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>No whiteboarding.</span>
           </h2>
-          <p className="text-[16px] text-white/85 leading-relaxed mb-7">
-            We've made room for the right person more than once. Send what you've shipped — not your resume — to <a href={`mailto:${CAREERS_EMAIL}`} className="underline">{CAREERS_EMAIL}</a>.
-          </p>
-          <a href={`mailto:${CAREERS_EMAIL}`} className="inline-block px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-[#E6F1FB]">Email careers@trainyouragent.com →</a>
+          <p className="text-[14.5px] text-slate-600 mb-10 max-w-2xl">Decision in writing within 2 weeks of the first call. The test project is paid at market rate.</p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {HIRING_STEPS.map((s) => (
+              <div key={s.step} className="rounded-2xl bg-white border border-slate-200 p-6">
+                <div className="text-[11px] uppercase tracking-[0.14em] text-[#185FA5] font-mono font-semibold mb-2">Step {String(s.step).padStart(2, "0")}</div>
+                <div className="text-[18px] font-semibold text-[#042C53] mb-2">{s.title}</div>
+                <div className="text-[14px] text-slate-700 leading-relaxed">{s.body}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="bg-white border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
-          <div className="flex items-center gap-2.5">
-            <BrainLogo size={28} />
-            <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
-            <span className="text-slate-400">— Tampa Bay, FL</span>
-          </div>
-          <div className="flex items-center gap-6 flex-wrap justify-center">
-            <Link to="/about" className="hover:text-[#042C53]">About</Link>
-            <Link to="/learn" className="hover:text-[#042C53]">Learn</Link>
-            <Link to="/status" className="hover:text-[#042C53]">Status</Link>
-            <Link to="/press" className="hover:text-[#042C53]">Press</Link>
-            <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
-            <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">LinkedIn</a>
-          </div>
-          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
+      <section className="px-5 sm:px-8 py-16">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Don't see your role?</div>
+          <h2 className="text-[28px] sm:text-[40px] font-semibold text-[#042C53] mb-3 leading-tight">
+            Pitch us the one you would build.
+          </h2>
+          <p className="text-[14.5px] text-slate-700 mb-6 leading-relaxed">
+            We have made room for the right person more than once. Tell us the role, tell us why, and we will reply within 5 business days.
+          </p>
+          <SelfPitchForm />
         </div>
-      </footer>
+      </section>
+
+      <FooterV44 />
     </div>
   );
 };

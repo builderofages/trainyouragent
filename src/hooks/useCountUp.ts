@@ -4,9 +4,9 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export function useCountUp(to: number, durationMs = 1500, from = 0) {
+export function useCountUp<T extends Element = HTMLElement>(to: number, durationMs = 1500, from = 0) {
   const [value, setValue] = useState<number>(from);
-  const elRef = useRef<HTMLSpanElement | null>(null);
+  const elRef = useRef<T | null>(null);
   const startedRef = useRef(false);
 
   useEffect(() => {

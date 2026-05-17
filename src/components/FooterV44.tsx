@@ -13,6 +13,8 @@ const PRODUCT = [
 ];
 
 const RESOURCES = [
+  { label: "Docs", to: "/docs" },
+  { label: "API docs", to: "/api-docs" },
   { label: "Customers", to: "/customers" },
   { label: "Case studies", to: "/case-studies" },
   { label: "Blog", to: "/blog" },
@@ -24,8 +26,11 @@ const RESOURCES = [
 
 const COMPANY = [
   { label: "About", to: "/about" },
+  { label: "Mission", to: "/mission" },
   { label: "Team", to: "/team" },
   { label: "Careers", to: "/careers" },
+  { label: "Invest", to: "/invest" },
+  { label: "Affiliate", to: "/affiliate-program" },
   { label: "Press", to: "/press" },
   { label: "Speaking", to: "/speaking" },
   { label: "Podcast", to: "/podcast-guest" },

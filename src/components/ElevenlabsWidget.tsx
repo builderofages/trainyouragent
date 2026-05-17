@@ -36,11 +36,13 @@ export default function ElevenlabsWidget({
       s.type = "text/javascript";
       document.body.appendChild(s);
     };
-    if ("requestIdleCallback" in window) {
-      (window as unknown as { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number })
-        .requestIdleCallback(inject, { timeout: 3000 });
+    const w = window as Window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+    };
+    if (typeof w.requestIdleCallback === "function") {
+      w.requestIdleCallback(inject, { timeout: 3000 });
     } else {
-      window.setTimeout(inject, 1800);
+      w.setTimeout(inject, 1800);
     }
   }, []);
 
