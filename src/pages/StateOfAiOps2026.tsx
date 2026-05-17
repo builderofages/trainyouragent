@@ -1,17 +1,15 @@
 // src/pages/StateOfAiOps2026.tsx
 // v42: lead-magnet report page with email gate -> PDF download.
+// v52B: swapped manual form for the unified <LeadMagnetForm>.
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import LeadMagnetForm from "@/components/LeadMagnetForm";
 
 const NAVY = "#042C53";
 const BLUE = "#185FA5";
-const TINT = "#E6F1FB";
 const FONT = "'Inter Tight', system-ui, sans-serif";
-
-const FORM_ENDPOINT = "/api/lead";
-const PDF_ENDPOINT = "/api/state-of-ai-ops-pdf";
 
 const KEY_FINDINGS = [
   "62% of SMBs piloted an AI agent in 2024-25 — only 19% reached production.",
@@ -41,9 +39,6 @@ const SAMPLE_CHARTS = [
 ];
 
 export default function StateOfAiOps2026() {
-  const [email, setEmail] = useState("");
-  const [state, setState] = useState<"idle" | "sending" | "ok" | "err">("idle");
-
   useEffect(() => {
     if (!document.getElementById("tya-fonts")) {
       const l = document.createElement("link");
@@ -52,30 +47,6 @@ export default function StateOfAiOps2026() {
       document.head.appendChild(l);
     }
   }, []);
-
-  const submit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return;
-    setState("sending");
-    try {
-      const r = await fetch(FORM_ENDPOINT, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          email,
-          source: "report-state-of-ai-ops-2026",
-          path: location.pathname,
-          website: "", hp: "",
-        }),
-      });
-      if (!r.ok) throw new Error("submit");
-      setState("ok");
-    } catch {
-      setState("err");
-    }
-  };
-
-  const pdfHref = `${PDF_ENDPOINT}?email=${encodeURIComponent(email)}`;
 
   return (
     <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: FONT }}>
@@ -138,57 +109,13 @@ export default function StateOfAiOps2026() {
           </ol>
         </section>
 
-        <section
-          id="download"
-          className="rounded-2xl p-6 sm:p-8 mb-8"
-          style={{ background: TINT }}
-        >
-          {state === "ok" ? (
-            <div>
-              <div className="text-[20px] font-semibold mb-2" style={{ color: NAVY }}>Thanks — your report is ready.</div>
-              <p className="text-[14.5px] text-slate-700 mb-4">
-                Click below to download. We also sent a copy to <strong>{email}</strong>.
-              </p>
-              <a
-                href={pdfHref}
-                className="inline-block px-6 py-3 rounded-lg bg-[#042C53] text-white text-[14px] font-medium hover:bg-[#0A3D6E]"
-                download="state-of-ai-ops-2026.pdf"
-              >
-                Download the PDF
-              </a>
-            </div>
-          ) : (
-            <form onSubmit={submit}>
-              <div className="text-[20px] sm:text-[22px] font-semibold mb-2" style={{ color: NAVY }}>
-                Download the full 30-page PDF
-              </div>
-              <p className="text-[14.5px] text-slate-700 mb-4">
-                One field, one click. We'll send the report and add you to the once-a-quarter benchmark update (unsubscribe in one click).
-              </p>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <label htmlFor="report-email" className="sr-only">Email</label>
-                <input
-                  id="report-email"
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@company.com"
-                  className="flex-1 px-4 py-3 rounded-lg border border-slate-300 text-[14px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[#185FA5]"
-                />
-                <button
-                  type="submit"
-                  disabled={state === "sending"}
-                  className="px-5 py-3 rounded-lg bg-[#042C53] text-white text-[14px] font-medium hover:bg-[#0A3D6E] disabled:opacity-60 min-h-[44px]"
-                >
-                  {state === "sending" ? "Sending…" : "Send me the PDF"}
-                </button>
-              </div>
-              {state === "err" && (
-                <div role="alert" className="mt-3 text-[12.5px] text-red-600">Something broke — try again or email hello@trainyouragent.com.</div>
-              )}
-            </form>
-          )}
+        <section id="download" className="mb-8">
+          <LeadMagnetForm
+            source="lead-magnet-state-of-ai-ops-2026"
+            title="Download the full 30-page PDF"
+            subtitle="Emailed in ~30 seconds. We'll add you to the once-a-quarter benchmark update — unsubscribe in one click."
+            cta="Send me the PDF →"
+          />
         </section>
 
         <div className="text-[13px] text-slate-500 leading-relaxed">

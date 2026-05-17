@@ -13,6 +13,8 @@ import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
 import EmbeddedDemo from "@/components/EmbeddedDemo";
 import { getPlaybook, getRelatedPlaybooks } from "@/lib/playbooks";
+// v52B: niche-specific illustration + voice CTA pill
+import { NicheIllustration } from "@/components/illustrations/NicheIllustrations";
 
 const SITE_URL = "https://trainyouragent.com";
 const CAL_URL = "https://cal.com/trainyouragent/30min";
@@ -128,41 +130,58 @@ export default function PlaybookPage() {
       <main className="pt-[var(--nav-height,72px)]">
         {/* HERO */}
         <section className="relative px-5 sm:px-8 pt-16 pb-12 bg-gradient-to-b from-[#F7FAFD] to-white">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-[12px] tracking-[0.2em] uppercase text-[#185FA5] font-semibold mb-4">
-              The Operator's Playbook · {pb.industrySize}
-            </div>
-            <h1 className="text-[36px] sm:text-[52px] leading-[1.05] font-semibold text-[#042C53] tracking-[-0.01em] mb-5">
-              AI for {pb.plural}
-            </h1>
-            <p className="text-[18px] sm:text-[20px] leading-[1.55] text-[#1B3A5C] max-w-3xl mb-8">
-              {pb.subhead}
-            </p>
-            <div className="flex flex-wrap gap-3">
-              {pb.heroPills.map((pill, i) => (
-                <span
-                  key={i}
-                  className="inline-flex items-center px-3.5 py-2 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[13px] font-semibold"
+          <div className="max-w-5xl mx-auto grid lg:grid-cols-[1fr_120px] gap-8 items-start">
+            <div>
+              <div className="text-[12px] tracking-[0.2em] uppercase text-[#185FA5] font-semibold mb-4">
+                The Operator's Playbook · {pb.industrySize}
+              </div>
+              <h1 className="text-[36px] sm:text-[52px] leading-[1.05] font-semibold text-[#042C53] tracking-[-0.01em] mb-5">
+                AI for {pb.plural}
+              </h1>
+              <p className="text-[18px] sm:text-[20px] leading-[1.55] text-[#1B3A5C] max-w-3xl mb-8">
+                {pb.subhead}
+              </p>
+              <div className="flex flex-wrap gap-3">
+                {pb.heroPills.map((pill, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center px-3.5 py-2 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[13px] font-semibold"
+                  >
+                    {pill}
+                  </span>
+                ))}
+                {/* v52B: voice-demo CTA pill, niche-tagged for tracking */}
+                <Link
+                  to={`/voice-demo?niche=${pb.slug}`}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-semibold hover:bg-[#0A3D6E]"
                 >
-                  {pill}
-                </span>
-              ))}
+                  <span className="relative inline-flex w-1.5 h-1.5" aria-hidden="true">
+                    <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping" />
+                    <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  </span>
+                  Try the voice agent for {pb.displayName.toLowerCase()} →
+                </Link>
+              </div>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a
+                  href={calLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center px-6 py-3 rounded-xl bg-[#042C53] text-white text-[15px] font-semibold hover:bg-[#0A3D6E]"
+                >
+                  Talk to a builder
+                </a>
+                <a
+                  href="#demo"
+                  className="inline-flex items-center px-6 py-3 rounded-xl border border-[#042C53]/15 text-[#042C53] text-[15px] font-semibold hover:bg-[#F7FAFD]"
+                >
+                  Try the live demo
+                </a>
+              </div>
             </div>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href={calLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center px-6 py-3 rounded-xl bg-[#042C53] text-white text-[15px] font-semibold hover:bg-[#0A3D6E]"
-              >
-                Talk to a builder
-              </a>
-              <a
-                href="#demo"
-                className="inline-flex items-center px-6 py-3 rounded-xl border border-[#042C53]/15 text-[#042C53] text-[15px] font-semibold hover:bg-[#F7FAFD]"
-              >
-                Try the live demo
-              </a>
+            {/* v52B: niche illustration, lg-only top-right of stats block */}
+            <div className="hidden lg:flex items-start justify-end pt-2" aria-hidden="true">
+              <NicheIllustration slug={pb.slug} size={120} />
             </div>
           </div>
         </section>

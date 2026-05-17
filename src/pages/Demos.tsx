@@ -82,6 +82,31 @@ const Demos = () => {
             Pick one and we'll <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>demo it on your call.</span>
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {/* v52B: NEW — free in-browser voice agent card, visually distinct */}
+            <Link
+              to="/voice-demo"
+              className="group relative rounded-2xl bg-gradient-to-br from-[#042C53] to-[#0A3D6E] text-white border border-[#185FA5]/40 p-6 hover:shadow-[0_8px_32px_-8px_rgba(4,44,83,0.4)] transition overflow-hidden"
+              aria-label="Live voice receptionist — try it now"
+            >
+              <span className="absolute top-3 right-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-300/40 text-emerald-100 text-[10px] font-semibold tracking-[0.12em] uppercase">
+                <span className="relative inline-flex w-1.5 h-1.5" aria-hidden="true">
+                  <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping" />
+                  <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                </span>
+                NEW
+              </span>
+              <div className="text-[12px] uppercase tracking-[0.12em] text-[#9CC4EC] font-semibold mb-2">
+                <span aria-hidden="true" className="mr-1">🎙️</span> Free · in your browser
+              </div>
+              <div className="text-[18px] font-semibold mb-2">Voice receptionist (NEW)</div>
+              <div className="text-[13px] text-white/80 leading-relaxed mb-4">
+                Click, grant mic access, talk. Live voice agent running on Web
+                Speech + Groq Llama. Zero install, zero account.
+              </div>
+              <div className="text-[13px] font-medium inline-flex items-center gap-1.5">
+                Try it now <span className="transition-transform group-hover:translate-x-0.5">→</span>
+              </div>
+            </Link>
             {DEMOS.map((d, i) => (
               <Link key={i} to="/demo-request" className="group rounded-2xl bg-white border border-slate-200 p-6 hover:border-[#185FA5] hover:shadow-[0_4px_24px_-10px_rgba(4,44,83,0.18)] transition">
                 <div className="text-[12px] uppercase tracking-[0.12em] text-[#185FA5] font-semibold mb-2">{d.vertical}</div>

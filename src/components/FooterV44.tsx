@@ -20,6 +20,9 @@ const RESOURCES = [
   { label: "Case studies", to: "/case-studies" },
   { label: "Blog", to: "/blog" },
   { label: "Learn AI", to: "/learn" },
+  { label: "Glossary", to: "/glossary" },
+  { label: "Founder log", to: "/founder-log" },
+  { label: "Vendor matrix", to: "/tools/vendor-matrix" },
   { label: "Cities (Local)", to: "/local" },
   { label: "Buyer's guide", to: "/resources" },
   { label: "State of AI Ops 2026", to: "/report/state-of-ai-ops-2026" },
@@ -54,6 +57,8 @@ const CONNECT = [
   { label: "Status", to: "/status" },
   { label: "Community", to: "/community" },
   { label: "Partners", to: "/partners" },
+  { label: "White-label", to: "/whitelabel" },
+  { label: "Reseller", to: "/reseller" },
   { label: "Roadmap", to: "/roadmap" },
   { label: "Customer portal", to: "/portal" },
 ];

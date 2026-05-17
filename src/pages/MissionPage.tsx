@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
+// v52B: live GitHub commits widget — proof we ship between thesis and roadmap
+import ShippedThisWeek from "@/components/ShippedThisWeek";
 
 function setHead() {
   if (typeof document === "undefined") return;
@@ -96,6 +98,13 @@ export default function MissionPage() {
           <p className="text-[16px] text-slate-700 leading-[1.75]">
             That perspective matters here. Most of the AI agent market is being built by people who have never been on the receiving end of a half-built tool. We have. The instinct to build software that operators actually deploy, rather than software that demos well at a conference, is the difference between the platforms that survive this cycle and the ones that do not.
           </p>
+        </div>
+      </section>
+
+      {/* v52B: live GitHub commits — proof we ship, between thesis and roadmap */}
+      <section className="px-5 sm:px-8 py-12">
+        <div className="max-w-3xl mx-auto">
+          <ShippedThisWeek />
         </div>
       </section>
 

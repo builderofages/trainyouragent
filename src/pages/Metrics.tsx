@@ -10,6 +10,8 @@ import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
 import SectionDivider from "@/components/SectionDivider";
 import DashboardIllo from "@/components/illustrations/DashboardIllo";
+// v52B: live GitHub commits feed
+import ShippedThisWeek from "@/components/ShippedThisWeek";
 
 const NAVY = "#042C53";
 const BLUE = "#185FA5";
@@ -112,6 +114,11 @@ export default function Metrics() {
             Couldn't load live metrics: {err}. Try again in a minute.
           </div>
         )}
+
+        {/* v52B: Live GitHub commits — proof we ship */}
+        <section className="max-w-6xl mx-auto mb-10" aria-label="Recent commits">
+          <ShippedThisWeek />
+        </section>
 
         {/* Business snapshot */}
         <section className="max-w-6xl mx-auto" aria-label="Business snapshot">

@@ -130,6 +130,14 @@ const PlaybookPage         = lazy(() => import("./pages/PlaybookPage"));
 const VoiceDemo            = lazy(() => import("./pages/VoiceDemo"));
 const ServerError          = lazy(() => import("./pages/ServerError"));
 
+// v52B: vendor matrix + founder log + glossary + whitelabel + reseller + data room
+const VendorMatrix         = lazy(() => import("./pages/tools/VendorMatrix"));
+const FounderLog           = lazy(() => import("./pages/FounderLog"));
+const Glossary             = lazy(() => import("./pages/Glossary"));
+const Whitelabel           = lazy(() => import("./pages/Whitelabel"));
+const Reseller             = lazy(() => import("./pages/Reseller"));
+const DataRoom             = lazy(() => import("./pages/DataRoom"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -279,6 +287,13 @@ const App = () => {
             {/* v52a: free voice agent demo + branded 500 page */}
             <Route path="/voice-demo" element={<VoiceDemo />} />
             <Route path="/500" element={<ServerError />} />
+            {/* v52B: vendor matrix + founder log + glossary + whitelabel + reseller + data room */}
+            <Route path="/tools/vendor-matrix" element={<VendorMatrix />} />
+            <Route path="/founder-log" element={<FounderLog />} />
+            <Route path="/glossary" element={<Glossary />} />
+            <Route path="/whitelabel" element={<Whitelabel />} />
+            <Route path="/reseller" element={<Reseller />} />
+            <Route path="/data-room" element={<DataRoom />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />

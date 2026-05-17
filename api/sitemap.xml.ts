@@ -71,6 +71,16 @@ const STATIC_PAGES: { path: string; priority: number; changefreq: string }[] = [
   { path: "/tools/prompt-library",      priority: 0.6,  changefreq: "monthly" },
   { path: "/tools/model-selector",      priority: 0.6,  changefreq: "monthly" },
   { path: "/tools/automation-roi",      priority: 0.6,  changefreq: "monthly" },
+  { path: "/tools/vendor-matrix",       priority: 0.75, changefreq: "monthly" },
+  // v52B: founder log + glossary + whitelabel + reseller (data-room is noindex)
+  { path: "/founder-log",               priority: 0.7,  changefreq: "daily"   },
+  { path: "/glossary",                  priority: 0.8,  changefreq: "monthly" },
+  { path: "/whitelabel",                priority: 0.75, changefreq: "monthly" },
+  { path: "/reseller",                  priority: 0.75, changefreq: "monthly" },
+  // v52a: free voice agent demo
+  { path: "/voice-demo",                priority: 0.85, changefreq: "weekly"  },
+  // v51B: playbooks hub is also emitted below; report kept here for completeness
+  { path: "/report/state-of-ai-ops-2026", priority: 0.85, changefreq: "monthly" },
   // v49: docs, api-docs, mission, invest, affiliate
   { path: "/docs",                      priority: 0.85, changefreq: "weekly"  },
   { path: "/api-docs",                  priority: 0.8,  changefreq: "monthly" },

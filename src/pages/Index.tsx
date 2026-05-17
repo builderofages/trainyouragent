@@ -14,6 +14,8 @@ import FooterV44 from "@/components/FooterV44";
 import SectionDivider from "@/components/SectionDivider";
 import { useCountUp } from "@/hooks/useCountUp";
 import NetworkIllo from "@/components/illustrations/NetworkIllo";
+// v52B: free in-browser voice agent CTA + buyer's-guide email opt-in
+import LeadMagnetForm from "@/components/LeadMagnetForm";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
@@ -176,6 +178,19 @@ const Index = () => {
                   <span className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold mb-1">For SMBs</span>
                   <span>Stop missing calls →</span>
                 </span>
+              </Link>
+            </div>
+            {/* v52B: live in-browser voice agent — primary above-the-fold CTA */}
+            <div className="mt-4">
+              <Link
+                to="/voice-demo"
+                className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#185FA5] hover:text-[#042C53]"
+              >
+                <span className="relative inline-flex w-2 h-2" aria-hidden="true">
+                  <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-75 animate-ping" />
+                  <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+                </span>
+                Or talk to our AI agent live (in your browser) →
               </Link>
             </div>
             {/* v42: live AI demos — prominent under the hero CTAs */}
@@ -404,6 +419,23 @@ const Index = () => {
         </div>
       </section>
 
+      {/* v52B: LEAD MAGNET — buyer's guide opt-in */}
+      <section className="px-5 sm:px-8 py-20">
+        <div className="max-w-3xl mx-auto">
+          <LeadMagnetForm
+            source="lead-magnet-buyers-guide"
+            title="Get the AI Operations Playbook"
+            subtitle="30 pages on what's working in AI agents in 2026 — voice, chat, ROI benchmarks, the 7 reasons most pilots die. Free PDF, emailed in ~30 seconds."
+            bullets={[
+              "Adoption by vertical (8 categories with real numbers)",
+              "ROI benchmarks across 5 deployment types",
+              "The 15-point readiness scorecard for your business",
+              "Vendor landscape — three-category framework",
+            ]}
+          />
+        </div>
+      </section>
+
       {/* CLOSER */}
       <section className="px-5 sm:px-8 py-24 bg-[#042C53] text-white">
         <div className="max-w-5xl mx-auto text-center">
@@ -414,7 +446,8 @@ const Index = () => {
             Thirty-minute build call. You leave with a written plan. We leave with the green light or an honest no.
           </p>
           <div className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
-            <a href={CAL_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 transition shadow-lg">Book a 30-min build call →</a>
+            <Link to="/voice-demo" className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 transition shadow-lg">Talk to our AI agent (live, in your browser) →</Link>
+            <a href={CAL_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition">Book a 30-min build call</a>
             <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition">Or DM AGENT on LinkedIn</a>
           </div>
         </div>

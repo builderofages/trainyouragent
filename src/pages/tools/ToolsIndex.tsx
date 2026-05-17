@@ -54,13 +54,20 @@ const TOOLS = [
     blurb: "Hours saved, annual labor savings, 3-year ROI. Downloadable PDF for your CFO.",
     minutes: "1 min",
   },
+  // v52B
+  {
+    slug: "vendor-matrix",
+    title: "AI Vendor Comparison Matrix",
+    blurb: "10 vendors × 12 criteria. Sortable, filterable, with a custom-recommendation form. Pick the right stack in 3 minutes.",
+    minutes: "3 min",
+  },
 ];
 
 export default function ToolsIndex() {
   return (
     <ToolLayout
       eyebrow="Free tools"
-      title="Eight tools you can use"
+      title="Nine tools you can use"
       italicTail="right now."
       subtitle="No signup. Each one solves something specific — and if you like how they work, the agents we build are the same brain underneath."
     >

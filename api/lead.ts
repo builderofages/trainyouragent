@@ -134,6 +134,12 @@ const ALLOWED_SOURCES = new Set([
   "lead-magnet-ecommerce-playbook",
   "lead-magnet-hospitality-playbook",
   "lead-magnet-state-of-ai-ops-2026",
+  // v52B: vendor matrix + founder log + whitelabel + reseller + data room
+  "vendor-matrix-recommendation",
+  "founder-log-subscribe",
+  "whitelabel-apply",
+  "reseller-apply",
+  "data-room-unlock",
 ]);
 
 const MAX_BODY_BYTES = 16 * 1024; // 16 KB is plenty for a lead form
