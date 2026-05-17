@@ -10,8 +10,8 @@ const steps = [
   {
     number: "01",
     icon: Rocket,
-    title: "Sign Up & Onboard",
-    description: "Quick 5-minute setup. Tell us about your business, your goals, and your ideal customers. No technical knowledge required.",
+    title: "30-min kickoff call with the founder",
+    description: "We listen to 3 of your existing calls, scope the build in writing the same day. No SDR layer, no technical knowledge required from you.",
     duration: "5 minutes",
     color: "from-blue-500 to-cyan-500"
   },
@@ -149,7 +149,7 @@ const HowItWorks = () => {
                 setLeadGateOpen(true);
               }}
             >
-              Get Started Today
+              Book a 30-min build call → leave with a written plan
               <ArrowRight className="w-5 h-5" />
             </MagneticButton>
             <p className="text-sm text-muted-foreground mt-4">

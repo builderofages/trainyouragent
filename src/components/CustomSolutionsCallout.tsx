@@ -39,7 +39,7 @@ export const CustomSolutionsCallout = ({
             className="rounded-full bg-gradient-primary whitespace-nowrap"
             onClick={onContactClick}
           >
-            Discuss Custom Needs
+            Scope your custom build → 30-min architecture call
           </MagneticButton>
         </div>
       </motion.div>
@@ -62,7 +62,7 @@ export const CustomSolutionsCallout = ({
           className="w-full"
           onClick={onContactClick}
         >
-          Contact Us
+          Scope your custom build → 30 min
         </MagneticButton>
       </GlassCard>
     );
@@ -119,7 +119,7 @@ export const CustomSolutionsCallout = ({
         className="rounded-full bg-gradient-primary w-full md:w-auto"
         onClick={onContactClick}
       >
-        Discuss Your Custom Needs
+        Book a 30-min scoping call → custom timeline same day
       </MagneticButton>
     </GlassCard>
   );

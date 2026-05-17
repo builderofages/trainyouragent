@@ -4,6 +4,8 @@ import RoiCalculator from "@/components/RoiCalculator";
 import SmartPriceReveal from "@/components/SmartPriceReveal";
 import NewsletterCapture from "@/components/NewsletterCapture";
 import CalEmbed from "@/components/CalEmbed";
+// v54: Hormozi-style risk reversal block (4 promises)
+import RiskReversalBlock from "@/components/RiskReversalBlock";
 import ToastHost, { toast } from "@/components/Toast";
 import SiteNav from "@/components/SiteNav";
 import DashboardIllo from "@/components/illustrations/DashboardIllo";
@@ -65,7 +67,7 @@ const PLANS = [
     monthlyUnit: "per minute answered",
     booking: "$25",
     bookingNote: "per booked appointment (optional add-on)",
-    cta: "Apply for the founder lane",
+    cta: "Apply for the Founder lane → $0 upfront, live in 7 days",
     accent: false,
     perks: [
       "One agent, fully built and trained on your docs",
@@ -85,7 +87,7 @@ const PLANS = [
     monthlyUnit: "per month, includes 4,000 minutes",
     booking: "$15",
     bookingNote: "per booked appointment after the included pool",
-    cta: "Start the build",
+    cta: "Start the Operator build → first agent live in 21 days or it's free",
     accent: true,
     perks: [
       "Multi-channel: voice + SMS + email + chat",
@@ -105,7 +107,7 @@ const PLANS = [
     monthlyUnit: "volume-tiered",
     booking: "Custom",
     bookingNote: "tied to your conversion model",
-    cta: "Get a custom quote",
+    cta: "Get a custom Scale quote → 30-min architecture call",
     accent: false,
     perks: [
       "Unlimited agents across brands or locations",
@@ -132,6 +134,21 @@ const FAQ = [
   { q: "Free trial?", a: "Yes. Seven business days of live calls handled by your agent before the first invoice. If it doesn't perform, you walk and we keep nothing." },
   { q: "Do you take equity?", a: "Sometimes, for the right startup. Defer cash, take a small piece, build the agent, ride the growth. Mention it on the call." },
 ];
+
+// v54: Hormozi-style "everything bundled in" stack with real value numbers.
+// Numbers reflect what we'd actually charge if these were unbundled add-ons —
+// not inflated theater. The point: total bundled value vs. lane sticker price.
+const STACK_ITEMS = [
+  { h: "Discovery + scoped SOW (one page, plain English)",                                v: 1500 },
+  { h: "Production voice OR chat agent, trained on YOUR docs",                            v: 8500 },
+  { h: "Native CRM + calendar + phone wiring (HubSpot, GHL, ServiceTitan, Twilio, Cal)",  v: 3500 },
+  { h: "Weekly transcript review + script tuning, first 90 days",                         v: 4500 },
+  { h: "Direct Slack or email line to Alexander (no SDR layer)",                          v: 2000 },
+  { h: "Dashboard with calls answered, booked, escalated, missed",                        v: 1500 },
+  { h: "30-day money-back guarantee, no clawback fight",                                  v: 0    },
+  { h: "Cancel any time after that — no contract trap, your number ports out",            v: 0    },
+];
+const STACK_TOTAL = STACK_ITEMS.reduce((s, i) => s + i.v, 0); // 21,500
 
 // v46a: what's actually in the box on day one — kills "what do I get?" friction.
 const DELIVERABLES = [
@@ -388,6 +405,53 @@ const Pricing = () => {
         </div>
       </section>
 
+      {/* v54: OFFER STACK — total bundled value vs. sticker price (Hormozi method) */}
+      <section className="px-5 sm:px-8 py-16 sm:py-20">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Every plan includes</div>
+          <h2 className="text-[28px] sm:text-[40px] leading-tight font-semibold text-[#042C53] mb-3">
+            ${STACK_TOTAL.toLocaleString()}+ in bundled value.{" "}
+            <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
+              Operators start at $799/mo.
+            </span>
+          </h2>
+          <p className="text-[15px] sm:text-[16px] text-slate-700 leading-relaxed max-w-3xl mb-8">
+            Every lane above includes the full stack below. Real numbers — what we'd actually charge if any one piece were sold standalone. The math is defensible. The point: you're not paying for software, you're paying for the result.
+          </p>
+          <div className="rounded-3xl bg-white border border-slate-200 overflow-hidden">
+            <ul className="divide-y divide-slate-100">
+              {STACK_ITEMS.map((it) => (
+                <li key={it.h} className="flex items-start justify-between gap-5 px-6 py-4">
+                  <div className="flex items-start gap-3 flex-1">
+                    <span aria-hidden="true" className="flex-shrink-0 mt-1 w-5 h-5 rounded-full bg-[#22A36C] text-white text-[12px] font-bold flex items-center justify-center">✓</span>
+                    <div className="text-[14.5px] text-[#0B1B2B] leading-snug">{it.h}</div>
+                  </div>
+                  <div className="flex-shrink-0 text-[13px] font-semibold text-[#185FA5] tabular-nums">
+                    {it.v > 0 ? `$${it.v.toLocaleString()}` : "Included"}
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="bg-[#042C53] text-white px-6 py-5 flex items-center justify-between gap-4">
+              <div className="text-[14px] font-semibold tracking-wide">Total bundled value</div>
+              <div className="text-[22px] font-semibold tabular-nums" style={{ fontFamily: "'Playfair Display', serif" }}>
+                ${STACK_TOTAL.toLocaleString()}+
+              </div>
+            </div>
+          </div>
+          <p className="mt-6 text-[14px] text-slate-600 leading-relaxed max-w-3xl">
+            Founders lane pays for it across booked calls, not upfront. Operators lane bundles the build for $4,950 + $799/mo. Scale gets it custom-scoped. <strong className="text-[#042C53]">No tier locks any of these behind a paywall.</strong>
+          </p>
+        </div>
+      </section>
+
+      {/* v54: RISK REVERSAL — concrete promises, no legalese (Hormozi method) */}
+      <section className="px-5 sm:px-8 pb-16 sm:pb-20">
+        <div className="max-w-5xl mx-auto">
+          <RiskReversalBlock variant="light" />
+        </div>
+      </section>
+
       <section className="px-5 sm:px-8 py-16 sm:py-24 bg-[#F6FAFE] border-y border-slate-200/70">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
           <div>
@@ -432,7 +496,7 @@ const Pricing = () => {
             </h2>
             <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-[12.5px] text-amber-900">
               <span aria-hidden>•</span>
-              Calendar fills 7-10 days out — book before Friday for a slot this month.
+              Limited to 12 new builds per quarter — Alexander personally scopes every one.
             </div>
           </div>
           <CalEmbed height={680} />
@@ -473,9 +537,10 @@ const Pricing = () => {
             Thirty-minute build call. We scope your use case, give you a real number on the spot, and you decide.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            <a href={CAL_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 shadow-lg">Book a 30-min build call →</a>
+            <a href={CAL_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 shadow-lg">Book a 30-min build call → leave with a written plan</a>
             <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15">Or DM Alexander on LinkedIn</a>
           </div>
+          <p className="mt-4 text-[13px] text-white/65">No card, no obligation — 30 min with the founder, written scope same day.</p>
         </div>
       </section>
 

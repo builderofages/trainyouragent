@@ -50,7 +50,7 @@ export const FinalCTA = () => {
                        shadow-[0_0_40px_hsla(0,0%,100%,0.3)] hover:shadow-[0_0_60px_hsla(0,0%,100%,0.4)]
                        transition-all duration-300"
           >
-            Get Started Now
+            Book a 30-min build call → leave with a plan
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
           
@@ -61,7 +61,7 @@ export const FinalCTA = () => {
             className="border-white/20 text-white hover:bg-white/10 font-semibold px-8 py-6 text-lg
                        backdrop-blur-sm transition-all duration-300 hover:border-white/40"
           >
-            Book a 15-Min Call
+Talk to a live AI agent → 60 sec, no signup
           </Button>
         </motion.div>
 

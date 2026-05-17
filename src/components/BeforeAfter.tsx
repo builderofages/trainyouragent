@@ -208,10 +208,10 @@ const BeforeAfter = () => {
                 setLeadGateOpen(true);
               }}
             >
-              Book a Free Consultation
+              Book a 30-min build call → leave with a written agent plan
             </MagneticButton>
             <p className="text-xs text-muted-foreground mt-4">
-              No credit card required for consultation
+              No card. 30 min with the founder. Written scope in your inbox same day.
             </p>
           </div>
         </motion.div>

@@ -63,10 +63,10 @@ const StickyCTA = () => {
                   
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-lg md:text-xl mb-1 truncate">
-                      Ready to 10x Your Leads?
+                      Stop missing after-hours calls.
                     </h3>
                     <p className="text-sm text-muted-foreground hidden md:block">
-                      AI-powered automation for serious businesses
+                      Live agent in 21 days — written scope on the first call.
                     </p>
                   </div>
                 </div>
@@ -78,8 +78,8 @@ const StickyCTA = () => {
                     size="lg"
                     className="gap-2 shadow-glow whitespace-nowrap"
                   >
-                    <span className="hidden sm:inline">Book a Demo</span>
-                    <span className="sm:hidden">Get Started</span>
+                    <span className="hidden sm:inline">Book a 30-min build call →</span>
+                    <span className="sm:hidden">Book build call →</span>
                     <ArrowRight className="w-4 h-4" />
                   </MagneticButton>
 

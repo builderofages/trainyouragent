@@ -64,7 +64,7 @@ const EmptyState = () => (
       We couldn't find any AI solutions for this industry yet. Our team is constantly adding new industries.
     </p>
     <MagneticButton variant="outline" onClick={() => window.location.href = '/contact'}>
-      Contact Us for Custom Solutions
+      Scope a custom build for your industry → 30 min
     </MagneticButton>
   </div>
 );
@@ -207,7 +207,7 @@ export const ComprehensiveSolutionsGrid = ({
                     ) : (
                       <>
                         <ChevronDown className="w-4 h-4 mr-2" />
-                        Learn More
+                        See features + pricing
                       </>
                     )}
                   </MagneticButton>

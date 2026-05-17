@@ -100,7 +100,7 @@ export const BeyondVoice = () => {
               {/* Link */}
               <span className="inline-flex items-center text-tech-cyan text-sm font-semibold 
                              opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Learn More <ArrowRight className="w-4 h-4 ml-1" />
+                See how it ships <ArrowRight className="w-4 h-4 ml-1" />
               </span>
             </motion.div>
           ))}

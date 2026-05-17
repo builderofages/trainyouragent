@@ -78,7 +78,7 @@ export const ScrollRevealSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Get Started in Minutes
+From kickoff to live agent in 21 days
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             No coding required. Launch your AI agent in four simple steps.

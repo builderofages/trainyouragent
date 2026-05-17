@@ -19,6 +19,8 @@ import { useCountUp } from "@/hooks/useCountUp";
 import NetworkIllo from "@/components/illustrations/NetworkIllo";
 // v52B: free in-browser voice agent CTA + buyer's-guide email opt-in
 import LeadMagnetForm from "@/components/LeadMagnetForm";
+// v54: Hormozi-style risk reversal block (4 promises)
+import RiskReversalBlock from "@/components/RiskReversalBlock";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
@@ -192,16 +194,16 @@ const Index = () => {
               <ShipsCounter variant="hero" />
             </div>
             <div className="mt-9 flex flex-col sm:flex-row gap-3">
-              <Link to="/contact?lane=startup" className="px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] transition shadow-lg shadow-[#042C53]/15 flex items-center justify-between gap-3 min-w-[260px]">
+              <Link to="/book" className="px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] transition shadow-lg shadow-[#042C53]/15 flex items-center justify-between gap-3 min-w-[260px]">
                 <span className="flex flex-col items-start leading-tight">
-                  <span className="text-[11px] uppercase tracking-[0.16em] text-[#9CC4EC] font-semibold mb-1">For Startups</span>
-                  <span>Build me an agent →</span>
+                  <span className="text-[11px] uppercase tracking-[0.16em] text-[#9CC4EC] font-semibold mb-1">Primary action</span>
+                  <span>Book a 30-min build call → written plan</span>
                 </span>
               </Link>
-              <Link to="/contact?lane=smb" className="px-6 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] border-2 border-[#042C53]/15 hover:border-[#042C53] transition flex items-center justify-between gap-3 min-w-[260px]">
+              <Link to="/voice-demo" className="px-6 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] border-2 border-[#042C53]/15 hover:border-[#042C53] transition flex items-center justify-between gap-3 min-w-[260px]">
                 <span className="flex flex-col items-start leading-tight">
-                  <span className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold mb-1">For SMBs</span>
-                  <span>Stop missing calls →</span>
+                  <span className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold mb-1">See it work first</span>
+                  <span>Talk to a live AI agent → 60 sec</span>
                 </span>
               </Link>
             </div>
@@ -403,8 +405,8 @@ const Index = () => {
               Voice agents, GTM infrastructure, brand systems, internal tooling — we build the layer that lets you go heads-down on the product.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <Link to="/contact?lane=startup" className="px-6 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 shadow-lg">Get the Startup Package →</Link>
-              <a href={CAL_URL} target="_blank" rel="noopener" className="px-6 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15">Book a 30-min build call</a>
+              <Link to="/contact?lane=startup" className="px-6 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 shadow-lg">Apply for the Founder lane → $0 upfront, live in 7 days</Link>
+              <a href={CAL_URL} target="_blank" rel="noopener" className="px-6 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15">Book a 30-min build call instead</a>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -529,6 +531,90 @@ const Index = () => {
         </div>
       </section>
 
+      {/* v54: THE OFFER, ON ONE PAGE — Hormozi you-get/you-don't-get */}
+      <section className="px-5 sm:px-8 py-24 bg-white border-y border-slate-200/70">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">The offer, on one page</div>
+          <h2 className="text-[34px] sm:text-[52px] leading-[1.04] tracking-tight font-semibold text-[#042C53] mb-10 max-w-4xl">
+            What's in the box —{" "}
+            <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
+              and what's not.
+            </span>
+          </h2>
+
+          <div className="grid lg:grid-cols-2 gap-4">
+            {/* YOU GET */}
+            <div className="rounded-3xl bg-[#042C53] text-white p-7 sm:p-9 shadow-[0_30px_80px_-20px_rgba(4,44,83,0.4)]">
+              <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full bg-white/10 border border-white/15">
+                <span aria-hidden="true" className="text-[14px]">✓</span>
+                <span className="text-[11px] uppercase tracking-[0.18em] font-semibold text-[#9CC4EC]">You get</span>
+              </div>
+              <ul className="space-y-3.5">
+                {[
+                  "Production AI voice OR chat agent (your pick), live in 21 days",
+                  "Wiring into your CRM, calendar, and phone stack — we do the integration work",
+                  "Weekly transcript review + script tuning for the first 90 days",
+                  "Direct Slack or email line to Alexander (no SDR layer, no account manager)",
+                  "Real-time dashboard — calls answered, booked, escalated, missed",
+                  "30-day money-back guarantee, no clawback fight",
+                  "Month-to-month after that — no multi-year contract trap",
+                  "If your agent doesn't book a real appointment in 21 days, we work free until it does",
+                ].map((line) => (
+                  <li key={line} className="flex gap-3 text-[15px] leading-relaxed text-white/95">
+                    <span aria-hidden="true" className="flex-shrink-0 mt-1 w-5 h-5 rounded-full bg-[#22A36C] text-white text-[11px] font-bold flex items-center justify-center">✓</span>
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* YOU DON'T GET */}
+            <div className="rounded-3xl bg-slate-50 border border-slate-200 p-7 sm:p-9">
+              <div className="inline-flex items-center gap-2 mb-5 px-3 py-1 rounded-full bg-white border border-slate-300">
+                <span aria-hidden="true" className="text-[14px] text-slate-500">×</span>
+                <span className="text-[11px] uppercase tracking-[0.18em] font-semibold text-slate-600">You don't get</span>
+              </div>
+              <ul className="space-y-3.5">
+                {[
+                  "A demo with a hand-off to a faceless 'delivery team'",
+                  "A 90-day implementation slog with weekly status calls",
+                  "Generic templates that aren't tuned to your business",
+                  "Surprise upsells once you're past the contract date",
+                  "A multi-year contract you can't cancel",
+                  "A bot that says 'I'm not able to help with that' 90% of the time",
+                  "An SDR pretending to be a builder on the first call",
+                  "Vendor lock-in — you own the prompts, scripts, and number",
+                ].map((line) => (
+                  <li key={line} className="flex gap-3 text-[14.5px] leading-relaxed text-slate-700">
+                    <span aria-hidden="true" className="flex-shrink-0 mt-1 w-5 h-5 rounded-full bg-slate-300 text-white text-[11px] font-bold flex items-center justify-center">×</span>
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-8 grid sm:grid-cols-[1fr_auto] gap-5 items-center rounded-3xl bg-[#E6F1FB] border border-[#185FA5]/15 p-6 sm:p-7">
+            <div className="text-[15px] sm:text-[16px] text-[#0B1B2B] leading-relaxed">
+              <strong className="text-[#042C53]">Starts at $0 upfront on the Founder lane,</strong> $1,500/mo+ on Operators. Most operators land on $5K/mo for full coverage. Pricing on the discovery call — written scope same day.
+            </div>
+            <Link
+              to="/book"
+              className="inline-flex items-center justify-center px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[14.5px] hover:bg-[#0A3D6E] shadow-lg whitespace-nowrap"
+            >
+              Book your build call → leave with a written plan
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* v54: RISK REVERSAL — four promises in plain English */}
+      <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE]">
+        <div className="max-w-5xl mx-auto">
+          <RiskReversalBlock variant="light" />
+        </div>
+      </section>
+
       {/* v52B: LEAD MAGNET — buyer's guide opt-in */}
       <section className="px-5 sm:px-8 py-20">
         <div className="max-w-3xl mx-auto">
@@ -553,18 +639,21 @@ const Index = () => {
             Ready to put AI <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>actually to work?</span>
           </h2>
           <p className="mt-6 text-[18px] text-white/85 max-w-2xl mx-auto leading-relaxed">
-            Thirty-minute build call. You leave with a written plan. We leave with the green light or an honest no.
+            Thirty minutes with the founder. You walk out with a written agent plan, a real number, and a 21-day delivery date. No card. No SDR. No obligation.
           </p>
           <div className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
-            <Link to="/voice-demo" className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 transition shadow-lg">Talk to our AI agent (live, in your browser) →</Link>
             <Link
               to={playbook ? `/book?utm_source=context&utm_campaign=${playbook.slug}` : "/book"}
-              className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition"
+              className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 transition shadow-lg"
             >
-              {playbook ? `Talk to a ${nicheName} AI builder` : "Book a 30-min build call"}
+              {playbook ? `Book your ${nicheName} build call → 30-min scoping, free` : "Book a 30-min build call → leave with a written plan"}
             </Link>
-            <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition">Or DM AGENT on LinkedIn</a>
+            <Link to="/voice-demo" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition">Talk to a live AI agent in your browser → 60 sec, no signup</Link>
+            <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition">Or DM Alexander on LinkedIn</a>
           </div>
+          <p className="mt-5 text-[13px] text-white/60">
+            Limited to 12 new builds per quarter — Alexander personally scopes every one.
+          </p>
         </div>
       </section>
 

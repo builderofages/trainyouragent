@@ -167,7 +167,7 @@ export const PricingDark = () => {
                 }`}
                 onClick={() => window.open(siteConfig.bookingUrl, "_blank")}
               >
-                Get Started
+                Book the build call → live in 21 days
               </Button>
             </motion.div>
           ))}
@@ -188,7 +188,7 @@ export const PricingDark = () => {
             onClick={() => window.open(siteConfig.bookingUrl, "_blank")}
             className="text-tech-cyan font-semibold hover:underline"
           >
-            Talk to Our Team →
+            Scope your custom Scale build → 30-min architecture call →
           </button>
         </motion.div>
 

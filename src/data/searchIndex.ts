@@ -78,7 +78,7 @@ export const searchIndex: SearchItem[] = [
   },
   {
     id: "team",
-    title: "Our Team",
+    title: "Team & founders",
     description: "Meet the people building the future of AI automation",
     category: "page",
     url: "/team",

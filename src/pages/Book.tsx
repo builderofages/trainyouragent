@@ -13,6 +13,8 @@ import { ogUrl, injectOgMeta } from "@/lib/og";
 // v53: niche-aware booking copy
 import { useVisitor } from "@/lib/visitorContext";
 import { getPlaybook } from "@/lib/playbooks";
+// v54: Hormozi-style risk reversal (4 promises)
+import RiskReversalBlock from "@/components/RiskReversalBlock";
 
 const SITE_URL = "https://trainyouragent.com";
 
@@ -134,6 +136,11 @@ export default function Book() {
                 </span>
               ))}
             </div>
+            {/* v54: real scarcity — quarterly build cap, honest about why */}
+            <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-[12.5px] text-amber-900">
+              <span aria-hidden="true">•</span>
+              Limited to 12 new builds per quarter — Alexander personally scopes every one.
+            </div>
           </section>
 
           {/* EMBED + SIDE RAIL */}
@@ -169,6 +176,11 @@ export default function Book() {
                 We don't hold a no-show against you.
               </div>
             </aside>
+          </section>
+
+          {/* v54: RISK REVERSAL — four promises in plain English */}
+          <section className="mt-12">
+            <RiskReversalBlock variant="light" />
           </section>
 
           {/* AFTER BOOK */}

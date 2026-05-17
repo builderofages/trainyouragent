@@ -22,11 +22,11 @@ type Props = {
 export default function LeadMagnetModal({
   open, onClose,
   // v42: default to the State of AI Ops 2026 report (richer lead magnet)
-  title = "State of AI Operations 2026",
-  subtitle = "30 pages on AI agent adoption, ROI benchmarks, the 7 reasons pilots fail, and the 2026-2027 vendor landscape. Free.",
+  title = "Before you go: get the AI Operations Playbook",
+  subtitle = "30 pages on AI agent adoption, ROI benchmarks, the 7 reasons pilots die, and the 2026-2027 vendor landscape. Free PDF, emailed in 30 seconds. No upsell, no follow-up unless you reply.",
   source = "report-state-of-ai-ops-2026",
   pdfEndpoint = "/api/state-of-ai-ops-pdf",
-  downloadCta = "Download the report →",
+  downloadCta = "Open the playbook PDF →",
 }: Props) {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "ok" | "err">("idle");
@@ -89,7 +89,7 @@ export default function LeadMagnetModal({
             <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5]" />
             <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Work email" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5]" />
             <button type="submit" disabled={state === "sending"} className="mt-1 px-5 py-3 rounded-full bg-[#042C53] text-white text-[14px] font-semibold hover:bg-[#0A3D6E] disabled:opacity-50">
-              {state === "sending" ? "Sending…" : "Get the guide →"}
+              {state === "sending" ? "Sending…" : "Email me the playbook (30 sec) →"}
             </button>
             <div className="text-[11px] text-slate-500 leading-relaxed">By submitting you join our newsletter (one email a week, no fluff). Unsubscribe any time.</div>
             {state === "err" && <div className="text-[12px] text-[#B23] italic">Couldn't send. Try again or email hello@trainyouragent.com.</div>}

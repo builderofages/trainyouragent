@@ -54,7 +54,7 @@ export const SmartCTAEngine = ({ industry, calculatorROI, onCTAClick }: SmartCTA
         icon: TrendingUp,
         headline: `Discuss Your $${Math.round(calculatorROI / 1000)}K Monthly ROI`,
         subtext: "Let's build a custom solution to capture this revenue opportunity",
-        ctaText: 'Schedule Strategy Session',
+        ctaText: 'Book a 30-min build call → leave with a plan',
         color: 'bg-gradient-to-br from-green-500/10 to-emerald-500/10',
       };
     }
@@ -67,7 +67,7 @@ export const SmartCTAEngine = ({ industry, calculatorROI, onCTAClick }: SmartCTA
           ? `Build Your Custom ${industry} Agent`
           : 'Build Your Custom AI Agent',
         subtext: "You've seen it work. Let's create your production-ready solution.",
-        ctaText: 'Get Started',
+        ctaText: 'Book the build call → live in 21 days',
         color: 'bg-gradient-to-br from-blue-500/10 to-cyan-500/10',
       };
     }
@@ -78,7 +78,7 @@ export const SmartCTAEngine = ({ industry, calculatorROI, onCTAClick }: SmartCTA
         icon: Calculator,
         headline: 'Want Us to Explain These Numbers?',
         subtext: "Get a personalized walkthrough of your ROI projections",
-        ctaText: 'Book Free Analysis',
+        ctaText: 'Book a 30-min ROI review with the founder',
         color: 'bg-gradient-to-br from-purple-500/10 to-pink-500/10',
       };
     }
@@ -93,7 +93,7 @@ export const SmartCTAEngine = ({ industry, calculatorROI, onCTAClick }: SmartCTA
           icon: Clock,
           headline: `You've Explored ${visitCount} Pages - Ready to Talk?`,
           subtext: "Looks like we're a good fit. Let's discuss your specific needs.",
-          ctaText: 'Connect With Us',
+          ctaText: 'Book a 30-min call with the founder',
           color: 'bg-gradient-to-br from-orange-500/10 to-red-500/10',
         };
       }
@@ -116,7 +116,7 @@ export const SmartCTAEngine = ({ industry, calculatorROI, onCTAClick }: SmartCTA
         icon: TrendingUp,
         headline: `${industryNames[industry] || 'Your Industry'} Solutions`,
         subtext: "See how we've helped similar businesses capture more revenue",
-        ctaText: 'See Case Studies',
+        ctaText: 'See real builds for your industry →',
         color: 'bg-gradient-to-br from-primary/10 to-accent/10',
       };
     }

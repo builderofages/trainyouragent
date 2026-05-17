@@ -127,7 +127,7 @@ const NewsletterSection = () => {
                         Subscribed!
                       </>
                     ) : (
-                      "Get Started"
+                      "Email me the weekly ship-notes"
                     )}
                   </Button>
                 </div>
