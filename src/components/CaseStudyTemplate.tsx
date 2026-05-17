@@ -28,25 +28,14 @@ export type CaseStudy = {
   quoteAttribution: string;
 };
 
-// [TBD] — Each entry corresponds to a /customers/:slug route. Slugs MUST
-// be lowercase and dash-separated. Add real customers below as they sign
-// release forms.
-export const CASE_STUDIES: Record<string, CaseStudy> = {
-  "tbd-hvac-case-study": {
-    slug: "tbd-hvac-case-study",
-    customer: "[TBD Customer Name]",
-    vertical: "HVAC",
-    oneLiner: "[TBD — one-sentence outcome. e.g. 'Doubled after-hours booking rate without adding headcount.']",
-    metricA: { label: "Booked calls/wk", value: "[TBD]" },
-    metricB: { label: "Answer rate",     value: "[TBD]" },
-    metricC: { label: "Payback",         value: "[TBD]" },
-    problem: "[TBD — what was breaking. Lost calls? After-hours dead zone? Dispatch chaos?]",
-    solution: "[TBD — what we shipped. Voice agent on the main line, integrated with ServiceTitan, fallback to on-call.]",
-    result: "[TBD — what happened in 30/60/90 days. Numbers, not adjectives.]",
-    quote: "[TBD — pull-quote from the operator. 2–3 sentences max.]",
-    quoteAttribution: "[TBD First Last, Title at Company]",
-  },
-};
+// v46a HONESTY: We do not ship fake [TBD] case studies. Entries land here
+// as real customers sign release forms. Until then any /customers/:slug
+// URL renders the honest empty-state below.
+//
+// To add a real case study, add an entry keyed by lowercase-dash slug
+// matching the URL, e.g.:
+//   "northbay-hvac-tampa": { slug: "northbay-hvac-tampa", customer: "Northbay HVAC", ... }
+export const CASE_STUDIES: Record<string, CaseStudy> = {};
 
 function BrainLogo({ size = 28 }: { size?: number }) {
   return (
@@ -76,20 +65,23 @@ const CaseStudyTemplate = () => {
       <SiteNav active="resources" />
       <main className="pt-28">
         {!cs ? (
-          <section className="px-5 sm:px-8 py-24">
+          <section className="px-5 sm:px-8 py-16 sm:py-24">
             <div className="max-w-3xl mx-auto text-center">
               <div className="text-[11px] tracking-[0.2em] uppercase text-[#185FA5] font-semibold mb-4">Case study</div>
               <h1 className="text-[34px] sm:text-[48px] leading-tight font-semibold text-[#042C53] mb-4">
-                Coming soon.
+                We're early — no public case studies yet.
               </h1>
-              <p className="text-[16px] text-slate-600 mb-8">
-                This case study is in publication review. While you wait — book a 30-minute build call and we'll walk you through unredacted production transcripts on the call.
+              <p className="text-[16px] text-slate-700 mb-8 leading-relaxed">
+                We won't publish fake case studies with stock photos and made-up metrics.
+                Real customer stories will land here as builds go live and operators agree
+                to be named. Until then, book a 30-min Zoom and we'll walk you through
+                unredacted production transcripts and dashboards on screen-share.
               </p>
-              <a href={CAL_URL} target="_blank" rel="noopener" className="inline-flex px-7 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] shadow-lg shadow-[#042C53]/15">
-                Book a build call →
+              <a href={CAL_URL} target="_blank" rel="noopener" className="inline-flex px-7 py-4 min-h-[44px] rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] shadow-lg shadow-[#042C53]/15">
+                Book a 30-min build call →
               </a>
               <div className="mt-8">
-                <Link to="/customers" className="text-[#185FA5] hover:text-[#042C53] underline decoration-[#185FA5]/30">
+                <Link to="/customers" className="text-[#185FA5] hover:text-[#042C53] underline decoration-[#185FA5]/30 inline-block min-h-[24px]">
                   ← Back to all customers
                 </Link>
               </div>

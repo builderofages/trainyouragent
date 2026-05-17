@@ -82,16 +82,28 @@ export default function FooterV44() {
               <PrismMark size={32} />
               <span className="text-[17px] font-semibold tracking-tight">TrainYourAgent</span>
             </Link>
-            <p className="text-[13.5px] text-white/70 leading-relaxed max-w-xs">
+            <p className="text-[14px] text-white/80 leading-relaxed max-w-xs">
               The operating layer for everything AI in your business. Voice agents, GTM
-              infrastructure, brand systems — built by operators who've shipped 300+.
+              infrastructure, brand systems — built by operators, not a chatbot company.
             </p>
+            {/* v46a: real trust details — founder, email, location */}
+            <div className="mt-5 space-y-1.5 text-[13px] text-white/75">
+              <div>
+                Founded 2022 · <span className="text-white">Tampa Bay, FL</span>
+              </div>
+              <div>
+                <a href="mailto:alexander@trainyouragent.com" className="hover:text-white underline decoration-white/30">
+                  alexander@trainyouragent.com
+                </a>
+              </div>
+              <div>Replies within 4 business hours</div>
+            </div>
             <Link
               to="/status"
-              className="mt-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[12px] font-medium hover:bg-white/10"
+              className="mt-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[12px] font-medium hover:bg-white/10 min-h-[28px]"
               aria-label="System status"
             >
-              <span className="relative inline-flex w-2 h-2">
+              <span className="relative inline-flex w-2 h-2" aria-hidden="true">
                 <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-75 animate-ping" />
                 <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-400" />
               </span>
@@ -105,13 +117,15 @@ export default function FooterV44() {
           <Col title="Connect" items={CONNECT} />
         </div>
 
-        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between text-[12px] text-white/55">
-          <div>© {new Date().getFullYear()} TrainYourAgent · Tampa Bay, FL</div>
+        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between text-[12.5px] text-white/65">
+          <div>© {new Date().getFullYear()} TrainYourAgent LLC · Tampa Bay, FL · Built by humans</div>
           <div className="flex flex-wrap gap-4">
-            <Link to="/privacy" className="hover:text-white">Privacy</Link>
-            <Link to="/terms" className="hover:text-white">Terms</Link>
-            <Link to="/cookie-policy" className="hover:text-white">Cookies</Link>
-            <Link to="/metrics" className="hover:text-white">Metrics</Link>
+            <Link to="/privacy" className="hover:text-white min-h-[24px] inline-block">Privacy</Link>
+            <Link to="/terms" className="hover:text-white min-h-[24px] inline-block">Terms</Link>
+            <Link to="/security" className="hover:text-white min-h-[24px] inline-block">Security</Link>
+            <Link to="/status" className="hover:text-white min-h-[24px] inline-block">Status</Link>
+            <Link to="/cookie-policy" className="hover:text-white min-h-[24px] inline-block">Cookies</Link>
+            <Link to="/metrics" className="hover:text-white min-h-[24px] inline-block">Metrics</Link>
           </div>
         </div>
       </div>

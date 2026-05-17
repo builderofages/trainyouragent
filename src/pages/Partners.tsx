@@ -1,5 +1,9 @@
 // src/pages/Partners.tsx
-// v41: /partners — referral program landing page.
+// v46a: HONEST partner program — waitlist, not invented tiers/logos.
+// We do not have a published, paying partner program yet. Rather than
+// dangle a "20% MRR for 12 months" promise we can't yet operationally
+// deliver, we surface what we WILL do for early partners and collect
+// real interest.
 
 import { useEffect, useState, type FormEvent } from "react";
 import Header from "@/components/Header";
@@ -11,35 +15,25 @@ const NAVY = "#042C53";
 const BLUE = "#185FA5";
 const TINT = "#E6F1FB";
 
-const STEPS = [
-  { n: 1, title: "Apply", body: "Tell us who you'd refer. Approval in 48h. No fees, no exclusivity." },
-  { n: 2, title: "Share a link",  body: "Send your referral link or co-sign a warm intro. We close it, you get credit." },
-  { n: 3, title: "Earn 20% MRR", body: "Paid monthly for 12 months on every customer that signs. ACH, Wise, or Stripe Connect." },
-];
+const CAL_URL = "https://cal.com/trainyouragent/30min";
 
-const TIERS = [
+const EARLY_PARTNER_PRINCIPLES = [
   {
-    name: "Affiliate", price: "20% MRR · 12 mo",
-    body: "Anyone with a relevant network. Refer warm leads, we close — paid monthly.",
-    perks: ["20% MRR for 12 months", "Co-branded landing page", "Quarterly partner call"],
+    h: "Cash, not points.",
+    b: "When the program launches it will be a flat revenue share paid monthly via ACH or Stripe Connect. We'll publish the exact percentage once we've run it through a few partners and know it's sustainable. We won't promise a number before we've tested it.",
   },
   {
-    name: "Reseller", price: "30% MRR · 24 mo",
-    body: "Agencies, consultants, fractional CTOs. You own the relationship, we white-glove the build.",
-    perks: ["30% MRR for 24 months", "Dedicated Slack channel", "Solutions engineer on demand"],
-    highlight: true,
+    h: "One contract, plain English.",
+    b: "Two pages, no exclusivity, no quotas, no clawback if the customer churns after 90 days. If that's not the contract you'd sign yourself, we won't ask you to sign it.",
   },
   {
-    name: "White-label", price: "Custom",
-    body: "Run TYA as your own brand. Full reseller pricing, your name on the dashboard.",
-    perks: ["Custom margin (50%+)", "Brandable admin UI", "Co-marketing budget"],
+    h: "Your name on the build, if you want it.",
+    b: "Reseller partners can run TrainYourAgent under their brand. Your dashboard, your invoice, our engineering. Co-marketing where it makes sense.",
   },
-];
-
-// Use existing brand-colored boxes as logo placeholders.
-const LOGO_PLACEHOLDERS = [
-  "Studio North", "Agency Forge", "Loop Labs", "Quint Group",
-  "Castle & Co", "Northbound", "Foundry", "Bright Stack",
+  {
+    h: "Real time with the founder.",
+    b: "Partners get a direct Slack DM with Alexander, a monthly partner roadmap call, and a heads-up on every release before public launch.",
+  },
 ];
 
 export default function Partners() {
@@ -71,7 +65,7 @@ export default function Partners() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           email, name, company,
-          source: "partner-apply",
+          source: "partner-waitlist",
           path: "/partners",
           payload: { note },
           website: "", hp: "",
@@ -89,117 +83,94 @@ export default function Partners() {
 
       <section className="max-w-5xl mx-auto px-5 sm:px-8 pt-16 sm:pt-24 pb-12">
         <div className="text-[11px] uppercase tracking-[0.18em] font-semibold mb-4" style={{ color: BLUE }}>
-          Partners
+          Partners · Building the program
         </div>
         <h1 className="text-[36px] sm:text-[60px] font-semibold leading-[1.02] tracking-[-0.02em]" style={{ color: NAVY }}>
-          Refer a customer, earn{" "}
+          We're building the partner program{" "}
           <span style={{ fontFamily: SERIF_ITALIC, fontStyle: "italic", fontWeight: 500 }}>
-            20% MRR for 12 months.
+            in public.
           </span>
         </h1>
-        <p className="mt-5 text-[17px] text-slate-600 max-w-2xl">
-          The simplest referral program in B2B AI. No tiers to unlock, no quotas, no exclusivity.
-          Send us a warm lead — we'll close it — you get paid monthly.
+        <p className="mt-5 text-[17px] text-slate-700 max-w-2xl leading-relaxed">
+          The first version will go to a small group of agencies, fractional CTOs,
+          and consultants we already know and trust. If you'd refer customers to
+          a small, founder-led AI build shop based in Tampa Bay, get on the list —
+          you'll get the contract draft before anyone else and direct input on
+          rates and terms.
         </p>
       </section>
 
-      {/* How it works */}
+      {/* Honest status */}
+      <section className="max-w-5xl mx-auto px-5 sm:px-8 pb-12">
+        <div className="rounded-2xl p-6 sm:p-8 border" style={{ background: TINT, borderColor: "#BDDAF4" }}>
+          <div className="text-[12px] uppercase tracking-[0.18em] font-semibold mb-3" style={{ color: BLUE }}>
+            What we are NOT doing
+          </div>
+          <ul className="text-[15px] sm:text-[16px] leading-relaxed text-slate-800 space-y-2 max-w-3xl">
+            <li>· Publishing a "20% MRR for 12 months" rate before we've tested it.</li>
+            <li>· Posting fake partner logos to look bigger than we are.</li>
+            <li>· Spinning up Affiliate / Reseller / White-label tier theater.</li>
+            <li>· Asking you to sign exclusivity or hit quotas.</li>
+          </ul>
+        </div>
+      </section>
+
+      {/* What we WILL do */}
       <section className="max-w-5xl mx-auto px-5 sm:px-8 py-12">
-        <h2 className="text-[24px] font-semibold mb-6" style={{ color: NAVY }}>How it works</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {STEPS.map((s) => (
-            <div key={s.n} className="rounded-2xl border border-slate-200 p-5">
-              <div className="text-[44px] font-semibold leading-none mb-2" style={{ color: BLUE }}>{s.n}</div>
-              <div className="text-[16px] font-semibold mb-1" style={{ color: NAVY }}>{s.title}</div>
-              <div className="text-[13px] text-slate-600 leading-snug">{s.body}</div>
+        <h2 className="text-[24px] sm:text-[28px] font-semibold mb-6" style={{ color: NAVY }}>What we WILL do for early partners</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {EARLY_PARTNER_PRINCIPLES.map((p) => (
+            <div key={p.h} className="rounded-2xl border border-slate-200 p-5 sm:p-6">
+              <div className="text-[16px] font-semibold mb-2" style={{ color: NAVY }}>{p.h}</div>
+              <div className="text-[14px] text-slate-700 leading-relaxed">{p.b}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Tiers */}
-      <section className="max-w-5xl mx-auto px-5 sm:px-8 py-12">
-        <h2 className="text-[24px] font-semibold mb-6" style={{ color: NAVY }}>Partner tiers</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {TIERS.map((t) => (
-            <div
-              key={t.name}
-              className="rounded-2xl border p-5 sm:p-6 flex flex-col"
-              style={{
-                background: t.highlight ? TINT : "white",
-                borderColor: t.highlight ? BLUE : "#e2e8f0",
-              }}
-            >
-              <div className="text-[12px] uppercase tracking-[0.15em] font-semibold mb-1" style={{ color: BLUE }}>
-                {t.name}
-              </div>
-              <div className="text-[20px] font-semibold mb-2" style={{ color: NAVY }}>{t.price}</div>
-              <div className="text-[13px] text-slate-700 mb-4 leading-snug">{t.body}</div>
-              <ul className="space-y-1.5 text-[13px] text-slate-700">
-                {t.perks.map((p) => (
-                  <li key={p} className="flex gap-2"><span style={{ color: BLUE }}>✓</span><span>{p}</span></li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Logo wall placeholder */}
-      <section className="max-w-5xl mx-auto px-5 sm:px-8 py-12 border-t border-slate-200">
-        <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-semibold mb-6">
-          Partners in the pipeline
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {LOGO_PLACEHOLDERS.map((n) => (
-            <div key={n} className="aspect-[3/1] flex items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
-              <span className="text-[13px] font-semibold tracking-tight" style={{ color: NAVY }}>{n}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Apply */}
+      {/* Waitlist apply */}
       <section className="max-w-3xl mx-auto px-5 sm:px-8 py-16 border-t border-slate-200">
-        <h2 className="text-[24px] font-semibold mb-2" style={{ color: NAVY }}>Apply</h2>
-        <p className="text-[14px] text-slate-600 mb-6">
-          We review every application personally. Approval in 48 hours.
+        <h2 className="text-[24px] sm:text-[28px] font-semibold mb-2" style={{ color: NAVY }}>Get on the early-partner list</h2>
+        <p className="text-[14px] text-slate-700 mb-6">
+          Alexander reads every application personally. Reply within 2 business days.
         </p>
         {state === "done" ? (
           <div role="status" aria-live="polite" className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-emerald-800 text-[14px]">
-            Got it — we'll be in touch within 48 hours.
+            Got it — we'll be in touch within 2 business days. In the meantime,{" "}
+            <a href={CAL_URL} target="_blank" rel="noopener" className="underline font-semibold">book a 30-min call</a>{" "}
+            if you want to talk now.
           </div>
         ) : (
-          <form onSubmit={submit} className="space-y-3" aria-label="Partner application">
+          <form onSubmit={submit} className="space-y-3" aria-label="Partner waitlist">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <input
                 type="text" value={name} onChange={(e) => setName(e.target.value)}
                 placeholder="Your name" aria-label="Your name"
-                className="px-4 py-3 rounded-lg border border-slate-300 text-[14px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[#185FA5]"
+                className="px-4 py-3 rounded-lg border border-slate-300 text-[16px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[#185FA5]"
               />
               <input
                 type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com" aria-label="Email"
-                className="px-4 py-3 rounded-lg border border-slate-300 text-[14px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[#185FA5]"
+                className="px-4 py-3 rounded-lg border border-slate-300 text-[16px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[#185FA5]"
               />
             </div>
             <input
               type="text" value={company} onChange={(e) => setCo(e.target.value)}
               placeholder="Company / agency" aria-label="Company or agency"
-              className="w-full px-4 py-3 rounded-lg border border-slate-300 text-[14px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[#185FA5]"
+              className="w-full px-4 py-3 rounded-lg border border-slate-300 text-[16px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[#185FA5]"
             />
             <textarea
               value={note} onChange={(e) => setNote(e.target.value)} rows={4} maxLength={800}
-              placeholder="Who would you refer? What's your network look like?"
+              placeholder="Who would you refer? What's your network look like? (one paragraph is enough)"
               aria-label="Notes"
-              className="w-full p-4 rounded-lg border border-slate-300 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#185FA5]"
+              className="w-full p-4 rounded-lg border border-slate-300 text-[16px] focus:outline-none focus:ring-2 focus:ring-[#185FA5]"
             />
             <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
-            {err && <div role="alert" className="text-[12px] text-red-600">{err}</div>}
-            {state === "error" && <div role="alert" className="text-[12px] text-red-600">Couldn't send — try again.</div>}
+            {err && <div role="alert" className="text-[13px] text-red-700">{err}</div>}
+            {state === "error" && <div role="alert" className="text-[13px] text-red-700">Couldn't send — try again.</div>}
             <button
               type="submit" disabled={state === "sending"}
-              className="px-6 py-3 rounded-lg bg-[#042C53] text-white text-[14px] font-semibold hover:bg-[#0A3D6E] disabled:opacity-60 min-h-[44px]"
+              className="px-6 py-3 rounded-xl bg-[#042C53] text-white text-[15px] font-semibold hover:bg-[#0A3D6E] disabled:opacity-60 min-h-[44px]"
             >
               {state === "sending" ? "Submitting…" : "Submit application"}
             </button>

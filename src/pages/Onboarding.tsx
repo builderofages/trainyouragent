@@ -132,11 +132,13 @@ const Onboarding = () => {
               done={!!complete.welcome}
               onToggle={(v) => mark("welcome", v)}
             >
-              <div className="aspect-video rounded-2xl bg-gradient-to-br from-[#E6F1FB] to-[#DCEBFA] border border-slate-200 flex items-center justify-center text-[#185FA5] text-[14px]">
-                [TBD — embed welcome video Loom URL]
+              <div className="aspect-video rounded-2xl bg-gradient-to-br from-[#E6F1FB] to-[#DCEBFA] border border-slate-200 flex flex-col items-center justify-center text-[#042C53] text-center px-6">
+                <div className="text-[14px] uppercase tracking-[0.18em] font-semibold text-[#185FA5] mb-2">Welcome video</div>
+                <div className="text-[16px] font-semibold max-w-md leading-snug">Recording in progress — kickoff Looms go live as each new customer signs.</div>
+                <div className="text-[13px] text-slate-700 mt-3 max-w-md">For now, Alexander records a personal welcome Loom inside 24 hours of your purchase and emails it directly.</div>
               </div>
-              <p className="text-[14px] text-slate-600 mt-4 leading-relaxed">
-                Three-minute intro from Alexander on how the next week works and who you'll be talking to.
+              <p className="text-[14px] text-slate-700 mt-4 leading-relaxed">
+                Three-minute intro from Alexander on how the next week works and who you'll be talking to. Sent direct to your inbox within one business day of purchase.
               </p>
             </StepCard>
 

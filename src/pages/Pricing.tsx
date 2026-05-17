@@ -9,8 +9,8 @@ import SiteNav from "@/components/SiteNav";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
-const HERO_PHONE_DISPLAY = "(813) 555-0142";
-const HERO_PHONE_TEL = "+18135550142";
+const HERO_PHONE_DISPLAY = "Book a 15-min Zoom";
+const HERO_PHONE_TEL = "https://cal.com/trainyouragent/30min";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
   return (
@@ -93,14 +93,28 @@ const PLANS = [
 ];
 
 const FAQ = [
+  { q: "Will I get my money back if it doesn't work?", a: "Yes. 30-day money-back guarantee on the build fee: if your first agent doesn't ship to the spec we agreed on the kickoff call, we refund the full build fee, you keep the artifacts, and there's no clawback fight. After the build is accepted, monthly usage fees are pay-as-you-go and cancel any time. Per-minute and per-booking charges are non-refundable once incurred." },
+  { q: "How fast will it actually be live?", a: "Founders lane: live in 7 business days. Operators lane: 10–14 business days end-to-end. If we slip past day 14 on Operators without an integration we flagged on the kickoff, the build fee is refunded — no quibbling." },
+  { q: "What if I don't like the voice or the script?", a: "We send 3 voice samples and the full opener/qualification script for your sign-off BEFORE cutover. Nothing goes live until you approve in writing. You can re-pick the voice and re-tune scripts in-flight without a fee, weekly, forever." },
+  { q: "Do you build for my industry?", a: "Today we ship for HVAC, roofing, legal, healthcare, real estate, accounting, automotive, solar, gym, spas, hotels, restaurants, logistics, and bars/nightclubs. If your industry isn't on the list, ask on the call — we've built outside our 14 standard verticals 6 times this year." },
+  { q: "Do I own the agent? Or does TYA?", a: "You own the prompts, scripts, recordings, and the phone number. We host and operate the runtime. If you ever leave, we send you everything in a zip + a transcript export, and we pay for the porting of your number." },
+  { q: "Who hosts and maintains it?", a: "We host on US-region infrastructure (Vercel, Supabase, Twilio, ElevenLabs/Vapi). We maintain the model versions, prompt drift fixes, telephony failover, and the dashboard. You don't manage uptime — that's our job." },
+  { q: "Can you match my brand voice?", a: "Yes — that's most of the discovery call. You send us 3-10 recordings (sales calls, support calls, or just a voice memo) and we tune prosody, pacing, fillers, and vocabulary to match. Beats the 'generic AI bot' tell." },
+  { q: "Will it work with my CRM?", a: "Native integrations with HubSpot, ServiceTitan, GoHighLevel, Stripe, Cal.com, Twilio. Custom integrations via webhook or Zapier for the long tail. We do the wiring in the build phase — you don't write code." },
+  { q: "What happens if I cancel?", a: "Cancel any time from the dashboard or by email. You're billed for the month in progress (no proration, no early-termination fee). Number ports out within 5 business days. Data export available for 90 days post-cancel." },
   { q: "Why no fake five-tier feature checklist?", a: "Because AI voice agents aren't a SaaS product where every tier unlocks one more dropdown. The work is: build it once, tune it weekly, charge for what runs through it. That's three honest lanes — Founders, Operators, Scale — not eleven boxes." },
   { q: "What does the build fee actually cover?", a: "Discovery (we listen to your existing calls), agent training on YOUR docs/scripts/pricing/tone, voice tuning, telephony provisioning, integrations to your CRM and calendar, stress testing, cutover, and the first 30 days of tuning. Not 'a chatbot deployment.'" },
-  { q: "What if I want to start, then scale up?", a: "Founders → Operators → Scale is the same agent, growing. You don't rebuild. We add capacity and channels as your volume justifies them." },
   { q: "Free trial?", a: "Yes. Seven business days of live calls handled by your agent before the first invoice. If it doesn't perform, you walk and we keep nothing." },
-  { q: "What about overage?", a: "Operators plan includes 4,000 minutes/mo. Overage is $0.18/min answered. Booked-appointment fee only applies on top of the included pool. No surprise invoices — your dashboard shows usage in real time." },
   { q: "Do you take equity?", a: "Sometimes, for the right startup. Defer cash, take a small piece, build the agent, ride the growth. Mention it on the call." },
-  { q: "Refund policy?", a: "Build fee is refundable in full during the 7-day trial if your agent doesn't perform to spec. After the trial, monthly fees are pay-as-you-go — cancel any time, no clawback. Booking and per-minute fees are non-refundable once incurred." },
-  { q: "Migrating from another vendor — what's involved?", a: "We can usually port a working agent in 5-7 business days. Bring your scripts, knowledge base, integrations list, and recent call recordings if you have them. We re-tune the agent to your voice tier and keep your existing phone number." },
+];
+
+// v46a: what's actually in the box on day one — kills "what do I get?" friction.
+const DELIVERABLES = [
+  { n: "01", h: "Kickoff call with the founder", b: "30-min Zoom with Alexander. We listen to 3 of your existing calls, write the scope back to you in writing the same day. No SDR layer." },
+  { n: "02", h: "Scoped SOW (one page, plain English)", b: "Exactly what we'll build, what integrations get wired, what success looks like at day 14 and day 30. Signed before any code is written." },
+  { n: "03", h: "Working agent in 14 days or less", b: "Voice + chat agent answering on a test number, trained on your docs, integrated with your CRM and calendar. You stress-test it before any real traffic." },
+  { n: "04", h: "Voice + handoff training (your team)", b: "60-min screen-share to teach your front-desk / dispatch / sales team when the agent escalates, how transcripts land, and where to tune scripts themselves." },
+  { n: "05", h: "30-day post-launch tuning included", b: "Weekly script + prompt updates for 30 days at zero extra cost. We watch every call. After that it's $299/mo for ongoing tuning, optional." },
 ];
 
 const Pricing = () => {
@@ -243,7 +257,44 @@ const Pricing = () => {
         </div>
       </section>
 
-      <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-y border-slate-200/70">
+      {/* v46a: trust rail under the plan cards — what's in the box, money-back, SSL */}
+      <section className="px-5 sm:px-8 pb-12">
+        <div className="max-w-6xl mx-auto grid sm:grid-cols-3 gap-3">
+          <div className="rounded-2xl bg-white border border-slate-200 p-5">
+            <div className="text-[11px] uppercase tracking-[0.14em] font-semibold text-[#185FA5] mb-1.5">Money-back</div>
+            <div className="text-[14px] text-slate-800 leading-snug">30-day refund on the build fee if our first agent doesn't ship to your spec. No clawback fight.</div>
+          </div>
+          <div className="rounded-2xl bg-white border border-slate-200 p-5">
+            <div className="text-[11px] uppercase tracking-[0.14em] font-semibold text-[#185FA5] mb-1.5">Payments handled by Stripe</div>
+            <div className="text-[14px] text-slate-800 leading-snug">SSL secured · TLS 1.3 · We never see or store your card. Stripe processes every charge.</div>
+          </div>
+          <div className="rounded-2xl bg-white border border-slate-200 p-5">
+            <div className="text-[11px] uppercase tracking-[0.14em] font-semibold text-[#185FA5] mb-1.5">No surprise contract</div>
+            <div className="text-[14px] text-slate-800 leading-snug">One page, plain English, cancel any time, no auto-renewal lock-in, your data exports on request.</div>
+          </div>
+        </div>
+      </section>
+
+      {/* v46a: deliverables — "what you actually get when you sign up" */}
+      <section className="px-5 sm:px-8 py-16 sm:py-24">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">What you actually get when you sign up</div>
+          <h2 className="text-[28px] sm:text-[40px] leading-tight font-semibold text-[#042C53] mb-10">
+            Five concrete deliverables. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Not a sales process.</span>
+          </h2>
+          <div className="grid md:grid-cols-2 gap-3">
+            {DELIVERABLES.map((d) => (
+              <div key={d.n} className="rounded-2xl bg-white border border-slate-200 p-6 hover:border-[#185FA5]/40 hover:shadow-[0_4px_24px_-12px_rgba(4,44,83,0.18)] transition">
+                <div className="text-[11px] font-mono tracking-wide text-[#185FA5] mb-1">{d.n}</div>
+                <div className="text-[16px] font-semibold text-[#042C53] mb-1.5 leading-snug">{d.h}</div>
+                <div className="text-[14px] text-slate-700 leading-relaxed">{d.b}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 sm:px-8 py-16 sm:py-24 bg-[#F6FAFE] border-y border-slate-200/70">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
           <div>
             <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Free 7-day live trial</div>
@@ -328,14 +379,14 @@ const Pricing = () => {
             Thirty-minute build call. We scope your use case, give you a real number on the spot, and you decide.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-            <a href={CAL_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 shadow-lg">Book a build call →</a>
-            <a href={`tel:${HERO_PHONE_TEL}`} className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15">Or call us: {HERO_PHONE_DISPLAY}</a>
+            <a href={CAL_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 shadow-lg">Book a 30-min build call →</a>
+            <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15">Or DM Alexander on LinkedIn</a>
           </div>
         </div>
       </section>
 
       <footer className="bg-white border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-600">
           <div className="flex items-center gap-2.5">
             <BrainLogo size={28} />
             <span className="font-semibold text-[#042C53]">TrainYourAgent</span>

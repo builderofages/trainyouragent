@@ -17,8 +17,8 @@ import {
 } from "@/content/locations";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
-const HERO_PHONE_DISPLAY = "(813) 555-0142";
-const HERO_PHONE_TEL = "+18135550142";
+const HERO_PHONE_DISPLAY = "Book a 15-min Zoom";
+const HERO_PHONE_TEL = "https://cal.com/trainyouragent/30min";
 const SITE_URL = "https://trainyouragent.com";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
@@ -119,7 +119,7 @@ const LocationPage = () => {
           "@id": `${url}#localbusiness`,
           name: `TrainYourAgent — ${v.label} AI Agents in ${c.name}`,
           url,
-          telephone: HERO_PHONE_TEL,
+          // telephone omitted until real number is published
           image: og,
           priceRange: "$$",
           address: {
@@ -245,11 +245,11 @@ const LocationPage = () => {
                 {v.offer} →
               </a>
               <a
-                href={`tel:${HERO_PHONE_TEL}`}
+                href={HERO_PHONE_TEL} target="_blank" rel="noopener"
                 className="px-6 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] border-2 border-[#042C53]/15 hover:border-[#042C53] focus:outline-none focus:ring-2 focus:ring-[#185FA5] focus:ring-offset-2"
-                aria-label={`Call us at ${HERO_PHONE_DISPLAY}`}
+                aria-label="Book a 15-min Zoom"
               >
-                Call us: {HERO_PHONE_DISPLAY}
+                {HERO_PHONE_DISPLAY}
               </a>
             </div>
           </div>
@@ -368,10 +368,10 @@ const LocationPage = () => {
                 {v.offer} →
               </a>
               <a
-                href={`tel:${HERO_PHONE_TEL}`}
+                href={HERO_PHONE_TEL} target="_blank" rel="noopener"
                 className="px-6 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#042C53]"
               >
-                Or call us: {HERO_PHONE_DISPLAY}
+                {HERO_PHONE_DISPLAY}
               </a>
             </div>
           </div>

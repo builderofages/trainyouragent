@@ -17,6 +17,7 @@ import LeadMagnetModal from "@/components/LeadMagnetModal";
 import LiveActivity from "@/components/LiveActivity";
 import LiveActivityTicker from "@/components/LiveActivityTicker";
 import PageTransition from "@/components/PageTransition";
+import TalkToHumanButton from "@/components/TalkToHumanButton";
 
 // v41: everything else is lazy-loaded to keep main entry chunk small.
 const Dashboard           = lazy(() => import("./pages/Dashboard"));
@@ -222,6 +223,7 @@ const App = () => (
         </ExitIntent>
         <LiveActivity />
         <LiveActivityTicker />
+        <TalkToHumanButton />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

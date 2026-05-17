@@ -49,11 +49,19 @@ export const URL = {
   emailCare:  "mailto:careers@trainyouragent.com",
 } as const;
 
-// Real phone number swap — change in ONE place, every page picks it up.
+// v46a HONESTY FIX:
+// We don't have a published phone line yet. Rather than ship a fake
+// (813) 555-0142 number that anyone over 35 instantly clocks as the
+// "555 movie phone" tell, every page now points to Cal.com for a
+// real human conversation. Swap to a real number when ported.
+//   - Update TODO_REAL_PHONE: false → set display/tel/href + flip to true
+//   - Every page reads PHONE.hasReal to decide whether to render a tel: link
 export const PHONE = {
-  display: "(813) 555-0142",  // SWAP to real
-  tel:     "+18135550142",     // SWAP to real (E.164)
-  href:    "tel:+18135550142", // derived
+  hasReal: false as boolean,
+  display: "Book a 15-min Zoom",        // shown wherever phone would render
+  tel:     "+1",                         // unused while hasReal=false
+  href:    "https://cal.com/trainyouragent/30min", // Cal.com fallback
+  copyShort: "Phone line ports Q3 — book a 15-min Zoom for now",
 } as const;
 
 // Public traction (his own LinkedIn — safe to cite)

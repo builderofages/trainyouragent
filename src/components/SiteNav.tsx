@@ -382,7 +382,7 @@ function DesktopDropdown({
                     {item.label}
                   </div>
                   {item.sub && (
-                    <div className="text-[12px] text-slate-500 mt-0.5 leading-snug">
+                    <div className="text-[12px] text-slate-600 mt-0.5 leading-snug">
                       {item.sub}
                     </div>
                   )}
@@ -434,7 +434,7 @@ function MobileSection({
             >
               {item.label}
               {item.sub && (
-                <span className="block text-[12px] text-slate-500 leading-snug">
+                <span className="block text-[12px] text-slate-600 leading-snug">
                   {item.sub}
                 </span>
               )}

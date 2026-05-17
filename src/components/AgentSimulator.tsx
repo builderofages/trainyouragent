@@ -117,7 +117,7 @@ export default function AgentSimulator({ defaultScenario, vertical }: Props) {
         setReply(acc);
       }
     } catch {
-      setReply("Agent simulator is offline. Try the live ElevenLabs widget on this page, or call us — (813) 555-0142.");
+      setReply("Agent simulator is offline. Try the live ElevenLabs widget on this page, or book a 15-min Zoom at cal.com/trainyouragent/30min.");
     } finally {
       setStreaming(false);
     }

@@ -10,8 +10,8 @@ import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
-const HERO_PHONE_DISPLAY = "(813) 555-0142";
-const HERO_PHONE_TEL = "+18135550142";
+const HERO_PHONE_DISPLAY = "Book a 15-min Zoom";
+const HERO_PHONE_TEL = "https://cal.com/trainyouragent/30min";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
   return (
@@ -426,10 +426,10 @@ const DemoVideo = () => {
           </h2>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
-              href={`tel:${HERO_PHONE_TEL}`}
+              href={HERO_PHONE_TEL} target="_blank" rel="noopener"
               className="px-7 py-3.5 rounded-full bg-white text-[#042C53] font-semibold text-[14px] hover:bg-slate-100 shadow"
             >
-              Call us: {HERO_PHONE_DISPLAY} →
+              {HERO_PHONE_DISPLAY} →
             </a>
             <a
               href={CAL_URL}

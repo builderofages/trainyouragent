@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
-const HERO_PHONE_DISPLAY = "(813) 555-0142";
-const HERO_PHONE_TEL = "+18135550142";
+const HERO_PHONE_DISPLAY = "Book a 15-min Zoom";
+const HERO_PHONE_TEL = "https://cal.com/trainyouragent/30min";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
   return (
@@ -88,7 +88,7 @@ const DemoRequest = () => {
           <div className="mt-8 flex items-center gap-3 text-[14px] text-slate-600">
             <span className="w-2 h-2 rounded-full bg-[#22A36C] animate-pulse" />
             <span>Or just call us right now and hear it live:</span>
-            <a href={`tel:${HERO_PHONE_TEL}`} className="text-[#042C53] font-semibold hover:underline">{HERO_PHONE_DISPLAY}</a>
+            <a href={HERO_PHONE_TEL} target="_blank" rel="noopener" className="text-[#042C53] font-semibold hover:underline">{HERO_PHONE_DISPLAY}</a>
           </div>
         </div>
       </section>

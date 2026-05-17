@@ -24,22 +24,22 @@ function BrainLogo({ size = 40 }: { size?: number }) {
 
 const CHANNELS = [
   {
-    label: "Book a 30-minute build call",
-    sub: "Fastest path. We scope your use case, show a live build, and you leave with a written plan.",
-    cta: "Open Cal.com",
+    label: "Book a 30-min build call",
+    sub: "Fastest path. You get the founder. We scope your use case, show a live build, and you leave with a written plan.",
+    cta: "Open Cal.com →",
     href: CAL_URL,
     accent: true,
   },
   {
-    label: "Email the founder",
-    sub: "Reach Alexander directly. Replies within one business day, usually same day.",
-    cta: "hello@trainyouragent.com",
-    href: "mailto:hello@trainyouragent.com",
+    label: "Email Alexander direct",
+    sub: "Founder inbox. Usually replies within 4 business hours, always within 1 business day.",
+    cta: "alexander@trainyouragent.com",
+    href: "mailto:alexander@trainyouragent.com",
   },
   {
     label: "LinkedIn DM",
-    sub: "Message Alexander on LinkedIn — DM the word AGENT for a live build walkthrough.",
-    cta: "Open LinkedIn",
+    sub: "DM the word AGENT to Alexander on LinkedIn — he records a live build walkthrough on the spot.",
+    cta: "Open LinkedIn →",
     href: LINKEDIN_URL,
   },
   {
@@ -72,18 +72,34 @@ const Contact = () => {
     }
   }, []);
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // No backend wired yet — direct user to email so nothing is lost.
     const form = e.currentTarget as HTMLFormElement;
     const data = new FormData(form);
     const name = String(data.get("name") || "");
-    const company = String(data.get("company") || "");
     const email = String(data.get("email") || "");
+    const company = String(data.get("company") || "");
     const phone = String(data.get("phone") || "");
     const use = String(data.get("use") || "");
+
+    // v46a: actually POST to /api/lead first, then fall back to mailto
+    // so a buyer never feels like they got dropped if the API is down.
+    try {
+      await fetch("/api/lead", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          email, name, company,
+          source: "contact-form",
+          path: "/contact",
+          payload: { use, phone },
+          website: "", hp: "",
+        }),
+      });
+    } catch {/* swallow — mailto fallback below */}
+
     const body = `Name: ${name}%0D%0ACompany: ${company}%0D%0AEmail: ${email}%0D%0APhone: ${phone}%0D%0A%0D%0AUse case:%0D%0A${use}`;
-    window.location.href = `mailto:hello@trainyouragent.com?subject=Build%20request%20from%20${encodeURIComponent(name || "site")}&body=${body}`;
+    window.location.href = `mailto:alexander@trainyouragent.com?subject=Build%20request%20from%20${encodeURIComponent(name || "site")}&body=${body}`;
     setSent(true);
   };
 
@@ -143,15 +159,15 @@ const Contact = () => {
               </div>
             </div>
             <form onSubmit={onSubmit} className="flex flex-col gap-3">
-              <input name="name" required placeholder="Your name" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5]" />
-              <input name="company" placeholder="Company (optional)" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5]" />
-              <input name="email" type="email" required placeholder="Work email" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5]" />
-              <input name="phone" placeholder="Phone (optional)" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5]" />
-              <textarea name="use" required rows={5} placeholder="What do you want the agent to do? E.g. 'Answer after-hours calls and book appointments into ServiceTitan.'" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5] resize-none" />
+              <input name="name" required placeholder="Your name" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[16px] min-h-[44px] focus:outline-none focus:border-[#185FA5] focus:ring-2 focus:ring-[#185FA5]/30" />
+              <input name="company" placeholder="Company (optional)" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[16px] min-h-[44px] focus:outline-none focus:border-[#185FA5] focus:ring-2 focus:ring-[#185FA5]/30" />
+              <input name="email" type="email" required placeholder="Work email" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[16px] min-h-[44px] focus:outline-none focus:border-[#185FA5] focus:ring-2 focus:ring-[#185FA5]/30" />
+              <input name="phone" placeholder="Phone (optional)" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[16px] min-h-[44px] focus:outline-none focus:border-[#185FA5] focus:ring-2 focus:ring-[#185FA5]/30" />
+              <textarea name="use" required rows={5} placeholder="What do you want the agent to do? E.g. 'Answer after-hours calls and book appointments into ServiceTitan.'" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[16px] min-h-[44px] focus:outline-none focus:border-[#185FA5] focus:ring-2 focus:ring-[#185FA5]/30 resize-none" />
               <button type="submit" className="mt-2 px-5 py-3 rounded-full bg-[#042C53] text-white text-[14px] font-medium hover:bg-[#0A3D6E] transition">
                 {sent ? "Opening your email…" : "Send build request"}
               </button>
-              <div className="text-[11px] text-slate-500 leading-relaxed mt-1">
+              <div className="text-[11px] text-slate-600 leading-relaxed mt-1">
                 By submitting you agree to our <Link to="/privacy" className="underline">privacy policy</Link>. We don't share your details with anyone outside the team building your agent.
               </div>
             </form>
@@ -160,7 +176,7 @@ const Contact = () => {
       </section>
 
       <footer className="border-t border-slate-200 bg-white">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-600">
           <div className="flex items-center gap-2.5">
             <BrainLogo size={28} />
             <span className="font-semibold text-[#042C53]">TrainYourAgent</span>

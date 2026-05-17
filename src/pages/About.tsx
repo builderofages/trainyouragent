@@ -150,22 +150,47 @@ const About = () => {
           </div>
         </section>
 
-        <section className="py-20 bg-white border-y border-slate-200">
-          <div className="max-w-[900px] mx-auto px-6">
-            <div className="text-[11px] tracking-[0.2em] uppercase text-[#185FA5] font-mono mb-4">Founder</div>
-            <h2 className="text-[clamp(32px,4vw,52px)] leading-[1.05] tracking-[-0.025em] mb-6" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 500 }}>
-              Alexander <em className="italic font-normal" style={{ color: "#185FA5" }}>Mills.</em>
-            </h2>
-            <div className="text-[#042C53] text-[17px] leading-[1.7] space-y-5 mb-8">
-              <p>I started TrainYourAgent out of Tampa Bay. Background: voice agents and autonomous AI that generate leads and cut ops costs for service businesses. The work happens in public on LinkedIn — DM <code className="font-mono text-[15px] bg-slate-100 px-2 py-0.5 rounded">AGENT</code> for a live build walkthrough.</p>
-              <p>I run discovery, scoping and engagement design myself. When the agent ships, I'm still your point of contact. No account-manager layer, no offshore handoff, no DocuSigned onboarding flow you'll never speak to a human through.</p>
+        <section className="py-16 sm:py-24 bg-white border-y border-slate-200">
+          <div className="max-w-[1080px] mx-auto px-6 grid md:grid-cols-[260px_1fr] gap-10 items-start">
+            {/* v46a: Founder photo slot — Alexander to drop real headshot at /alexander-mills.jpg */}
+            <div className="flex flex-col gap-4">
+              <div className="aspect-square rounded-3xl border border-slate-200 bg-gradient-to-br from-[#E6F1FB] to-[#DCEBFA] flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+                {/* If /alexander-mills.jpg exists in /public, swap the placeholder for: */}
+                {/* <img src="/alexander-mills.jpg" alt="Alexander Mills" className="w-full h-full object-cover" /> */}
+                <BrainLogo size={88} />
+                <div className="text-[11px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mt-3">Founder headshot</div>
+                <div className="text-[11px] text-slate-600 mt-1">Real photo replaces this once approved</div>
+              </div>
+              <div className="text-[13px] text-slate-700 leading-relaxed">
+                <div><strong className="font-semibold text-[#042C53]">Alexander Mills</strong></div>
+                <div>Founder, TrainYourAgent</div>
+                <div>Tampa Bay, Florida</div>
+                <div>Founded 2022</div>
+                <div className="mt-2">
+                  <a href="mailto:alexander@trainyouragent.com" className="text-[#185FA5] underline decoration-[#185FA5]/40 hover:decoration-[#185FA5]">alexander@trainyouragent.com</a>
+                </div>
+              </div>
             </div>
-            <div className="flex gap-3 flex-wrap">
-              <a href={CAL_URL} target="_blank" rel="noopener" className="inline-flex items-center gap-2 px-6 py-3 text-[14px] font-semibold text-white bg-[#185FA5] hover:bg-[#0C447C] transition rounded-full">Book 30 min with me →</a>
-              <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="inline-flex items-center gap-2 px-6 py-3 text-[14px] font-semibold text-[#042C53] bg-white hover:bg-slate-50 border border-slate-200 transition rounded-full">Connect on LinkedIn →</a>
+
+            <div>
+              <div className="text-[11px] tracking-[0.2em] uppercase text-[#185FA5] font-mono mb-4">Founder</div>
+              <h2 className="text-[clamp(32px,4vw,52px)] leading-[1.05] tracking-[-0.025em] mb-6" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 500 }}>
+                Alexander <em className="italic font-normal" style={{ color: "#185FA5" }}>Mills.</em>
+              </h2>
+              <div className="text-[#0B1B2B] text-[16.5px] leading-[1.7] space-y-4 mb-8">
+                <p>I've been building since I was fifteen. Started in operations — restaurant management on a GM track, then industrial welding on Ford-parts undercarriages, picking up robotic engineering on weekends.</p>
+                <p>From there I went into markets — running a trading community and learning options, crypto, and ops the way I learn everything: by shipping and watching what worked.</p>
+                <p>Los Angeles came next, running social for one of the largest SMMAs in the world. Worked with celebrities and household-name brands. Then EndCreations, my gaming infrastructure company. Now TrainYourAgent, plus a portfolio of ventures I run in parallel from Tampa Bay.</p>
+                <p>Four years deep in AI — through every major model shift. I build the things I want to exist and ship them faster than anyone you've met. When you sign with TYA, you don't get an SDR or an account manager — you get me on discovery, scoping, and at every monthly check-in after.</p>
+                <p>DM the word <code className="font-mono text-[15px] bg-slate-100 px-2 py-0.5 rounded">AGENT</code> on LinkedIn for a live build walkthrough — I'll record one for you on the spot.</p>
+              </div>
+              <div className="flex gap-3 flex-wrap">
+                <a href={CAL_URL} target="_blank" rel="noopener" className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] text-[15px] font-semibold text-white bg-[#185FA5] hover:bg-[#0C447C] transition rounded-full">Book 30 min with me →</a>
+                <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] text-[15px] font-semibold text-[#042C53] bg-white hover:bg-slate-50 border border-slate-200 transition rounded-full">Connect on LinkedIn →</a>
+              </div>
+              {/* v38: live ship counter under the bio */}
+              <div className="mt-8"><ShipsCounter variant="hero" /></div>
             </div>
-            {/* v38: live ship counter under the bio */}
-            <div className="mt-8"><ShipsCounter variant="hero" /></div>
           </div>
         </section>
 

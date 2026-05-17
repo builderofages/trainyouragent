@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
-const HERO_PHONE_DISPLAY = "(813) 555-0142";
-const HERO_PHONE_TEL = "+18135550142";
+const HERO_PHONE_DISPLAY = "Book a 15-min Zoom";
+const HERO_PHONE_TEL = "https://cal.com/trainyouragent/30min";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
   return (

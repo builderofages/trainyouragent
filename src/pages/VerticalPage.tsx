@@ -7,8 +7,8 @@ import WallOfLove from "@/components/WallOfLove";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
-const HERO_PHONE_DISPLAY = "(813) 555-0142";
-const HERO_PHONE_TEL = "+18135550142";
+const HERO_PHONE_DISPLAY = "Book a 15-min Zoom";
+const HERO_PHONE_TEL = "https://cal.com/trainyouragent/30min";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
   return (
@@ -360,7 +360,7 @@ export const VERTICAL_CONTENT: Record<string, RichContent> = {
 type LaneOverlay = { tag: string; ctaPrimary: string; ctaSecondary: string };
 const LANE_OVERLAY: Record<LaneId, LaneOverlay> = {
   startup: { tag: "Founder lane", ctaPrimary: "Apply for the founder lane", ctaSecondary: "Book a 30-min build call" },
-  smb:     { tag: "Operator lane", ctaPrimary: "Start the build",            ctaSecondary: "Call us live" },
+  smb:     { tag: "Operator lane", ctaPrimary: "Start the build",            ctaSecondary: "Book a 15-min Zoom" },
   agency:  { tag: "Partner lane",  ctaPrimary: "Become a partner",           ctaSecondary: "Book a partnership call" },
   ops:     { tag: "Scale lane",    ctaPrimary: "Get a custom quote",         ctaSecondary: "Book an architecture call" },
 };
@@ -556,7 +556,7 @@ const VerticalPage = () => {
           <p className="mt-6 text-[18px] sm:text-[20px] text-slate-700 max-w-3xl leading-relaxed">{config.sub}</p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <a href={CAL_URL} target="_blank" rel="noopener" className="px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] shadow-lg shadow-[#042C53]/15">{overlay ? overlay.ctaPrimary : "Book a build call"} →</a>
-            <a href={`tel:${HERO_PHONE_TEL}`} className="px-6 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] border-2 border-[#042C53]/15 hover:border-[#042C53]">{overlay ? overlay.ctaSecondary : `Call us: ${HERO_PHONE_DISPLAY}`}</a>
+            <a href={HERO_PHONE_TEL} target="_blank" rel="noopener" className="px-6 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] border-2 border-[#042C53]/15 hover:border-[#042C53]">{overlay ? overlay.ctaSecondary : HERO_PHONE_DISPLAY}</a>
           </div>
         </div>
       </section>
@@ -685,13 +685,13 @@ const VerticalPage = () => {
               </div>
             </section>
 
-            {/* v38: Wall of Love filtered to this vertical (falls back to all
-                quotes if the filtered pool is empty so the section never goes
-                blank while placeholders are TBD). */}
+            {/* v46a: WallOfLove now ships honest early-days commitments,
+                not fake per-vertical testimonials. Vertical prop is kept
+                for the day real quotes land. */}
             <WallOfLove
               vertical={config.label}
-              eyebrow={`What ${config.label} operators say`}
-              title={`Trusted by ${config.label} operators already running on us.`}
+              eyebrow="Why operators give us a shot"
+              title="We're early. Here's what we promise instead."
               background="white"
             />
 
@@ -729,7 +729,7 @@ const VerticalPage = () => {
                     Book a 30-min build call →
                   </a>
                   <a
-                    href={`tel:${HERO_PHONE_TEL}`}
+                    href={HERO_PHONE_TEL} target="_blank" rel="noopener"
                     className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] border-2 border-[#042C53]/15 hover:border-[#042C53]"
                   >
                     {rc.cta.secondary}
@@ -771,7 +771,7 @@ const VerticalPage = () => {
           <p className="mt-5 text-[17px] text-white/85 max-w-2xl mx-auto leading-relaxed">Thirty-minute build call. You leave with a written plan and a price.</p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <a href={CAL_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 shadow-lg">{overlay ? overlay.ctaPrimary : "Book a build call"} →</a>
-            <a href={`tel:${HERO_PHONE_TEL}`} className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15">Or call us: {HERO_PHONE_DISPLAY}</a>
+            <a href={HERO_PHONE_TEL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15">{HERO_PHONE_DISPLAY}</a>
           </div>
         </div>
       </section>

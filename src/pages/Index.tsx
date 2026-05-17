@@ -153,11 +153,25 @@ const Index = () => {
               </Link>
             </div>
             {/* v42: live AI demos — prominent under the hero CTAs */}
-            <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-[13px]">
-              <span className="text-slate-500">Try a live demo:</span>
+            <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-[14px]">
+              <span className="text-slate-600">Try a live demo:</span>
               <Link to="/demos/sales-objection-handler" className="text-[#185FA5] font-medium hover:underline">Sales objection handler →</Link>
               <Link to="/demos/sop-writer" className="text-[#185FA5] font-medium hover:underline">SOP writer →</Link>
               <Link to="/demos/seo-cluster" className="text-[#185FA5] font-medium hover:underline">SEO cluster generator →</Link>
+            </div>
+
+            {/* v46a: founder-credential strip, honest about the team behind the work */}
+            <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] text-slate-700 max-w-2xl">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#042C53]" aria-hidden="true" />
+                <strong className="font-semibold text-[#042C53]">Alexander Mills</strong>, Founder
+              </span>
+              <span className="text-slate-400" aria-hidden="true">·</span>
+              <span>Tampa Bay, FL</span>
+              <span className="text-slate-400" aria-hidden="true">·</span>
+              <span>4 yrs in AI</span>
+              <span className="text-slate-400" aria-hidden="true">·</span>
+              <Link to="/metrics" className="text-[#185FA5] font-medium hover:underline">Building this in public →</Link>
             </div>
           </div>
 
@@ -174,7 +188,7 @@ const Index = () => {
                 style={{ background: "radial-gradient(closest-side, #BDDAF4 0%, rgba(189,218,244,0) 70%)" }}
               />
               <PathwayRouter />
-              <div className="mt-3 text-center text-[12px] text-slate-500">
+              <div className="mt-3 text-center text-[12px] text-slate-600">
                 Four years deep in AI · Every major model
               </div>
             </div>

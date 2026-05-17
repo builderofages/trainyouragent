@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
-const HERO_PHONE_DISPLAY = "(813) 555-0142";
-const HERO_PHONE_TEL = "+18135550142";
+const HERO_PHONE_DISPLAY = "Book a 15-min Zoom";
+const HERO_PHONE_TEL = "https://cal.com/trainyouragent/30min";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
   return (
@@ -261,7 +261,7 @@ const VersusPage = () => {
           </h2>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <a href={CAL_URL} target="_blank" rel="noopener" className="px-7 py-3.5 rounded-full bg-white text-[#042C53] font-semibold text-[14px] hover:bg-slate-100 shadow">Book a build call →</a>
-            <a href={`tel:${HERO_PHONE_TEL}`} className="px-7 py-3.5 rounded-full bg-white/10 border border-white/20 text-white font-medium text-[14px] hover:bg-white/15">Or call us: {HERO_PHONE_DISPLAY}</a>
+            <a href={HERO_PHONE_TEL} target="_blank" rel="noopener" className="px-7 py-3.5 rounded-full bg-white/10 border border-white/20 text-white font-medium text-[14px] hover:bg-white/15">{HERO_PHONE_DISPLAY}</a>
           </div>
         </div>
       </section>
