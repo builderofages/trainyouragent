@@ -357,14 +357,31 @@ const Index = () => {
         </div>
       </section>
 
-      {/* VISION */}
-      <section className="px-5 sm:px-8 py-28">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="text-[12px] uppercase tracking-[0.22em] text-[#185FA5] font-semibold mb-6">Why we're building this</div>
-          <blockquote className="text-[28px] sm:text-[42px] leading-[1.18] tracking-tight font-medium text-[#042C53]" style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic" }}>
-            "AI isn't a feature. It's the evolutionary step humans have been waiting for — the one that takes us out of cubicles and away from paperwork, back into the work we were built for: building, dreaming, evolving. The companies that get this right won't just be more efficient. They'll write the next chapter of what business looks like. We're here to make sure every founder, every operator, every business is first in line."
-          </blockquote>
-          <div className="mt-8 text-[14px] text-slate-500 tracking-[0.12em] uppercase">Alexander Mills · Founder</div>
+      {/* VISION — editorial pull quote */}
+      <section className="px-5 sm:px-8 py-28 bg-[#FAFBFC] border-y border-slate-200/70">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-[11px] uppercase tracking-[0.22em] text-[#185FA5] font-semibold mb-8">Why we're building this</div>
+          <div className="relative">
+            <span aria-hidden="true" className="absolute -left-2 sm:-left-8 -top-6 text-[80px] sm:text-[120px] leading-none text-[#185FA5]/15 font-serif select-none">"</span>
+            <blockquote className="relative text-[19px] sm:text-[22px] leading-[1.55] text-[#0B1B2B] font-normal" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+              <p className="mb-5">
+                AI isn't a feature. It's the evolutionary step humans have been waiting for — the one that takes us out of cubicles and away from paperwork, back into the work we were built for: <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500, color: "#042C53" }}>building, dreaming, evolving.</span>
+              </p>
+              <p className="mb-5">
+                The companies that get this right won't just be more efficient. They'll write the next chapter of what business looks like.
+              </p>
+              <p className="text-[#042C53] font-medium">
+                We're here to make sure every founder, every operator, every business is first in line.
+              </p>
+            </blockquote>
+          </div>
+          <div className="mt-10 pt-8 border-t border-slate-200 flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#185FA5] to-[#042C53] flex-shrink-0" aria-hidden="true" />
+            <div>
+              <div className="text-[15px] font-semibold text-[#042C53]">Alexander Mills</div>
+              <div className="text-[12px] text-slate-500 tracking-wide">Founder · TrainYourAgent · Tampa Bay, FL</div>
+            </div>
+          </div>
         </div>
       </section>
 
