@@ -3,10 +3,13 @@
 // Same brand language as buyers-guide-pdf.ts.
 
 import { jsPDF } from "jspdf";
+import { rateLimitNode, ipFromNodeReq } from "./_lib/rate-limit-node.js";
 
 type NodeReq = {
   method?: string;
   query: Record<string, string | string[] | undefined>;
+  headers?: Record<string, string | string[] | undefined>;
+  socket?: { remoteAddress?: string };
 };
 type NodeRes = {
   status(code: number): NodeRes;
@@ -37,6 +40,15 @@ function n(q: NodeReq["query"], key: string, dflt: number): number {
 export default async function handler(req: NodeReq, res: NodeRes) {
   if (req.method !== "GET" && req.method !== "HEAD") {
     res.status(405).json({ ok: false, error: "method" });
+    return;
+  }
+
+  // v55a: 5/IP/hour — heavy renderer.
+  const ip = ipFromNodeReq(req);
+  const rl = rateLimitNode(`pdf-roi:${ip}`, { limit: 5, windowMs: 60 * 60 * 1000 });
+  if (!rl.ok) {
+    res.setHeader("retry-after", String(rl.retryAfter));
+    res.status(429).json({ ok: false, error: "rate-limited" });
     return;
   }
 

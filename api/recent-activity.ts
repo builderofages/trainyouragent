@@ -4,6 +4,7 @@
 // up; falls back to plausible synthetic items so the ticker is never empty.
 
 import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors.js";
+import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
 import { getLeads } from "./_lib/lead-store.js";
 
 export const config = { runtime: "edge" };
@@ -40,6 +41,11 @@ export default async function handler(req: Request) {
   if (!cors.allowed) return forbiddenResponse();
   if (cors.isPreflight) return preflightResponse(cors.headers);
   if (req.method !== "GET") return json({ ok: false, error: "method" }, 405, cors.headers);
+
+  // v55a: 120/IP/hour — public ticker feed.
+  const ip = ipFromRequest(req);
+  const rl = rateLimit(`ract:${ip}`, { limit: 120, windowMs: 60 * 60 * 1000 });
+  if (!rl.ok) return json({ ok: false, error: "rate-limited" }, 429, { ...cors.headers, ...rl.headers });
 
   const real = getLeads(50).slice(0, 5).map((l) => {
     const { action, where } = humanize(l.source, l.emailHash);

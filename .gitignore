@@ -27,4 +27,35 @@ dist-ssr
 # and a local .env.local (also ignored) for development.
 .env
 .env.local
+.env.production
 .env.*.local
+.env.tmp
+.env.*.tmp
+
+# Vercel
+.vercel/
+
+# Build outputs
+build/
+.next/
+.turbo/
+
+# Cert / key material
+*.pem
+*.key
+*.p12
+*.pfx
+*.cer
+*.crt
+
+# Service-account / credential files commonly leaked
+secrets.json
+credentials.json
+service-account.json
+*.serviceaccount.json
+google-credentials*.json
+
+# OS / editor leftovers
+.DS_Store
+*.swp
+Thumbs.db

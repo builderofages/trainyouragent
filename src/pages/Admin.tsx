@@ -22,11 +22,13 @@ const VERCEL_DEPLOY_URL = "https://vercel.com/builderofages/trainyouragent/deplo
 const GITHUB_REPO_URL = "https://github.com/builderofages/trainyouragent";
 const DEPLOY_HOOK_URL = "https://api.vercel.com/v1/integrations/deploy/prj_bxA7MPcFmHyKRJ69XSIYdjNbSxy4/0D9pWDtZqR";
 
-// VITE_ADMIN_TOKEN is read at build time. If not set, fall back to a
-// known-only-to-Alexander shared secret so the page is never publicly readable.
+// v55a: VITE_ADMIN_TOKEN is read at build time. NO hardcoded fallback —
+// shipping a fallback to the client bundle is a public backdoor once the
+// repo is public. If the env var isn't set, the page refuses every token.
+// Set VITE_ADMIN_TOKEN in Vercel (Build & Output Settings → Environment
+// Variables) to match server-side ADMIN_TOKEN.
 const ADMIN_TOKEN: string =
-  (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_ADMIN_TOKEN) ||
-  "tya-internal-2026";
+  (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_ADMIN_TOKEN) || "";
 
 type HealthSnapshot = {
   voice: string; ai: string; telephony: string; booking: string; payments: string;
@@ -74,7 +76,9 @@ const PIPELINE_STAGES = [
 const Admin = () => {
   const [params] = useSearchParams();
   const token = params.get("token") || "";
-  const authorized = token && token === ADMIN_TOKEN;
+  // v55a: explicit empty-token guard so an empty VITE_ADMIN_TOKEN can never
+  // match an empty query param. Both must be non-empty AND equal.
+  const authorized = !!ADMIN_TOKEN && !!token && token === ADMIN_TOKEN;
 
   const [health, setHealth] = useState<HealthSnapshot>(null);
   const [healthMs, setHealthMs] = useState<number | null>(null);

@@ -5,7 +5,12 @@
 // into Vercel env vars (STRIPE_PRICE_STARTER / OPERATOR / SCALE).
 //
 // Gated by query token so random hits don't trigger:
-//   POST /api/stripe-setup?init_token=tya-init-2026
+//   POST /api/stripe-setup?init_token=$STRIPE_SETUP_INIT_TOKEN
+//
+// v55a: hardcoded init_token REMOVED — once the repo is public a baked-in
+// token is a permanent backdoor allowing anyone to call the Stripe API with
+// the account's key. STRIPE_SETUP_INIT_TOKEN MUST be set in Vercel before
+// this endpoint becomes callable; otherwise it returns 401.
 //
 // Hardening:
 //   - Node runtime (not edge — uses standard fetch but kept simple)
@@ -16,7 +21,9 @@
 
 export const config = { runtime: "edge" };
 
-const INIT_TOKEN = "tya-init-2026";
+import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
+
+const INIT_TOKEN = process.env.STRIPE_SETUP_INIT_TOKEN || "";
 
 type Plan = {
   slug: "starter" | "operator" | "scale";
@@ -55,10 +62,25 @@ export default async function handler(req: Request) {
     return json({ ok: false, error: "method", hint: "POST to this endpoint" }, 405);
   }
 
+  // v55a: 10/IP/hour brute-force guard BEFORE the init-token check.
+  const ip = ipFromRequest(req);
+  const rl = rateLimit(`stripe-setup:${ip}`, { limit: 10, windowMs: 60 * 60 * 1000 });
+  if (!rl.ok) return json({ ok: false, error: "rate-limited" }, 429);
+
   const url = new URL(req.url);
-  const token = url.searchParams.get("init_token");
-  if (token !== INIT_TOKEN) {
-    return json({ ok: false, error: "missing-token", hint: `Append ?init_token=${INIT_TOKEN}` }, 401);
+  const token = url.searchParams.get("init_token") || "";
+  // v55a: fail closed when env not configured (no public-bundle backdoor).
+  if (!INIT_TOKEN || token !== INIT_TOKEN) {
+    return json(
+      {
+        ok: false,
+        error: "unauthorized",
+        hint:
+          "This endpoint requires STRIPE_SETUP_INIT_TOKEN to be set in Vercel env, " +
+          "then call ?init_token=<value>.",
+      },
+      401,
+    );
   }
 
   const stripeKey = process.env.STRIPE_SECRET_KEY;
@@ -71,7 +93,7 @@ export default async function handler(req: Request) {
         "1. Get your Stripe secret key from https://dashboard.stripe.com/apikeys",
         "2. vercel env add STRIPE_SECRET_KEY production",
         "3. Redeploy: vercel --prod",
-        "4. Re-hit POST /api/stripe-setup?init_token=tya-init-2026",
+        "4. Re-hit POST /api/stripe-setup?init_token=$STRIPE_SETUP_INIT_TOKEN",
       ],
     }, 400);
   }

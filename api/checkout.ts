@@ -84,7 +84,7 @@ export default async function handler(req: Request) {
     return json({
       ok: false,
       error: "plan-not-configured",
-      hint: "Run POST /api/stripe-setup?init_token=tya-init-2026 to seed Stripe products, then set the returned price IDs as Vercel env vars.",
+      hint: "Run POST /api/stripe-setup?init_token=$STRIPE_SETUP_INIT_TOKEN to seed Stripe products, then set the returned price IDs as Vercel env vars.",
     }, 200, cors.headers);
   }
 

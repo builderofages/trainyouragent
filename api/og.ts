@@ -11,6 +11,8 @@
 //
 // 5-min CDN cache, longer browser cache.
 
+import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
+
 export const config = { runtime: "edge" };
 
 const NAVY = "#042C53";
@@ -183,6 +185,13 @@ function renderSvg(
 }
 
 export default async function handler(req: Request): Promise<Response> {
+  // v55a: 120/IP/hour. Crawler-friendly, abuse-resistant.
+  const ip = ipFromRequest(req);
+  const rl = rateLimit(`og:${ip}`, { limit: 120, windowMs: 60 * 60 * 1000 });
+  if (!rl.ok) {
+    return new Response("rate-limited", { status: 429, headers: rl.headers });
+  }
+
   const url = new URL(req.url);
 
   const titleRaw = url.searchParams.get("title");

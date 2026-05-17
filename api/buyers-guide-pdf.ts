@@ -27,12 +27,15 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { jsPDF } from "jspdf";
+import { rateLimitNode, ipFromNodeReq } from "./_lib/rate-limit-node.js";
 
 // Vercel Node serverless runtime. Don't pull in @vercel/node types — define
 // the minimal request/response shape we use so we don't add a build-time dep.
 type NodeReq = {
   method?: string;
   query: Record<string, string | string[] | undefined>;
+  headers?: Record<string, string | string[] | undefined>;
+  socket?: { remoteAddress?: string };
 };
 type NodeRes = {
   status(code: number): NodeRes;
@@ -55,6 +58,15 @@ const EMAIL_RE = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']{2,}$/;
 export default async function handler(req: NodeReq, res: NodeRes) {
   if (req.method !== "GET" && req.method !== "HEAD") {
     res.status(405).json({ ok: false, error: "method" });
+    return;
+  }
+
+  // v55a: 5/IP/hour — PDF rendering is heavy, low-volume by design.
+  const ip = ipFromNodeReq(req);
+  const rl = rateLimitNode(`pdf-buyers:${ip}`, { limit: 5, windowMs: 60 * 60 * 1000 });
+  if (!rl.ok) {
+    res.setHeader("retry-after", String(rl.retryAfter));
+    res.status(429).json({ ok: false, error: "rate-limited" });
     return;
   }
 

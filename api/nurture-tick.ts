@@ -18,6 +18,7 @@
 
 import { getSupabase, supabaseConfigured } from "./_lib/supabase.js";
 import { sendEmail } from "./_lib/resend.js";
+import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
 
 export const config = { runtime: "edge" };
 
@@ -47,6 +48,11 @@ type TickResult = {
 };
 
 export default async function handler(req: Request) {
+  // v55a: 30/IP/hour token-brute-force guard BEFORE the secret check.
+  const ip = ipFromRequest(req);
+  const rl = rateLimit(`nurture:${ip}`, { limit: 30, windowMs: 60 * 60 * 1000 });
+  if (!rl.ok) return json({ ok: false, error: "rate-limited" }, 429);
+
   const url = new URL(req.url);
   const token = url.searchParams.get("token") || "";
   if (!ADMIN_TOKEN || token !== ADMIN_TOKEN) {
