@@ -122,6 +122,15 @@ export default function SiteNav({ active }: SiteNavProps) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // v55C: lock body scroll while mobile drawer is open so the page underneath
+  // doesn't scroll-bleed when the user pans the nav.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = mobileOpen ? "hidden" : prev;
+    return () => { document.body.style.overflow = prev; };
+  }, [mobileOpen]);
+
   // Hover-intent helpers — short delay before close so users can travel
   // diagonally into the dropdown without it disappearing.
   const openWithIntent = (key: DropdownKey) => {
@@ -260,8 +269,8 @@ export default function SiteNav({ active }: SiteNavProps) {
 
         {/* Mobile drawer */}
         {mobileOpen && (
-          <div className="md:hidden border-t border-slate-200 bg-white">
-            <div className="max-w-7xl mx-auto px-5 py-4 flex flex-col gap-1 text-[15px]">
+          <div className="md:hidden border-t border-slate-200 bg-white max-h-[calc(100dvh-64px)] overflow-y-auto">
+            <div className="max-w-7xl mx-auto px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex flex-col gap-1 text-[15px]">
               <MobileSection
                 label="Solutions"
                 open={mobileSection === "solutions"}

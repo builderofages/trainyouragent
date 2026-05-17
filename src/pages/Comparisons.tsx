@@ -89,7 +89,7 @@ const Comparisons = () => {
       <section className="pt-32 pb-12 px-5 sm:px-8">
         <div className="max-w-5xl mx-auto">
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Comparisons</div>
-          <h1 className="text-[42px] sm:text-[64px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+          <h1 className="text-[32px] sm:text-[48px] md:text-[64px] leading-[1.06] sm:leading-[1.04] tracking-tight font-semibold text-[#042C53]">
             TrainYourAgent vs. off-the-shelf <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>vs. BPO call centers.</span>
           </h1>
           <p className="mt-6 text-[18px] text-slate-700 max-w-3xl leading-relaxed">
@@ -100,26 +100,28 @@ const Comparisons = () => {
 
       <section className="px-5 sm:px-8 pb-20">
         <div className="max-w-6xl mx-auto rounded-3xl border border-slate-200 overflow-hidden">
-          <div className="grid grid-cols-4 bg-[#042C53] text-white text-[13px] font-semibold">
+          <div className="overflow-x-auto">
+          <div className="grid grid-cols-4 bg-[#042C53] text-white text-[13px] font-semibold min-w-[640px]">
             <div className="px-5 py-4">Feature</div>
             <div className="px-5 py-4 border-l border-white/15">TrainYourAgent</div>
             <div className="px-5 py-4 border-l border-white/15">Off-the-shelf AI</div>
             <div className="px-5 py-4 border-l border-white/15">BPO call center</div>
           </div>
           {ROWS.map((r, i) => (
-            <div key={i} className={`grid grid-cols-4 text-[13px] sm:text-[14px] ${i % 2 === 0 ? "bg-white" : "bg-[#F6FAFE]"} border-t border-slate-100`}>
+            <div key={i} className={`grid grid-cols-4 text-[13px] sm:text-[14px] ${i % 2 === 0 ? "bg-white" : "bg-[#F6FAFE]"} border-t border-slate-100 min-w-[640px]`}>
               <div className="px-5 py-4 font-medium text-[#042C53]">{r.feature}</div>
               <div className="px-5 py-4 text-slate-700 border-l border-slate-100">{r.tya}</div>
               <div className="px-5 py-4 text-slate-700 border-l border-slate-100">{r.offshelf}</div>
               <div className="px-5 py-4 text-slate-700 border-l border-slate-100">{r.bpo}</div>
             </div>
           ))}
+          </div>
         </div>
       </section>
 
       <section className="px-5 sm:px-8 py-20 bg-[#042C53] text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-[32px] sm:text-[48px] leading-[1.04] tracking-tight font-semibold">
+          <h2 className="text-[26px] sm:text-[40px] md:text-[48px] leading-[1.08] sm:leading-[1.04] tracking-tight font-semibold">
             Where we win: <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>the long middle of every business.</span>
           </h2>
           <p className="mt-5 text-[16px] text-white/85 max-w-2xl mx-auto leading-relaxed">

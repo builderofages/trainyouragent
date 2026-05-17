@@ -56,7 +56,7 @@ export default function PlaybooksIndex() {
             <div className="text-[12px] tracking-[0.2em] uppercase text-[#185FA5] font-semibold mb-4">
               The operator's library
             </div>
-            <h1 className="text-[40px] sm:text-[58px] leading-[1.05] font-semibold text-[#042C53] tracking-[-0.01em] mb-5">
+            <h1 className="text-[32px] sm:text-[44px] md:text-[58px] leading-[1.06] sm:leading-[1.05] font-semibold text-[#042C53] tracking-[-0.01em] mb-5">
               AI playbooks for 15 SMB niches
             </h1>
             <p className="text-[19px] sm:text-[21px] leading-[1.55] text-[#1B3A5C] max-w-3xl">

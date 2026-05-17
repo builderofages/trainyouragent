@@ -111,7 +111,7 @@ const Contact = () => {
       <section className="pt-28 pb-12 px-5 sm:px-8">
         <div className="max-w-5xl mx-auto">
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Contact</div>
-          <h1 className="text-[42px] sm:text-[64px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+          <h1 className="text-[32px] sm:text-[48px] md:text-[64px] leading-[1.06] sm:leading-[1.04] tracking-tight font-semibold text-[#042C53]">
             Talk to the people who <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>build</span> it.
           </h1>
           <p className="mt-5 text-[18px] text-slate-600 max-w-2xl leading-relaxed">
@@ -142,7 +142,7 @@ const Contact = () => {
       </section>
 
       <section className="px-5 sm:px-8 pb-20">
-        <div className="max-w-5xl mx-auto bg-[#F6FAFE] border border-slate-200 rounded-2xl p-7 sm:p-10">
+        <div className="max-w-5xl mx-auto bg-[#F6FAFE] border border-slate-200 rounded-2xl p-5 sm:p-7 md:p-10">
           <div className="grid md:grid-cols-2 gap-10">
             <div>
               <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Send a build request</div>

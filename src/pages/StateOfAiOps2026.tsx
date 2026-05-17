@@ -64,7 +64,7 @@ export default function StateOfAiOps2026() {
 
       <main className="max-w-3xl mx-auto px-5 sm:px-8 py-10 sm:py-16">
         <div className="text-[11px] uppercase tracking-[0.18em] font-semibold mb-3" style={{ color: BLUE }}>Q2 2026 · Free report</div>
-        <h1 className="text-[36px] sm:text-[52px] font-semibold leading-[1.05] mb-4" style={{ color: NAVY }}>
+        <h1 className="text-[28px] sm:text-[40px] md:text-[52px] font-semibold leading-[1.08] sm:leading-[1.05] mb-4" style={{ color: NAVY }}>
           State of AI Operations 2026
         </h1>
         <p className="text-[17px] sm:text-[19px] text-slate-700 leading-relaxed mb-10 max-w-2xl">

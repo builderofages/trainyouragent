@@ -97,14 +97,14 @@ export default function Book() {
       </a>
       <SiteNav active="pricing" />
 
-      <main id="main" className="pt-28 pb-16 px-5 sm:px-8">
+      <main id="main" className="pt-24 sm:pt-28 pb-12 sm:pb-16 px-5 sm:px-8">
         <div className="max-w-6xl mx-auto">
           {/* HERO */}
           <section className="text-center mb-10">
             <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">
               {playbook ? `Book a ${nicheName} build call` : "Book a call"}
             </div>
-            <h1 className="text-[40px] sm:text-[60px] leading-[1.04] tracking-tight font-semibold text-[#042C53] max-w-4xl mx-auto">
+            <h1 className="text-[32px] sm:text-[48px] md:text-[60px] leading-[1.06] sm:leading-[1.04] tracking-tight font-semibold text-[#042C53] max-w-4xl mx-auto">
               {playbook ? (
                 <>
                   Book your {nicheName} build call —{" "}
@@ -149,7 +149,7 @@ export default function Book() {
               <CalEmbed height={780} />
             </div>
             <aside
-              className="rounded-3xl bg-[#042C53] text-white p-7 lg:sticky lg:top-28"
+              className="rounded-3xl bg-[#042C53] text-white p-6 sm:p-7 lg:sticky lg:top-28"
               aria-label="Day-1 promises"
             >
               <div className="text-[11px] uppercase tracking-[0.18em] text-[#9CC4EC] font-semibold mb-2">
@@ -188,7 +188,7 @@ export default function Book() {
             <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">
               What happens after you book
             </div>
-            <h2 className="text-[26px] sm:text-[34px] leading-tight font-semibold text-[#042C53] mb-7 max-w-3xl">
+            <h2 className="text-[24px] sm:text-[30px] md:text-[34px] leading-tight font-semibold text-[#042C53] mb-7 max-w-3xl">
               Three concrete steps.{" "}
               <span
                 style={{

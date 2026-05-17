@@ -121,7 +121,7 @@ export default function BlogPost() {
           </Link>
         </div>
         <h1
-          className="text-[36px] sm:text-[52px] font-semibold leading-[1.05] tracking-[-0.02em] mb-5"
+          className="text-[28px] sm:text-[40px] md:text-[52px] font-semibold leading-[1.08] sm:leading-[1.05] tracking-[-0.02em] mb-5"
           style={{ color: NAVY }}
         >
           {post.title}
@@ -149,15 +149,19 @@ export default function BlogPost() {
         )}
 
         {/* MDX body */}
-        <div className="prose prose-slate prose-lg max-w-none
+        <div className="prose prose-slate sm:prose-lg max-w-none
                         prose-headings:font-semibold prose-headings:tracking-[-0.01em]
-                        prose-h2:text-[28px] prose-h2:mt-12 prose-h2:mb-4
-                        prose-h3:text-[20px] prose-h3:mt-8
+                        prose-h2:text-[22px] sm:prose-h2:text-[28px] prose-h2:mt-10 sm:prose-h2:mt-12 prose-h2:mb-4
+                        prose-h3:text-[18px] sm:prose-h3:text-[20px] prose-h3:mt-8
                         prose-a:text-[#185FA5] prose-a:no-underline hover:prose-a:underline
                         prose-strong:text-[#042C53]
-                        prose-table:text-[14px]
+                        prose-table:text-[13px] sm:prose-table:text-[14px]
                         prose-th:bg-slate-50 prose-th:text-left prose-th:px-3 prose-th:py-2
-                        prose-td:px-3 prose-td:py-2 prose-td:border-t prose-td:border-slate-200">
+                        prose-td:px-3 prose-td:py-2 prose-td:border-t prose-td:border-slate-200
+                        prose-pre:overflow-x-auto prose-pre:text-[12.5px]
+                        prose-img:rounded-lg
+                        [&_table]:block [&_table]:overflow-x-auto sm:[&_table]:table
+                        [&_pre]:-mx-5 sm:[&_pre]:mx-0 [&_pre]:rounded-none sm:[&_pre]:rounded-lg">
           <Body />
         </div>
 

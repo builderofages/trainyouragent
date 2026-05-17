@@ -71,7 +71,7 @@ export default function VoiceDemo() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E6F1FB] text-[12px] uppercase tracking-[0.18em] font-semibold text-[#185FA5] mb-5">
               <PrismMark size={14} /> Live demo · No signup
             </div>
-            <h1 className="text-[44px] sm:text-[64px] leading-[1.04] tracking-tight font-semibold text-[#042C53] max-w-3xl mx-auto">
+            <h1 className="text-[32px] sm:text-[48px] md:text-[64px] leading-[1.06] sm:leading-[1.04] tracking-tight font-semibold text-[#042C53] max-w-3xl mx-auto">
               Talk to our AI agent{" "}
               <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
                 right now.

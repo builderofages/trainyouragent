@@ -122,7 +122,7 @@ export default function Glossary() {
       <main className="pt-32 pb-24 px-5 sm:px-8">
         <section className="max-w-4xl mx-auto">
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Glossary</div>
-          <h1 className="text-[40px] sm:text-[56px] leading-[1.05] tracking-tight font-semibold" style={{ color: NAVY }}>
+          <h1 className="text-[32px] sm:text-[44px] md:text-[56px] leading-[1.06] sm:leading-[1.05] tracking-tight font-semibold" style={{ color: NAVY }}>
             AI terms,{" "}
             <span style={{ fontFamily: SERIF_ITALIC, fontStyle: "italic", fontWeight: 500 }}>
               finally explained.
@@ -182,7 +182,7 @@ export default function Glossary() {
           <aside className="hidden lg:block">
             <div className="sticky top-32">
               <div className="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-semibold mb-3">Jump to</div>
-              <nav className="grid grid-cols-4 gap-1.5" aria-label="Alphabet jump nav">
+              <nav className="grid grid-cols-6 sm:grid-cols-4 gap-1.5" aria-label="Alphabet jump nav">
                 {LETTERS.map((l) => (
                   <a
                     key={l}

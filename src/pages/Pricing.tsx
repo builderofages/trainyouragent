@@ -276,7 +276,7 @@ const Pricing = () => {
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Pricing</div>
           {recommendation ? (
             <>
-              <h1 className="text-[40px] sm:text-[64px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+              <h1 className="text-[32px] sm:text-[48px] md:text-[64px] leading-[1.06] sm:leading-[1.04] tracking-tight font-semibold text-[#042C53]">
                 Pricing for{" "}
                 <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
                   {recommendation.label.toLowerCase()}.
@@ -288,7 +288,7 @@ const Pricing = () => {
             </>
           ) : (
             <>
-              <h1 className="text-[44px] sm:text-[72px] leading-[1.02] tracking-tight font-semibold text-[#042C53]">
+              <h1 className="text-[34px] sm:text-[52px] md:text-[72px] leading-[1.06] sm:leading-[1.02] tracking-tight font-semibold text-[#042C53]">
                 Three lanes. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Zero theater.</span>
               </h1>
               <p className="mt-6 text-[18px] sm:text-[20px] text-slate-700 max-w-3xl mx-auto leading-relaxed">
@@ -324,7 +324,7 @@ const Pricing = () => {
           {PLANS.map((p) => {
             const isRecommended = recommendation && recommendation.plan === p.id;
             return (
-            <div key={p.id} className={`relative rounded-3xl p-8 border transition-all duration-300 ${p.accent ? "bg-[#042C53] text-white border-[#042C53] shadow-2xl shadow-[#042C53]/15 lg:scale-[1.02] hover:shadow-[0_30px_60px_-15px_rgba(24,95,165,0.45)]" : "bg-white text-[#0B1B2B] border-slate-200 hover:border-[#185FA5] hover:shadow-[0_20px_50px_-15px_rgba(24,95,165,0.25)] hover:-translate-y-0.5"} ${isRecommended ? "ring-4 ring-[#22A36C]/40 ring-offset-2 ring-offset-white" : ""}`}>
+            <div key={p.id} className={`relative rounded-3xl p-6 sm:p-8 border transition-all duration-300 ${p.accent ? "bg-[#042C53] text-white border-[#042C53] shadow-2xl shadow-[#042C53]/15 lg:scale-[1.02] hover:shadow-[0_30px_60px_-15px_rgba(24,95,165,0.45)]" : "bg-white text-[#0B1B2B] border-slate-200 hover:border-[#185FA5] hover:shadow-[0_20px_50px_-15px_rgba(24,95,165,0.25)] hover:-translate-y-0.5"} ${isRecommended ? "ring-4 ring-[#22A36C]/40 ring-offset-2 ring-offset-white" : ""}`}>
               {p.accent && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#22A36C] text-white text-[11px] font-semibold tracking-[0.12em] uppercase shadow-lg">Most Popular</div>
               )}
@@ -334,18 +334,18 @@ const Pricing = () => {
               <div className={`text-[12px] uppercase tracking-[0.18em] font-semibold mb-2 ${p.accent ? "text-[#9CC4EC]" : "text-[#185FA5]"}`}>{p.label}</div>
               <div className={`text-[15px] leading-relaxed mb-6 ${p.accent ? "text-white/85" : "text-slate-700"}`}>{p.forWho}</div>
 
-              <div className={`grid grid-cols-3 gap-3 mb-8 pb-6 border-b ${p.accent ? "border-white/15" : "border-slate-200"}`}>
-                <div>
-                  <div className={`text-[24px] font-semibold tracking-tight ${p.accent ? "text-white" : "text-[#042C53]"}`}>{p.upfront}</div>
-                  <div className={`text-[11px] mt-1 ${p.accent ? "text-white/65" : "text-slate-600"}`}>{p.upfrontNote}</div>
+              <div className={`grid grid-cols-3 gap-2 sm:gap-3 mb-8 pb-6 border-b ${p.accent ? "border-white/15" : "border-slate-200"}`}>
+                <div className="min-w-0">
+                  <div className={`text-[20px] sm:text-[24px] font-semibold tracking-tight ${p.accent ? "text-white" : "text-[#042C53]"}`}>{p.upfront}</div>
+                  <div className={`text-[11px] mt-1 leading-snug ${p.accent ? "text-white/65" : "text-slate-600"}`}>{p.upfrontNote}</div>
                 </div>
-                <div>
-                  <div className={`text-[24px] font-semibold tracking-tight ${p.accent ? "text-white" : "text-[#042C53]"}`}>{p.monthly}</div>
-                  <div className={`text-[11px] mt-1 ${p.accent ? "text-white/65" : "text-slate-600"}`}>{p.monthlyUnit}</div>
+                <div className="min-w-0">
+                  <div className={`text-[20px] sm:text-[24px] font-semibold tracking-tight ${p.accent ? "text-white" : "text-[#042C53]"}`}>{p.monthly}</div>
+                  <div className={`text-[11px] mt-1 leading-snug ${p.accent ? "text-white/65" : "text-slate-600"}`}>{p.monthlyUnit}</div>
                 </div>
-                <div>
-                  <div className={`text-[24px] font-semibold tracking-tight ${p.accent ? "text-white" : "text-[#042C53]"}`}>{p.booking}</div>
-                  <div className={`text-[11px] mt-1 ${p.accent ? "text-white/65" : "text-slate-600"}`}>{p.bookingNote}</div>
+                <div className="min-w-0">
+                  <div className={`text-[20px] sm:text-[24px] font-semibold tracking-tight ${p.accent ? "text-white" : "text-[#042C53]"}`}>{p.booking}</div>
+                  <div className={`text-[11px] mt-1 leading-snug ${p.accent ? "text-white/65" : "text-slate-600"}`}>{p.bookingNote}</div>
                 </div>
               </div>
 
@@ -474,7 +474,7 @@ const Pricing = () => {
       </section>
 
       {/* ROI CALCULATOR */}
-      <section className="px-5 sm:px-8 py-24">
+      <section className="px-5 sm:px-8 py-14 sm:py-24">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10">
             <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">ROI calculator</div>
@@ -510,7 +510,7 @@ const Pricing = () => {
         </div>
       </section>
 
-      <section className="px-5 sm:px-8 py-20">
+      <section className="px-5 sm:px-8 py-12 sm:py-20">
         <div className="max-w-4xl mx-auto">
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">FAQ</div>
           <h2 className="text-[28px] sm:text-[40px] leading-tight font-semibold text-[#042C53] mb-10">Questions we get on every call.</h2>
@@ -528,7 +528,7 @@ const Pricing = () => {
         </div>
       </section>
 
-      <section className="px-5 sm:px-8 py-20 bg-[#042C53] text-white">
+      <section className="px-5 sm:px-8 py-12 sm:py-20 bg-[#042C53] text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-[36px] sm:text-[56px] leading-[1.04] tracking-tight font-semibold">
             Stop pricing. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Start shipping.</span>

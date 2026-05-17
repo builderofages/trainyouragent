@@ -93,7 +93,7 @@ export default function Metrics() {
               Updated {data ? relTime(new Date(data.generatedAt).getTime()) : "just now"}
             </span>
           </div>
-          <h1 className="text-[40px] sm:text-[56px] leading-[1.05] tracking-tight font-semibold" style={{ color: NAVY }}>
+          <h1 className="text-[32px] sm:text-[44px] md:text-[56px] leading-[1.06] sm:leading-[1.05] tracking-tight font-semibold" style={{ color: NAVY }}>
             We're building in public.{" "}
             <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
               Here are the numbers.
@@ -231,7 +231,8 @@ export default function Metrics() {
         <section className="max-w-6xl mx-auto">
           <h2 className="text-[20px] font-semibold mb-3" style={{ color: NAVY }}>Last 10 real events</h2>
           <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
-            <table className="w-full text-[13px]">
+            <div className="overflow-x-auto">
+            <table className="w-full text-[13px] min-w-[440px]">
               <thead className="bg-slate-50">
                 <tr className="text-left text-slate-500">
                   <th className="px-4 py-2.5 font-semibold uppercase tracking-[0.1em] text-[11px]">When</th>
@@ -265,6 +266,7 @@ export default function Metrics() {
                 )}
               </tbody>
             </table>
+            </div>
           </div>
           <p className="mt-3 text-[12px] text-slate-500">
             Sources are categorized (e.g. <code>tool:cost-estimator</code>), never identified. We never expose visitor emails or identities here.

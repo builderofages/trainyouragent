@@ -135,7 +135,7 @@ export default function PlaybookPage() {
               <div className="text-[12px] tracking-[0.2em] uppercase text-[#185FA5] font-semibold mb-4">
                 The Operator's Playbook · {pb.industrySize}
               </div>
-              <h1 className="text-[36px] sm:text-[52px] leading-[1.05] font-semibold text-[#042C53] tracking-[-0.01em] mb-5">
+              <h1 className="text-[28px] sm:text-[40px] md:text-[52px] leading-[1.08] sm:leading-[1.05] font-semibold text-[#042C53] tracking-[-0.01em] mb-5">
                 AI for {pb.plural}
               </h1>
               <p className="text-[18px] sm:text-[20px] leading-[1.55] text-[#1B3A5C] max-w-3xl mb-8">

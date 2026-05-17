@@ -142,7 +142,7 @@ export default function Roadmap() {
       <section className="pt-32 pb-12 px-5 sm:px-8">
         <div className="max-w-3xl mx-auto">
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Public roadmap</div>
-          <h1 className="text-[42px] sm:text-[60px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+          <h1 className="text-[32px] sm:text-[48px] md:text-[60px] leading-[1.06] sm:leading-[1.04] tracking-tight font-semibold text-[#042C53]">
             Vote on what we <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>build next.</span>
           </h1>
           <p className="mt-5 text-[16px] text-slate-600">

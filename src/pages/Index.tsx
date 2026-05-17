@@ -156,7 +156,7 @@ const Index = () => {
 
       {/* HERO */}
       <main id="main">
-      <section className="relative pt-32 pb-24 px-5 sm:px-8 overflow-hidden">
+      <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-24 px-5 sm:px-8 overflow-hidden">
         <div className="absolute inset-0 -z-10 pointer-events-none">
           <div className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] rounded-full opacity-60" style={{ background: "radial-gradient(closest-side, #DCEBFA 0%, rgba(220,235,250,0) 70%)" }} />
         </div>
@@ -165,7 +165,7 @@ const Index = () => {
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E6F1FB] text-[#042C53] text-[12px] font-semibold tracking-[0.12em] uppercase mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#22A36C] animate-pulse" /> Live · Agents in production
             </div>
-            <h1 className="text-[44px] sm:text-[68px] lg:text-[80px] leading-[0.98] tracking-tight font-semibold text-[#042C53]">
+            <h1 className="text-[34px] sm:text-[56px] md:text-[68px] lg:text-[80px] leading-[1.02] sm:leading-[0.98] tracking-tight font-semibold text-[#042C53]">
               The AI that's <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>actually running</span> your business by morning.
             </h1>
             <p className="mt-7 text-[18px] sm:text-[20px] text-slate-700 leading-relaxed max-w-2xl">
@@ -281,7 +281,7 @@ const Index = () => {
 
       {/* v53: NICHE STATS — only renders when a niche is set in VisitorContext */}
       {playbook && (
-        <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-b border-slate-200/70">
+        <section className="px-5 sm:px-8 py-12 sm:py-16 bg-[#F6FAFE] border-b border-slate-200/70">
           <div className="max-w-6xl mx-auto">
             <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">
               {nicheName} · industry signal
@@ -305,12 +305,12 @@ const Index = () => {
 
       {/* v53: HELL → HEAVEN — niche-specific pain vs outcome */}
       {playbook && (
-        <section className="px-5 sm:px-8 py-20 bg-white border-b border-slate-200/70">
+        <section className="px-5 sm:px-8 py-14 sm:py-20 bg-white border-b border-slate-200/70">
           <div className="max-w-6xl mx-auto">
             <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">
               {nicheName} · before vs after
             </div>
-            <h2 className="text-[32px] sm:text-[48px] leading-[1.04] tracking-tight font-semibold text-[#042C53] mb-10 max-w-4xl">
+            <h2 className="text-[26px] sm:text-[40px] md:text-[48px] leading-[1.04] tracking-tight font-semibold text-[#042C53] mb-10 max-w-4xl">
               From the hell most {nicheName.toLowerCase()} shops are stuck in{" "}
               <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
                 to the heaven a built agent puts you in.
@@ -369,12 +369,12 @@ const Index = () => {
       />
 
       {/* CAPABILITIES */}
-      <section className="px-5 sm:px-8 py-24">
+      <section className="px-5 sm:px-8 py-14 sm:py-24">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-[1.7fr_1fr] gap-10 items-center mb-12">
             <div className="max-w-3xl">
               <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Everything AI</div>
-              <h2 className="text-[34px] sm:text-[48px] leading-[1.05] tracking-tight font-semibold text-[#042C53]">
+              <h2 className="text-[28px] sm:text-[40px] md:text-[48px] leading-[1.08] sm:leading-[1.05] tracking-tight font-semibold text-[#042C53]">
                 Not a chatbot company. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>The operating layer</span> for everything AI in your business.
               </h2>
             </div>
@@ -394,11 +394,11 @@ const Index = () => {
       </section>
 
       {/* STARTUP SPOTLIGHT */}
-      <section className="px-5 sm:px-8 py-24 bg-[#042C53] text-white">
+      <section className="px-5 sm:px-8 py-14 sm:py-24 bg-[#042C53] text-white">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-[1.3fr_1fr] gap-12 items-center">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-[#BDDAF4] text-[12px] font-semibold tracking-[0.12em] uppercase mb-6 border border-white/15">For Founders</div>
-            <h2 className="text-[36px] sm:text-[56px] leading-[1.02] tracking-tight font-semibold">
+            <h2 className="text-[30px] sm:text-[44px] md:text-[56px] leading-[1.04] tracking-tight font-semibold">
               Building a startup? <br /><span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>You should not be answering phones.</span>
             </h2>
             <p className="mt-6 text-[18px] text-white/85 leading-relaxed max-w-xl">
@@ -426,11 +426,11 @@ const Index = () => {
       </section>
 
       {/* VERTICALS */}
-      <section className="px-5 sm:px-8 py-24">
+      <section className="px-5 sm:px-8 py-14 sm:py-24">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mb-10">
             <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Currently live in</div>
-            <h2 className="text-[32px] sm:text-[44px] leading-tight font-semibold text-[#042C53]">
+            <h2 className="text-[26px] sm:text-[36px] md:text-[44px] leading-tight font-semibold text-[#042C53]">
               Built for your industry. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Not the average of all of them.</span>
             </h2>
           </div>
@@ -451,7 +451,7 @@ const Index = () => {
       </section>
 
       {/* FOUNDER */}
-      <section className="px-5 sm:px-8 py-24 bg-[#F6FAFE] border-y border-slate-200/70">
+      <section className="px-5 sm:px-8 py-14 sm:py-24 bg-[#F6FAFE] border-y border-slate-200/70">
         <div className="max-w-5xl mx-auto grid md:grid-cols-[1fr_2fr] gap-10 items-start">
           <div className="flex flex-col gap-4">
             <div className="aspect-square rounded-3xl bg-gradient-to-br from-[#E6F1FB] to-[#DCEBFA] border border-slate-200 flex items-center justify-center">
@@ -470,7 +470,7 @@ const Index = () => {
           </div>
           <div>
             <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Founder-led</div>
-            <h2 className="text-[32px] sm:text-[44px] leading-[1.08] tracking-tight font-semibold text-[#042C53] mb-6">
+            <h2 className="text-[26px] sm:text-[36px] md:text-[44px] leading-[1.08] tracking-tight font-semibold text-[#042C53] mb-6">
               Built by someone who's <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>been shipping for a decade.</span>
             </h2>
             <div className="text-[16px] text-slate-700 leading-[1.75] space-y-4">
@@ -485,11 +485,11 @@ const Index = () => {
       </section>
 
       {/* VISION — editorial pull quote */}
-      <section className="px-5 sm:px-8 py-28 bg-[#FAFBFC] border-y border-slate-200/70">
+      <section className="px-5 sm:px-8 py-16 sm:py-28 bg-[#FAFBFC] border-y border-slate-200/70">
         <div className="max-w-3xl mx-auto">
           <div className="text-[11px] uppercase tracking-[0.22em] text-[#185FA5] font-semibold mb-8">Why we're building this</div>
           <div className="relative">
-            <span aria-hidden="true" className="absolute -left-2 sm:-left-8 -top-6 text-[80px] sm:text-[120px] leading-none text-[#185FA5]/15 font-serif select-none">"</span>
+            <span aria-hidden="true" className="absolute -left-2 sm:-left-8 -top-6 text-[60px] sm:text-[120px] leading-none text-[#185FA5]/15 font-serif select-none">"</span>
             <blockquote className="relative text-[19px] sm:text-[22px] leading-[1.55] text-[#0B1B2B] font-normal" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
               <p className="mb-5">
                 AI isn't a feature. It's the evolutionary step humans have been waiting for — the one that takes us out of cubicles and away from paperwork, back into the work we were built for: <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500, color: "#042C53" }}>building, dreaming, evolving.</span>
@@ -513,10 +513,10 @@ const Index = () => {
       </section>
 
       {/* FAQ */}
-      <section className="px-5 sm:px-8 py-24 bg-[#F6FAFE]">
+      <section className="px-5 sm:px-8 py-14 sm:py-24 bg-[#F6FAFE]">
         <div className="max-w-4xl mx-auto">
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Questions buyers actually ask</div>
-          <h2 className="text-[32px] sm:text-[44px] leading-tight font-semibold text-[#042C53] mb-10">FAQ</h2>
+          <h2 className="text-[26px] sm:text-[36px] md:text-[44px] leading-tight font-semibold text-[#042C53] mb-10">FAQ</h2>
           <div className="space-y-3">
             {FAQ_ITEMS.map((f, i) => (
               <details key={i} className="group bg-white border border-slate-200 rounded-2xl p-6 open:border-[#185FA5]/60 open:shadow-sm">
@@ -532,10 +532,10 @@ const Index = () => {
       </section>
 
       {/* v54: THE OFFER, ON ONE PAGE — Hormozi you-get/you-don't-get */}
-      <section className="px-5 sm:px-8 py-24 bg-white border-y border-slate-200/70">
+      <section className="px-5 sm:px-8 py-14 sm:py-24 bg-white border-y border-slate-200/70">
         <div className="max-w-6xl mx-auto">
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">The offer, on one page</div>
-          <h2 className="text-[34px] sm:text-[52px] leading-[1.04] tracking-tight font-semibold text-[#042C53] mb-10 max-w-4xl">
+          <h2 className="text-[28px] sm:text-[44px] md:text-[52px] leading-[1.04] tracking-tight font-semibold text-[#042C53] mb-10 max-w-4xl">
             What's in the box —{" "}
             <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
               and what's not.
@@ -616,7 +616,7 @@ const Index = () => {
       </section>
 
       {/* v52B: LEAD MAGNET — buyer's guide opt-in */}
-      <section className="px-5 sm:px-8 py-20">
+      <section className="px-5 sm:px-8 py-12 sm:py-20">
         <div className="max-w-3xl mx-auto">
           <LeadMagnetForm
             source="lead-magnet-buyers-guide"
@@ -633,9 +633,9 @@ const Index = () => {
       </section>
 
       {/* CLOSER */}
-      <section className="px-5 sm:px-8 py-24 bg-[#042C53] text-white">
+      <section className="px-5 sm:px-8 py-14 sm:py-24 bg-[#042C53] text-white">
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-[40px] sm:text-[64px] leading-[1.02] tracking-tight font-semibold">
+          <h2 className="text-[32px] sm:text-[48px] md:text-[64px] leading-[1.02] tracking-tight font-semibold">
             Ready to put AI <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>actually to work?</span>
           </h2>
           <p className="mt-6 text-[18px] text-white/85 max-w-2xl mx-auto leading-relaxed">

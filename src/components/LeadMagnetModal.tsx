@@ -77,18 +77,18 @@ export default function LeadMagnetModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#042C53]/60 backdrop-blur-sm" onClick={onClose} style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
-      <div className="relative max-w-lg w-full bg-white rounded-3xl border border-slate-200 shadow-[0_30px_80px_-20px_rgba(4,44,83,0.55)] p-8 sm:p-10" onClick={(e) => e.stopPropagation()}>
-        <button aria-label="Close" onClick={onClose} className="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 text-[18px] leading-none">×</button>
-        <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Free download</div>
-        <h3 className="text-[26px] sm:text-[32px] leading-tight font-semibold text-[#042C53] mb-3">{title}</h3>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#042C53]/60 backdrop-blur-sm overflow-y-auto" onClick={onClose} style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
+      <div className="relative w-[calc(100vw-2rem)] max-w-lg bg-white rounded-3xl border border-slate-200 shadow-[0_30px_80px_-20px_rgba(4,44,83,0.55)] p-6 sm:p-8 md:p-10 max-h-[90vh] overflow-y-auto my-4" onClick={(e) => e.stopPropagation()}>
+        <button aria-label="Close" onClick={onClose} className="absolute top-3 right-3 sm:top-4 sm:right-4 w-11 h-11 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 text-[18px] leading-none flex items-center justify-center">×</button>
+        <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3 pr-10">Free download</div>
+        <h3 className="text-[22px] sm:text-[26px] md:text-[32px] leading-tight font-semibold text-[#042C53] mb-3">{title}</h3>
         <p className="text-[14px] text-slate-700 leading-relaxed mb-6">{subtitle}</p>
 
         {state !== "ok" ? (
           <form onSubmit={submit} className="grid gap-3">
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5]" />
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Work email" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[15px] focus:outline-none focus:border-[#185FA5]" />
-            <button type="submit" disabled={state === "sending"} className="mt-1 px-5 py-3 rounded-full bg-[#042C53] text-white text-[14px] font-semibold hover:bg-[#0A3D6E] disabled:opacity-50">
+            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[16px] min-h-[44px] focus:outline-none focus:border-[#185FA5]" />
+            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Work email" className="px-4 py-3 rounded-lg bg-white border border-slate-300 text-[16px] min-h-[44px] focus:outline-none focus:border-[#185FA5]" />
+            <button type="submit" disabled={state === "sending"} className="mt-1 px-5 py-3 rounded-full bg-[#042C53] text-white text-[14px] font-semibold hover:bg-[#0A3D6E] disabled:opacity-50 min-h-[44px]">
               {state === "sending" ? "Sending…" : "Email me the playbook (30 sec) →"}
             </button>
             <div className="text-[11px] text-slate-500 leading-relaxed">By submitting you join our newsletter (one email a week, no fluff). Unsubscribe any time.</div>

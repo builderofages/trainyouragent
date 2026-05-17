@@ -98,10 +98,12 @@ export default function FooterV44() {
       className="bg-[#042C53] text-white"
       style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}
     >
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr_1fr] gap-10">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 sm:py-14 mb-safe">
+        <div className="grid grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr_1fr] gap-x-6 gap-y-8 md:gap-10">
+          {/* Brand block spans full width on mobile so its long paragraph reads cleanly */}
+          <style>{`@media (max-width: 767px) { footer .brand-col-mobile-full { grid-column: 1 / -1; } }`}</style>
           {/* Brand block */}
-          <div>
+          <div className="brand-col-mobile-full">
             <Link to="/" className="inline-flex items-center gap-2.5 mb-4" aria-label="TrainYourAgent home">
               <PrismMark size={32} />
               <span className="text-[17px] font-semibold tracking-tight">TrainYourAgent</span>

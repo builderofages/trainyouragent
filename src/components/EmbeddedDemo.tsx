@@ -129,13 +129,13 @@ export default function EmbeddedDemo({ mode = "simulator", nicheLabel, openingMe
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your own message…"
-            className="flex-1 px-3.5 py-2.5 rounded-xl border border-[#0B1B2B]/15 text-[14px] focus:outline-none focus:border-[#185FA5]"
+            className="flex-1 min-w-0 px-3.5 py-2.5 rounded-xl border border-[#0B1B2B]/15 text-[14px] min-h-[44px] focus:outline-none focus:border-[#185FA5]"
             disabled={sending}
           />
           <button
             type="submit"
             disabled={sending || !input.trim()}
-            className="px-4 py-2.5 rounded-xl bg-[#042C53] text-white text-[13.5px] font-semibold hover:bg-[#0A3D6E] disabled:opacity-50 transition"
+            className="flex-shrink-0 px-4 py-2.5 rounded-xl bg-[#042C53] text-white text-[13.5px] font-semibold hover:bg-[#0A3D6E] disabled:opacity-50 transition min-h-[44px]"
           >
             Send
           </button>

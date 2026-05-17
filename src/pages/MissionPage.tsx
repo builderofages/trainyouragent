@@ -50,7 +50,7 @@ export default function MissionPage() {
       <section className="pt-32 pb-16 px-5 sm:px-8 bg-gradient-to-b from-[#042C53] to-[#0A3D6E] text-white">
         <div className="max-w-5xl mx-auto">
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#9CC4EC] font-semibold mb-4">Mission · TrainYourAgent</div>
-          <h1 className="text-[42px] sm:text-[68px] lg:text-[84px] leading-[1.02] font-semibold tracking-tight">
+          <h1 className="text-[32px] sm:text-[52px] md:text-[68px] lg:text-[84px] leading-[1.06] sm:leading-[1.02] font-semibold tracking-tight">
             Take humans out of cubicles. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Put them into the work only humans can do.</span>
           </h1>
           <p className="mt-6 text-[17px] sm:text-[20px] text-white/85 max-w-3xl leading-relaxed">

@@ -23,8 +23,8 @@ export default function TalkToHumanButton() {
 
   return (
     <div
-      className="hidden sm:block fixed z-[60] bottom-5 left-5 sm:bottom-6 sm:left-6"
-      style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}
+      className="hidden sm:block fixed z-[60] left-5 sm:left-6"
+      style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", bottom: "calc(1.25rem + env(safe-area-inset-bottom))" }}
     >
       {open && (
         <div

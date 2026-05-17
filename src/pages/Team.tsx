@@ -100,7 +100,7 @@ const Team = () => {
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">
             Team
           </div>
-          <h1 className="text-[42px] sm:text-[64px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+          <h1 className="text-[32px] sm:text-[48px] md:text-[64px] leading-[1.06] sm:leading-[1.04] tracking-tight font-semibold text-[#042C53]">
             Lean by design.{" "}
             <span
               style={{
@@ -122,7 +122,7 @@ const Team = () => {
 
       {/* FOUNDER */}
       <section className="px-5 sm:px-8 pb-16">
-        <div className="max-w-4xl mx-auto rounded-3xl bg-[#F6FAFE] border border-slate-200 p-8 sm:p-10 grid md:grid-cols-[200px_1fr] gap-8 items-start">
+        <div className="max-w-4xl mx-auto rounded-3xl bg-[#F6FAFE] border border-slate-200 p-6 sm:p-8 md:p-10 grid md:grid-cols-[200px_1fr] gap-6 sm:gap-8 items-start">
           <div className="flex flex-col gap-3">
             <div className="aspect-square rounded-2xl bg-gradient-to-br from-[#E6F1FB] to-[#DCEBFA] border border-slate-200 flex items-center justify-center">
               <BrainLogo size={120} />

@@ -64,8 +64,8 @@ export default function AiChat() {
     <>
       {!open && (
         <button onClick={() => toggle("chat")} aria-label="Chat with our AI"
-                className="fixed bottom-24 right-5 z-[90] w-14 h-14 rounded-full bg-[#042C53] text-white shadow-[0_10px_30px_-8px_rgba(4,44,83,0.5)] hover:bg-[#0A3D6E] transition flex items-center justify-center group"
-                style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
+                className="fixed right-4 sm:right-5 z-[90] w-14 h-14 rounded-full bg-[#042C53] text-white shadow-[0_10px_30px_-8px_rgba(4,44,83,0.5)] hover:bg-[#0A3D6E] transition flex items-center justify-center group"
+                style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", bottom: "calc(1rem + env(safe-area-inset-bottom) + 4rem)" }}>
           <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
@@ -73,8 +73,8 @@ export default function AiChat() {
         </button>
       )}
       {open && (
-        <div className="fixed bottom-24 right-5 z-[95] w-[min(380px,calc(100vw-2rem))] h-[min(560px,calc(100vh-2rem))] rounded-3xl bg-white border border-slate-200 shadow-[0_30px_80px_-20px_rgba(4,44,83,0.55)] flex flex-col overflow-hidden"
-             style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
+        <div className="fixed right-4 sm:right-5 z-[95] w-[min(380px,calc(100vw-2rem))] h-[min(560px,calc(100dvh-6rem))] rounded-3xl bg-white border border-slate-200 shadow-[0_30px_80px_-20px_rgba(4,44,83,0.55)] flex flex-col overflow-hidden"
+             style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", bottom: "calc(1rem + env(safe-area-inset-bottom) + 4rem)" }}>
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 bg-[#042C53] text-white">
             <div className="flex items-center gap-2.5">
               <span className="w-2 h-2 rounded-full bg-[#22A36C] animate-pulse" />
@@ -100,10 +100,10 @@ export default function AiChat() {
             <div className="flex gap-2">
               <input value={input} onChange={(e) => setInput(e.target.value)}
                      onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
-                     placeholder="Ask about pricing, builds, integrations…"
-                     className="flex-1 px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-[14px] focus:outline-none focus:border-[#185FA5]" />
+                     placeholder="Ask about pricing, builds…"
+                     className="flex-1 min-w-0 px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-[16px] sm:text-[14px] min-h-[44px] focus:outline-none focus:border-[#185FA5]" />
               <button onClick={send} disabled={streaming || !input.trim()}
-                      className="px-4 py-2.5 rounded-xl bg-[#042C53] text-white text-[13px] font-semibold hover:bg-[#0A3D6E] disabled:opacity-40">
+                      className="px-4 py-2.5 rounded-xl bg-[#042C53] text-white text-[13px] font-semibold hover:bg-[#0A3D6E] disabled:opacity-40 min-h-[44px] flex-shrink-0">
                 {streaming ? "…" : "Send"}
               </button>
             </div>

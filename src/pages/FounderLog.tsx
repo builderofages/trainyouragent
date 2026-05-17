@@ -192,7 +192,7 @@ export default function FounderLog() {
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">
             Founder log
           </div>
-          <h1 className="text-[40px] sm:text-[56px] leading-[1.05] tracking-tight font-semibold" style={{ color: NAVY }}>
+          <h1 className="text-[32px] sm:text-[44px] md:text-[56px] leading-[1.06] sm:leading-[1.05] tracking-tight font-semibold" style={{ color: NAVY }}>
             What got shipped,{" "}
             <span style={{ fontFamily: SERIF_ITALIC, fontStyle: "italic", fontWeight: 500 }}>
               what got learned,

@@ -103,7 +103,7 @@ export default function BlogIndex() {
             Blog
           </div>
           <h1
-            className="text-[40px] sm:text-[56px] font-semibold leading-[1.05] tracking-[-0.02em] mb-4"
+            className="text-[32px] sm:text-[44px] md:text-[56px] font-semibold leading-[1.06] sm:leading-[1.05] tracking-[-0.02em] mb-4"
             style={{ color: NAVY }}
           >
             Real builds. Real numbers.

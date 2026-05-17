@@ -54,7 +54,7 @@ const Demos = () => {
       <section className="pt-32 pb-12 px-5 sm:px-8">
         <div className="max-w-5xl mx-auto">
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Demos</div>
-          <h1 className="text-[42px] sm:text-[64px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
+          <h1 className="text-[32px] sm:text-[48px] md:text-[64px] leading-[1.06] sm:leading-[1.04] tracking-tight font-semibold text-[#042C53]">
             Hear an agent run. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Live, on the phone.</span>
           </h1>
           <p className="mt-6 text-[18px] text-slate-700 max-w-3xl leading-relaxed">
@@ -121,7 +121,7 @@ const Demos = () => {
 
       <section className="px-5 sm:px-8 py-20 bg-[#042C53] text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-[32px] sm:text-[48px] leading-[1.04] tracking-tight font-semibold">
+          <h2 className="text-[26px] sm:text-[40px] md:text-[48px] leading-[1.08] sm:leading-[1.04] tracking-tight font-semibold">
             Skip the demo, <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>build the real thing.</span>
           </h2>
           <p className="mt-5 text-[16px] text-white/85 max-w-2xl mx-auto leading-relaxed">Thirty-minute build call. We scope, you decide, we ship in days.</p>
