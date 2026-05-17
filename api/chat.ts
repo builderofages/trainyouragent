@@ -107,12 +107,14 @@ export default async function handler(req: Request) {
     let upstreamMsg = "";
     try {
       const body = await r.text();
-      // Strip any potential leaked secret; only surface error type
+      // Strip any potential leaked secret; only surface error type+message
       try {
         const j = JSON.parse(body) as { error?: { type?: string; message?: string } };
-        if (j?.error?.type) upstreamMsg = String(j.error.type).slice(0, 80);
+        const t = j?.error?.type ? String(j.error.type) : "";
+        const m = j?.error?.message ? String(j.error.message) : "";
+        upstreamMsg = `${t} ${m}`.trim().slice(0, 160);
       } catch {
-        upstreamMsg = body.slice(0, 80).replace(/[\r\n]+/g, " ");
+        upstreamMsg = body.slice(0, 160).replace(/[\r\n]+/g, " ");
       }
     } catch { /* ignore */ }
     const msg = upstreamMsg
