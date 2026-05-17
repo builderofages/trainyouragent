@@ -84,7 +84,7 @@ const Team = () => {
     };
     setMeta(
       "description",
-      "Founded by Alexander Mills — operations, welding, markets, LA SMMA, EndCreations, now TrainYourAgent. 4 years deep in AI. Tampa Bay.",
+      "Founded by Alexander Mills — operator, founder, 4 years deep in applied AI. TrainYourAgent is a Tampa-based AI company building voice and chat agents for service businesses.",
     );
   }, []);
 
@@ -148,23 +148,24 @@ const Team = () => {
             </div>
             <div className="text-[15px] text-slate-700 leading-[1.75] space-y-3">
               <p>
-                Started in operations. Spent years on industrial welding lines
-                and robotic engineering before running a markets / trading
-                community. Then LA SMMA work with celebrities, then founding
-                EndCreations in gaming infrastructure.
+                Operator across multiple industries before AI. Led social
+                strategy at one of the world's largest social media marketing
+                agencies in Los Angeles, shipping for global brands and
+                household-name talent. Founded EndCreations, an infrastructure
+                company in the gaming industry.
               </p>
               <p>
-                Now: TrainYourAgent — running $20K+/mo recurring across voice
-                + chat + infra builds — alongside a portfolio of ventures
-                shipping in parallel. Telegram clients with CNNCT, content
-                engines, token launches, gamified products. Same operating
-                philosophy across all of them: ship the thing, watch what works,
-                double down.
+                Now runs TrainYourAgent — $20K+/mo recurring across voice,
+                chat, and infrastructure builds — alongside a portfolio of
+                ventures shipping in parallel. CNNCT for messaging clients,
+                content engines, and a handful of consumer products. Same
+                operating philosophy across all of them: ship the thing, watch
+                what works, double down.
               </p>
               <p>
-                Four years deep in AI — through every major model shift since
-                2022. Builds the things he wants to exist, ships them faster
-                than anyone you've met.
+                Four years deep in applied AI, through every major model shift
+                since 2022. Builds the systems he wants to exist and ships them
+                at operator speed.
               </p>
               <p className="text-[#042C53] font-medium border-l-2 border-[#185FA5] pl-4 italic">
                 "AI is the evolutionary step that takes humans out of cubicles.

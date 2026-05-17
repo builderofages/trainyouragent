@@ -88,7 +88,7 @@ export default function MissionPage() {
           <div className="text-[11px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-3">Why us</div>
           <h2 className="text-[28px] sm:text-[40px] font-semibold text-[#042C53] mb-5 leading-tight">A welder who became an AI founder is the right person to build this.</h2>
           <p className="text-[16px] text-slate-700 leading-[1.75] mb-4">
-            Alexander Mills started in heavy industrial welding in Tampa Bay. He spent a decade in environments where the people who matter most are the ones who can do the work, not the ones who can talk about the work. He started shipping software because the businesses he worked around — service companies, contractors, clinics, dispatch operations — were drowning in repetitive computer work that nobody had the time or the budget to fix.
+            Alexander Mills is the founder of TrainYourAgent. His operating background spans manufacturing, capital markets, and digital media — including leading social strategy at one of the world's largest social media marketing agencies in Los Angeles. He started shipping AI software because the businesses he worked with — service companies, contractors, clinics, dispatch operations — were drowning in repetitive computer work that nobody had the time or budget to fix.
           </p>
           <p className="text-[16px] text-slate-700 leading-[1.75] mb-4">
             He spent four years building AI agents before the rest of the market noticed there was a market. He has scoped, built, and shipped agents for dozens of operators. He answers his own customer support email. He still answers a real customer call every week, and the company will lose a great deal more than it gains the day he stops.

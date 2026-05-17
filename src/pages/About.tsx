@@ -178,9 +178,9 @@ const About = () => {
                 Alexander <em className="italic font-normal" style={{ color: "#185FA5" }}>Mills.</em>
               </h2>
               <div className="text-[#0B1B2B] text-[16.5px] leading-[1.7] space-y-4 mb-8">
-                <p>I've been building since I was fifteen. Started in operations — restaurant management on a GM track, then industrial welding on Ford-parts undercarriages, picking up robotic engineering on weekends.</p>
-                <p>From there I went into markets — running a trading community and learning options, crypto, and ops the way I learn everything: by shipping and watching what worked.</p>
-                <p>Los Angeles came next, running social for one of the largest SMMAs in the world. Worked with celebrities and household-name brands. Then EndCreations, my gaming infrastructure company. Now TrainYourAgent, plus a portfolio of ventures I run in parallel from Tampa Bay.</p>
+                <p>I'm the founder of TrainYourAgent, a Tampa-based AI company building voice and chat agents for service businesses.</p>
+                <p>My career spans operations, capital markets, and digital media. In Los Angeles I led social strategy at one of the world's largest social media marketing agencies, shipping work for global brands and household-name talent. I then founded EndCreations, an infrastructure company in the gaming industry, before turning full-time to applied AI.</p>
+                <p>Four years deep in the model shift — through every major release and tool stack — I build the systems I want to exist and ship them at operator speed. I run TrainYourAgent and a portfolio of related ventures from Tampa Bay.</p>
                 <p>Four years deep in AI — through every major model shift. I build the things I want to exist and ship them faster than anyone you've met. When you sign with TYA, you don't get an SDR or an account manager — you get me on discovery, scoping, and at every monthly check-in after.</p>
                 <p>DM the word <code className="font-mono text-[15px] bg-slate-100 px-2 py-0.5 rounded">AGENT</code> on LinkedIn for a live build walkthrough — I'll record one for you on the spot.</p>
               </div>

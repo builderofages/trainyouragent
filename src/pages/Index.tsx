@@ -349,10 +349,9 @@ const Index = () => {
               Built by someone who's <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>been shipping for a decade.</span>
             </h2>
             <div className="text-[16px] text-slate-700 leading-[1.75] space-y-4">
-              <p>Alexander Mills has been building since he was fifteen.</p>
-              <p>He started in operations — restaurant management on a GM track, then industrial welding on Ford-parts undercarriages, picking up robotic engineering on weekends. From there into markets: running a trading community and learning options, crypto, and ops the way he learns everything — by shipping and watching what worked.</p>
-              <p>Los Angeles came next, running social for one of the largest SMMAs in the world, working with celebrities and household names. Then EndCreations, his gaming infrastructure company. Now: TrainYourAgent, plus a portfolio of ventures he runs in parallel.</p>
-              <p>Four years deep in AI — through every major model shift, every tool, every release. He builds the things he wants to exist, and ships them faster than anyone you've met.</p>
+              <p>Alexander Mills is the founder of TrainYourAgent, a Tampa-based AI company building voice and chat agents for service businesses.</p>
+              <p>His career spans operations, capital markets, and digital media — from leading social strategy at one of the world's largest social media marketing agencies in Los Angeles, where his team shipped for global brands and household-name talent, to founding EndCreations, an infrastructure company in the gaming industry.</p>
+              <p>Four years deep in applied AI — through every major model release, every tool stack, every shift in capability — he builds the systems he wants to exist and ships them at operator speed. He runs TrainYourAgent and a portfolio of related ventures from Tampa Bay.</p>
             </div>
           </div>
         </div>
