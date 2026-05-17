@@ -1,13 +1,12 @@
-// api/chat.ts — Vercel edge function. Streams Claude responses to the
-// AiChat / AgentSimulator widgets.
-//
+// api/chat.ts — Vercel edge function.
+// Non-streaming Claude response — returns the full text body once.
 // REQUIRES env: ANTHROPIC_API_KEY
 //
-// Hardening (v30):
-//   - System prompts hardcoded server-side (client picks `mode`, not prompt)
+// Hardening:
+//   - System prompts hardcoded server-side (client picks `mode`)
 //   - 30 messages / IP / hour rate limit
 //   - CORS allowlist
-//   - Max 4 KB input, max 16 messages in history
+//   - Max 4 KB input, max 16 messages
 //   - max_tokens capped at 800
 //   - ANTHROPIC_API_KEY never logged or echoed in errors
 
@@ -19,11 +18,8 @@ export const config = { runtime: "edge" };
 const MAX_INPUT_CHARS = 4000;
 const MAX_MESSAGES = 16;
 const MAX_OUTPUT_TOKENS = 800;
+const MODEL = "claude-haiku-4-5-20251001"; // cost-optimized default
 
-// Server-side system prompts. The client sends `mode`, never the prompt itself.
-// This stops prompt-injection of instructions like "ignore previous" or
-// jailbreaks that would let an attacker burn our Anthropic budget on
-// arbitrary tasks.
 const SYSTEMS: Record<string, string> = {
   assistant:
     "You are TrainYourAgent's website assistant. Help visitors understand the product (custom AI voice + chat agents for service businesses), pricing, integrations, and how to book a call. Stay on topic. If asked anything off-topic or harmful, politely redirect to booking a call at /contact. Keep replies under 5 sentences.",
@@ -92,48 +88,34 @@ export default async function handler(req: Request) {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
+        model: MODEL,
         max_tokens: MAX_OUTPUT_TOKENS,
-        stream: true,
         system,
         messages,
       }),
     });
   } catch {
-    // NEVER include the upstream error body — it can echo headers/keys.
     return text("upstream-fetch-failed", 502, cors.headers);
   }
 
-  if (!r.ok || !r.body) {
-    // Drain and discard the body so the upstream key/header is never echoed.
+  if (!r.ok) {
     try { await r.text(); } catch { /* ignore */ }
     return text("upstream-error", 502, cors.headers);
   }
 
-  const reader = r.body.getReader();
-  const decoder = new TextDecoder();
-  const encoder = new TextEncoder();
-  const stream = new ReadableStream({
-    async pull(controller) {
-      const { value, done } = await reader.read();
-      if (done) { controller.close(); return; }
-      const chunk = decoder.decode(value, { stream: true });
-      for (const line of chunk.split("\n")) {
-        const t = line.trim();
-        if (!t.startsWith("data:")) continue;
-        const payload = t.slice(5).trim();
-        if (!payload || payload === "[DONE]") continue;
-        try {
-          const obj = JSON.parse(payload);
-          if (obj.type === "content_block_delta" && obj.delta?.text) {
-            controller.enqueue(encoder.encode(obj.delta.text));
-          }
-        } catch { /* ignore */ }
-      }
-    },
-  });
+  let body: { content?: { type: string; text?: string }[] };
+  try {
+    body = await r.json();
+  } catch {
+    return text("upstream-bad-json", 502, cors.headers);
+  }
 
-  return new Response(stream, {
+  const out = (body.content || [])
+    .filter((c) => c && c.type === "text" && typeof c.text === "string")
+    .map((c) => c.text)
+    .join("");
+
+  return new Response(out, {
     status: 200,
     headers: {
       "content-type": "text/plain; charset=utf-8",
