@@ -1,7 +1,13 @@
-// src/components/ContextPill.tsx — v53
-// Persistent context pill that sits under SiteNav on every page (except
-// /start, /admin, /portal). Shows the visitor's current operating context
-// (lane + niche) and lets them swap it without going back to /start.
+// src/components/ContextPill.tsx — v61
+// Persistent context pill that sits as a FIXED top strip above SiteNav on
+// every page (except /start, /admin, /portal). Always full-width, never
+// inline with the logo. Hidden on Home when the visitor has NOT yet set a
+// niche (the pathway router in the Home hero is the personalization gate
+// in that case — no need for a redundant prompt).
+//
+// Coordinates with SiteNav via the CSS variable `--tya-pill-h` set on the
+// document root: SiteNav reads this and offsets its `top:` so the pill
+// strip is never overlapped.
 
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -14,6 +20,7 @@ import {
 import { PLAYBOOKS } from "@/lib/playbooks";
 
 const HIDDEN_PATHS = ["/start", "/admin", "/portal"];
+const PILL_HEIGHT_PX = 36;
 
 const LANES: { id: VisitorLane; label: string }[] = [
   { id: "smb",     label: "SMB" },
@@ -33,7 +40,27 @@ export default function ContextPill() {
     () => HIDDEN_PATHS.some((p) => location.pathname === p || location.pathname.startsWith(p + "/")),
     [location.pathname],
   );
-  if (hidden) return null;
+
+  // v61: also hide on Home when no personalization is set — the hero's
+  // PathwayRouter is already the prompt; an extra strip is just noise.
+  const onHome = location.pathname === "/";
+  const hideOnHomeUnpersonalized = onHome && !isPersonalized;
+
+  const shouldRender = !hidden && !hideOnHomeUnpersonalized;
+
+  // Publish pill height to the document root so SiteNav can offset itself.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+    if (shouldRender) {
+      root.style.setProperty("--tya-pill-h", `${PILL_HEIGHT_PX}px`);
+    } else {
+      root.style.setProperty("--tya-pill-h", "0px");
+    }
+    return () => { root.style.setProperty("--tya-pill-h", "0px"); };
+  }, [shouldRender]);
+
+  if (!shouldRender) return null;
 
   const display = isPersonalized
     ? `Operating as: ${nicheDisplayName(niche)} operator · ${laneDisplayName(lane)}`
@@ -41,19 +68,21 @@ export default function ContextPill() {
 
   return (
     <div
-      className="w-full bg-[#E6F1FB] border-b border-[#185FA5]/15"
-      style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}
+      className="fixed top-0 left-0 right-0 z-[60] bg-[#042C53] text-white border-b border-[#185FA5]/40 shadow-sm"
+      style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", height: PILL_HEIGHT_PX }}
+      role="region"
+      aria-label="Visitor context"
     >
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 py-2 flex items-center justify-between gap-3 text-[12.5px]">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 h-full flex items-center justify-between gap-3 text-[12.5px]">
         {display ? (
-          <div className="flex items-center gap-2 text-[#042C53]">
-            <span aria-hidden="true">{"\u{1F464}"}</span>
+          <div className="flex items-center gap-2 min-w-0">
+            <span aria-hidden="true" className="text-[#9CC4EC]">{"\u{1F464}"}</span>
             <span className="font-semibold truncate">{display}</span>
           </div>
         ) : (
-          <div className="text-[#042C53]">
-            What’s your business?{" "}
-            <Link to="/start" className="font-semibold underline decoration-[#185FA5]/40 hover:decoration-[#185FA5]">
+          <div className="text-white">
+            What's your business?{" "}
+            <Link to="/start" className="font-semibold underline decoration-[#9CC4EC]/60 hover:decoration-white">
               Tell us →
             </Link>
           </div>
@@ -63,7 +92,7 @@ export default function ContextPill() {
             <button
               type="button"
               onClick={() => setEditing((v) => !v)}
-              className="text-[#185FA5] font-semibold hover:text-[#042C53] underline decoration-[#185FA5]/30 hover:decoration-[#042C53]"
+              className="text-[#9CC4EC] font-semibold hover:text-white underline decoration-[#9CC4EC]/40 hover:decoration-white"
               aria-expanded={editing}
             >
               {editing ? "Close" : "change"}
@@ -73,7 +102,7 @@ export default function ContextPill() {
             <button
               type="button"
               onClick={reset}
-              className="text-slate-500 hover:text-[#042C53]"
+              className="text-white/70 hover:text-white"
               aria-label="Clear personalization"
             >
               clear
@@ -83,7 +112,7 @@ export default function ContextPill() {
       </div>
 
       {editing && (
-        <div className="border-t border-[#185FA5]/15 bg-white">
+        <div className="absolute top-full left-0 right-0 border-t border-[#185FA5]/40 bg-white shadow-md">
           <div className="max-w-7xl mx-auto px-5 sm:px-8 py-4 grid sm:grid-cols-2 gap-4">
             <div>
               <div className="text-[10px] uppercase tracking-[0.16em] font-semibold text-[#185FA5] mb-2">Lane</div>

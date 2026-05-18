@@ -149,12 +149,15 @@ export default function SiteNav({ active }: SiteNavProps) {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
           scrolled || mobileOpen
             ? "bg-white/95 backdrop-blur-xl border-b border-slate-200/60"
             : "bg-transparent"
         }`}
-        style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}
+        style={{
+          top: "var(--tya-pill-h, 0px)",
+          fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif",
+        }}
       >
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between gap-6">
           {/* Brand */}

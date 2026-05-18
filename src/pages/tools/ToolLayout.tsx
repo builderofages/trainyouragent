@@ -20,10 +20,19 @@ type Props = {
   children: ReactNode;
 };
 
+// v61: titles passed in sometimes end with an em-dash (because the visual
+// hero composes title + italicTail). Strip trailing dash/whitespace before
+// composing the <title> so we never produce "Foo — — TrainYourAgent Tools".
+function cleanTitle(t: string, tail?: string): string {
+  const base = t.replace(/[\s—–\-:·]+$/u, "").trim();
+  const t2 = tail ? `${base} ${tail.replace(/[\s—–\-:·]+$/u, "").trim()}` : base;
+  return t2.replace(/\s+/g, " ").trim();
+}
+
 export default function ToolLayout({ eyebrow, title, italicTail, subtitle, children }: Props) {
   useEffect(() => {
     if (typeof document === "undefined") return;
-    document.title = `${title} — TrainYourAgent Tools`;
+    document.title = `${cleanTitle(title, italicTail)} — TrainYourAgent Tools`;
     if (!document.getElementById("tya-fonts")) {
       const l = document.createElement("link");
       l.id = "tya-fonts";
@@ -33,13 +42,14 @@ export default function ToolLayout({ eyebrow, title, italicTail, subtitle, child
       document.head.appendChild(l);
     }
     // v48: dynamic OG image for every tool page
-    const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent(title + (italicTail ? " " + italicTail : ""))}&subtitle=${encodeURIComponent(subtitle || "Free tool — TrainYourAgent")}&type=tool`;
+    const cleanedTitle = cleanTitle(title, italicTail);
+    const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent(cleanedTitle)}&subtitle=${encodeURIComponent(subtitle || "Free tool — TrainYourAgent")}&type=tool`;
     const sM = (sel: string, a: "name"|"property", k: string, v: string) => {
       let el = document.querySelector(sel) as HTMLMetaElement | null;
       if (!el) { el = document.createElement("meta"); el.setAttribute(a, k); document.head.appendChild(el); }
       el.setAttribute("content", v);
     };
-    sM("meta[property='og:title']", "property", "og:title", `${title} — TrainYourAgent`);
+    sM("meta[property='og:title']", "property", "og:title", `${cleanedTitle} — TrainYourAgent`);
     if (subtitle) sM("meta[property='og:description']", "property", "og:description", subtitle);
     sM("meta[property='og:image']", "property", "og:image", ogImage);
     sM("meta[property='og:image:width']", "property", "og:image:width", "1200");
@@ -50,18 +60,31 @@ export default function ToolLayout({ eyebrow, title, italicTail, subtitle, child
 
   return (
     <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: FONT }}>
-      {/* Top bar */}
+      {/* Top bar — v61: PrismNode glyph + wordmark for visual consistency with SiteNav */}
       <header className="border-b border-slate-200 bg-white sticky top-0 z-30">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
           <Link
             to="/"
-            className="text-[14px] font-semibold tracking-tight"
-            style={{ color: NAVY }}
+            className="flex items-center gap-2"
             aria-label="TrainYourAgent home"
           >
-            TrainYourAgent
+            <span
+              className="inline-flex items-center justify-center flex-shrink-0"
+              style={{ width: 26, height: 26, color: NAVY }}
+              aria-hidden="true"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" style={{ width: 26, height: 26 }}>
+                <g strokeWidth="4"><path d="M 32 6 L 58 32 L 32 58 L 6 32 Z" /></g>
+                <g strokeWidth="2.4"><path d="M 32 6 L 32 58" /><path d="M 6 32 L 58 32" /></g>
+                <circle cx="32" cy="32" r="3" fill="currentColor" stroke="none" />
+              </svg>
+            </span>
+            <span className="text-[14px] font-semibold tracking-tight" style={{ color: NAVY }}>
+              TrainYourAgent
+            </span>
           </Link>
           <nav className="flex items-center gap-4 text-[13px]" aria-label="Tools nav">
+            <Link to="/" className="text-slate-700 hover:text-[#042C53]">Back to site</Link>
             <Link to="/tools" className="text-slate-700 hover:text-[#042C53]">All tools</Link>
             <Link
               to="/contact"
@@ -89,14 +112,14 @@ export default function ToolLayout({ eyebrow, title, italicTail, subtitle, child
           {italicTail && (
             <>
               {" "}
-              <span style={{ fontFamily: SERIF_ITALIC, fontStyle: "italic", fontWeight: 500 }}>
+              <span style={{ fontFamily: SERIF_ITALIC, fontStyle: "italic", fontWeight: 500, color: BLUE }}>
                 {italicTail}
               </span>
             </>
           )}
         </h1>
         {subtitle && (
-          <p className="mt-4 text-[16px] sm:text-[18px] text-slate-600 max-w-2xl">
+          <p className="mt-4 text-[16px] sm:text-[18px] text-slate-700 max-w-2xl leading-relaxed">
             {subtitle}
           </p>
         )}

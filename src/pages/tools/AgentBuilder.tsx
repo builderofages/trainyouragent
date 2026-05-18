@@ -121,7 +121,7 @@ export default function AgentBuilder() {
   return (
     <ToolLayout
       eyebrow="Free personalized demo · 30 seconds"
-      title="Build your own AI agent —"
+      title="Build your own AI agent"
       italicTail="in 30 seconds."
       subtitle="Type your business name. Pick your industry. We spin up a customer-facing AI agent that knows who you are and what you do. Then you chat with it like a real customer would."
     >

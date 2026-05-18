@@ -6,9 +6,9 @@ import PathwayRouter from "@/components/PathwayRouter";
 // v53: visitor-context personalization — Home re-skins per niche/lane.
 import { useVisitor, nicheDisplayName } from "@/lib/visitorContext";
 import { getPlaybook } from "@/lib/playbooks";
-// v38: trust signals — testimonial wall, ship counter, built-in-public.
+// v38: trust signals — testimonial wall, built-in-public.
 import WallOfLove from "@/components/WallOfLove";
-import ShipsCounter from "@/components/ShipsCounter";
+// v61: ShipsCounter removed from Home — proof strip uses verifiable real numbers instead.
 // v42: site-visit funnel event
 import { fireSiteVisitOnce } from "@/lib/event";
 // v44: hero illustration, footer redesign, animated dividers, count-up
@@ -71,17 +71,29 @@ const FAQ_ITEMS = [
   { q: "What about data + security?",       a: "TLS in transit, AES-256 at rest, US hosting, zero training on your data, HIPAA BAA available, SOC 2 in evaluation." },
 ];
 
-function AnimatedStat({ value, suffix = "", prefix = "", label, decimals = 0 }: { value: number; suffix?: string; prefix?: string; label: string; decimals?: number }) {
+function AnimatedStat({ value, suffix = "", prefix = "", label, decimals = 0, href }: { value: number; suffix?: string; prefix?: string; label: string; decimals?: number; href?: string }) {
   const { value: v, ref } = useCountUp<HTMLDivElement>(value, 1500);
   const display = decimals > 0 ? v.toFixed(decimals) : Math.round(v).toLocaleString();
-  return (
-    <div>
+  const inner = (
+    <>
       <div ref={ref} className="text-[40px] sm:text-[56px] leading-none tracking-tight font-semibold text-[#042C53]" style={{ fontFamily: "'Playfair Display', serif" }}>
         {prefix}{display}{suffix}
       </div>
       <div className="mt-2 text-[13px] text-slate-600 leading-snug">{label}</div>
-    </div>
+    </>
   );
+  if (href) {
+    const isExternal = href.startsWith("http");
+    if (isExternal) {
+      return (
+        <a href={href} target="_blank" rel="noopener" className="block hover:opacity-80 transition">
+          {inner}
+        </a>
+      );
+    }
+    return <Link to={href} className="block hover:opacity-80 transition">{inner}</Link>;
+  }
+  return <div>{inner}</div>;
 }
 
 const Index = () => {
@@ -171,11 +183,11 @@ const Index = () => {
             <p className="mt-7 text-[18px] sm:text-[20px] text-slate-700 leading-relaxed max-w-2xl">
               {playbook ? (
                 <>
-                  AI voice and chat agents for <span className="text-[#042C53] font-medium">{nicheName} operators</span> — built by an operator <span className="text-[#042C53] font-medium">4 years deep in applied AI</span>. 336 public commits, 564 live URLs, working product. <Link to="/proof" className="text-[#185FA5] underline underline-offset-2">See the receipts →</Link>
+                  AI voice and chat agents for <span className="text-[#042C53] font-medium">{nicheName} operators</span> — built by an operator <span className="text-[#042C53] font-medium">4 years deep in applied AI</span>. 339+ public commits, 569 live URLs, working product. <Link to="/proof" className="text-[#185FA5] underline underline-offset-2">See the receipts →</Link>
                 </>
               ) : (
                 <>
-                  Voice agents, lead gen, creative, infrastructure — built by an operator <span className="text-[#042C53] font-medium">4 years deep in applied AI</span>. 336 public commits, 564 live URLs, working product. <Link to="/proof" className="text-[#185FA5] underline underline-offset-2">See the receipts →</Link>
+                  Voice agents, lead gen, creative, infrastructure — built by an operator <span className="text-[#042C53] font-medium">4 years deep in applied AI</span>. 339+ public commits, 569 live URLs, working product. <Link to="/proof" className="text-[#185FA5] underline underline-offset-2">See the receipts →</Link>
                 </>
               )}
             </p>
@@ -189,26 +201,17 @@ const Index = () => {
                 </Link>
               </div>
             )}
-            {/* v38: live ship-counter — pulls commit count from GitHub */}
-            <div className="mt-5">
-              <ShipsCounter variant="hero" />
-            </div>
+            {/* v61: removed ShipsCounter — proof strip below has verifiable, sourced numbers */}
             <div className="mt-9 flex flex-col sm:flex-row gap-3">
-              <Link to="/book" className="px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] transition shadow-lg shadow-[#042C53]/15 flex items-center justify-between gap-3 min-w-[260px]">
+              <Link to="/tools/agent-builder" className="px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] transition shadow-lg shadow-[#042C53]/15 flex items-center justify-between gap-3 min-w-[260px]">
                 <span className="flex flex-col items-start leading-tight">
-                  <span className="text-[11px] uppercase tracking-[0.16em] text-[#9CC4EC] font-semibold mb-1">Primary action</span>
-                  <span>Book a 30-min build call → written plan</span>
-                </span>
-              </Link>
-              <Link to="/voice-demo" className="px-6 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] border-2 border-[#042C53]/15 hover:border-[#042C53] transition flex items-center justify-between gap-3 min-w-[260px]">
-                <span className="flex flex-col items-start leading-tight">
-                  <span className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold mb-1">See it work first</span>
-                  <span>Talk to a live AI agent → 60 sec</span>
+                  <span className="text-[11px] uppercase tracking-[0.16em] text-[#9CC4EC] font-semibold mb-1">Primary action · 30 seconds</span>
+                  <span>Build your own AI agent →</span>
                 </span>
               </Link>
             </div>
-            {/* v52B: live in-browser voice agent — primary above-the-fold CTA */}
-            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+            {/* v61: ONE secondary link — talk to a real AI agent. Other CTAs moved below the hero. */}
+            <div className="mt-4">
               <Link
                 to="/voice-demo"
                 className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#185FA5] hover:text-[#042C53]"
@@ -217,31 +220,8 @@ const Index = () => {
                   <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-75 animate-ping" />
                   <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
                 </span>
-                Or talk to our AI agent live (in your browser) →
+                or talk to a real AI agent in your browser →
               </Link>
-              {/* v59: third CTA — viral lead magnet */}
-              <Link
-                to="/tools/website-audit"
-                className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#185FA5] hover:text-[#042C53]"
-              >
-                <span className="inline-flex w-2 h-2 rounded-full bg-[#185FA5]" aria-hidden="true" />
-                Audit your own site in 30 sec →
-              </Link>
-              {/* v60: personalized agent builder CTA */}
-              <Link
-                to="/tools/agent-builder"
-                className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#185FA5] hover:text-[#042C53]"
-              >
-                <span className="inline-flex w-2 h-2 rounded-full bg-[#185FA5]" aria-hidden="true" />
-                Build your own agent in 30 sec →
-              </Link>
-            </div>
-            {/* v42: live AI demos — prominent under the hero CTAs */}
-            <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-[14px]">
-              <span className="text-slate-600">Try a live demo:</span>
-              <Link to="/demos/sales-objection-handler" className="text-[#185FA5] font-medium hover:underline">Sales objection handler →</Link>
-              <Link to="/demos/sop-writer" className="text-[#185FA5] font-medium hover:underline">SOP writer →</Link>
-              <Link to="/demos/seo-cluster" className="text-[#185FA5] font-medium hover:underline">SEO cluster generator →</Link>
             </div>
 
             {/* v46a: founder-credential strip, honest about the team behind the work */}
@@ -280,16 +260,32 @@ const Index = () => {
         </div>
       </section>
 
+      {/* v61: "More ways to see it work" — secondary CTAs demoted from hero */}
+      <section className="px-5 sm:px-8 py-6 sm:py-8 bg-white border-y border-slate-200/70">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center gap-x-6 gap-y-3 text-[13.5px]">
+          <span className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold">More ways to see it work</span>
+          <Link to="/tools/website-audit" className="text-[#185FA5] font-medium hover:underline">Audit your site in 30 sec →</Link>
+          <span className="text-slate-300" aria-hidden="true">·</span>
+          <Link to="/demos/sales-objection-handler" className="text-[#185FA5] font-medium hover:underline">Sales objection handler →</Link>
+          <span className="text-slate-300" aria-hidden="true">·</span>
+          <Link to="/demos/sop-writer" className="text-[#185FA5] font-medium hover:underline">SOP writer →</Link>
+          <span className="text-slate-300" aria-hidden="true">·</span>
+          <Link to="/demos/seo-cluster" className="text-[#185FA5] font-medium hover:underline">SEO cluster generator →</Link>
+          <span className="text-slate-300" aria-hidden="true">·</span>
+          <Link to="/book" className="text-[#185FA5] font-medium hover:underline">Book a 30-min build call →</Link>
+        </div>
+      </section>
+
       {/* v44: animated section divider */}
       <SectionDivider />
 
-      {/* PROOF STRIP — count-up animated */}
+      {/* PROOF STRIP — count-up animated; every number is publicly verifiable */}
       <section className="px-5 sm:px-8 py-14 border-y border-slate-200 bg-white">
         <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
-          <AnimatedStat value={4}    suffix=" yrs" label="In AI, through every major model shift" />
-          <AnimatedStat value={300}  suffix="+"    label="Projects shipped" />
-          <AnimatedStat value={20}   prefix="$"  suffix="K+" label="Monthly recurring" />
-          <AnimatedStat value={14}               label="Verticals supported" />
+          <AnimatedStat value={4}    suffix=" yrs" label="In applied AI · every major model shift" />
+          <AnimatedStat value={339}  suffix="+" label="Public commits · on GitHub" href="https://github.com/builderofages/trainyouragent/commits/main" />
+          <AnimatedStat value={569}             label="Live URLs · in production" href="/sitemap.xml" />
+          <AnimatedStat value={15}              label="Niche playbooks · real cited data" href="/playbooks" />
         </div>
       </section>
 

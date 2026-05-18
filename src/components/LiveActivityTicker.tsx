@@ -1,17 +1,13 @@
 // src/components/LiveActivityTicker.tsx
-// v53: throttled (15s first-show, 35–45s rotation), hover-pause, session
-// dismiss, desktop-only. Pulls real activity from /api/recent-activity with
-// a synthetic fallback so the pill is never empty.
+// v61: HONEST-ONLY. The ticker now renders ONLY real events from
+// /api/recent-activity. If the API returns no items, the component
+// renders nothing. No "Sarah / Hector / Marcus / Founder" fallbacks.
+// Throttled (15s first-show, 35–45s rotation), hover-pause, session
+// dismiss, desktop-only.
 
 import { useEffect, useRef, useState } from "react";
 
 type Item = { who: string; where: string; action: string; ago: string };
-
-const FALLBACK: Item[] = [
-  { who: "Founder", where: "Austin, TX",        action: "downloaded the State of AI Ops report", ago: "just now" },
-  { who: "Owner",   where: "Tampa, FL",         action: "booked a 30-min build call",            ago: "3 min ago" },
-  { who: "PM",      where: "San Francisco, CA", action: "ran the cost estimator",                ago: "7 min ago" },
-];
 
 const DISMISS_KEY = "tya_live_activity_dismissed";
 const FIRST_SHOW_MS = 15_000;
@@ -28,21 +24,22 @@ function markDismissed() {
 }
 
 export default function LiveActivityTicker() {
-  const [items, setItems] = useState<Item[]>(FALLBACK);
+  const [items, setItems] = useState<Item[]>([]);
   const [idx, setIdx] = useState(0);
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState<boolean>(false);
   const [paused, setPaused] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const timerRef = useRef<number | null>(null);
 
-  // Initial hydration + first-show delay.
+  // First-show delay so the ticker doesn't pop in immediately.
   useEffect(() => {
     if (dismissedThisSession()) { setDismissed(true); return; }
     const t = window.setTimeout(() => setVisible(true), FIRST_SHOW_MS);
     return () => window.clearTimeout(t);
   }, []);
 
-  // Fetch real activity (best-effort).
+  // Fetch real activity ONLY. No synthetic fallback.
   useEffect(() => {
     let alive = true;
     fetch("/api/recent-activity")
@@ -54,12 +51,13 @@ export default function LiveActivityTicker() {
             who: x.who, where: x.where, action: x.action, ago: x.ago,
           })));
         }
+        setLoaded(true);
       })
-      .catch(() => { /* stick with fallback */ });
+      .catch(() => { if (alive) setLoaded(true); });
     return () => { alive = false; };
   }, []);
 
-  // Throttled rotation — 35–45s, pauses on hover, only rotates when visible.
+  // Throttled rotation — only when we have >1 real item.
   useEffect(() => {
     if (!visible || paused || items.length <= 1 || dismissed) return;
     const schedule = () => {
@@ -73,8 +71,10 @@ export default function LiveActivityTicker() {
     return () => { if (timerRef.current) window.clearTimeout(timerRef.current); };
   }, [visible, paused, items.length, dismissed]);
 
-  if (dismissed || !visible) return null;
-  const item = items[idx] || FALLBACK[0];
+  // The credibility gate: if there's no real activity, render nothing.
+  if (dismissed || !visible || !loaded || items.length === 0) return null;
+  const item = items[idx];
+  if (!item) return null;
 
   return (
     <div

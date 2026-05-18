@@ -35,12 +35,17 @@ function loadFonts() {
   document.head.appendChild(l);
 }
 
-function useGitHubVelocity(): Velocity {
-  const [v, setV] = useState<Velocity>({
+type VelocityState = Velocity & { status: "loading" | "ok" | "error" };
+
+function useGitHubVelocity(): VelocityState {
+  // daysPublic is computed locally — never depends on the network.
+  const initialDays = Math.max(1, Math.floor((Date.now() - FIRST_COMMIT_MS) / 86400000));
+  const [v, setV] = useState<VelocityState>({
     commitsLast7d: null,
     commitsLast30d: null,
     commitsToday: null,
-    daysPublic: null,
+    daysPublic: initialDays,
+    status: "loading",
   });
   useEffect(() => {
     const CACHE_KEY = "tya:velocity:v1";
@@ -50,19 +55,19 @@ function useGitHubVelocity(): Velocity {
       const ts = Number(localStorage.getItem(CACHE_TS) || "0");
       const raw = localStorage.getItem(CACHE_KEY);
       if (ts && raw && Date.now() - ts < MAX_AGE) {
-        setV(JSON.parse(raw));
+        const cached = JSON.parse(raw) as Velocity;
+        setV({ ...cached, status: "ok" });
         return;
       }
     } catch { /* ignore */ }
     (async () => {
       try {
         const since30 = new Date(Date.now() - 30 * 86400000).toISOString();
-        const r = await fetch(
-          `https://api.github.com/repos/builderofages/trainyouragent/commits?since=${since30}&per_page=100`,
-          { headers: { Accept: "application/vnd.github+json" } },
-        );
-        if (!r.ok) return;
+        const url = `https://api.github.com/repos/builderofages/trainyouragent/commits?since=${since30}&per_page=100`;
+        const r = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
+        if (!r.ok) throw new Error(`github ${r.status}`);
         const commits = (await r.json()) as Array<{ commit?: { author?: { date?: string } } }>;
+        if (!Array.isArray(commits)) throw new Error("bad payload");
         const now = Date.now();
         const day = 86400000;
         const sod = new Date(); sod.setHours(0, 0, 0, 0);
@@ -81,12 +86,16 @@ function useGitHubVelocity(): Velocity {
           commitsLast30d: commits.length,
           daysPublic,
         };
-        setV(next);
+        setV({ ...next, status: "ok" });
         try {
           localStorage.setItem(CACHE_KEY, JSON.stringify(next));
           localStorage.setItem(CACHE_TS, String(Date.now()));
         } catch { /* ignore */ }
-      } catch { /* swallow */ }
+      } catch {
+        // Network/rate-limit failure: surface error so the UI can render a
+        // click-through fallback instead of a permanent em-dash.
+        setV(prev => ({ ...prev, status: "error" }));
+      }
     })();
   }, []);
   return v;
@@ -285,11 +294,19 @@ export default function Proof() {
             </a>. If you don't trust the cached number, click through and count.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
-            <Stat label="Commits today" value={v.commitsToday === null ? "—" : String(v.commitsToday)} sub="resets at local midnight" />
-            <Stat label="Commits last 7d" value={v.commitsLast7d === null ? "—" : String(v.commitsLast7d)} sub="all on main" />
-            <Stat label="Commits last 30d" value={v.commitsLast30d === null ? "—" : String(v.commitsLast30d)} sub="sustained ship rate" />
-            <Stat label="Days building public" value={v.daysPublic === null ? "—" : String(v.daysPublic)} sub="since first commit" />
+            <Stat label="Commits today" value={v.commitsToday === null ? (v.status === "error" ? "see GitHub" : "…") : String(v.commitsToday)} sub="resets at local midnight" />
+            <Stat label="Commits last 7d" value={v.commitsLast7d === null ? (v.status === "error" ? "see GitHub" : "…") : String(v.commitsLast7d)} sub="all on main" />
+            <Stat label="Commits last 30d" value={v.commitsLast30d === null ? (v.status === "error" ? "see GitHub" : "…") : String(v.commitsLast30d)} sub="sustained ship rate" />
+            <Stat label="Days building public" value={v.daysPublic === null ? "…" : String(v.daysPublic)} sub="since first commit" />
           </div>
+          {v.status === "error" && (
+            <div className="mt-3 text-[12.5px] text-slate-600">
+              GitHub rate-limited this view —{" "}
+              <a href={`${REPO}/commits/main`} target="_blank" rel="noopener" className="text-[#185FA5] underline underline-offset-2 font-medium">
+                see the live commit count on GitHub →
+              </a>
+            </div>
+          )}
           {/* v59: live 90-day commit heatmap, GitHub-style */}
           <div className="mt-6">
             <CommitGraph />
