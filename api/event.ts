@@ -31,6 +31,9 @@ const ALLOWED_EVENT_TYPES = new Set([
   "pricing_view",
   // v50A: public roadmap voting
   "roadmap_upvote",
+  // v57B: funnel completion events fired from Stripe/Cal webhooks and client-side
+  "booking_created",
+  "purchase_completed",
 ]);
 
 type Body = {
