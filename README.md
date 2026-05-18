@@ -3,6 +3,7 @@
 > Production AI voice + chat agents for service businesses. Tampa-based. Built in public.
 
 [![Site](https://img.shields.io/badge/site-trainyouragent.com-042C53)](https://www.trainyouragent.com)
+[![Proof](https://img.shields.io/badge/proof-receipts-042C53)](https://www.trainyouragent.com/proof)
 [![Live demo](https://img.shields.io/badge/live%20voice%20demo-talk%20now-185FA5)](https://www.trainyouragent.com/voice-demo)
 [![Public metrics](https://img.shields.io/badge/metrics-live-10B981)](https://www.trainyouragent.com/metrics)
 [![Status](https://img.shields.io/badge/status-operational-10B981)](https://www.trainyouragent.com/uptime)
@@ -43,8 +44,10 @@ If you're a developer, the rest of this README is for you.
 - `/blog` — 70 long-form posts
 - `/docs` — Knowledge base
 - `/api-docs` — Public API documentation
-- `/metrics` — Real built-in-public metrics (no synthetic baselines)
-- `/founder-log` — Daily ship journal
+- `/proof` — The cornerstone proof page. Operator velocity (live GitHub), architecture proof (every claim linked to code in this repo), security audit artifacts, and the honest pre-customer gap.
+- `/how-we-win-without-testimonials` — The honest case for hiring a pre-customer AI shop
+- `/metrics` — Real built-in-public metrics (no synthetic baselines), leading with operator velocity
+- `/founder-log` — Daily ship journal (every entry anchored to a real commit)
 - `/glossary` — 46 AI terms defined
 - `/trust-center` — Security, compliance, accessibility, uptime
 - `/admin` — Token-gated dashboard

@@ -137,6 +137,76 @@ export function getLeads(limit = 100): LeadRecord[] {
   return mem.leads.slice(0, limit);
 }
 
+// v58: async variant that unions the in-memory store with whatever the
+// canonical Supabase tables hold. This is what the public-metrics endpoint
+// now uses so reads don't go to zero just because the Vercel function
+// isolate was cold and the in-memory ring was empty.
+export async function getLeadsAsync(limit = 100): Promise<LeadRecord[]> {
+  const sb = getSupabase();
+  if (!sb) return mem.leads.slice(0, limit);
+  try {
+    const { data, error } = await sb
+      .from("tya_leads")
+      .select("created_at, source, email, path, ip")
+      .order("created_at", { ascending: false })
+      .limit(limit);
+    if (error || !data) return mem.leads.slice(0, limit);
+    const sbRows: LeadRecord[] = (data as Array<{
+      created_at: string; source: string; email: string; path: string | null; ip: string | null;
+    }>).map(r => ({
+      ts: r.created_at ? new Date(r.created_at).getTime() : Date.now(),
+      source: r.source ?? "unknown",
+      emailHash: r.email ?? "***",
+      path: r.path ?? undefined,
+      ip: r.ip ?? undefined,
+    }));
+    // Union by (ts, source, emailHash) — dedupe Supabase + memory.
+    const seen = new Set<string>();
+    const merged: LeadRecord[] = [];
+    for (const r of [...mem.leads, ...sbRows]) {
+      const key = `${r.ts}|${r.source}|${r.emailHash}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      merged.push(r);
+    }
+    merged.sort((a, b) => b.ts - a.ts);
+    return merged.slice(0, limit);
+  } catch {
+    return mem.leads.slice(0, limit);
+  }
+}
+
+// v58: async metrics that derive counts from the unioned lead set above so
+// /api/public-metrics doesn't show zeros just because the function isolate
+// is cold. Bookings/purchases still come from memory (event aggregation
+// from Supabase will land in a future commit; this one closes the most
+// visible gap).
+export async function getMetricsAsync() {
+  const DAY = 24 * 60 * 60 * 1000;
+  const leads = await getLeadsAsync(500);
+  const leadsTs = leads.map((l) => l.ts);
+  const leads24h = withinMs(leadsTs, DAY);
+  const leads7d  = withinMs(leadsTs, 7 * DAY);
+  const leads30d = withinMs(leadsTs, 30 * DAY);
+
+  const bookings24h = withinMs(mem.bookings, DAY);
+  const bookings7d  = withinMs(mem.bookings, 7 * DAY);
+  const bookings30d = withinMs(mem.bookings, 30 * DAY);
+
+  const purchases30d = mem.purchases.filter((p) => p.ts >= Date.now() - 30 * DAY);
+  const revenue30d   = purchases30d.reduce((a, b) => a + (Number(b.amount) || 0), 0);
+
+  return {
+    leads:    { "24h": leads24h, "7d": leads7d, "30d": leads30d },
+    bookings: { "24h": bookings24h, "7d": bookings7d, "30d": bookings30d },
+    purchases:{ "30d": purchases30d.length },
+    revenue:  { "30d": revenue30d, mrrEstimate: revenue30d },
+    storeSize: { leads: leads.length, events: mem.visitorPings.length },
+    backend: supabaseConfigured() ? "supabase+memory" : "memory-only",
+    generatedAt: new Date().toISOString(),
+  };
+}
+
 function withinMs(arr: number[], ms: number): number {
   const cutoff = Date.now() - ms;
   let n = 0;

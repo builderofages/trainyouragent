@@ -28,7 +28,7 @@ function setHead() {
 }
 
 const PITCH = [
-  { title: "Current stage", body: "$20K+ MRR, four years building AI agents, two years operating TrainYourAgent as a real production business with paying SMB customers. Tampa-based. Profitable on a cash basis." },
+  { title: "Current stage", body: "Pre-customer in this exact site/product configuration — the rest of the operating business (Tampa-based, four years in applied AI, prior SMB and agency work) underwrites runway. The trainyouragent.com product is being built and shipped in public: 336 commits, 564 live URLs, audited security posture. Founding-customer slots open now." },
   { title: "What we are building", body: "The AI agency-OS for SMBs. Voice agents, chat agents, back-office agents — packaged, deployed, and operated end to end by us so the customer never sees a config file." },
   { title: "Why now", body: "The post-Claude-4 inflection has dropped per-agent build cost by an order of magnitude and pushed reliability into the territory where SMB operators will trust the output. The market is forming around delivery, not platforms." },
   { title: "What we would do with capital", body: "Two founding engineers, one solutions architect, one GTM lead. Tighten the build process from days to hours, push margin from project-grade to product-grade, and lock in the first hundred multi-agent accounts." },

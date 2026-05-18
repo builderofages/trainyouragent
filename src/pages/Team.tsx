@@ -144,7 +144,7 @@ const Team = () => {
               Alexander Mills
             </div>
             <div className="text-[14px] text-slate-600 mb-5">
-              Tampa Bay, FL · 4 years deep in AI · $20K+/mo recurring · 300+ builds shipped
+              Tampa Bay, FL · 4 years deep in applied AI · 336 public commits · 564 live URLs · open-source repo
             </div>
             <div className="text-[15px] text-slate-700 leading-[1.75] space-y-3">
               <p>
@@ -163,8 +163,9 @@ const Team = () => {
               <p>
                 He's now four years deep in applied AI — through every model
                 release, every tool shift, every capability jump — and runs
-                TrainYourAgent ($20K+/mo recurring) alongside a portfolio of
-                related ventures from Tampa Bay. He ships the same way he
+                TrainYourAgent — building the product in public, with the
+                full commit history readable on GitHub — alongside a portfolio
+                of related ventures from Tampa Bay. He ships the same way he
                 always has: faster than anyone you've met, with a thesis you
                 can argue with.
               </p>

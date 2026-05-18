@@ -42,6 +42,8 @@ const COMPANY = [
 ];
 
 const TRUST = [
+  { label: "Proof", to: "/proof" },
+  { label: "How we win (no testimonials)", to: "/how-we-win-without-testimonials" },
   { label: "Trust Center", to: "/trust-center" },
   { label: "Security", to: "/security" },
   { label: "Compliance", to: "/compliance" },

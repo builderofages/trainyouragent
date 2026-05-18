@@ -1,8 +1,9 @@
-// src/pages/Metrics.tsx — v45 (HONEST)
+// src/pages/Metrics.tsx — v58 (PROOF REFRAME)
 // Public metrics dashboard. Real numbers only — no baselines, no fake events.
-// Two clearly-labeled sections:
-//   (1) Business (founder-stated, snapshot of the WHOLE TrainYourAgent business)
-//   (2) Website (live, pulled from the lead store — may be 0)
+// Order reflects what's ACTUALLY verifiable about us today:
+//   (1) Operator velocity — live GitHub data, the only proof we have today
+//   (2) Business — founder-stated, treated as claims not audited financials
+//   (3) Website — live, pulled from the lead store, may be 0 (and that's OK)
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -27,10 +28,10 @@ type WebsiteKpi = {
 };
 type Business = {
   yearsInAi: number;
-  mrrFloorUsd: number;
   livePages: number;
   blogPosts: number;
-  shipsThisYear: number;
+  totalCommits: number;
+  niches: number;
 };
 type SeriesPoint = { day: string; count: number };
 type EventRow = { ts: number; type: string; maskedSource: string };
@@ -102,6 +103,9 @@ export default function Metrics() {
           <p className="mt-5 text-[17px] text-slate-600 max-w-2xl">
             Real metrics from the live lead store. We don't inflate numbers, invent customers, or fake activity. If a number is small, it's small.
           </p>
+          <p className="mt-3 text-[13.5px] text-slate-500 max-w-2xl border-l-2 border-amber-300 pl-3 bg-amber-50/40 py-2 rounded-r">
+            We publish this page because we'd rather you see honest zeros than fake hundreds. Pre-customer in this exact site/product configuration — see <Link to="/proof" className="text-[#185FA5] underline underline-offset-2">/proof</Link> for what IS verifiable about how we ship.
+          </p>
           <div className="mt-8 max-w-xl opacity-90">
             <DashboardIllo style={{ width: "100%", height: "auto" }} />
           </div>
@@ -115,28 +119,50 @@ export default function Metrics() {
           </div>
         )}
 
-        {/* v52B: Live GitHub commits — proof we ship */}
+        {/* v58: OPERATOR VELOCITY (the only real proof today) — leads the page */}
+        <section className="max-w-6xl mx-auto" aria-label="Operator velocity">
+          <div className="flex items-baseline justify-between mb-3">
+            <h2 className="text-[20px] font-semibold" style={{ color: NAVY }}>
+              Operator velocity <span className="text-slate-500 font-normal text-[14px]">— the only real proof we have today</span>
+            </h2>
+            <span className="text-[11px] uppercase tracking-[0.14em] text-emerald-600 font-semibold">
+              Live · GitHub
+            </span>
+          </div>
+          <p className="text-[14px] text-slate-600 max-w-3xl mb-4">
+            Every number below is checkable against the public repo at{" "}
+            <a href="https://github.com/builderofages/trainyouragent" target="_blank" rel="noopener" className="text-[#185FA5] underline underline-offset-2">github.com/builderofages/trainyouragent</a>.
+            This is what "building in public" actually looks like — not a brand value, a data feed.
+          </p>
+          <GitHubVelocityCards />
+        </section>
+
+        <SectionDivider className="my-10 max-w-6xl mx-auto" />
+
+        {/* v52B: Live GitHub commits feed */}
         <section className="max-w-6xl mx-auto mb-10" aria-label="Recent commits">
           <ShippedThisWeek />
         </section>
 
-        {/* Business snapshot */}
+        {/* Business snapshot — v58: clearly labeled as founder claims */}
         <section className="max-w-6xl mx-auto" aria-label="Business snapshot">
           <div className="flex items-baseline justify-between mb-3">
-            <h2 className="text-[20px] font-semibold" style={{ color: NAVY }}>The business</h2>
+            <h2 className="text-[20px] font-semibold" style={{ color: NAVY }}>
+              The business <span className="text-slate-500 font-normal text-[14px]">— founder claims, not audited financials</span>
+            </h2>
             <span className="text-[11px] uppercase tracking-[0.14em] text-slate-500 font-semibold">
               Founder-stated
             </span>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             <Kpi label="Years in AI" value={data?.business.yearsInAi} sub="founder track record" />
-            <Kpi label="MRR (floor)" value={data?.business.mrrFloorUsd} sub="USD / month, conservative" money />
-            <Kpi label="Live pages" value={data?.business.livePages} sub="routes shipped" />
+            <Kpi label="Live URLs" value={data?.business.livePages} sub="verifiable via /sitemap.xml" />
             <Kpi label="Blog posts" value={data?.business.blogPosts} sub="long-form, published" />
-            <Kpi label="Ships this year" value={data?.business.shipsThisYear} sub="commits to main" />
+            <Kpi label="Total commits" value={data?.business.totalCommits} sub="builderofages/trainyouragent" />
+            <Kpi label="Niche playbooks" value={data?.business.niches} sub="hand-edited operator content" />
           </div>
           <p className="mt-3 text-[12px] text-slate-500">
-            These are founder-stated metrics for the broader TrainYourAgent operation, not just this website. Source: latest public disclosure.
+            Founder-stated as of the last disclosure. Treat as the founder's claims, not as audited financials. Customer-revenue metrics are intentionally absent until paying customers are live on this exact product — see <Link to="/proof" className="text-[#185FA5] underline">/proof</Link> for the full picture.
           </p>
         </section>
 
@@ -381,6 +407,78 @@ function SignupChart({ series }: { series: SeriesPoint[] }) {
         </text>
       ))}
     </svg>
+  );
+}
+
+// v58: live GitHub commit velocity — pulled from the public REST API,
+// cached to localStorage for 30 min so reloads don't burn rate-limit.
+function GitHubVelocityCards() {
+  const [stats, setStats] = useState<{
+    last7d: number | null;
+    last30d: number | null;
+    today: number | null;
+    daysPublic: number | null;
+  }>({ last7d: null, last30d: null, today: null, daysPublic: null });
+
+  useEffect(() => {
+    const CACHE_KEY = "tya:velocity:v1";
+    const CACHE_TS = "tya:velocity:ts:v1";
+    const MAX_AGE = 1000 * 60 * 30;
+
+    try {
+      const ts = Number(localStorage.getItem(CACHE_TS) || "0");
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (ts && raw && Date.now() - ts < MAX_AGE) {
+        setStats(JSON.parse(raw));
+        return;
+      }
+    } catch { /* ignore */ }
+
+    (async () => {
+      try {
+        const since30 = new Date(Date.now() - 30 * 86400000).toISOString();
+        const r = await fetch(
+          `https://api.github.com/repos/builderofages/trainyouragent/commits?since=${since30}&per_page=100`,
+          { headers: { Accept: "application/vnd.github+json" } },
+        );
+        if (!r.ok) return;
+        const commits = (await r.json()) as Array<{
+          commit?: { author?: { date?: string } };
+        }>;
+        const now = Date.now();
+        const day = 86400000;
+        const startOfToday = new Date(); startOfToday.setHours(0,0,0,0);
+        const last7d = commits.filter(c => {
+          const d = c.commit?.author?.date ? new Date(c.commit.author.date).getTime() : 0;
+          return d >= now - 7 * day;
+        }).length;
+        const today = commits.filter(c => {
+          const d = c.commit?.author?.date ? new Date(c.commit.author.date).getTime() : 0;
+          return d >= startOfToday.getTime();
+        }).length;
+        // First-commit lookup is heavier — fixed value, repo started Nov 7 2025.
+        const firstCommit = new Date("2025-11-07T20:25:45Z").getTime();
+        const daysPublic = Math.max(1, Math.floor((now - firstCommit) / day));
+        const next = { last7d, last30d: commits.length, today, daysPublic };
+        setStats(next);
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify(next));
+          localStorage.setItem(CACHE_TS, String(Date.now()));
+        } catch { /* ignore */ }
+      } catch { /* swallow */ }
+    })();
+  }, []);
+
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <Kpi label="Commits today" value={stats.today ?? undefined} sub="builderofages/trainyouragent" />
+      <Kpi label="Commits last 7d" value={stats.last7d ?? undefined} sub="all on main, all public" />
+      <Kpi label="Commits last 30d" value={stats.last30d ?? undefined} sub="ship rate, sustained" />
+      <Kpi label="Days building public" value={stats.daysPublic ?? undefined} sub="since first commit" />
+      <p className="col-span-2 sm:col-span-4 text-[12px] text-slate-500 mt-1">
+        Pulled live from the GitHub REST API. Open <a href="https://github.com/builderofages/trainyouragent/commits/main" target="_blank" rel="noopener" className="text-[#185FA5] underline">/commits/main</a> to verify any number above. Cached client-side for 30 min so we don't burn anyone's rate limit.
+      </p>
+    </div>
   );
 }
 

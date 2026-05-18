@@ -171,11 +171,11 @@ const Index = () => {
             <p className="mt-7 text-[18px] sm:text-[20px] text-slate-700 leading-relaxed max-w-2xl">
               {playbook ? (
                 <>
-                  AI voice and chat agents for <span className="text-[#042C53] font-medium">{nicheName} operators</span> — built by people who've shipped 300+ projects across four years in AI. <span className="text-[#042C53] font-medium">$20K+/mo recurring</span> from SMBs already running on us.
+                  AI voice and chat agents for <span className="text-[#042C53] font-medium">{nicheName} operators</span> — built by an operator <span className="text-[#042C53] font-medium">4 years deep in applied AI</span>. 336 public commits, 564 live URLs, working product. <Link to="/proof" className="text-[#185FA5] underline underline-offset-2">See the receipts →</Link>
                 </>
               ) : (
                 <>
-                  Voice agents, lead gen, creative, infrastructure — built by operators who've shipped 300+ projects across four years in AI. <span className="text-[#042C53] font-medium">$20K+/mo recurring</span> from SMBs and startups already running on us.
+                  Voice agents, lead gen, creative, infrastructure — built by an operator <span className="text-[#042C53] font-medium">4 years deep in applied AI</span>. 336 public commits, 564 live URLs, working product. <Link to="/proof" className="text-[#185FA5] underline underline-offset-2">See the receipts →</Link>
                 </>
               )}
             </p>

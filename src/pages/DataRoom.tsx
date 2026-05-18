@@ -28,12 +28,12 @@ const DOCS: Doc[] = [
 ];
 
 const METRICS = [
-  { label: "MRR (floor)", value: "$20K+", note: "Founder-stated, conservative" },
-  { label: "Gross margin", value: "72%", note: "Trailing 90 days" },
-  { label: "CAC range", value: "$1,800–$3,200", note: "Blended across direct + partner channels" },
-  { label: "Payback", value: "5.2 months", note: "Median, fully-loaded" },
-  { label: "Net revenue retention", value: "112%", note: "Trailing 12 months, small base" },
-  { label: "Headcount", value: "1 + contractors", note: "Founder-led; hiring engineer #1 in Q3" },
+  { label: "Stage", value: "Pre-customer", note: "On this exact product. Founding-customer slots open." },
+  { label: "Public commits", value: "336", note: "github.com/builderofages/trainyouragent" },
+  { label: "Live URLs", value: "564", note: "Verifiable via /api/sitemap.xml" },
+  { label: "Build quality", value: "0 vulns", note: "npm audit + SECURITY_AUDIT.md in repo" },
+  { label: "Founder track record", value: "4 yrs", note: "Applied AI, plus prior LA SMMA + EndCreations" },
+  { label: "Headcount", value: "1 + contractors", note: "Founder-led; engineer #1 hired with first customer revenue" },
 ];
 
 type State = "idle" | "sending" | "ok" | "err";

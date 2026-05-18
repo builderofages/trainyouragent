@@ -47,10 +47,10 @@ const FREE_COURSES: Course[] = [
     ],
   },
   {
-    slug: "20k-mrr-agency",
+    slug: "build-in-public-agency",
     eyebrow: "Free · 90 min",
-    title: "Build Your First $20K MRR AI Agency in 90 Days",
-    blurb: "The exact playbook I'd use if I started over with $0 and a laptop. Niche selection, offer design, pricing, the first 5 closes, and how to deliver without burning out.",
+    title: "Build an AI Agency in Public — the First 90 Days Honestly",
+    blurb: "The exact playbook I'd use if I started over with $0 and a laptop. Niche selection, offer design, pricing, the first 5 closes, and how to deliver without burning out. Numbers in this course are based on industry rates and observed agency metrics — not a claim about my own MRR.",
     length: "8 modules · 90 min total",
     modules: [
       "Niche selection: the 3 industries with the fastest yes (and 3 to never touch)",
@@ -60,7 +60,7 @@ const FREE_COURSES: Course[] = [
       "Pricing without flinching: $2k–$10k setup, $799–$2,997 retainer math",
       "The minimum tech stack that actually delivers (no, you don't need a CRM yet)",
       "First-90 delivery: shipping the agent, the handoff, the case study",
-      "Hitting $20K MRR: when to hire, when to raise prices, when to fire a client",
+      "Scaling honestly: when to hire, when to raise prices, when to fire a client",
     ],
   },
   {
@@ -86,7 +86,7 @@ const COHORT_WEEKS: { week: string; title: string; outcome: string }[] = [
   { week: "Week 3", title: "Outbound system + first 10 booked calls", outcome: "A repeatable booking machine. We script, send, and iterate together." },
   { week: "Week 4", title: "Run the discovery + close the deal", outcome: "Roleplay live discovery calls. Get torn apart in private so prospects don't tear you apart in public." },
   { week: "Week 5", title: "Delivery without drama", outcome: "Project plan, milestones, customer comms, and the SOPs we use internally." },
-  { week: "Week 6", title: "Scale: pricing, hiring, second offer", outcome: "Path from your first $5K MRR to your first $20K MRR — and what the next hire actually does." },
+  { week: "Week 6", title: "Scale: pricing, hiring, second offer", outcome: "Honest path from your first paying customer to a repeatable book of work — and what the next hire actually does." },
 ];
 
 const Learn = () => {

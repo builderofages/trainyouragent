@@ -64,12 +64,15 @@ export const PHONE = {
   copyShort: "Phone line ports Q3 — book a 15-min Zoom for now",
 } as const;
 
-// Public traction (his own LinkedIn — safe to cite)
+// Operator-verifiable proof (every number can be checked against the
+// public GitHub repo or /api/sitemap.xml). v58: removed unverifiable MRR
+// claim — until customer revenue is on /metrics, the recurring number is
+// founder-stated only and lives on the /metrics page with a disclaimer.
 export const PROOF = {
-  yearsInAI:    "4 yrs",
-  shipsBuilt:   "300+",
-  monthlyMRR:   "$20K+",
-  verticals:    "14",
+  yearsInAI:   "4 yrs",
+  commits:     "336",
+  liveUrls:    "564",
+  verticals:   "15",
 } as const;
 
 // Fonts loader — call once on mount in any new page that needs it.

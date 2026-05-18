@@ -50,6 +50,9 @@ const STATIC_PAGES: { path: string; priority: number; changefreq: string }[] = [
   { path: "/careers",                   priority: 0.55, changefreq: "monthly" },
   { path: "/press",                     priority: 0.55, changefreq: "monthly" },
   { path: "/agency-partner",            priority: 0.7,  changefreq: "monthly" },
+  // v58: proof reframe — cornerstone trust pages
+  { path: "/proof",                     priority: 0.95, changefreq: "daily"   },
+  { path: "/how-we-win-without-testimonials", priority: 0.85, changefreq: "monthly" },
   // v47A: trust + authority
   { path: "/speaking",                  priority: 0.65, changefreq: "monthly" },
   { path: "/podcast-guest",             priority: 0.6,  changefreq: "monthly" },

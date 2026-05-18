@@ -229,6 +229,13 @@ export default function SiteNav({ active }: SiteNavProps) {
               About
             </Link>
             <Link
+              to="/proof"
+              className="hover:text-[#042C53] inline-flex items-center gap-1.5"
+              aria-label="Proof page — operator velocity and architecture receipts"
+            >
+              Proof
+            </Link>
+            <Link
               to="/metrics"
               className="hover:text-[#042C53] inline-flex items-center gap-1.5"
               aria-label="Public metrics dashboard"
@@ -325,6 +332,13 @@ export default function SiteNav({ active }: SiteNavProps) {
                 className="px-3 py-3 rounded-lg text-[#042C53] font-medium hover:bg-[#F6FAFE]"
               >
                 About
+              </Link>
+              <Link
+                to="/proof"
+                onClick={() => setMobileOpen(false)}
+                className="px-3 py-3 rounded-lg text-[#042C53] font-medium hover:bg-[#F6FAFE]"
+              >
+                Proof
               </Link>
               <Link
                 to="/metrics"

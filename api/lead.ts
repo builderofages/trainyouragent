@@ -55,7 +55,7 @@ const META_CAPI_TOKEN = process.env.META_CAPI_ACCESS_TOKEN || process.env.META_C
 const META_GRAPH_URL = META_PIXEL_ID && META_CAPI_TOKEN
   ? `https://graph.facebook.com/v19.0/${META_PIXEL_ID}/events?access_token=${META_CAPI_TOKEN}`
   : "";
-const META_LEAD_SOURCE_RE = /^(contact|contact-form|demo-request|lead-magnet-|tool:|report-|founder-log-subscribe|newsletter)/;
+const META_LEAD_SOURCE_RE = /^(contact|contact-form|demo-request|lead-magnet-|tool:|report-|founder-log-subscribe|newsletter|founding-customer-apply)/;
 
 const NEWSLETTER_SOURCES = new Set([
   "newsletter",
@@ -148,6 +148,8 @@ const ALLOWED_SOURCES = new Set([
   "whitelabel-apply",
   "reseller-apply",
   "data-room-unlock",
+  // v58: proof reframe — founding-customer slot application from /proof
+  "founding-customer-apply",
 ]);
 
 const MAX_BODY_BYTES = 16 * 1024; // 16 KB is plenty for a lead form

@@ -6,7 +6,7 @@
 
 import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors.js";
 import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
-import { getLeads, getMetrics } from "./_lib/lead-store.js";
+import { getLeadsAsync, getMetricsAsync } from "./_lib/lead-store.js";
 
 export const config = { runtime: "edge" };
 
@@ -16,14 +16,17 @@ type EventRow = {
   maskedSource: string;
 };
 
-// Founder-stated public numbers — these are the BUSINESS, not the WEBSITE.
-// Surfaced separately on /metrics so the website-only numbers stay honest.
+// v58: founder-stated context kept separate from operator-verifiable numbers.
+// MRR removed from the public payload until customer revenue is on /metrics —
+// the contradiction (claim recurring while site KPIs show $0) was the loudest
+// trust signal failure on the site. Anything below is checkable: commit counts
+// against the public GitHub repo, URL counts against /api/sitemap.xml.
 const BUSINESS_TRUTH = {
   yearsInAi: 4,
-  mrrFloorUsd: 20000,            // "$20K+/mo recurring" — floor only, no inflation
-  livePages: 300,                // real count of routes shipped
-  blogPosts: 17,                 // v40 (7) + v42 (10)
-  shipsThisYear: 45,             // counted commits to main
+  livePages: 564,                // verifiable in /api/sitemap.xml
+  blogPosts: 70,                 // v40 + v42 + v50c = 7 + 10 + 50
+  totalCommits: 336,             // git rev-list --count HEAD on builderofages/trainyouragent
+  niches: 15,                    // /playbooks/* count
 };
 
 export default async function handler(req: Request) {
@@ -39,8 +42,10 @@ export default async function handler(req: Request) {
   const rl = rateLimit(`pmetrics:${ip}`, { limit: 120, windowMs: 60 * 60 * 1000 });
   if (!rl.ok) return json({ ok: false, error: "rate-limited" }, 429, { ...cors.headers, ...rl.headers });
 
-  const m = getMetrics();
-  const realLeads = getLeads(50);
+  const [m, realLeads] = await Promise.all([
+    getMetricsAsync(),
+    getLeadsAsync(50),
+  ]);
 
   // Website-only KPIs — real numbers from the store, even if 0.
   const websiteKpi = {

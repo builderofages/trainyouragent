@@ -16,7 +16,7 @@ const TOPICS = [
     fit: "AI conferences · Operator meetups · Vendor user groups",
   },
   {
-    h: "Building an AI agency from $0 to $20K MRR in 12 months",
+    h: "Building an AI agency in public: 336 commits, 564 live URLs, 0 fake metrics",
     p: "An honest playbook on what it actually takes to bootstrap an AI services company — pricing, packaging, sales motion, the deals to walk away from, and the operational debt nobody warns you about. No survivorship-bias hero arc, no growth-hack tricks.",
     fit: "Founder communities · YC alumni events · SaaStr-style stages",
   },

@@ -147,6 +147,10 @@ const DataRoom             = lazy(() => import("./pages/DataRoom"));
 // v57A: internal — Resend domain verification helper
 const VerifyEmailDomain    = lazy(() => import("./pages/VerifyEmailDomain"));
 
+// v58: proof reframe — cornerstone trust pages
+const Proof                = lazy(() => import("./pages/Proof"));
+const HowWeWin             = lazy(() => import("./pages/HowWeWin"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -309,6 +313,9 @@ const App = () => {
             <Route path="/data-room" element={<DataRoom />} />
             {/* v57A: internal — Resend domain verification helper */}
             <Route path="/verify-email-domain" element={<VerifyEmailDomain />} />
+            {/* v58: proof reframe — cornerstone trust pages */}
+            <Route path="/proof" element={<Proof />} />
+            <Route path="/how-we-win-without-testimonials" element={<HowWeWin />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />

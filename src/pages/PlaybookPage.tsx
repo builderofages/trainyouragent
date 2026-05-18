@@ -393,15 +393,25 @@ export default function PlaybookPage() {
           </div>
         </section>
 
-        {/* SCENARIOS */}
+        {/* SCENARIOS — v58: clearly marked as hypothetical until real customer case studies exist in this vertical. */}
         <section className="px-5 sm:px-8 py-14 bg-[#F7FAFD]" aria-labelledby="scenarios-heading">
           <div className="max-w-4xl mx-auto">
             <div className="text-[12px] tracking-[0.2em] uppercase text-[#185FA5] font-semibold mb-3">
               How it actually runs
             </div>
-            <h2 id="scenarios-heading" className="text-[28px] sm:text-[34px] font-semibold text-[#042C53] mb-8">
+            <h2 id="scenarios-heading" className="text-[28px] sm:text-[34px] font-semibold text-[#042C53] mb-4">
               Three end-to-end operational scenarios
             </h2>
+            <div
+              role="note"
+              aria-label="Scenario disclosure"
+              className="mb-7 rounded-xl border border-amber-300 bg-amber-50/60 px-5 py-4 text-[13.5px] leading-[1.65] text-[#5C4400]"
+            >
+              <strong className="font-semibold">Hypothetical, not historical.</strong>{" "}
+              We don't have a real customer case study to show in this vertical yet. The three scenarios below are first-principles walkthroughs of what an engagement would look like, written from operator-level experience with the niche. They're illustrative — they're not stories about specific customers. See{" "}
+              <Link to="/proof" className="underline underline-offset-2 text-[#185FA5]">/proof</Link>{" "}
+              for what IS verifiable about how we ship today.
+            </div>
             <div className="space-y-7">
               {pb.scenarios.map((s, i) => (
                 <div

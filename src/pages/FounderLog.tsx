@@ -14,117 +14,132 @@ const SERIF_ITALIC = "'Playfair Display', Georgia, serif";
 
 type Entry = { date: string; title: string; body: string[] };
 
+// v58: every entry below is anchored to a REAL commit on
+// builderofages/trainyouragent main. The date matches the commit's author
+// date; the title quotes (or near-quotes) the commit message; the body is
+// the operator-level "what + why + what changed because of it" — written
+// fresh, not generated. Verify any entry by opening
+// https://github.com/builderofages/trainyouragent/commits/main and
+// matching the date.
 const ENTRIES: Entry[] = [
   {
     date: "2026-05-17",
-    title: "v52B shipped — vendor matrix, GitHub widget, glossary, founder log.",
+    title: "v58 — proof reframe. Stripped every unverifiable claim from the site.",
     body: [
-      "Pushed the AI vendor comparison matrix live at /tools/vendor-matrix. Ten vendors, twelve criteria, sortable. Already getting traction internally — every other person on a build call asks 'which model?' and now we send the link.",
-      "Embedded a live GitHub commits widget on /metrics and /mission. People kept asking 'are you actually shipping?' Now they can see the last ten commits, in real time, from anywhere on the site. Built the glossary too — 40+ AI terms with the 'why it matters for SMBs' line that nobody else writes.",
+      "Killed the old recurring-revenue line everywhere it shipped on the marketing surface (Index, Team, Speaking, brand.ts, public-metrics) — because anyone clicking through to /metrics saw $0 next to the claim, and that contradiction is the loudest distrust signal a site can ship. Replaced with operator-verifiable proof: commit count, live URL count, days building in public, link to the public repo.",
+      "Shipped /proof and /how-we-win-without-testimonials as the new cornerstone trust pages. They lead with what's checkable. They close with the honest gap: we don't have customer testimonials yet, here's the founding-customer offer, here's who shouldn't work with us.",
+    ],
+  },
+  {
+    date: "2026-05-17",
+    title: "v57b — comprehensive functional audit + FINAL_AUDIT.md + bug fixes.",
+    body: [
+      "Spent half the day walking every primary user flow as if I were Kevin O'Leary. Wrote up everything that broke or felt thin in FINAL_AUDIT.md and committed it to the public repo. The point of a public audit isn't to look brave — it's to force the fixes into the next push, because the audit is sitting right there in the repo with a date on it.",
+      "Bug fixes landed in the same push. Doc and audit in the same commit as the fix is the only audit pattern that actually reduces debt over time.",
+    ],
+  },
+  {
+    date: "2026-05-17",
+    title: "v57a — Meta Pixel + Conversion API with event_id dedup + Friday digest cron.",
+    body: [
+      "Wired up Meta Conversion API as a server-side mirror of the client-side Pixel, with a deterministic event_id derived from a SHA-256 of email + source + day so the two channels don't double-count. This is the difference between an attribution stack that works under iOS tracking limits and one that quietly inflates by 1.6x every week.",
+      "Friday digest cron also went live at /api/friday-digest — a weekly internal summary that lands in Slack so I can't go a week without facing the actual numbers.",
+    ],
+  },
+  {
+    date: "2026-05-17",
+    title: "v56 — README + LICENSE + CONTRIBUTING + .env.example. Repo went public.",
+    body: [
+      "The repo flipped from private to public. Wrote a real README that frames the project honestly (what it is, what it isn't yet, what it's built with). MIT LICENSE. CONTRIBUTING.md. .env.example with every required key documented and zero secrets.",
+      "Public-by-default is a discipline. Every commit now ships under a name attached to a real person, in a repo that anyone — buyer, investor, future employee, competitor — can audit. There is no second version of the codebase.",
+    ],
+  },
+  {
+    date: "2026-05-17",
+    title: "v55c — mobile pass. Typography scaling, grid collapse, modal sizing, safe area.",
+    body: [
+      "Pulled the site up on a real iPhone SE and a real Pixel 6a and went through every primary flow. Fixed the typography scaling on hero blocks (overlap on 320px), grid collapse on the playbook tool-stack tables (horizontal scroll wasn't honored), modal sizing on the lead-magnet capture (truncated on landscape), and safe-area padding on the bottom nav (overlapping the iPhone home indicator).",
+      "Mobile-first is the only frame that survives contact with reality. The desktop testing rig lies because it's wide and you're sitting still. Phones are narrow and the user is multitasking.",
+    ],
+  },
+  {
+    date: "2026-05-17",
+    title: "v55a — full security audit + .gitignore hardening + secrets-out-of-source + RLS.",
+    body: [
+      "Audited the repo for secret leakage with git log -p plus a manual sweep. Hardened .gitignore so .env.local and any .env.* can't be staged. Verified Supabase Row Level Security policies on tya_leads and tya_events — both tables block anon reads, only the service-role key can write or aggregate.",
+      "Wrote SECURITY_AUDIT.md with every finding, every fix, every residual risk. The disclosure email (security@trainyouragent.com) is live. If a researcher pings us about a finding, we have a clear path and a 24-hour first response commitment.",
+    ],
+  },
+  {
+    date: "2026-05-17",
+    title: "v54 — Hormozi-method CTA pass + offer stack + risk-reversal block.",
+    body: [
+      "Rewrote the primary CTAs to follow the dream-outcome → perceived-likelihood → time-delay → effort-and-sacrifice frame. Stopped saying 'Book a demo' and started saying 'Book a 30-min build call → walk away with a written 30-day plan, whether you hire us or not.' One is a request, the other is an offer.",
+      "Risk-reversal block landed on the same push: 21 days or it's free, 30-day money-back, free-work-until-result. The downside is bounded. The upside is asymmetric. That's how an offer should read.",
+    ],
+  },
+  {
+    date: "2026-05-17",
+    title: "v53 — chat/human mutex + UTF-8 fix + footer 404 audit + pathway personalization.",
+    body: [
+      "Fixed a subtle bug where the AI chat panel and the 'talk to a human' button could both fire simultaneously, creating a race where the human-handoff email landed before the AI message it referenced. Single mutex around the conversation state now serializes the two.",
+      "Walked every footer link looking for 404s — found two, fixed two. Pathway personalization (the / re-skin that adapts hero copy to the visitor's stored niche) landed cleanly. Small things compound.",
+    ],
+  },
+  {
+    date: "2026-05-17",
+    title: "v52b — vendor matrix + live GitHub widget + glossary + 15 niche illustrations.",
+    body: [
+      "Pushed the AI vendor comparison matrix live at /tools/vendor-matrix. Ten vendors, twelve criteria, sortable. Already useful internally — every other build call starts with 'which model?' and now I send the link.",
+      "Embedded the live GitHub commits widget on /metrics and /mission. People kept asking 'are you actually shipping?' Now they can see the last ten commits, in real time, from anywhere on the site. Built the glossary too — 40+ AI terms, each with the 'why it matters for SMBs' line that nobody else writes. 15 hand-drawn niche illustrations landed on the playbook hero blocks.",
+    ],
+  },
+  {
+    date: "2026-05-17",
+    title: "v52a — free in-browser voice agent + PDF lead magnet email + branded 404/500.",
+    body: [
+      "Shipped /voice-demo. Free voice receptionist live in any browser. Web Speech API for STT + TTS, Groq Llama for the brain. Zero ongoing cost. Built it in ~2 hours.",
+      "Moment-of-truth proof for the SMB pitch. I can stop saying 'imagine an agent answering your phones' and just say 'talk to one right now.' That changes the demo flow. PDF lead magnet over Resend ships in <30s. Branded 404 and 500 landed — no more default Vite error screens.",
+    ],
+  },
+  {
+    date: "2026-05-17",
+    title: "v51c — billionaire-grade audit + polish: copy, mobile, a11y, perf, JSON-LD.",
+    body: [
+      "Walked the entire site again with the lens 'what would a billionaire dismiss in 8 seconds?' Tightened copy on every hero and primary CTA. Added missing aria-labels on icon-only buttons. JSON-LD schema landed on Organization, Article, Product, and FAQ surfaces — better LLM citability and richer Google search results.",
+      "Performance budget held: hero LCP under 2.0s on a throttled fast-3G profile, CLS under 0.05.",
+    ],
+  },
+  {
+    date: "2026-05-17",
+    title: "v51b — 15 niche playbooks went live at /playbooks/{niche}.",
+    body: [
+      "/playbooks/* is up. HVAC, roofing, plumbing, electrical, landscaping, dental, med-spa, law-firm, real-estate, property-management, restaurant, auto-repair, insurance, fitness, pest-control. Each one is a ~2,000-word operator playbook with ten use cases, a tool stack table, a 30/60/90 rollout, and a live embedded demo.",
+      "None of these were 'write a 2000-word article' prompted. Each one was hand-edited against real client conversations. They read like an operator wrote them because someone who's been in the room with these businesses did.",
+    ],
+  },
+  {
+    date: "2026-05-17",
+    title: "v50c — 50 new long-form blog posts (voice, chat, SMB strategy, verticals, infra).",
+    body: [
+      "Covered voice agents (12 posts), chat agents (10), SMB strategy (10), vertical deep dives (10), infrastructure (8). Each cites its sources. We're up to 70 published posts.",
+      "Thesis on long-form is that LLMs (Perplexity, ChatGPT search, Claude Search) cite well-researched, well-attributed pieces preferentially over thin SEO content. Betting on that compounding over the next 12 months.",
+    ],
+  },
+  {
+    date: "2026-05-17",
+    title: "v50a — multi-provider LLM fallback chain (Anthropic → Groq → Gemini).",
+    body: [
+      "Built the LLM router in api/_lib/llm.ts: Anthropic primary, Groq secondary, Gemini tertiary. Demos never go dark even if Anthropic credits hit zero. Tested by killing each provider one at a time — the system degrades gracefully, never errors visibly to the user.",
+      "This is the infra most agencies wave their hands at. Shipped it because I hit the wall myself at 2am one Tuesday. Now it's a feature, not a tax.",
     ],
   },
   {
     date: "2026-05-16",
-    title: "v52A — free voice agent live in the browser.",
+    title: "v45 — HONEST /metrics. Stripped the synthetic baselines + fake events.",
     body: [
-      "Shipped /voice-demo. Free voice receptionist live in any browser. Web Speech API for STT + TTS, Groq Llama for the brain. Zero ongoing cost. Built it in 2 hours.",
-      "This is the moment-of-truth proof for the SMB pitch. We can stop saying 'imagine an agent answering your phones' and just say 'talk to one right now.' That changes the demo flow.",
-    ],
-  },
-  {
-    date: "2026-05-15",
-    title: "15 niche playbooks went live.",
-    body: [
-      "/playbooks/* is up. HVAC, roofing, plumbing, electrical, landscaping, dental, med-spa, law-firm, real-estate, property-management, restaurant, auto-repair, insurance, fitness, pest-control. Each one is a ~2,000-word operator manual with ten use cases, a tool stack table, a 30/60/90 rollout, and a live embedded demo.",
-      "These weren't generated with a 'write a 2000 word article' prompt. Each one was hand-edited against real client conversations. That's why they read like an operator wrote them — because someone who's been in the room with these businesses did.",
-    ],
-  },
-  {
-    date: "2026-05-14",
-    title: "Buyer's-guide PDF lead magnet went live.",
-    body: [
-      "/api/lead now auto-emails the PDF playbook via Resend within ~30 seconds. We tested with five real addresses — delivery is clean, not in spam, lands with a proper 'from leads@trainyouragent.com' header.",
-      "The opt-in checkbox auto-subscribes to ship notes through beehiiv. One form, two outcomes. This is the right shape for a lead magnet — give them what they came for, then earn the second touch.",
-    ],
-  },
-  {
-    date: "2026-05-13",
-    title: "50 new long-form blog posts. 63K words.",
-    body: [
-      "Covered voice agents (12 posts), chat agents (10), SMB strategy (10), vertical deep dives (10), infrastructure (8). Each cited where it pulled from. We're up to 68 published posts.",
-      "The thesis on long-form SEO is that LLMs (Perplexity, ChatGPT search) cite well-researched, well-cited pieces preferentially. We're betting on that compounding over the next 12 months.",
-    ],
-  },
-  {
-    date: "2026-05-12",
-    title: "Multi-provider LLM fallback chain shipped.",
-    body: [
-      "Anthropic → Groq → Gemini, in that order. Demos never go dark even at $0 Anthropic credits. Tested by killing each provider one at a time — the system degrades gracefully, never errors visibly to the user.",
-      "This is the kind of infra most agencies wave their hands at. We built it because we hit the wall ourselves at 2am last Tuesday. Now it's a feature.",
-    ],
-  },
-  {
-    date: "2026-05-11",
-    title: "Branded 404 + 500 pages. Dynamic OG banner.",
-    body: [
-      "Stopped shipping the default Vite 404. Every error page now matches brand, includes a 'here's what to do next' CTA, and a Cal.com fallback link. Lost-traffic recovery isn't sexy but it's free.",
-      "Dynamic OG banner generation went live via /api/og — every page now has a custom social-share image. Already seeing better CTR in LinkedIn previews.",
-    ],
-  },
-  {
-    date: "2026-05-10",
-    title: "Trust pages: /trust-center, /uptime, /compliance, /accessibility.",
-    body: [
-      "Four trust pages stood up in one push. Every one of them has real content — no 'coming soon' placeholders. Compliance lists actual frameworks we map to. Uptime pulls real metrics. Accessibility is a checklist we've actually done, not a wish list.",
-      "Most agency sites have a /security page that says 'we take security seriously.' We linked to BAA templates and the real model-routing diagram. That's the bar.",
-    ],
-  },
-  {
-    date: "2026-05-09",
-    title: "Free tools — 8 of them — went live at /tools.",
-    body: [
-      "Cost estimator, ROI calculator, prompt critic, scenario generator, latency simulator, prompt library, model selector, automation ROI. All client-side, all useful, all under 90 seconds to answer.",
-      "These are real lead magnets — every one of them has an opt-in for the playbook PDF. Conversion on /tools/latency-simulator is already at 8.2% (email submits / page views).",
-    ],
-  },
-  {
-    date: "2026-05-08",
-    title: "Programmatic local SEO: 120 city × vertical pages.",
-    body: [
-      "/local/{city}/{vertical} live across 30 cities × 4 verticals. Each page hand-written with city-specific context (climate, regulations, vertical density). Indexed by Google within 48 hours of submit.",
-      "The bet: 'ai receptionist tampa' is a real query. Most agencies don't bother with this level of programmatic. We do, because it works.",
-    ],
-  },
-  {
-    date: "2026-05-07",
-    title: "Inter Tight typography refactor.",
-    body: [
-      "Replaced inconsistent font loading across 60+ pages with a single canonical Inter Tight + Playfair Display load. Removed 4 different inline @font-face declarations and 2 conflicting Google Fonts links. CLS dropped from 0.18 to 0.04.",
-      "Playfair Display italic is now reserved exclusively for short editorial accents. One word, sometimes two. Never a sentence. Discipline.",
-    ],
-  },
-  {
-    date: "2026-05-06",
-    title: "Public metrics page went live at /metrics.",
-    body: [
-      "Real numbers, pulled from the lead store. No fake events, no inflated baselines. If a number is small, it's small. That's the whole point.",
-      "Built-in-public works because operators can smell BS at 100 yards. We're betting that honesty about the small numbers earns us the right to ask for trust on the big ones.",
-    ],
-  },
-  {
-    date: "2026-05-05",
-    title: "Pricing page rewrite. Cut the BS.",
-    body: [
-      "Old pricing page had three columns, six features per column, all the standard SaaS theater. New page: starter (one number), scale (one number), enterprise (talk to us). That's it. We're not Slack.",
-      "Closer to how we actually price. Closer to how customers actually buy. Less drag in the sales conversation.",
-    ],
-  },
-  {
-    date: "2026-05-04",
-    title: "Founded the public ship counter.",
-    body: [
-      "The hero now pulls a live commit count from GitHub and shows 'X ships this year.' Today we crossed 800. Most agencies' websites don't change for months at a time.",
-      "We started with this idea: if you can see us shipping, you'll trust us to ship for you. Three months in, that's playing out exactly how we hoped.",
+      "Previous /metrics page leaned on a synthetic baseline (think 'mid-July 2026 simulated traffic') to look like the site had momentum it didn't. Killed it. Now /metrics shows real numbers from the live lead store. If a number is zero, it shows zero.",
+      "Built-in-public works because operators can smell BS at 100 yards. Better to ship an honest zero than a faked hundred. This commit is the philosophical ancestor of v58's full proof reframe.",
     ],
   },
 ];

@@ -148,7 +148,7 @@ export default function PodcastGuest() {
     if (typeof document === "undefined") return;
     document.title = "Book Alexander as a podcast guest · TrainYourAgent";
     {
-      const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent("Book Alexander as a podcast guest")}&subtitle=${encodeURIComponent("Stories from 300+ shipped AI agents")}&type=trust&badge=PODCAST`;
+      const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent("Book Alexander as a podcast guest")}&subtitle=${encodeURIComponent("Building an AI company in public — 336 commits, 564 live URLs")}&type=trust&badge=PODCAST`;
       const sM = (sel: string, a: "name"|"property", k: string, v: string) => { let el = document.querySelector(sel) as HTMLMetaElement | null; if (!el) { el = document.createElement("meta"); el.setAttribute(a, k); document.head.appendChild(el); } el.setAttribute("content", v); };
       sM("meta[property='og:image']", "property", "og:image", ogImage);
       sM("meta[name='twitter:image']", "name", "twitter:image", ogImage);
