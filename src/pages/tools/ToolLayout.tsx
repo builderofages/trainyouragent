@@ -60,35 +60,43 @@ export default function ToolLayout({ eyebrow, title, italicTail, subtitle, child
 
   return (
     <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: FONT }}>
-      {/* Top bar — v61: PrismNode glyph + wordmark for visual consistency with SiteNav */}
-      <header className="border-b border-slate-200 bg-white sticky top-0 z-30">
+      {/* Top bar — v64: high-contrast wordmark + nav links (NAVY 7:1 on white).
+          v63 used inherited slate colors that washed out on white. */}
+      <header className="border-b border-slate-200 bg-white sticky top-0 z-30 shadow-[0_1px_0_rgba(4,44,83,0.04)]">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
           <Link
             to="/"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2.5"
             aria-label="TrainYourAgent home"
           >
             <span
               className="inline-flex items-center justify-center flex-shrink-0"
-              style={{ width: 26, height: 26, color: NAVY }}
+              style={{ width: 26, height: 26, color: "#042C53" }}
               aria-hidden="true"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" style={{ width: 26, height: 26 }}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="#042C53" strokeLinecap="round" strokeLinejoin="round" style={{ width: 26, height: 26 }}>
                 <g strokeWidth="4"><path d="M 32 6 L 58 32 L 32 58 L 6 32 Z" /></g>
                 <g strokeWidth="2.4"><path d="M 32 6 L 32 58" /><path d="M 6 32 L 58 32" /></g>
-                <circle cx="32" cy="32" r="3" fill="currentColor" stroke="none" />
+                <circle cx="32" cy="32" r="3" fill="#042C53" stroke="none" />
               </svg>
             </span>
-            <span className="text-[14px] font-semibold tracking-tight" style={{ color: NAVY }}>
+            <span
+              className="text-[15px] font-semibold tracking-tight"
+              style={{ color: "#042C53" }}
+            >
               TrainYourAgent
             </span>
           </Link>
-          <nav className="flex items-center gap-4 text-[13px]" aria-label="Tools nav">
-            <Link to="/" className="text-slate-700 hover:text-[#042C53]">Back to site</Link>
-            <Link to="/tools" className="text-slate-700 hover:text-[#042C53]">All tools</Link>
+          <nav className="flex items-center gap-5 text-[13.5px] font-medium" aria-label="Tools nav">
+            <Link to="/" className="text-slate-700 hover:text-[#042C53]" style={{ color: "#334155" }}>
+              Back to site
+            </Link>
+            <Link to="/tools" className="text-slate-700 hover:text-[#042C53]" style={{ color: "#334155" }}>
+              All tools
+            </Link>
             <Link
               to="/contact"
-              className="px-3 py-1.5 rounded-full bg-[#042C53] text-white hover:bg-[#0A3D6E] min-h-[36px] inline-flex items-center"
+              className="px-3.5 py-1.5 rounded-full bg-[#042C53] text-white hover:bg-[#0A3D6E] min-h-[36px] inline-flex items-center font-semibold"
             >
               Book a call
             </Link>
@@ -112,7 +120,17 @@ export default function ToolLayout({ eyebrow, title, italicTail, subtitle, child
           {italicTail && (
             <>
               {" "}
-              <span style={{ fontFamily: SERIF_ITALIC, fontStyle: "italic", fontWeight: 500, color: BLUE }}>
+              {/* v64: bump weight to 600 + explicit BLUE (#185FA5) so the italic tail
+                  renders crisp navy-blue, not the washed-out gray it inherited via
+                  Playfair italic 500 + faded text color. */}
+              <span
+                style={{
+                  fontFamily: SERIF_ITALIC,
+                  fontStyle: "italic",
+                  fontWeight: 600,
+                  color: "#185FA5",
+                }}
+              >
                 {italicTail}
               </span>
             </>

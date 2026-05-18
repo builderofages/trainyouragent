@@ -73,7 +73,7 @@ export default function AiChat() {
         </button>
       )}
       {open && (
-        <div className="fixed right-4 sm:right-5 z-[95] w-[min(380px,calc(100vw-2rem))] h-[min(560px,calc(100dvh-6rem))] rounded-3xl bg-white border border-slate-200 shadow-[0_30px_80px_-20px_rgba(4,44,83,0.55)] flex flex-col overflow-hidden"
+        <div className="fixed right-4 sm:right-5 z-[95] w-[min(380px,calc(100vw-2rem))] h-[min(580px,calc(100dvh-6rem))] rounded-3xl bg-white border border-slate-200 shadow-[0_30px_80px_-20px_rgba(4,44,83,0.55)] flex flex-col overflow-hidden"
              style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", bottom: "calc(1rem + env(safe-area-inset-bottom) + 4rem)" }}>
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 bg-[#042C53] text-white">
             <div className="flex items-center gap-2.5">
@@ -85,6 +85,27 @@ export default function AiChat() {
             </div>
             <button aria-label="Close" onClick={() => setFloater(null)} className="text-white/70 hover:text-white text-[20px] leading-none">×</button>
           </div>
+
+          {/* v64: prominent "Or talk to a human" link at the top of the chat tray.
+              Replaces the bottom-left floating pill which was overlapping hero content. */}
+          <button
+            type="button"
+            onClick={() => setFloater("human")}
+            className="flex items-center justify-between gap-3 px-5 py-3 border-b border-slate-200 bg-[#F6FAFE] hover:bg-[#EAF3FB] text-left transition"
+            aria-label="Talk to a human instead"
+          >
+            <span className="flex items-center gap-2.5">
+              <span className="relative inline-flex w-2.5 h-2.5" aria-hidden="true">
+                <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-70 animate-ping" />
+                <span className="relative inline-flex w-2.5 h-2.5 rounded-full bg-emerald-500" />
+              </span>
+              <span className="flex flex-col leading-tight">
+                <span className="text-[13px] font-semibold text-[#042C53]">Or talk to a human</span>
+                <span className="text-[11px] text-slate-600">Reply &lt; 4 business hours</span>
+              </span>
+            </span>
+            <span className="text-[#185FA5] text-[14px] font-semibold" aria-hidden="true">→</span>
+          </button>
 
           <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
             {msgs.map((m, i) => (
@@ -107,17 +128,8 @@ export default function AiChat() {
                 {streaming ? "…" : "Send"}
               </button>
             </div>
-            <div className="mt-2 flex items-center justify-between gap-2">
-              <button
-                type="button"
-                onClick={() => setFloater("human")}
-                className="text-[11px] text-[#185FA5] hover:text-[#042C53] underline decoration-[#185FA5]/30 sm:hidden"
-              >
-                Talk to a human instead →
-              </button>
-              <div className="ml-auto text-[10px] text-slate-500 text-center sm:mx-auto">
-                Powered by Claude · Answers based on TrainYourAgent docs
-              </div>
+            <div className="mt-2 text-[10px] text-slate-500 text-center">
+              Powered by Claude · Answers based on TrainYourAgent docs
             </div>
           </div>
         </div>

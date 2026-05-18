@@ -48,8 +48,12 @@ function useGitHubVelocity(): VelocityState {
     status: "loading",
   });
   useEffect(() => {
-    const CACHE_KEY = "tya:velocity:v1";
-    const CACHE_TS = "tya:velocity:ts:v1";
+    // v64: server-side proxy via /api/github-velocity (in-memory cached, 30
+    // min TTL) replaces direct fetch to api.github.com. The old client-side
+    // call hit the unauthenticated 60/IP/hr rate limit and rendered "see
+    // GitHub" fallbacks instead of real numbers.
+    const CACHE_KEY = "tya:velocity:v2"; // bumped key — old shape is fine but
+    const CACHE_TS = "tya:velocity:ts:v2"; // bumping clears stale "error" states.
     const MAX_AGE = 1000 * 60 * 30;
     try {
       const ts = Number(localStorage.getItem(CACHE_TS) || "0");
@@ -62,28 +66,28 @@ function useGitHubVelocity(): VelocityState {
     } catch { /* ignore */ }
     (async () => {
       try {
-        const since30 = new Date(Date.now() - 30 * 86400000).toISOString();
-        const url = `https://api.github.com/repos/builderofages/trainyouragent/commits?since=${since30}&per_page=100`;
-        const r = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
-        if (!r.ok) throw new Error(`github ${r.status}`);
-        const commits = (await r.json()) as Array<{ commit?: { author?: { date?: string } } }>;
-        if (!Array.isArray(commits)) throw new Error("bad payload");
-        const now = Date.now();
+        const r = await fetch("/api/github-velocity", {
+          headers: { Accept: "application/json" },
+        });
+        if (!r.ok) throw new Error(`velocity ${r.status}`);
+        const data = (await r.json()) as {
+          today?: number;
+          last7d?: number;
+          last30d?: number;
+          error?: string;
+        };
+        if (data.error || typeof data.today !== "number") {
+          throw new Error(data.error || "bad payload");
+        }
         const day = 86400000;
-        const sod = new Date(); sod.setHours(0, 0, 0, 0);
-        const commitsToday = commits.filter(c => {
-          const d = c.commit?.author?.date ? new Date(c.commit.author.date).getTime() : 0;
-          return d >= sod.getTime();
-        }).length;
-        const commitsLast7d = commits.filter(c => {
-          const d = c.commit?.author?.date ? new Date(c.commit.author.date).getTime() : 0;
-          return d >= now - 7 * day;
-        }).length;
-        const daysPublic = Math.max(1, Math.floor((now - FIRST_COMMIT_MS) / day));
+        const daysPublic = Math.max(
+          1,
+          Math.floor((Date.now() - FIRST_COMMIT_MS) / day),
+        );
         const next: Velocity = {
-          commitsToday,
-          commitsLast7d,
-          commitsLast30d: commits.length,
+          commitsToday: data.today ?? 0,
+          commitsLast7d: data.last7d ?? 0,
+          commitsLast30d: data.last30d ?? 0,
           daysPublic,
         };
         setV({ ...next, status: "ok" });
@@ -92,7 +96,7 @@ function useGitHubVelocity(): VelocityState {
           localStorage.setItem(CACHE_TS, String(Date.now()));
         } catch { /* ignore */ }
       } catch {
-        // Network/rate-limit failure: surface error so the UI can render a
+        // Network/proxy failure: surface error so the UI can render a
         // click-through fallback instead of a permanent em-dash.
         setV(prev => ({ ...prev, status: "error" }));
       }
