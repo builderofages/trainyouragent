@@ -17,7 +17,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { parseCommits, type BipCommit } from "@/components/BuiltInPublic";
 
-const GH_API = "https://api.github.com/repos/builderofages/trainyouragent/commits?per_page=10";
+// v65: route through /api/github-velocity proxy (cached, rate-limit-safe).
+// Direct api.github.com fetches were getting throttled.
+const GH_API = "/api/github-velocity";
 const VERCEL_DEPLOY_URL = "https://vercel.com/builderofages/trainyouragent/deployments";
 const GITHUB_REPO_URL = "https://github.com/builderofages/trainyouragent";
 const DEPLOY_HOOK_URL = "https://api.vercel.com/v1/integrations/deploy/prj_bxA7MPcFmHyKRJ69XSIYdjNbSxy4/0D9pWDtZqR";
@@ -129,7 +131,10 @@ const Admin = () => {
         if (!r.ok) return;
         const data = await r.json();
         if (!mounted) return;
-        setCommits(parseCommits(data));
+        // v65: proxy returns { commits: [...trimmed], ... }. parseCommits()
+        // accepts both shapes for forward/backward compat.
+        const commitsArr = Array.isArray(data?.commits) ? data.commits : data;
+        setCommits(parseCommits(commitsArr));
       } catch { /* ignore */ }
     })();
     return () => { mounted = false; };

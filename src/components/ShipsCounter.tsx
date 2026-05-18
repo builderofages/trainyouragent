@@ -1,19 +1,15 @@
 // src/components/ShipsCounter.tsx
-// v38: "N builds shipped this year." — counts commits in the current
-// calendar year from the public GitHub API. Animates count-up via
-// requestAnimationFrame. Caches result in sessionStorage so subsequent
-// renders are instant.
+// v65: "N builds shipped this year." — counts commits in the current
+// calendar year using the /api/github-velocity proxy (cached, rate-limit-
+// safe). Direct api.github.com fetches were getting throttled. Animates
+// count-up via requestAnimationFrame.
 //
-// Defensive: paginates up to 5 pages (500 commits/year cap, which is well
-// over the actual rate for this repo). Falls back to a sensible static
-// number if the API is blocked.
+// Falls back to a sensible static number if the proxy is unreachable.
 
 import { useEffect, useRef, useState } from "react";
 
-const CACHE_KEY = "tya:ships:year:v1";
+const CACHE_KEY = "tya:ships:year:v3";
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour — counter doesn't need real-time
-const PER_PAGE = 100;
-const MAX_PAGES = 5;
 
 type Cached = { ts: number; year: number; count: number };
 
@@ -37,17 +33,25 @@ function writeCache(year: number, count: number) {
 }
 
 async function fetchYearCount(year: number): Promise<number> {
-  const since = `${year}-01-01T00:00:00Z`;
-  const until = `${year + 1}-01-01T00:00:00Z`;
+  // v65: use proxy. Proxy returns the last 100 commits (more than enough
+  // for year-to-date for this repo's cadence).
+  const sinceMs = Date.UTC(year, 0, 1);
+  const untilMs = Date.UTC(year + 1, 0, 1);
+  const r = await fetch("/api/github-velocity", { headers: { Accept: "application/json" } });
+  if (!r.ok) throw new Error(`velocity ${r.status}`);
+  const data = (await r.json()) as {
+    commits?: Array<{ date?: string | null }>;
+    error?: string;
+  };
+  if (data.error || !Array.isArray(data.commits)) {
+    throw new Error(data.error || "bad payload");
+  }
   let total = 0;
-  for (let page = 1; page <= MAX_PAGES; page++) {
-    const url = `https://api.github.com/repos/builderofages/trainyouragent/commits?per_page=${PER_PAGE}&page=${page}&since=${encodeURIComponent(since)}&until=${encodeURIComponent(until)}`;
-    const r = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
-    if (!r.ok) throw new Error(`github ${r.status}`);
-    const arr = await r.json();
-    if (!Array.isArray(arr)) break;
-    total += arr.length;
-    if (arr.length < PER_PAGE) break;
+  for (const c of data.commits) {
+    if (!c.date) continue;
+    const t = new Date(c.date).getTime();
+    if (Number.isNaN(t)) continue;
+    if (t >= sinceMs && t < untilMs) total += 1;
   }
   return total;
 }

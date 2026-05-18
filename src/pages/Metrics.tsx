@@ -436,30 +436,29 @@ function GitHubVelocityCards() {
 
     (async () => {
       try {
-        const since30 = new Date(Date.now() - 30 * 86400000).toISOString();
-        const r = await fetch(
-          `https://api.github.com/repos/builderofages/trainyouragent/commits?since=${since30}&per_page=100`,
-          { headers: { Accept: "application/vnd.github+json" } },
-        );
+        // v65: server-side proxy via /api/github-velocity (cached, rate-
+        // limit-safe). Replaces previous direct api.github.com fetch.
+        const r = await fetch("/api/github-velocity", {
+          headers: { Accept: "application/json" },
+        });
         if (!r.ok) return;
-        const commits = (await r.json()) as Array<{
-          commit?: { author?: { date?: string } };
-        }>;
+        const data = (await r.json()) as {
+          today?: number;
+          last7d?: number;
+          last30d?: number;
+          error?: string;
+        };
+        if (data.error || typeof data.today !== "number") return;
         const now = Date.now();
         const day = 86400000;
-        const startOfToday = new Date(); startOfToday.setHours(0,0,0,0);
-        const last7d = commits.filter(c => {
-          const d = c.commit?.author?.date ? new Date(c.commit.author.date).getTime() : 0;
-          return d >= now - 7 * day;
-        }).length;
-        const today = commits.filter(c => {
-          const d = c.commit?.author?.date ? new Date(c.commit.author.date).getTime() : 0;
-          return d >= startOfToday.getTime();
-        }).length;
-        // First-commit lookup is heavier — fixed value, repo started Nov 7 2025.
         const firstCommit = new Date("2025-11-07T20:25:45Z").getTime();
         const daysPublic = Math.max(1, Math.floor((now - firstCommit) / day));
-        const next = { last7d, last30d: commits.length, today, daysPublic };
+        const next = {
+          last7d: data.last7d ?? 0,
+          last30d: data.last30d ?? 0,
+          today: data.today ?? 0,
+          daysPublic,
+        };
         setStats(next);
         try {
           localStorage.setItem(CACHE_KEY, JSON.stringify(next));

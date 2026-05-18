@@ -1,7 +1,10 @@
 // src/components/CommitGraph.tsx
-// v59 — 90-day commit heatmap (GitHub-style) for /proof.
-// Pure SVG, no library. Fetches commits from the public repo, buckets them by
-// day, and renders a 13-week × 7-day grid. Honors prefers-reduced-motion.
+// v65 — 90-day commit heatmap (GitHub-style) for /proof.
+// Pure SVG, no library. Pulls commits from the server-side proxy
+// /api/github-velocity (cached, rate-limit-safe) instead of hitting
+// api.github.com directly from the browser. The proxy returns
+// dayBuckets, longestStreak, and mostActiveDay so this component
+// renders without any additional computation when possible.
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -25,8 +28,6 @@ function bucket(n: number): number {
   if (n <= 9) return 3;
   return 4;
 }
-
-type CommitRow = { commit?: { author?: { date?: string } } };
 
 type CellData = { date: Date; key: string; count: number };
 
@@ -53,33 +54,38 @@ export default function CommitGraph({ days = DAYS }: { days?: number }) {
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
-    const CACHE_KEY = "tya:commitgraph:v1";
-    const CACHE_TS = "tya:commitgraph:ts:v1";
+    // v65: bumped cache key to v3 to flush any stale empty/error state from
+    // the previous direct-fetch implementation.
+    const CACHE_KEY = "tya:commitgraph:v3";
+    const CACHE_TS = "tya:commitgraph:ts:v3";
     const MAX_AGE = 1000 * 60 * 30; // 30 min
     try {
       const ts = Number(localStorage.getItem(CACHE_TS) || "0");
       const raw = localStorage.getItem(CACHE_KEY);
       if (ts && raw && Date.now() - ts < MAX_AGE) {
-        setCounts(JSON.parse(raw));
-        return;
+        const parsed = JSON.parse(raw) as Record<string, number>;
+        if (parsed && Object.keys(parsed).length > 0) {
+          setCounts(parsed);
+          return;
+        }
       }
     } catch { /* ignore */ }
     (async () => {
       try {
-        const since = new Date(Date.now() - days * 86400000).toISOString();
-        // GitHub max per_page is 100. 90 days easily fits for our cadence.
-        // If we ever sustain >100 commits/90d, paginate.
-        const url = `https://api.github.com/repos/${REPO}/commits?since=${encodeURIComponent(since)}&per_page=100`;
-        const r = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
-        if (!r.ok) throw new Error(`http-${r.status}`);
-        const rows = (await r.json()) as CommitRow[];
-        const c: Record<string, number> = {};
-        for (const row of rows) {
-          const d = row.commit?.author?.date;
-          if (!d) continue;
-          const k = isoKey(startOfDay(new Date(d)));
-          c[k] = (c[k] || 0) + 1;
+        // Server-side proxy: see api/github-velocity.ts. Cached in-memory
+        // for 30 min on the edge — never hits the GitHub 60/hr/IP limit.
+        const r = await fetch("/api/github-velocity", {
+          headers: { Accept: "application/json" },
+        });
+        if (!r.ok) throw new Error(`velocity ${r.status}`);
+        const data = (await r.json()) as {
+          dayBuckets?: Record<string, number>;
+          error?: string;
+        };
+        if (data.error || !data.dayBuckets) {
+          throw new Error(data.error || "bad payload");
         }
+        const c = data.dayBuckets;
         setCounts(c);
         try {
           localStorage.setItem(CACHE_KEY, JSON.stringify(c));

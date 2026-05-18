@@ -1,7 +1,10 @@
-// src/components/ShippedThisWeek.tsx — v52B
-// Pulls public commits from builderofages/trainyouragent (unauthenticated GitHub
-// REST API, CORS-allowed for public repos) and renders the last 10.
-// Graceful localStorage fallback if rate-limited.
+// src/components/ShippedThisWeek.tsx — v65
+// v65: switched from direct api.github.com fetch to /api/github-velocity
+// server-side proxy. The unauthenticated GitHub REST API caps anonymous
+// IPs at 60 req/hr, which caused "Commits cached — refresh in a few
+// minutes." to render on warm pages. The proxy returns a trimmed list
+// of the last 100 commits (sha, shortSha, message, author, date, url),
+// already first-line truncated, so this component just slices the first 10.
 
 import { useEffect, useState } from "react";
 
@@ -12,11 +15,10 @@ type Commit = {
   url: string;
 };
 
-const GH_URL =
-  "https://api.github.com/repos/builderofages/trainyouragent/commits?per_page=10";
 const REPO_BASE = "https://github.com/builderofages/trainyouragent/commit/";
-const CACHE_KEY = "tya:shipped:cache:v1";
-const CACHE_TS = "tya:shipped:ts:v1";
+const CACHE_KEY = "tya:shipped:cache:v3";
+const CACHE_TS = "tya:shipped:ts:v3";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const CACHE_MAX_AGE = 1000 * 60 * 30; // 30 min
 
 function relTime(ms: number): string {
@@ -58,26 +60,35 @@ export default function ShippedThisWeek({ className = "" }: { className?: string
 
     (async () => {
       try {
-        const res = await fetch(GH_URL, {
-          headers: { Accept: "application/vnd.github+json" },
+        // v65: server-side proxy. Trimmed payload (~20KB) with shortSha,
+        // message, author, date, url already populated.
+        const res = await fetch("/api/github-velocity", {
+          headers: { Accept: "application/json" },
         });
         if (!res.ok) {
           if (res.status === 403 || res.status === 429) {
             setStale(true);
             return;
           }
-          throw new Error(`GitHub ${res.status}`);
+          throw new Error(`velocity ${res.status}`);
         }
-        const json = (await res.json()) as Array<{
-          sha: string;
-          commit?: { message?: string; author?: { date?: string } };
-          html_url?: string;
-        }>;
-        const list: Commit[] = json.slice(0, 10).map((c) => ({
+        const data = (await res.json()) as {
+          commits?: Array<{
+            sha: string;
+            message: string;
+            date: string | null;
+            url: string;
+          }>;
+          error?: string;
+        };
+        if (data.error || !Array.isArray(data.commits)) {
+          throw new Error(data.error || "bad payload");
+        }
+        const list: Commit[] = data.commits.slice(0, 10).map((c) => ({
           sha: c.sha,
-          message: c.commit?.message || "(no message)",
-          date: c.commit?.author?.date || new Date().toISOString(),
-          url: c.html_url || `${REPO_BASE}${c.sha}`,
+          message: c.message || "(no message)",
+          date: c.date || new Date().toISOString(),
+          url: c.url || `${REPO_BASE}${c.sha}`,
         }));
         if (!alive) return;
         setCommits(list);

@@ -1,7 +1,8 @@
 // src/components/BuiltInPublic.tsx
-// v38: Built-in-public timeline — fetches the last 10 commits from the
-// public GitHub API on mount, refreshes every 60s. Caches in sessionStorage
-// so navigating around the site doesn't re-burn API quota.
+// v65: Built-in-public timeline — pulls commits through /api/github-velocity
+// proxy (cached, rate-limit-safe) instead of api.github.com directly.
+// Refreshes every 60s. Caches in sessionStorage so navigating around the
+// site doesn't re-burn API quota.
 //
 // Parses commit messages matching `vN[a-z]?: {description}` and renders a
 // vertical timeline (date · ship version · description). Skips merge commits
@@ -9,8 +10,8 @@
 
 import { useEffect, useState } from "react";
 
-const REPO_API = "https://api.github.com/repos/builderofages/trainyouragent/commits?per_page=10";
-const CACHE_KEY = "tya:bip:commits:v1";
+const REPO_API = "/api/github-velocity";
+const CACHE_KEY = "tya:bip:commits:v3";
 const CACHE_TTL_MS = 60 * 1000;
 
 export type BipCommit = {
@@ -45,20 +46,37 @@ function writeCache(items: BipCommit[]) {
 // Accepts "v36c: fix Vercel build …", "v34: trust pages …", "v38: …"
 const V_RE = /^(v\d+[a-z]?)\s*:\s*(.+)$/i;
 
+// Accepts either the raw GitHub commit shape OR the trimmed shape returned
+// by /api/github-velocity (sha, shortSha, message, date, url, author).
 export function parseCommits(raw: any[]): BipCommit[] {
   if (!Array.isArray(raw)) return [];
   const out: BipCommit[] = [];
   for (const c of raw) {
-    const msg: string = c?.commit?.message ?? "";
-    const firstLine = msg.split("\n")[0]?.trim() ?? "";
+    // Trimmed shape from /api/github-velocity has top-level `message` / `date`
+    // / `url`. Raw GitHub shape has `commit.message` / `commit.author.date` /
+    // `html_url`. Support both for forward/backward compat.
+    const msgRaw: string =
+      (typeof c?.message === "string" ? c.message : undefined) ??
+      (c?.commit?.message ?? "");
+    const firstLine = msgRaw.split("\n")[0]?.trim() ?? "";
     // skip merges
     if (/^merge /i.test(firstLine)) continue;
     const m = firstLine.match(V_RE);
     if (!m) continue;
+    const sha = String(c?.sha ?? "");
+    const date =
+      (typeof c?.date === "string" ? c.date : undefined) ??
+      c?.commit?.author?.date ??
+      c?.commit?.committer?.date ??
+      "";
+    const url =
+      (typeof c?.url === "string" ? c.url : undefined) ??
+      c?.html_url ??
+      `https://github.com/builderofages/trainyouragent/commit/${sha}`;
     out.push({
-      sha: String(c?.sha ?? "").slice(0, 7),
-      date: c?.commit?.author?.date ?? c?.commit?.committer?.date ?? "",
-      url: c?.html_url ?? `https://github.com/builderofages/trainyouragent/commit/${c?.sha ?? ""}`,
+      sha: sha.slice(0, 7),
+      date,
+      url,
       version: m[1],
       description: m[2].trim(),
       rawMessage: firstLine,
@@ -102,11 +120,13 @@ export default function BuiltInPublic({
           setLoading(false);
           // Still refresh in the background after using cache
         }
-        const r = await fetch(REPO_API, { headers: { Accept: "application/vnd.github+json" } });
-        if (!r.ok) throw new Error(`github ${r.status}`);
-        const raw = await r.json();
+        const r = await fetch(REPO_API, { headers: { Accept: "application/json" } });
+        if (!r.ok) throw new Error(`velocity ${r.status}`);
+        const data = await r.json();
         if (cancelled) return;
-        const parsed = parseCommits(raw);
+        // Server-side proxy returns { commits: [...trimmed], ... }
+        const commits = Array.isArray(data?.commits) ? data.commits : data;
+        const parsed = parseCommits(commits);
         setItems(parsed);
         setError(null);
         writeCache(parsed);
