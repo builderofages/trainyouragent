@@ -8,6 +8,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
+// v63: honest empty-state CTAs that FIRE real events so the visitor sees
+// their own action appear in the stream. The smarter version of Grok Heavy's
+// "seed fake events" suggestion — no fakes, but the page never feels dead.
+import { fireEvent } from "@/lib/event";
 
 const NAVY = "#042C53";
 const BLUE = "#185FA5";
@@ -181,32 +185,44 @@ export default function Live() {
           <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
             {items.length === 0 ? (
               <div className="p-8 sm:p-10 text-center">
-                <div className="text-[15px] font-semibold mb-2" style={{ color: NAVY }}>
-                  No recent activity in the last hour.
+                <div className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold mb-2">
+                  Be the first event in the stream
                 </div>
-                <div className="text-[14px] text-slate-600 max-w-md mx-auto leading-relaxed mb-5">
-                  The site is live but quiet right now. Be the first &mdash; tap a tool, book a call, or talk to the AI.
+                <div className="text-[18px] sm:text-[20px] font-semibold mb-3" style={{ color: NAVY }}>
+                  The funnel is quiet right now &mdash;{" "}
+                  <span style={{ fontFamily: SERIF_ITALIC, fontStyle: "italic", fontWeight: 500 }}>
+                    you can change that.
+                  </span>
+                </div>
+                <div className="text-[14px] text-slate-600 max-w-lg mx-auto leading-relaxed mb-6">
+                  Each of these actions registers a real event that you will see appear in this stream within ~8 seconds. No fake fillers, no synthetic motion.
                 </div>
                 <div className="flex flex-wrap justify-center gap-2.5">
                   <Link
-                    to="/tools"
-                    className="px-4 py-2 rounded-lg bg-[#042C53] text-white text-[13px] font-semibold hover:bg-[#0A3D6E] min-h-[40px] inline-flex items-center"
+                    to="/voice-demo"
+                    onClick={() => { void fireEvent("demo_used", { from: "/live", cta: "voice-demo" }, "live-empty-state"); }}
+                    className="px-4 py-2.5 rounded-lg bg-[#042C53] text-white text-[13px] font-semibold hover:bg-[#0A3D6E] min-h-[40px] inline-flex items-center"
                   >
-                    Try a tool &rarr;
+                    Try the voice demo &rarr;
+                  </Link>
+                  <Link
+                    to="/tools/website-audit"
+                    onClick={() => { void fireEvent("tool_used", { from: "/live", cta: "website-audit" }, "live-empty-state"); }}
+                    className="px-4 py-2.5 rounded-lg border border-[#185FA5] text-[#185FA5] text-[13px] font-semibold hover:bg-[#E6F1FB] min-h-[40px] inline-flex items-center"
+                  >
+                    Run an AI audit on your site &rarr;
                   </Link>
                   <Link
                     to="/book"
-                    className="px-4 py-2 rounded-lg border border-[#185FA5] text-[#185FA5] text-[13px] font-semibold hover:bg-[#E6F1FB] min-h-[40px] inline-flex items-center"
+                    onClick={() => { void fireEvent("router_lane_chosen", { from: "/live", cta: "book-call" }, "live-empty-state"); }}
+                    className="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 text-[13px] font-semibold hover:border-[#185FA5] min-h-[40px] inline-flex items-center"
                   >
-                    Book a call &rarr;
-                  </Link>
-                  <Link
-                    to="/voice-demo"
-                    className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 text-[13px] font-semibold hover:border-[#185FA5] min-h-[40px] inline-flex items-center"
-                  >
-                    Talk to the AI &rarr;
+                    Book a build call &rarr;
                   </Link>
                 </div>
+                <p className="mt-5 text-[11.5px] text-slate-500 max-w-md mx-auto">
+                  Your event arrives anonymized (2-letter initial only) — same as everyone else's.
+                </p>
               </div>
             ) : (
               <ul className="divide-y divide-slate-100">

@@ -469,8 +469,48 @@ export default function Proof() {
           </ul>
         </section>
 
+        {/* v63: FOUNDING CUSTOMER CASE STUDY — placeholder, honestly empty today.
+            Reserved for the first paying customer's named, measurable story. */}
+        <section className="max-w-5xl mx-auto mt-24" id="founding-customer-case-study">
+          <div className="rounded-3xl border-2 border-dashed border-[#185FA5]/40 bg-[#F6FAFE] p-7 sm:p-10">
+            <div className="text-[11px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">
+              Reserved · Founding customer case study
+            </div>
+            <h2 className="text-[26px] sm:text-[32px] font-semibold tracking-tight mb-5" style={{ color: NAVY }}>
+              This space is reserved for{" "}
+              <span style={{ fontFamily: SERIF_ITALIC, fontStyle: "italic", fontWeight: 500 }}>
+                the first paying customer's story.
+              </span>
+            </h2>
+            <p className="text-[15px] sm:text-[16px] text-slate-700 leading-[1.75] max-w-3xl mb-5">
+              When they close, this is where their measurable outcome lives &mdash; public, named, with the numbers (calls answered, bookings created, hours saved, dollars recovered). No anonymized "Fortune 500 logo" theater. Real company, real founder, real number.
+            </p>
+            <div className="rounded-2xl bg-white border border-slate-200 p-5 sm:p-6 grid sm:grid-cols-[1fr_auto] gap-5 items-center">
+              <div>
+                <div className="text-[13px] font-semibold text-[#042C53] mb-1">
+                  Founding-customer slots open
+                </div>
+                <div className="text-[13px] text-slate-600 leading-relaxed">
+                  First 10 customers get locked-in pricing for the life of the engagement, direct line to Alexander, and named on this page once we have results to show. Apply via the form below.
+                </div>
+              </div>
+              <a
+                href="#founding-customer-apply"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const el = document.getElementById("founding-customer-apply");
+                  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                className="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-[#042C53] text-white text-[13.5px] font-semibold hover:bg-[#0A3D6E] whitespace-nowrap"
+              >
+                Apply &rarr;
+              </a>
+            </div>
+          </div>
+        </section>
+
         {/* E. THE HONEST GAP */}
-        <section className="max-w-5xl mx-auto mt-24">
+        <section className="max-w-5xl mx-auto mt-24" id="founding-customer-apply">
           <div className="rounded-3xl bg-[#042C53] text-white p-7 sm:p-10">
             <div className="text-[11px] uppercase tracking-[0.18em] text-[#9CC4EC] font-semibold mb-3">
               The honest gap

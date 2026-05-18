@@ -1,6 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import RoiCalculator from "@/components/RoiCalculator";
+// v63: inline plan-recommending ROI calc (Grok Heavy audit)
+import RoiInline from "@/components/RoiInline";
 import SmartPriceReveal from "@/components/SmartPriceReveal";
 import NewsletterCapture from "@/components/NewsletterCapture";
 import CalEmbed from "@/components/CalEmbed";
@@ -442,6 +444,23 @@ const Pricing = () => {
           <p className="mt-6 text-[14px] text-slate-600 leading-relaxed max-w-3xl">
             Founders lane pays for it across booked calls, not upfront. Operators lane bundles the build for $4,950 + $799/mo. Scale gets it custom-scoped. <strong className="text-[#042C53]">No tier locks any of these behind a paywall.</strong>
           </p>
+        </div>
+      </section>
+
+      {/* v63: INLINE ROI CALC — plug your numbers in, get a specific plan
+          recommendation + payback days. Placed right under the offer stack so
+          buyers can self-qualify before the risk-reversal block. */}
+      <section id="roi-inline" className="px-5 sm:px-8 pb-12 sm:pb-16">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-7">
+            <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">
+              Self-qualify in 30 seconds
+            </div>
+            <h2 className="text-[26px] sm:text-[36px] leading-tight font-semibold text-[#042C53]">
+              Pick the lane the math picks for you.
+            </h2>
+          </div>
+          <RoiInline />
         </div>
       </section>
 

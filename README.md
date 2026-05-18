@@ -2,6 +2,8 @@
 
 > Production AI voice + chat agents for service businesses. Tampa-based. Built in public.
 
+Recent audit: [GROK_AUDIT.md](./GROK_AUDIT.md) — brutal third-party critical audit from Grok Heavy, dated 2026-05-18.
+
 [![Site](https://img.shields.io/badge/site-trainyouragent.com-042C53)](https://www.trainyouragent.com)
 [![Proof](https://img.shields.io/badge/proof-receipts-042C53)](https://www.trainyouragent.com/proof)
 [![Live demo](https://img.shields.io/badge/live%20voice%20demo-talk%20now-185FA5)](https://www.trainyouragent.com/voice-demo)

@@ -1,8 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
 import { injectJsonLdMany, organizationLd, personLd } from "@/lib/jsonld";
 import PathwayRouter from "@/components/PathwayRouter";
+// v63: live voice demo embedded directly in hero — the 10x conversion lever
+// called out in the Grok Heavy audit.
+import HeroVoiceEmbed from "@/components/HeroVoiceEmbed";
+// v63: live KPI strip above the fold pulling /api/public-metrics
+import LiveKpiStrip from "@/components/LiveKpiStrip";
+// v63: deterministic per-session hero h1 variant rotation (A/B without an A/B framework)
+import { fireEvent } from "@/lib/event";
 // v53: visitor-context personalization — Home re-skins per niche/lane.
 import { useVisitor, nicheDisplayName } from "@/lib/visitorContext";
 import { getPlaybook } from "@/lib/playbooks";
@@ -96,13 +103,70 @@ function AnimatedStat({ value, suffix = "", prefix = "", label, decimals = 0, hr
   return <div>{inner}</div>;
 }
 
+// v63: three hero h1 variants, rotated deterministically per browser session so
+// each visitor sees one consistent variant within a session, but the next visit
+// might land on a different one. Tracked via Meta Pixel/CAPI when a lead fires.
+type HeroVariant = {
+  id: "A" | "B" | "C";
+  headlineHtml: JSX.Element;
+};
+const HERO_VARIANTS: HeroVariant[] = [
+  {
+    id: "A",
+    headlineHtml: (
+      <>
+        The AI that's <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>actually running</span> your business by morning.
+      </>
+    ),
+  },
+  {
+    id: "B",
+    headlineHtml: (
+      <>
+        Talk to a voice agent in <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>5 seconds.</span> Decide in 30.
+      </>
+    ),
+  },
+  {
+    id: "C",
+    headlineHtml: (
+      <>
+        AI that books appointments <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>while you sleep.</span> Live in 21 days.
+      </>
+    ),
+  },
+];
+
+function pickHeroVariant(): HeroVariant {
+  if (typeof window === "undefined") return HERO_VARIANTS[0];
+  try {
+    const KEY = "tya:hero-variant-v63";
+    const existing = window.sessionStorage.getItem(KEY);
+    if (existing === "A" || existing === "B" || existing === "C") {
+      const found = HERO_VARIANTS.find((v) => v.id === existing);
+      if (found) return found;
+    }
+    const v = HERO_VARIANTS[Math.floor(Math.random() * HERO_VARIANTS.length)];
+    window.sessionStorage.setItem(KEY, v.id);
+    return v;
+  } catch {
+    return HERO_VARIANTS[Math.floor(Math.random() * HERO_VARIANTS.length)];
+  }
+}
+
 const Index = () => {
   const { niche } = useVisitor();
   const playbook = niche ? getPlaybook(niche) : undefined;
   const nicheName = playbook ? playbook.displayName : nicheDisplayName(niche);
+  // v63: pick once per mount so SSR/hydration is stable and the variant doesn't
+  // jitter on re-render. fireEvent records the variant for downstream attribution.
+  const heroVariant = useMemo(() => pickHeroVariant(), []);
+  const [pathwayOpen, setPathwayOpen] = useState(false);
 
   useEffect(() => {
     fireSiteVisitOnce();
+    // v63: record which hero variant this visitor saw (best-effort, never throws)
+    void fireEvent("router_view", { hero_variant: heroVariant.id }, "home-hero-variant");
     if (typeof document === "undefined") return;
     if (!document.getElementById("tya-fonts")) {
       const l = document.createElement("link");
@@ -177,8 +241,11 @@ const Index = () => {
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E6F1FB] text-[#042C53] text-[12px] font-semibold tracking-[0.12em] uppercase mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#22A36C] animate-pulse" /> Live · Agents in production
             </div>
-            <h1 className="text-[34px] sm:text-[56px] md:text-[68px] lg:text-[80px] leading-[1.02] sm:leading-[0.98] tracking-tight font-semibold text-[#042C53]">
-              The AI that's <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>actually running</span> your business by morning.
+            <h1
+              className="text-[34px] sm:text-[56px] md:text-[68px] lg:text-[80px] leading-[1.02] sm:leading-[0.98] tracking-tight font-semibold text-[#042C53]"
+              data-hero-variant={heroVariant.id}
+            >
+              {heroVariant.headlineHtml}
             </h1>
             <p className="mt-7 text-[18px] sm:text-[20px] text-slate-700 leading-relaxed max-w-2xl">
               {playbook ? (
@@ -239,26 +306,57 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Pathway Router with animated Prism illustration behind it.
-              Desktop: illustration sits beside card. Mobile: illustration is
-              absolutely positioned with low opacity behind the headline. */}
+          {/* v63: 10x conversion lever — live voice demo embedded directly in
+              the hero. Visitor lands → sees a working AI agent in 5 seconds →
+              can talk to it without signing up. */}
           <div className="relative flex items-center justify-center lg:justify-end">
-            <HeroIllustration className="hidden lg:block absolute -right-10 -top-10 w-[420px] h-[420px] pointer-events-none opacity-90 -z-10" />
-            <HeroIllustration className="lg:hidden absolute inset-0 pointer-events-none opacity-30 -z-10" />
-            <div className="relative w-full max-w-md">
-              {/* Soft halo behind the card to keep it floating in the brand hero */}
-              <div
-                className="absolute -inset-6 rounded-[32px] blur-2xl opacity-70 pointer-events-none -z-10"
-                style={{ background: "radial-gradient(closest-side, #BDDAF4 0%, rgba(189,218,244,0) 70%)" }}
-              />
-              <PathwayRouter />
-              <div className="mt-3 text-center text-[12px] text-slate-600">
-                Four years deep in AI · Every major model
+            <HeroIllustration className="hidden lg:block absolute -right-10 -top-10 w-[420px] h-[420px] pointer-events-none opacity-60 -z-10" />
+            <HeroIllustration className="lg:hidden absolute inset-0 pointer-events-none opacity-20 -z-10" />
+            <HeroVoiceEmbed />
+          </div>
+        </div>
+
+        {/* v63: pathway router demoted to a slide-down "personalize this site"
+            expander below the hero so the live demo gets the prime real estate. */}
+        <div className="max-w-7xl mx-auto mt-10 sm:mt-14">
+          <div className="rounded-2xl bg-white border border-slate-200 px-5 py-4 sm:px-6 sm:py-5">
+            <button
+              type="button"
+              onClick={() => setPathwayOpen((o) => !o)}
+              aria-expanded={pathwayOpen}
+              className="w-full flex items-center justify-between gap-4 text-left"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold">
+                  Personalize this site
+                </span>
+                <span className="hidden sm:inline text-[13px] text-slate-600">
+                  Tell us your role + industry → we'll re-skin the rest of the page.
+                </span>
               </div>
-            </div>
+              <span
+                className={`text-[#185FA5] text-[20px] leading-none transition-transform ${pathwayOpen ? "rotate-45" : ""}`}
+                aria-hidden="true"
+              >
+                +
+              </span>
+            </button>
+            {pathwayOpen && (
+              <div className="mt-4 pt-4 border-t border-slate-100">
+                <PathwayRouter />
+                <div className="mt-3 text-center text-[12px] text-slate-600">
+                  Four years deep in AI · Every major model
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
+
+      {/* v63: LIVE KPI STRIP — real numbers pulled from /api/public-metrics,
+          above the fold. Closes Grok Heavy's "move /metrics + /proof numbers
+          to home page above fold" callout. */}
+      <LiveKpiStrip />
 
       {/* v61: "More ways to see it work" — secondary CTAs demoted from hero */}
       <section className="px-5 sm:px-8 py-6 sm:py-8 bg-white border-y border-slate-200/70">
