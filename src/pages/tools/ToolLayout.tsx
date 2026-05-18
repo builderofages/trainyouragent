@@ -20,13 +20,27 @@ type Props = {
   children: ReactNode;
 };
 
-// v61: titles passed in sometimes end with an em-dash (because the visual
-// hero composes title + italicTail). Strip trailing dash/whitespace before
-// composing the <title> so we never produce "Foo — — TrainYourAgent Tools".
+// v68: titles passed in sometimes end with an em-dash (because the visual
+// hero composes title + italicTail using the em-dash as the intended
+// separator). PRESERVE that em-dash when composing the <title> so the
+// browser tab reads "Foo — bar" not "Foo bar". Only strip trailing junk
+// from the tail itself, and avoid emitting double separators.
 function cleanTitle(t: string, tail?: string): string {
-  const base = t.replace(/[\s—–\-:·]+$/u, "").trim();
-  const t2 = tail ? `${base} ${tail.replace(/[\s—–\-:·]+$/u, "").trim()}` : base;
-  return t2.replace(/\s+/g, " ").trim();
+  // Detect intentional em-dash separator at end of title.
+  const hasEmDashSeparator = /[\s]*[—–][\s]*$/u.test(t);
+  // Strip trailing whitespace/colons/middots but PRESERVE em-dash if present.
+  const base = t.replace(/[\s:·\-]+$/u, "").trim();
+  const cleanedTail = tail ? tail.replace(/[\s—–\-:·]+$/u, "").trim() : "";
+  let out: string;
+  if (!cleanedTail) {
+    out = base;
+  } else if (hasEmDashSeparator) {
+    // base already ends with em-dash; just append space + tail.
+    out = `${base} ${cleanedTail}`;
+  } else {
+    out = `${base} ${cleanedTail}`;
+  }
+  return out.replace(/\s+/g, " ").trim();
 }
 
 export default function ToolLayout({ eyebrow, title, italicTail, subtitle, children }: Props) {

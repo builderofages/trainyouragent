@@ -231,6 +231,8 @@ const ALT_VERTICALS = [
   "hvac","healthcare","real-estate","legal","roofing",
   "solar","ecommerce","hospitality","accounting","automotive",
 ];
+// v68: competitor-only alternative pages (no vertical attached)
+const ALT_COMPETITOR_ONLY = ["zapier","intercom"];
 
 // ---- v47B: LOCAL /local/{citySlug}/{verticalSlug} (120 LPs + /local hub) --
 const LOCAL_CITIES = [
@@ -295,6 +297,11 @@ export default async function handler(_req: Request): Promise<Response> {
     for (const v of ALT_VERTICALS) {
       lines.push(urlNode(`/alternatives/${c}-for-${v}`, 0.7, "monthly", today));
     }
+  }
+
+  // v68: competitor-only alternative LPs (e.g. /alternatives/zapier)
+  for (const c of ALT_COMPETITOR_ONLY) {
+    lines.push(urlNode(`/alternatives/${c}`, 0.8, "monthly", today));
   }
 
   // v47B: /local hub + 120 city x vertical LPs

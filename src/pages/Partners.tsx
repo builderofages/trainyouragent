@@ -6,7 +6,7 @@
 // real interest.
 
 import { useEffect, useState, type FormEvent } from "react";
-import Header from "@/components/Header";
+import SiteNav from "@/components/SiteNav";
 import Footer from "@/components/Footer";
 
 const FONT = "'Inter Tight', system-ui, -apple-system, sans-serif";
@@ -79,7 +79,7 @@ export default function Partners() {
 
   return (
     <div className="min-h-screen bg-white" style={{ fontFamily: FONT }}>
-      <Header />
+      <SiteNav />
 
       <section className="max-w-5xl mx-auto px-5 sm:px-8 pt-16 sm:pt-24 pb-12">
         <div className="text-[11px] uppercase tracking-[0.18em] font-semibold mb-4" style={{ color: BLUE }}>

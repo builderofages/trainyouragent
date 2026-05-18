@@ -59,6 +59,9 @@ export const ALT_COMPETITORS = {
   vapi:      { name: "Vapi",       url: "https://vapi.ai",        tag: "voice agent platform with builder UI" },
   retell:    { name: "Retell",     url: "https://retellai.com",   tag: "voice infra for developers" },
   airagent:  { name: "Air.ai",     url: "https://air.ai",         tag: "outbound AI sales agent platform" },
+  // v68: capture the two largest "vs TYA" search buckets
+  zapier:    { name: "Zapier",     url: "https://zapier.com",     tag: "generic workflow automation glue" },
+  intercom:  { name: "Intercom",   url: "https://intercom.com",   tag: "enterprise chat platform for B2B SaaS support" },
 } as const;
 
 export type AltCompetitorKey = keyof typeof ALT_COMPETITORS;
@@ -111,14 +114,20 @@ function parseSlug(
   }
   // Path B: single slug — split on the first "-for-"
   if (slugFromRouter) {
-    const idx = slugFromRouter.toLowerCase().indexOf("-for-");
+    const lower = slugFromRouter.toLowerCase();
+    const idx = lower.indexOf("-for-");
     if (idx > 0) {
-      const c = slugFromRouter.slice(0, idx).toLowerCase() as AltCompetitorKey;
-      const v = slugFromRouter.slice(idx + "-for-".length).toLowerCase() as AltVerticalKey;
+      const c = lower.slice(0, idx) as AltCompetitorKey;
+      const v = lower.slice(idx + "-for-".length) as AltVerticalKey;
       return {
         competitor: c in ALT_COMPETITORS ? c : null,
         vertical:   v in ALT_VERTICALS   ? v : null,
       };
+    }
+    // v68: competitor-only slug (e.g. /alternatives/zapier, /alternatives/intercom)
+    const c = lower as AltCompetitorKey;
+    if (c in ALT_COMPETITORS) {
+      return { competitor: c, vertical: null };
     }
   }
   return { competitor: null, vertical: null };
@@ -153,6 +162,82 @@ function buildHeroParagraph(competitor: { name: string; tag: string }, verticalL
 }
 
 /* ------------------------------------------------------------------ */
+/*  v68: COMPETITOR-ONLY content (no vertical attached)                */
+/*  Used when slug is just a competitor name like /alternatives/zapier */
+/* ------------------------------------------------------------------ */
+type CompetitorOnlySection = { h: string; body: string };
+type CompetitorOnlyContent = {
+  hero: string;
+  sections: CompetitorOnlySection[];
+  faq: { q: string; a: string }[];
+};
+
+export const COMPETITOR_ONLY_CONTENT: Partial<Record<AltCompetitorKey, CompetitorOnlyContent>> = {
+  zapier: {
+    hero: "Zapier is generic glue — it wires SaaS tools to each other and waits for you to design every step. TrainYourAgent ships a vertical-specific AI agent that answers the phone, qualifies the lead, books the appointment, and writes back to your CRM in 21 days. Different category, different outcome.",
+    sections: [
+      {
+        h: "Workflow automation vs vertical AI agents.",
+        body: "Zapier is a horizontal automation platform: triggers, actions, paths, filters. It's powerful, but it assumes you already know the workflow and can decompose it into ~12 steps per Zap. TrainYourAgent isn't a workflow builder — it's a deployed AI agent built for one industry at a time (HVAC, healthcare, real estate, legal). The agent decides what to do at runtime based on the conversation, not based on a static if/then graph.",
+      },
+      {
+        h: "Generic glue vs CRM-wired voice + chat.",
+        body: "On Zapier you connect your CRM, your calendar, your dialer, your SMS — and then you build the logic. With TrainYourAgent the voice/chat agent ships pre-wired to ServiceTitan, Housecall Pro, Follow Up Boss, Clio, Athena, Shopify, and 40+ vertical-specific systems. Day 1 the agent can read a customer's history, book the right tech, and write the call summary back to the deal record.",
+      },
+      {
+        h: "Design-every-step vs 21-day deploy.",
+        body: "Zapier's cost is mostly your time: most teams spend 3–6 months building, debugging, and maintaining their Zap library. TrainYourAgent ships a complete production agent in 21 days, tuned weekly by a real engineer. No Zap maintenance, no broken authentications at 2am, no \"works for everything except the case that just came in.\"",
+      },
+    ],
+    faq: [
+      {
+        q: "Can TrainYourAgent replace my Zapier workflows?",
+        a: "For the customer-facing parts — yes. The voice agent handles inbound calls, the chat agent handles inbound web/SMS, and both write back to your CRM. For backoffice automation (e.g. \"when a new contact lands in HubSpot, add a row to Google Sheets\"), Zapier is still the right tool. Most customers keep both.",
+      },
+      {
+        q: "How is pricing different?",
+        a: "Zapier prices on tasks ($19.99–$799+/mo). TrainYourAgent prices on the agent ($799–$2,499+/mo all-in: build, integrations, runtime, weekly tuning). For replacing 1 FTE worth of phone/chat coverage, our pricing is dramatically cheaper than the loaded cost of a CSR plus the per-task Zapier bill.",
+      },
+      {
+        q: "Do you offer a Zapier-style step builder?",
+        a: "No — by design. We don't think \"design every step\" is the right product for service businesses. We think \"hire an agent that already knows your industry\" is the right product. If you want to build Zaps, use Zapier.",
+      },
+    ],
+  },
+  intercom: {
+    hero: "Intercom is the enterprise chat platform for B2B SaaS support — Fin AI, Inbox, Help Center, Surveys, the works. TrainYourAgent is voice + chat AI for service-business inbound: HVAC, dental, law, real estate. Different ICP, different price point, different surface area.",
+    sections: [
+      {
+        h: "Enterprise B2B SaaS support vs SMB service-business inbound.",
+        body: "Intercom is built for product-led SaaS companies with thousands of support tickets per week. Their pricing reflects that ($74–$268/seat/mo, plus Fin AI usage). TrainYourAgent is built for service businesses (HVAC, dental, legal, real estate, roofing) where the inbound is calls and leads — not support tickets — and the operator is a 5-50 person team that needs answers booked, not deflected.",
+      },
+      {
+        h: "Chat-only vs voice + chat in one agent.",
+        body: "Intercom is fundamentally a web/in-app messaging platform. Voice (Fin Voice) is recent and add-on. TrainYourAgent ships voice and chat as one agent from Day 1 — the same brain answers the phone, the website chat, and the SMS. Customers don't have to repeat themselves across channels, and the agent has one unified conversation history per contact.",
+      },
+      {
+        h: "$74-$268/seat/mo vs $799/mo all-in.",
+        body: "Intercom: Essential $39/seat, Advanced $99/seat, Expert $139/seat — plus Fin resolutions at ~$0.99/resolution. A 10-seat support org runs ~$15K-$30K/yr before Fin. TrainYourAgent: voice + chat agent from $799/mo all-in — the build, the integrations, the runtime, the weekly tuning. For a service business under ~3K conversations/mo, our pricing is roughly 5-10× cheaper than the equivalent Intercom + Fin setup.",
+      },
+    ],
+    faq: [
+      {
+        q: "Is TrainYourAgent a real Intercom alternative?",
+        a: "If you're a B2B SaaS company with a help center, a product, and 10K MRR worth of support tickets — no, stay on Intercom. If you're a service business (HVAC, dental, real estate, etc.) and you bought Intercom because someone told you you needed a chat widget — yes, we're the better fit at a tenth of the cost.",
+      },
+      {
+        q: "Do you have a Help Center / ticket inbox / surveys?",
+        a: "No — we don't try to replace Intercom's surface area. We ship voice + chat AI agents that answer, qualify, and book. If you need a help center, articles, NPS surveys, and a seat-based inbox for a support team, that's Intercom's territory and we won't try to compete there.",
+      },
+      {
+        q: "How long does it take to switch?",
+        a: "21 days from kickoff. We wire the voice agent to your phone number, the chat agent to your website, and both to your CRM. You keep Intercom running for whatever support workflows still need it (often none, for service businesses) and we cut over the inbound traffic.",
+      },
+    ],
+  },
+};
+
+/* ------------------------------------------------------------------ */
 /*  Page                                                              */
 /* ------------------------------------------------------------------ */
 const AlternativeFor = () => {
@@ -162,20 +247,32 @@ const AlternativeFor = () => {
 
   const cMeta = cKey ? ALT_COMPETITORS[cKey] : null;
   const vMeta = vKey ? ALT_VERTICALS[vKey] : null;
+  // v68: competitor-only mode (e.g. /alternatives/zapier)
+  const competitorOnly = cMeta && !vMeta ? COMPETITOR_ONLY_CONTENT[cKey as AltCompetitorKey] ?? null : null;
   // Reuse VerticalPage's rich content map for "why {vertical} businesses choose us" bullets
   const richContent = vMeta ? VERTICAL_CONTENT[vMeta.verticalSlug] : null;
 
   const faq = useMemo(() => {
-    if (!cMeta || !vMeta) return [];
-    return buildFaq(cMeta.name, vMeta.label, vMeta.nounPlural);
-  }, [cMeta, vMeta]);
+    if (!cMeta) return [];
+    if (vMeta) return buildFaq(cMeta.name, vMeta.label, vMeta.nounPlural);
+    if (competitorOnly) return competitorOnly.faq;
+    return [];
+  }, [cMeta, vMeta, competitorOnly]);
 
   useEffect(() => {
-    if (typeof document === "undefined" || !cMeta || !vMeta) return;
+    if (typeof document === "undefined" || !cMeta) return;
+    // Render path requires either a vertical OR a competitor-only content map.
+    if (!vMeta && !competitorOnly) return;
 
-    const title = `TrainYourAgent vs ${cMeta.name} for ${vMeta.label} businesses — alternative for ${vMeta.nounPlural}`;
-    const desc = `Looking for a ${cMeta.name} alternative for your ${vMeta.label.toLowerCase()} business? TrainYourAgent ships a done-for-you AI agent in 14 days with native ${vMeta.label.toLowerCase()}-stack integrations. Honest comparison and pricing inside.`;
-    const url = `${SITE_URL}/alternatives/${cKey}-for-${vKey}`;
+    const title = vMeta
+      ? `TrainYourAgent vs ${cMeta.name} for ${vMeta.label} businesses — alternative for ${vMeta.nounPlural}`
+      : `TrainYourAgent vs ${cMeta.name} — the honest ${cMeta.name} alternative`;
+    const desc = vMeta
+      ? `Looking for a ${cMeta.name} alternative for your ${vMeta.label.toLowerCase()} business? TrainYourAgent ships a done-for-you AI agent in 14 days with native ${vMeta.label.toLowerCase()}-stack integrations. Honest comparison and pricing inside.`
+      : `Looking for a ${cMeta.name} alternative? TrainYourAgent is a vertical-specific voice + chat AI agent — wired to your CRM, deployed in 21 days. Honest comparison and pricing inside.`;
+    const url = vMeta
+      ? `${SITE_URL}/alternatives/${cKey}-for-${vKey}`
+      : `${SITE_URL}/alternatives/${cKey}`;
 
     document.title = title;
 
@@ -232,7 +329,7 @@ const AlternativeFor = () => {
     return () => {
       // Leave the JSON-LD in place; the next render will overwrite it.
     };
-  }, [cMeta, vMeta, cKey, vKey, faq]);
+  }, [cMeta, vMeta, competitorOnly, cKey, vKey, faq]);
 
   useEffect(() => {
     const f = () => setNavScrolled(window.scrollY > 20);
@@ -241,21 +338,178 @@ const AlternativeFor = () => {
   }, []);
 
   // 404 fallback
-  if (!cMeta || !vMeta) {
+  // 404 fallback (v68): when slug is unknown, render the actual list of
+  //                     valid alternative slugs so the page becomes a
+  //                     discovery surface instead of a dead end.
+  if (!cMeta || (!vMeta && !competitorOnly)) {
+    const competitorSlugs = Object.keys(ALT_COMPETITORS) as AltCompetitorKey[];
+    const requested = params.slug ?? `${params.competitor ?? ""}${params.vertical ? `-for-${params.vertical}` : ""}`;
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center px-5" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
-        <div className="text-center max-w-md">
-          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Page not found</div>
-          <h1 className="text-[28px] font-semibold text-[#042C53] mb-4">We don't have a page for that combo — yet.</h1>
-          <p className="text-[15px] text-slate-600 mb-6">Try our general comparison page, or book a call and we'll talk through your stack.</p>
-          <div className="flex gap-3 justify-center">
-            <Link to="/comparisons" className="px-4 py-2 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[13px] font-medium">See comparisons</Link>
-            <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium">Book a call</a>
+      <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+        <SiteNav active="comparisons" />
+        <section className="pt-32 pb-12 px-5 sm:px-8">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Page not found</div>
+            <h1 className="text-[32px] sm:text-[40px] font-semibold text-[#042C53] mb-4 tracking-tight">
+              We don't have a page for <span className="font-mono text-[#185FA5]">{requested || "that"}</span> — yet.
+            </h1>
+            <p className="text-[15px] sm:text-[16px] text-slate-700 max-w-2xl mb-8 leading-relaxed">
+              Here are the alternative pages we DO have. Pick the one that matches what you're shopping for, or book a call and we'll talk through your stack directly.
+            </p>
+
+            <h2 className="text-[18px] sm:text-[20px] font-semibold text-[#042C53] mb-3">Compare us to a competitor</h2>
+            <div className="flex flex-wrap gap-2 mb-8">
+              {competitorSlugs.map((c) => (
+                <Link
+                  key={c}
+                  to={`/alternatives/${c}`}
+                  className="px-3.5 py-1.5 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[13px] font-medium hover:bg-[#D6E7F6]"
+                >
+                  /alternatives/{c}
+                </Link>
+              ))}
+            </div>
+
+            <h2 className="text-[18px] sm:text-[20px] font-semibold text-[#042C53] mb-3">Or by competitor + industry (50 pages)</h2>
+            <div className="flex flex-wrap gap-2 mb-8 max-h-64 overflow-y-auto p-2 rounded-xl border border-slate-200 bg-slate-50">
+              {ALL_ALTERNATIVE_SLUGS.map((slug) => (
+                <Link
+                  key={slug}
+                  to={`/alternatives/${slug}`}
+                  className="px-2.5 py-1 rounded-full bg-white text-slate-700 text-[12px] font-medium hover:text-[#185FA5] border border-slate-200"
+                >
+                  {slug}
+                </Link>
+              ))}
+            </div>
+
+            <div className="flex gap-3 flex-wrap">
+              <Link to="/comparisons" className="px-4 py-2 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[14px] font-medium">All comparisons</Link>
+              <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[14px] font-medium">Book a call</a>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
     );
   }
+
+  // v68: competitor-only render path (e.g. /alternatives/zapier)
+  if (competitorOnly && cMeta) {
+    return (
+      <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+        <SiteNav active="comparisons" />
+
+        {/* HERO */}
+        <section className="pt-32 pb-12 px-5 sm:px-8 bg-gradient-to-b from-[#E6F1FB]/40 to-white">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">
+              {cMeta.name} alternative
+            </div>
+            <h1
+              className="text-[36px] sm:text-[52px] leading-[1.05] font-semibold text-[#042C53] tracking-tight mb-5"
+              style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 600 }}
+            >
+              TrainYourAgent vs {cMeta.name}.
+            </h1>
+            <p className="text-[17px] sm:text-[19px] leading-[1.55] text-slate-700 max-w-3xl mb-7">
+              {competitorOnly.hero}
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={CAL_URL}
+                target="_blank"
+                rel="noopener"
+                className="px-5 py-3 rounded-full bg-[#042C53] text-white text-[14px] font-medium hover:bg-[#0A3D6E] shadow-sm"
+              >
+                Book a 30-min build call
+              </a>
+              <Link
+                to="/comparisons"
+                className="px-5 py-3 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[14px] font-medium hover:bg-[#D6E7F6]"
+              >
+                All comparisons
+              </Link>
+              <a
+                href={cMeta.url}
+                target="_blank"
+                rel="noopener nofollow"
+                className="px-5 py-3 rounded-full border border-slate-300 text-slate-700 text-[14px] font-medium hover:bg-slate-50"
+              >
+                Visit {cMeta.name} →
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* THREE SECTIONS */}
+        <section className="py-14 px-5 sm:px-8">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-5">
+            {competitorOnly.sections.map((s, i) => (
+              <div key={i} className="rounded-2xl border border-slate-200 p-6 bg-white">
+                <div className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold mb-2">0{i + 1}</div>
+                <div className="text-[18px] font-semibold text-[#042C53] mb-3">{s.h}</div>
+                <div className="text-[14px] leading-[1.6] text-slate-700">{s.body}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="py-14 px-5 sm:px-8 bg-[#E6F1FB]/40">
+          <div className="max-w-3xl mx-auto">
+            <h2
+              className="text-[24px] sm:text-[30px] font-semibold text-[#042C53] mb-6 tracking-tight"
+              style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 600 }}
+            >
+              Common questions about switching from {cMeta.name}.
+            </h2>
+            <div className="space-y-3">
+              {faq.map((f, i) => (
+                <details key={i} className="rounded-xl bg-white border border-slate-200 px-5 py-4 group">
+                  <summary className="cursor-pointer text-[15px] font-semibold text-[#042C53] list-none flex justify-between items-center">
+                    <span>{f.q}</span>
+                    <span className="text-[#185FA5] group-open:rotate-45 transition-transform text-[20px] leading-none">+</span>
+                  </summary>
+                  <div className="mt-3 text-[14px] leading-[1.6] text-slate-700">{f.a}</div>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="py-16 px-5 sm:px-8">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2
+              className="text-[28px] sm:text-[36px] font-semibold text-[#042C53] mb-4 tracking-tight"
+              style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 600 }}
+            >
+              See it deployed for your business in 21 days.
+            </h2>
+            <p className="text-[15px] text-slate-600 mb-7 max-w-xl mx-auto">
+              30 minutes. We map your inbound, your CRM, your stack. You leave with a build plan and a price — not a sales pitch.
+            </p>
+            <a
+              href={CAL_URL}
+              target="_blank"
+              rel="noopener"
+              className="inline-block px-7 py-3.5 rounded-full bg-[#042C53] text-white text-[15px] font-medium hover:bg-[#0A3D6E] shadow-sm"
+            >
+              Book a 30-min build call →
+            </a>
+            <div className="mt-6 text-[12px] text-slate-500">
+              <Link to="/comparisons" className="underline">All comparisons</Link>
+              {" · "}
+              <Link to="/pricing" className="underline">Pricing</Link>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // vMeta guaranteed below this point
+  if (!vMeta) return null;
 
   const heroPara = buildHeroParagraph(cMeta, vMeta.label, vMeta.nounPlural);
   // Pull 3 vertical bullets from VERTICAL_CONTENT.tools[].outcome (with fallback)
