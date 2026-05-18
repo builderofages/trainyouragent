@@ -8,7 +8,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const CACHE_KEY = "tya:ships:year:v3";
+// v66: bumped cache key — switched data source to data.last52Weeks (real, not capped)
+const CACHE_KEY = "tya:ships:year:v4";
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour — counter doesn't need real-time
 
 type Cached = { ts: number; year: number; count: number };
@@ -32,28 +33,25 @@ function writeCache(year: number, count: number) {
   } catch {}
 }
 
-async function fetchYearCount(year: number): Promise<number> {
-  // v65: use proxy. Proxy returns the last 100 commits (more than enough
-  // for year-to-date for this repo's cadence).
-  const sinceMs = Date.UTC(year, 0, 1);
-  const untilMs = Date.UTC(year + 1, 0, 1);
+async function fetchYearCount(_year: number): Promise<number> {
+  // v66: use proxy's HONEST numbers. The previous version counted commits
+  // inside data.commits (capped at GitHub's per_page=100), which under-
+  // reported any year with > 100 commits. The proxy now exposes:
+  //   - last52Weeks: sum of weekly-participation buckets (real, GitHub-computed)
+  //   - totalCommits: exact lifetime total via pagination Link header
+  // For a "builds shipped this year" counter, last52Weeks is the right
+  // signal (52 trailing weeks ~ 1 year, real numbers).
   const r = await fetch("/api/github-velocity", { headers: { Accept: "application/json" } });
   if (!r.ok) throw new Error(`velocity ${r.status}`);
   const data = (await r.json()) as {
-    commits?: Array<{ date?: string | null }>;
+    last52Weeks?: number;
+    totalCommits?: number;
     error?: string;
   };
-  if (data.error || !Array.isArray(data.commits)) {
-    throw new Error(data.error || "bad payload");
-  }
-  let total = 0;
-  for (const c of data.commits) {
-    if (!c.date) continue;
-    const t = new Date(c.date).getTime();
-    if (Number.isNaN(t)) continue;
-    if (t >= sinceMs && t < untilMs) total += 1;
-  }
-  return total;
+  if (data.error) throw new Error(data.error);
+  if (typeof data.last52Weeks === "number") return data.last52Weeks;
+  if (typeof data.totalCommits === "number") return data.totalCommits;
+  throw new Error("bad payload");
 }
 
 type Props = {

@@ -23,6 +23,7 @@ type Velocity = {
   commitsLast7d: number | null;
   commitsLast30d: number | null;
   commitsToday: number | null;
+  commitsAllTime: number | null;
   daysPublic: number | null;
 };
 
@@ -44,6 +45,7 @@ function useGitHubVelocity(): VelocityState {
     commitsLast7d: null,
     commitsLast30d: null,
     commitsToday: null,
+    commitsAllTime: null,
     daysPublic: initialDays,
     status: "loading",
   });
@@ -52,8 +54,10 @@ function useGitHubVelocity(): VelocityState {
     // min TTL) replaces direct fetch to api.github.com. The old client-side
     // call hit the unauthenticated 60/IP/hr rate limit and rendered "see
     // GitHub" fallbacks instead of real numbers.
-    const CACHE_KEY = "tya:velocity:v2"; // bumped key — old shape is fine but
-    const CACHE_TS = "tya:velocity:ts:v2"; // bumping clears stale "error" states.
+    // v66: bumped cache key to v4 — payload shape changed (added commitsAllTime,
+    // remapped today/last7d/last30d to the honest /api/github-velocity fields).
+    const CACHE_KEY = "tya:velocity:v4";
+    const CACHE_TS = "tya:velocity:ts:v4";
     const MAX_AGE = 1000 * 60 * 30;
     try {
       const ts = Number(localStorage.getItem(CACHE_TS) || "0");
@@ -71,12 +75,13 @@ function useGitHubVelocity(): VelocityState {
         });
         if (!r.ok) throw new Error(`velocity ${r.status}`);
         const data = (await r.json()) as {
-          today?: number;
-          last7d?: number;
-          last30d?: number;
+          todayCount?: number;
+          last1Week?: number;
+          last4Weeks?: number;
+          totalCommits?: number;
           error?: string;
         };
-        if (data.error || typeof data.today !== "number") {
+        if (data.error || typeof data.todayCount !== "number") {
           throw new Error(data.error || "bad payload");
         }
         const day = 86400000;
@@ -85,9 +90,10 @@ function useGitHubVelocity(): VelocityState {
           Math.floor((Date.now() - FIRST_COMMIT_MS) / day),
         );
         const next: Velocity = {
-          commitsToday: data.today ?? 0,
-          commitsLast7d: data.last7d ?? 0,
-          commitsLast30d: data.last30d ?? 0,
+          commitsToday: data.todayCount ?? 0,
+          commitsLast7d: data.last1Week ?? 0,
+          commitsLast30d: data.last4Weeks ?? 0,
+          commitsAllTime: data.totalCommits ?? 0,
           daysPublic,
         };
         setV({ ...next, status: "ok" });
@@ -297,11 +303,12 @@ export default function Proof() {
               {REPO.replace("https://", "")}
             </a>. If you don't trust the cached number, click through and count.
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
-            <Stat label="Commits today" value={v.commitsToday === null ? (v.status === "error" ? "see GitHub" : "…") : String(v.commitsToday)} sub="resets at local midnight" />
-            <Stat label="Commits last 7d" value={v.commitsLast7d === null ? (v.status === "error" ? "see GitHub" : "…") : String(v.commitsLast7d)} sub="all on main" />
-            <Stat label="Commits last 30d" value={v.commitsLast30d === null ? (v.status === "error" ? "see GitHub" : "…") : String(v.commitsLast30d)} sub="sustained ship rate" />
-            <Stat label="Days building public" value={v.daysPublic === null ? "…" : String(v.daysPublic)} sub="since first commit" />
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-6">
+            <Stat label="Commits today" value={v.commitsToday === null ? (v.status === "error" ? "see GitHub" : "…") : String(v.commitsToday)} sub="resets at midnight" />
+            <Stat label="Commits last 7d" value={v.commitsLast7d === null ? (v.status === "error" ? "see GitHub" : "…") : String(v.commitsLast7d)} sub="via GitHub participation" />
+            <Stat label="Commits last 30d" value={v.commitsLast30d === null ? (v.status === "error" ? "see GitHub" : "…") : String(v.commitsLast30d)} sub="4-week rolling" />
+            <Stat label="All-time commits" value={v.commitsAllTime === null ? (v.status === "error" ? "see GitHub" : "…") : String(v.commitsAllTime)} sub="since first commit" />
+            <Stat label="Days building public" value={v.daysPublic === null ? "…" : String(v.daysPublic)} sub="lifetime" />
           </div>
           {v.status === "error" && (
             <div className="mt-3 text-[12.5px] text-slate-600">

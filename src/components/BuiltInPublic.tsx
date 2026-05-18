@@ -11,7 +11,9 @@
 import { useEffect, useState } from "react";
 
 const REPO_API = "/api/github-velocity";
-const CACHE_KEY = "tya:bip:commits:v3";
+// v66: bumped cache key to v4 — sessionStorage shape carried over; bumping
+// guarantees a fresh fetch off the new /api/github-velocity payload shape.
+const CACHE_KEY = "tya:bip:commits:v4";
 const CACHE_TTL_MS = 60 * 1000;
 
 export type BipCommit = {

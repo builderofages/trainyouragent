@@ -49,6 +49,9 @@ type Payload = {
 export default function Metrics() {
   const [data, setData] = useState<Payload | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  // v66: live-override the static `business.totalCommits` (which is hand-
+  // bumped each release) with the real number from /api/github-velocity.
+  const [liveTotalCommits, setLiveTotalCommits] = useState<number | null>(null);
 
   useEffect(() => {
     if (typeof document !== "undefined") {
@@ -74,6 +77,14 @@ export default function Metrics() {
       .then((r) => { if (!r.ok) throw new Error("status " + r.status); return r.json(); })
       .then((j: Payload) => { if (!cancelled) setData(j); })
       .catch((e) => { if (!cancelled) setErr(String(e?.message || e)); });
+    // v66: pull the real total from the velocity proxy (pagination Link header).
+    fetch("/api/github-velocity")
+      .then((r) => r.ok ? r.json() : null)
+      .then((j) => {
+        if (cancelled || !j) return;
+        if (typeof j.totalCommits === "number") setLiveTotalCommits(j.totalCommits);
+      })
+      .catch(() => { /* ignore */ });
     return () => { cancelled = true; };
   }, []);
 
@@ -158,7 +169,7 @@ export default function Metrics() {
             <Kpi label="Years in AI" value={data?.business.yearsInAi} sub="founder track record" />
             <Kpi label="Live URLs" value={data?.business.livePages} sub="verifiable via /sitemap.xml" />
             <Kpi label="Blog posts" value={data?.business.blogPosts} sub="long-form, published" />
-            <Kpi label="Total commits" value={data?.business.totalCommits} sub="builderofages/trainyouragent" />
+            <Kpi label="Total commits" value={liveTotalCommits ?? data?.business.totalCommits} sub="live via /api/github-velocity" />
             <Kpi label="Niche playbooks" value={data?.business.niches} sub="hand-edited operator content" />
           </div>
           <p className="mt-3 text-[12px] text-slate-500">
@@ -421,8 +432,9 @@ function GitHubVelocityCards() {
   }>({ last7d: null, last30d: null, today: null, daysPublic: null });
 
   useEffect(() => {
-    const CACHE_KEY = "tya:velocity:v1";
-    const CACHE_TS = "tya:velocity:ts:v1";
+    // v66: bumped cache key to v4 — payload shape changed, see api/github-velocity.ts
+    const CACHE_KEY = "tya:velocity:v4";
+    const CACHE_TS = "tya:velocity:ts:v4";
     const MAX_AGE = 1000 * 60 * 30;
 
     try {
@@ -443,20 +455,20 @@ function GitHubVelocityCards() {
         });
         if (!r.ok) return;
         const data = (await r.json()) as {
-          today?: number;
-          last7d?: number;
-          last30d?: number;
+          todayCount?: number;
+          last1Week?: number;
+          last4Weeks?: number;
           error?: string;
         };
-        if (data.error || typeof data.today !== "number") return;
+        if (data.error || typeof data.todayCount !== "number") return;
         const now = Date.now();
         const day = 86400000;
         const firstCommit = new Date("2025-11-07T20:25:45Z").getTime();
         const daysPublic = Math.max(1, Math.floor((now - firstCommit) / day));
         const next = {
-          last7d: data.last7d ?? 0,
-          last30d: data.last30d ?? 0,
-          today: data.today ?? 0,
+          last7d: data.last1Week ?? 0,
+          last30d: data.last4Weeks ?? 0,
+          today: data.todayCount ?? 0,
           daysPublic,
         };
         setStats(next);

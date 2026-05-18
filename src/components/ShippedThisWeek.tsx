@@ -16,8 +16,9 @@ type Commit = {
 };
 
 const REPO_BASE = "https://github.com/builderofages/trainyouragent/commit/";
-const CACHE_KEY = "tya:shipped:cache:v3";
-const CACHE_TS = "tya:shipped:ts:v3";
+// v66: bumped cache key to v4 so stale v3 caches don't shadow new payload shape.
+const CACHE_KEY = "tya:shipped:cache:v4";
+const CACHE_TS = "tya:shipped:ts:v4";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const CACHE_MAX_AGE = 1000 * 60 * 30; // 30 min
 

@@ -25,7 +25,7 @@ const BUSINESS_TRUTH = {
   yearsInAi: 4,
   livePages: 564,                // verifiable in /api/sitemap.xml
   blogPosts: 70,                 // v40 + v42 + v50c = 7 + 10 + 50
-  totalCommits: 336,             // git rev-list --count HEAD on builderofages/trainyouragent
+  totalCommits: 343,             // v66 verified via /api/github-velocity pagination Link header — updated each release
   niches: 15,                    // /playbooks/* count
 };
 

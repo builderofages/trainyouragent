@@ -1,15 +1,18 @@
-// src/components/CommitGraph.tsx
-// v65 — 90-day commit heatmap (GitHub-style) for /proof.
-// Pure SVG, no library. Pulls commits from the server-side proxy
-// /api/github-velocity (cached, rate-limit-safe) instead of hitting
-// api.github.com directly from the browser. The proxy returns
-// dayBuckets, longestStreak, and mostActiveDay so this component
-// renders without any additional computation when possible.
+// src/components/CommitGraph.tsx — v66
+// HONEST weekly heatmap: each cell = one week (52 cells = 1 year), color
+// intensity proportional to commits/week. The old per-day heatmap was
+// derived from the latest 100 commits and reported "100 commits in last 91
+// days" — that was just the GitHub API per_page cap, not the real number.
+// /api/github-velocity now returns:
+//   - weeklyAll: 52 weekly commit counts (from GitHub /stats/participation)
+//   - totalCommits: exact total via pagination Link header
+//   - mostActiveWeek: { weeksAgo, count }
+//   - last13Weeks: real 13-week sum
+// Cache key bumped to v4 to flush stale v3 dayBuckets-shaped data.
 
 import { useEffect, useMemo, useState } from "react";
 
 const REPO = "builderofages/trainyouragent";
-const DAYS = 91; // 13 weeks × 7 days
 
 const NAVY = "#042C53";
 const BLUE = "#185FA5";
@@ -18,136 +21,97 @@ const CELL = 14;
 const GAP = 3;
 const RADIUS = 3;
 
-// 5 buckets: 0, 1, 2-4, 5-9, 10+
+// 5 buckets, color intensity scaled vs. weeklyMax
 const COLORS = ["#EEF2F7", "#C8DDF1", "#7FB1DF", "#3984C8", NAVY];
 
-function bucket(n: number): number {
-  if (n <= 0) return 0;
-  if (n === 1) return 1;
-  if (n <= 4) return 2;
-  if (n <= 9) return 3;
+function bucketByMax(n: number, max: number): number {
+  if (n <= 0 || max <= 0) return 0;
+  const r = n / max;
+  if (r <= 0.05) return 1;
+  if (r <= 0.25) return 2;
+  if (r <= 0.6) return 3;
   return 4;
 }
 
-type CellData = { date: Date; key: string; count: number };
+type Payload = {
+  totalCommits?: number;
+  weeklyAll?: number[];
+  mostActiveWeek?: { weeksAgo: number; count: number } | null;
+  last13Weeks?: number;
+  error?: string;
+};
 
-function startOfDay(d: Date): Date {
-  const x = new Date(d);
-  x.setHours(0, 0, 0, 0);
-  return x;
-}
-
-function isoKey(d: Date): string {
-  return d.toISOString().slice(0, 10);
-}
-
-function formatDayLong(d: Date): string {
-  return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-}
-
-function pluralize(n: number, one: string, many: string): string {
-  return `${n} ${n === 1 ? one : many}`;
-}
-
-export default function CommitGraph({ days = DAYS }: { days?: number }) {
-  const [counts, setCounts] = useState<Record<string, number> | null>(null);
+export default function CommitGraph() {
+  const [data, setData] = useState<Payload | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
-    // v65: bumped cache key to v3 to flush any stale empty/error state from
-    // the previous direct-fetch implementation.
-    const CACHE_KEY = "tya:commitgraph:v3";
-    const CACHE_TS = "tya:commitgraph:ts:v3";
-    const MAX_AGE = 1000 * 60 * 30; // 30 min
+    // v66: bumped cache key to v4 to flush stale v3 dayBuckets-shaped data.
+    const CACHE_KEY = "tya:commitgraph:v4";
+    const CACHE_TS = "tya:commitgraph:ts:v4";
+    const MAX_AGE = 1000 * 60 * 30;
     try {
       const ts = Number(localStorage.getItem(CACHE_TS) || "0");
       const raw = localStorage.getItem(CACHE_KEY);
       if (ts && raw && Date.now() - ts < MAX_AGE) {
-        const parsed = JSON.parse(raw) as Record<string, number>;
-        if (parsed && Object.keys(parsed).length > 0) {
-          setCounts(parsed);
+        const parsed = JSON.parse(raw) as Payload;
+        if (parsed && Array.isArray(parsed.weeklyAll) && parsed.weeklyAll.length > 0) {
+          setData(parsed);
           return;
         }
       }
     } catch { /* ignore */ }
+
     (async () => {
       try {
-        // Server-side proxy: see api/github-velocity.ts. Cached in-memory
-        // for 30 min on the edge — never hits the GitHub 60/hr/IP limit.
         const r = await fetch("/api/github-velocity", {
           headers: { Accept: "application/json" },
         });
         if (!r.ok) throw new Error(`velocity ${r.status}`);
-        const data = (await r.json()) as {
-          dayBuckets?: Record<string, number>;
-          error?: string;
-        };
-        if (data.error || !data.dayBuckets) {
-          throw new Error(data.error || "bad payload");
+        const payload = (await r.json()) as Payload;
+        if (payload.error || !Array.isArray(payload.weeklyAll)) {
+          throw new Error(payload.error || "bad payload");
         }
-        const c = data.dayBuckets;
-        setCounts(c);
+        setData(payload);
         try {
-          localStorage.setItem(CACHE_KEY, JSON.stringify(c));
+          localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
           localStorage.setItem(CACHE_TS, String(Date.now()));
         } catch { /* ignore */ }
       } catch (e) {
         setErr(e instanceof Error ? e.message : "fetch-failed");
       }
     })();
-  }, [days]);
+  }, []);
 
-  const { cells, weeks } = useMemo(() => {
-    const today = startOfDay(new Date());
-    const cells: CellData[] = [];
-    for (let i = days - 1; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(d.getDate() - i);
-      const key = isoKey(d);
-      cells.push({ date: d, key, count: counts?.[key] ?? 0 });
-    }
-    // Pad front to start on a Sunday column.
-    const leading = cells[0].date.getDay(); // 0=Sun..6=Sat
-    const pad: (CellData | null)[] = new Array(leading).fill(null);
-    const all: (CellData | null)[] = [...pad, ...cells];
-    // Pad tail so length % 7 === 0
-    while (all.length % 7 !== 0) all.push(null);
-    const weeks: (CellData | null)[][] = [];
-    for (let i = 0; i < all.length; i += 7) weeks.push(all.slice(i, i + 7));
-    return { cells, weeks };
-  }, [counts, days]);
+  const { weeklyAll, weeklyMax, mostActiveWeek, totalCommits, avgPerWeek } = useMemo(() => {
+    const weeks = data?.weeklyAll ?? [];
+    const max = weeks.reduce((m, n) => (n > m ? n : m), 0);
+    const last13 = data?.last13Weeks ?? weeks.slice(-13).reduce((a, b) => a + b, 0);
+    const avg = Math.round(last13 / 13);
+    return {
+      weeklyAll: weeks,
+      weeklyMax: max,
+      mostActiveWeek: data?.mostActiveWeek ?? null,
+      totalCommits: data?.totalCommits ?? null,
+      avgPerWeek: avg,
+    };
+  }, [data]);
 
-  // Stats
-  const stats = useMemo(() => {
-    let total = 0;
-    let longestStreak = 0;
-    let currentStreak = 0;
-    let bestDay: { date: Date; count: number } | null = null;
-    for (const c of cells) {
-      total += c.count;
-      if (c.count > 0) {
-        currentStreak += 1;
-        if (currentStreak > longestStreak) longestStreak = currentStreak;
-      } else {
-        currentStreak = 0;
-      }
-      if (!bestDay || c.count > bestDay.count) bestDay = { date: c.date, count: c.count };
-    }
-    return { total, longestStreak, bestDay };
-  }, [cells]);
-
-  const width = weeks.length * (CELL + GAP) + 24;
-  const height = 7 * (CELL + GAP) + 24;
+  // Layout: 52 cells in a single row (or wrap to 2 rows on narrow).
+  // We render as 1 row × 52 cols, plus quarterly labels.
+  const cols = weeklyAll.length || 52;
+  const width = cols * (CELL + GAP) + 8;
+  const height = CELL + 28;
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
       <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
         <div>
           <div className="text-[11px] uppercase tracking-[0.14em] font-semibold text-slate-500">
-            Last {days} days · live from GitHub
+            Weeks this year · live from GitHub
           </div>
           <h3 className="mt-0.5 text-[18px] font-semibold" style={{ color: NAVY }}>
-            Commit heatmap
+            Weekly commit heatmap
           </h3>
         </div>
         <a
@@ -163,45 +127,41 @@ export default function CommitGraph({ days = DAYS }: { days?: number }) {
       <div className="overflow-x-auto -mx-2 px-2">
         <svg
           role="img"
-          aria-label={`Commit heatmap for the last ${days} days`}
+          aria-label="Weekly commit heatmap, last 52 weeks"
           width={width}
           height={height}
           viewBox={`0 0 ${width} ${height}`}
           style={{ display: "block", minWidth: width }}
         >
-          {/* Cells */}
-          {weeks.map((wk, x) =>
-            wk.map((cell, y) => {
-              if (!cell) return null;
-              const cx = x * (CELL + GAP);
-              const cy = y * (CELL + GAP);
-              const b = bucket(cell.count);
-              const fill = COLORS[b];
-              const title =
-                cell.count === 0
-                  ? `${formatDayLong(cell.date)} — no commits`
-                  : `${formatDayLong(cell.date)} — ${pluralize(cell.count, "commit", "commits")}`;
-              return (
-                <g key={`${x}-${y}`}>
-                  <rect
-                    x={cx}
-                    y={cy}
-                    width={CELL}
-                    height={CELL}
-                    rx={RADIUS}
-                    ry={RADIUS}
-                    fill={fill}
-                    stroke={b === 0 ? "rgba(15,23,42,0.06)" : "rgba(4,44,83,0.08)"}
-                    strokeWidth={1}
-                  >
-                    <title>{title}</title>
-                  </rect>
-                </g>
-              );
-            }),
-          )}
+          {weeklyAll.map((count, i) => {
+            const cx = i * (CELL + GAP);
+            const b = bucketByMax(count, weeklyMax);
+            const fill = COLORS[b];
+            const weeksAgo = weeklyAll.length - 1 - i;
+            const label =
+              weeksAgo === 0
+                ? `This week — ${count} commit${count === 1 ? "" : "s"}`
+                : `${weeksAgo}w ago — ${count} commit${count === 1 ? "" : "s"}`;
+            return (
+              <g key={i}>
+                <rect
+                  x={cx}
+                  y={0}
+                  width={CELL}
+                  height={CELL}
+                  rx={RADIUS}
+                  ry={RADIUS}
+                  fill={fill}
+                  stroke={b === 0 ? "rgba(15,23,42,0.06)" : "rgba(4,44,83,0.08)"}
+                  strokeWidth={1}
+                >
+                  <title>{label}</title>
+                </rect>
+              </g>
+            );
+          })}
           {/* Legend */}
-          <g transform={`translate(0, ${7 * (CELL + GAP) + 8})`}>
+          <g transform={`translate(0, ${CELL + 12})`}>
             <text x={0} y={10} fontSize={10} fill="#64748B" fontFamily="'Inter Tight', sans-serif">
               Less
             </text>
@@ -233,15 +193,21 @@ export default function CommitGraph({ days = DAYS }: { days?: number }) {
       </div>
 
       <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-[13px]">
-        <Stat label={`Commits in last ${days} days`} value={String(stats.total)} />
-        <Stat label="Longest streak" value={`${stats.longestStreak} ${stats.longestStreak === 1 ? "day" : "days"}`} />
         <Stat
-          label="Most-active day"
+          label="Total commits"
+          value={totalCommits === null ? "—" : String(totalCommits)}
+        />
+        <Stat
+          label="Most-active week"
           value={
-            stats.bestDay && stats.bestDay.count > 0
-              ? `${formatDayLong(stats.bestDay.date)} · ${stats.bestDay.count}`
+            mostActiveWeek && mostActiveWeek.count > 0
+              ? `${mostActiveWeek.weeksAgo === 0 ? "this week" : `${mostActiveWeek.weeksAgo}w ago`} · ${mostActiveWeek.count}`
               : "—"
           }
+        />
+        <Stat
+          label="Avg / week (last 13w)"
+          value={avgPerWeek > 0 ? String(avgPerWeek) : "—"}
         />
       </div>
       {err && (
