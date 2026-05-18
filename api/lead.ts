@@ -154,6 +154,25 @@ const ALLOWED_SOURCES = new Set([
   "data-room-unlock",
   // v58: proof reframe — founding-customer slot application from /proof
   "founding-customer-apply",
+  // v67A: 3 new Groq-powered tools + 15 /build/{niche} landing pages
+  "tool:voice-script-generator",
+  "tool:cold-dm-generator",
+  "tool:diagnose",
+  "build-landing-hvac",
+  "build-landing-roofing",
+  "build-landing-plumbing",
+  "build-landing-electrical",
+  "build-landing-landscaping",
+  "build-landing-dental",
+  "build-landing-med-spa",
+  "build-landing-law-firm",
+  "build-landing-real-estate",
+  "build-landing-property-management",
+  "build-landing-restaurant",
+  "build-landing-auto-repair",
+  "build-landing-insurance",
+  "build-landing-fitness",
+  "build-landing-pest-control",
 ]);
 
 const MAX_BODY_BYTES = 16 * 1024; // 16 KB is plenty for a lead form

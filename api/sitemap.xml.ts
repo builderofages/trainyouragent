@@ -79,6 +79,10 @@ const STATIC_PAGES: { path: string; priority: number; changefreq: string }[] = [
   { path: "/tools/website-audit",       priority: 0.9,  changefreq: "weekly"  },
   { path: "/tools/agent-builder",       priority: 0.9,  changefreq: "weekly"  },
   { path: "/live",                      priority: 0.85, changefreq: "always"  },
+  // v67A: 3 new Groq-powered tools
+  { path: "/tools/voice-script-generator", priority: 0.85, changefreq: "monthly" },
+  { path: "/tools/cold-dm-generator",      priority: 0.85, changefreq: "monthly" },
+  { path: "/tools/diagnose",               priority: 0.85, changefreq: "monthly" },
   // v52B: founder log + glossary + whitelabel + reseller (data-room is noindex)
   { path: "/founder-log",               priority: 0.7,  changefreq: "daily"   },
   { path: "/glossary",                  priority: 0.8,  changefreq: "monthly" },
@@ -310,6 +314,11 @@ export default async function handler(_req: Request): Promise<Response> {
   lines.push(urlNode(`/playbooks`, 0.9, "weekly", today));
   for (const niche of PLAYBOOK_NICHES) {
     lines.push(urlNode(`/playbooks/${niche}`, 0.85, "monthly", today));
+  }
+
+  // v67A: 15 /build/{niche} per-niche conversion landing pages
+  for (const niche of PLAYBOOK_NICHES) {
+    lines.push(urlNode(`/build/${niche}`, 0.85, "weekly", today));
   }
 
   const xml =

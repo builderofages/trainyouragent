@@ -156,6 +156,14 @@ const WebsiteAudit         = lazy(() => import("./pages/tools/WebsiteAudit"));
 const AgentBuilder         = lazy(() => import("./pages/tools/AgentBuilder"));
 const Live                 = lazy(() => import("./pages/Live"));
 
+// v67A: case-study renderer + per-niche /build/{niche} + 3 Groq-powered tools
+const CaseStudyDetail        = lazy(() => import("./pages/CaseStudy"));
+const CaseStudiesIndexNew    = lazy(() => import("./pages/CaseStudiesIndex"));
+const BuildLanding           = lazy(() => import("./pages/BuildLanding"));
+const VoiceScriptGenerator   = lazy(() => import("./pages/tools/VoiceScriptGenerator"));
+const ColdDmGenerator        = lazy(() => import("./pages/tools/ColdDmGenerator"));
+const DiagnoseWizard         = lazy(() => import("./pages/tools/DiagnoseWizard"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -234,7 +242,11 @@ const App = () => {
             <Route path="/terms" element={<Terms />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             <Route path="/comparisons" element={<Comparisons />} />
-            <Route path="/case-studies" element={<CaseStudies />} />
+            {/* v67A: replaced hand-coded CaseStudies with JSON-driven index;
+                 the old page is preserved at /case-studies-legacy for fallback. */}
+            <Route path="/case-studies" element={<CaseStudiesIndexNew />} />
+            <Route path="/case-studies-legacy" element={<CaseStudies />} />
+            <Route path="/case-study/:slug" element={<CaseStudyDetail />} />
             <Route path="/demo-request" element={<DemoRequest />} />
             <Route path="/demo-video" element={<DemoVideo />} />
             <Route path="/contact" element={<Contact />} />
@@ -325,6 +337,13 @@ const App = () => {
             <Route path="/tools/website-audit" element={<WebsiteAudit />} />
             <Route path="/tools/agent-builder" element={<AgentBuilder />} />
             <Route path="/live" element={<Live />} />
+            {/* v67A: 3 new Groq-powered free tools */}
+            <Route path="/tools/voice-script-generator" element={<VoiceScriptGenerator />} />
+            <Route path="/tools/cold-dm-generator" element={<ColdDmGenerator />} />
+            <Route path="/tools/diagnose" element={<DiagnoseWizard />} />
+            {/* v67A: per-niche conversion landing pages — MUST come before
+                 /:vertical/:city catchall or it will be swallowed. */}
+            <Route path="/build/:niche" element={<BuildLanding />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />
