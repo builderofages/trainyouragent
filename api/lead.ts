@@ -88,6 +88,8 @@ const ALLOWED_SOURCES = new Set([
   "tool:automation-roi",
   // v59: AI website audit
   "tool:website-audit",
+  // v60: personalized agent builder
+  "tool:agent-builder",
   // v41: community + partners
   "community-win",
   "partner-apply",

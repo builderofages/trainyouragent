@@ -1,6 +1,8 @@
 // src/pages/Live.tsx
-// v59 — public real-time event stream. Polls /api/recent-activity every 8s,
-// prepends new events. Auto-trims to last 50 visible. Anonymized only.
+// v60 — public real-time event stream. Polls /api/recent-activity every 8s.
+// HONESTY FIX: server returns only real events (no synthetic fillers). When
+// the funnel is quiet this page renders an honest empty state with three
+// CTAs the visitor can use to BE the first event.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -66,7 +68,7 @@ export default function Live() {
       document.head.appendChild(desc);
     }
     desc.content =
-      "Live, anonymized event stream from trainyouragent.com — leads, page views, demos, in real time. We don't track PII. Every event is masked.";
+      "Live, anonymized event stream from trainyouragent.com — real events only, no simulated traffic. When this page is empty, the funnel is genuinely quiet.";
   }, []);
 
   // Poll loop.
@@ -139,8 +141,11 @@ export default function Live() {
             </span>
           </h1>
           <p className="mt-6 text-[18px] sm:text-[20px] text-slate-700 leading-relaxed max-w-3xl">
-            Every lead, every demo, every page view that fires through trainyouragent.com — anonymized, in real time. We don't track PII. We don't show emails or names. Just enough signal so you can see the site is alive.
+            Every lead, every demo that fires through trainyouragent.com — anonymized, in real time. We don't track PII. We don't show emails or names. Just the type of action and a 2-letter initial.
           </p>
+          <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 text-amber-900 p-4 sm:p-5 max-w-3xl text-[13.5px] leading-relaxed">
+            <strong className="font-semibold">Real events only.</strong> No simulated traffic. If this page is empty, the funnel is genuinely quiet right now &mdash; that's the honesty tradeoff of building in public.
+          </div>
         </section>
 
         {/* COUNTERS */}
@@ -175,8 +180,33 @@ export default function Live() {
 
           <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
             {items.length === 0 ? (
-              <div className="p-8 text-center text-slate-500 text-[14px]">
-                Waiting for the first event to come through…
+              <div className="p-8 sm:p-10 text-center">
+                <div className="text-[15px] font-semibold mb-2" style={{ color: NAVY }}>
+                  No recent activity in the last hour.
+                </div>
+                <div className="text-[14px] text-slate-600 max-w-md mx-auto leading-relaxed mb-5">
+                  The site is live but quiet right now. Be the first &mdash; tap a tool, book a call, or talk to the AI.
+                </div>
+                <div className="flex flex-wrap justify-center gap-2.5">
+                  <Link
+                    to="/tools"
+                    className="px-4 py-2 rounded-lg bg-[#042C53] text-white text-[13px] font-semibold hover:bg-[#0A3D6E] min-h-[40px] inline-flex items-center"
+                  >
+                    Try a tool &rarr;
+                  </Link>
+                  <Link
+                    to="/book"
+                    className="px-4 py-2 rounded-lg border border-[#185FA5] text-[#185FA5] text-[13px] font-semibold hover:bg-[#E6F1FB] min-h-[40px] inline-flex items-center"
+                  >
+                    Book a call &rarr;
+                  </Link>
+                  <Link
+                    to="/voice-demo"
+                    className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 text-[13px] font-semibold hover:border-[#185FA5] min-h-[40px] inline-flex items-center"
+                  >
+                    Talk to the AI &rarr;
+                  </Link>
+                </div>
               </div>
             ) : (
               <ul className="divide-y divide-slate-100">
@@ -195,10 +225,10 @@ export default function Live() {
                     />
                     <div className="flex-1 min-w-0">
                       <div className="text-[14px] leading-snug" style={{ color: NAVY }}>
-                        <span className="font-semibold">{it.who || "Visitor"}</span>
-                        {it.what ? <> — {it.what}</> : null}
+                        <span className="font-semibold">{it.who || "??"}***</span>
+                        {it.what ? <> &mdash; {it.what}</> : null}
                         {" "}<span className="text-slate-600">{it.action}</span>
-                        {it.where ? <> · <span className="text-slate-600">{it.where}</span></> : null}
+                        {it.where ? <> &middot; <span className="text-slate-600">{it.where}</span></> : null}
                       </div>
                       <div className="text-[11.5px] text-slate-400 mt-0.5">{it.ago || "just now"}</div>
                     </div>
@@ -223,7 +253,7 @@ export default function Live() {
                 We strip PII server-side before any event hits this page. Email addresses are reduced to two-letter initials. We do not display names, IPs, user agents, or referrers.
               </p>
               <p>
-                When real activity is sparse, the endpoint returns a small set of plausible synthetic samples so the stream has visible motion. We mark the data source in the response payload — open the network tab if you want to verify which mode you're seeing.
+                As of v60 (May 2026) the endpoint returns <strong>only real events</strong> from the lead store, within the last hour. We removed all synthetic / "plausible sample" fillers &mdash; if the funnel is quiet, this page is empty. That's the honest tradeoff and we'd rather show silence than fake motion.
               </p>
               <p>
                 Full privacy + cookie practices: <Link to="/privacy" className="text-[#185FA5] underline underline-offset-2">/privacy</Link>. The full code for the endpoint is in the public repo at <a className="text-[#185FA5] underline underline-offset-2" href="https://github.com/builderofages/trainyouragent/blob/main/api/recent-activity.ts" target="_blank" rel="noopener">api/recent-activity.ts</a>.

@@ -68,13 +68,20 @@ const TOOLS = [
     blurb: "Paste your URL — we fetch your site and return 5 specific AI-agent opportunities with priority, expected outcome, and the integration stack we'd build.",
     minutes: "30 sec",
   },
+  // v60 — personalized agent builder
+  {
+    slug: "agent-builder",
+    title: "Personalized agent demo · Free, in 30 sec",
+    blurb: "Type your business name + industry. We spin up a live customer-service AI agent that knows who you are. Chat with it like a real customer would.",
+    minutes: "30 sec",
+  },
 ];
 
 export default function ToolsIndex() {
   return (
     <ToolLayout
       eyebrow="Free tools"
-      title="Ten tools you can use"
+      title="Eleven tools you can use"
       italicTail="right now."
       subtitle="No signup. Each one solves something specific — and if you like how they work, the agents we build are the same brain underneath."
     >

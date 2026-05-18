@@ -153,6 +153,7 @@ const HowWeWin             = lazy(() => import("./pages/HowWeWin"));
 
 // v59: AI website audit tool + public real-time event stream
 const WebsiteAudit         = lazy(() => import("./pages/tools/WebsiteAudit"));
+const AgentBuilder         = lazy(() => import("./pages/tools/AgentBuilder"));
 const Live                 = lazy(() => import("./pages/Live"));
 
 const queryClient = new QueryClient();
@@ -322,6 +323,7 @@ const App = () => {
             <Route path="/how-we-win-without-testimonials" element={<HowWeWin />} />
             {/* v59: AI website audit + live public event stream */}
             <Route path="/tools/website-audit" element={<WebsiteAudit />} />
+            <Route path="/tools/agent-builder" element={<AgentBuilder />} />
             <Route path="/live" element={<Live />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />

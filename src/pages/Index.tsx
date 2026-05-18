@@ -227,6 +227,14 @@ const Index = () => {
                 <span className="inline-flex w-2 h-2 rounded-full bg-[#185FA5]" aria-hidden="true" />
                 Audit your own site in 30 sec →
               </Link>
+              {/* v60: personalized agent builder CTA */}
+              <Link
+                to="/tools/agent-builder"
+                className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#185FA5] hover:text-[#042C53]"
+              >
+                <span className="inline-flex w-2 h-2 rounded-full bg-[#185FA5]" aria-hidden="true" />
+                Build your own agent in 30 sec →
+              </Link>
             </div>
             {/* v42: live AI demos — prominent under the hero CTAs */}
             <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-[14px]">
