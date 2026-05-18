@@ -61,13 +61,20 @@ const TOOLS = [
     blurb: "10 vendors × 12 criteria. Sortable, filterable, with a custom-recommendation form. Pick the right stack in 3 minutes.",
     minutes: "3 min",
   },
+  // v59 — AI website audit lead magnet
+  {
+    slug: "website-audit",
+    title: "AI website audit · Free, in 30 sec",
+    blurb: "Paste your URL — we fetch your site and return 5 specific AI-agent opportunities with priority, expected outcome, and the integration stack we'd build.",
+    minutes: "30 sec",
+  },
 ];
 
 export default function ToolsIndex() {
   return (
     <ToolLayout
       eyebrow="Free tools"
-      title="Nine tools you can use"
+      title="Ten tools you can use"
       italicTail="right now."
       subtitle="No signup. Each one solves something specific — and if you like how they work, the agents we build are the same brain underneath."
     >

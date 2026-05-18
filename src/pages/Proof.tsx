@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
 import ShippedThisWeek from "@/components/ShippedThisWeek";
+import CommitGraph from "@/components/CommitGraph";
 
 const NAVY = "#042C53";
 const BLUE = "#185FA5";
@@ -288,6 +289,10 @@ export default function Proof() {
             <Stat label="Commits last 7d" value={v.commitsLast7d === null ? "—" : String(v.commitsLast7d)} sub="all on main" />
             <Stat label="Commits last 30d" value={v.commitsLast30d === null ? "—" : String(v.commitsLast30d)} sub="sustained ship rate" />
             <Stat label="Days building public" value={v.daysPublic === null ? "—" : String(v.daysPublic)} sub="since first commit" />
+          </div>
+          {/* v59: live 90-day commit heatmap, GitHub-style */}
+          <div className="mt-6">
+            <CommitGraph />
           </div>
           <div className="mt-6">
             <ShippedThisWeek />

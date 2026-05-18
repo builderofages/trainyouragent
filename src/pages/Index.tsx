@@ -208,7 +208,7 @@ const Index = () => {
               </Link>
             </div>
             {/* v52B: live in-browser voice agent — primary above-the-fold CTA */}
-            <div className="mt-4">
+            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
               <Link
                 to="/voice-demo"
                 className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#185FA5] hover:text-[#042C53]"
@@ -218,6 +218,14 @@ const Index = () => {
                   <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
                 </span>
                 Or talk to our AI agent live (in your browser) →
+              </Link>
+              {/* v59: third CTA — viral lead magnet */}
+              <Link
+                to="/tools/website-audit"
+                className="inline-flex items-center gap-2 text-[14px] font-semibold text-[#185FA5] hover:text-[#042C53]"
+              >
+                <span className="inline-flex w-2 h-2 rounded-full bg-[#185FA5]" aria-hidden="true" />
+                Audit your own site in 30 sec →
               </Link>
             </div>
             {/* v42: live AI demos — prominent under the hero CTAs */}

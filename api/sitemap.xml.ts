@@ -75,6 +75,9 @@ const STATIC_PAGES: { path: string; priority: number; changefreq: string }[] = [
   { path: "/tools/model-selector",      priority: 0.6,  changefreq: "monthly" },
   { path: "/tools/automation-roi",      priority: 0.6,  changefreq: "monthly" },
   { path: "/tools/vendor-matrix",       priority: 0.75, changefreq: "monthly" },
+  // v59: AI website audit tool + public real-time event stream
+  { path: "/tools/website-audit",       priority: 0.9,  changefreq: "weekly"  },
+  { path: "/live",                      priority: 0.85, changefreq: "always"  },
   // v52B: founder log + glossary + whitelabel + reseller (data-room is noindex)
   { path: "/founder-log",               priority: 0.7,  changefreq: "daily"   },
   { path: "/glossary",                  priority: 0.8,  changefreq: "monthly" },

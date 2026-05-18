@@ -86,6 +86,8 @@ const ALLOWED_SOURCES = new Set([
   "tool:prompt-library",
   "tool:model-selector",
   "tool:automation-roi",
+  // v59: AI website audit
+  "tool:website-audit",
   // v41: community + partners
   "community-win",
   "partner-apply",

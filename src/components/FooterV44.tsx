@@ -11,6 +11,7 @@ const PRODUCT = [
   { label: "Integrations", to: "/integrations" },
   { label: "Live demos", to: "/demos" },
   { label: "Free tools", to: "/tools" },
+  { label: "AI website audit", to: "/tools/website-audit" },
 ];
 
 const RESOURCES = [
@@ -26,6 +27,8 @@ const RESOURCES = [
   { label: "Cities (Local)", to: "/local" },
   { label: "Buyer's guide", to: "/resources" },
   { label: "State of AI Ops 2026", to: "/report/state-of-ai-ops-2026" },
+  // v59: real-time public event stream
+  { label: "Live (real-time stream)", to: "/live" },
 ];
 
 const COMPANY = [

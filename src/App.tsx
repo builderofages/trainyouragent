@@ -151,6 +151,10 @@ const VerifyEmailDomain    = lazy(() => import("./pages/VerifyEmailDomain"));
 const Proof                = lazy(() => import("./pages/Proof"));
 const HowWeWin             = lazy(() => import("./pages/HowWeWin"));
 
+// v59: AI website audit tool + public real-time event stream
+const WebsiteAudit         = lazy(() => import("./pages/tools/WebsiteAudit"));
+const Live                 = lazy(() => import("./pages/Live"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -316,6 +320,9 @@ const App = () => {
             {/* v58: proof reframe — cornerstone trust pages */}
             <Route path="/proof" element={<Proof />} />
             <Route path="/how-we-win-without-testimonials" element={<HowWeWin />} />
+            {/* v59: AI website audit + live public event stream */}
+            <Route path="/tools/website-audit" element={<WebsiteAudit />} />
+            <Route path="/live" element={<Live />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />
