@@ -113,6 +113,56 @@ Webhooks (signature-verified):
 - `POST /api/cal-webhook` — Cal.com booking events
 - `POST /api/stripe-webhook` — Stripe subscription/checkout events
 
+
+## Meta Pixel + Conversion API (v57A)
+
+Conversion tracking for paid ads requires BOTH the browser pixel (client-side
+events) and the Conversion API (server-side mirror) firing with the same
+`event_id` so Meta dedupes correctly. Setup:
+
+1. **Create your pixel** — Events Manager -> Data Sources -> Connect Data
+   Source -> Web -> name it `trainyouragent`, copy the 16-digit ID.
+2. **Generate a CAPI access token** — Events Manager -> your pixel -> Settings
+   tab -> "Set up the Conversions API" -> "Generate access token".
+3. **Set env vars in Vercel** (Production + Preview + Development):
+   - `VITE_META_PIXEL_ID` — same pixel ID, used by the browser bundle
+   - `META_PIXEL_ID` — same pixel ID, used by server-side CAPI
+   - `META_CAPI_ACCESS_TOKEN` — the token from step 2 (server-only)
+   - `META_TEST_EVENT_CODE` — optional, for staging traffic only
+4. **Verify** — Events Manager -> Test Events tab. Open the site with the test
+   code set; every fire should appear with `event_id` populated. The same
+   `event_id` should appear on the "Server" row a few seconds later.
+
+The wiring lives in three files:
+- `src/lib/meta-pixel.ts` — `fireClient(name, params)` fires `fbq('track')`
+  with a sessionStorage-stashed event_id.
+- `src/lib/metaPixel.ts` — `fireMetaEvent(name)` fires both client and server
+  in one call (preferred).
+- `api/meta-capi-send.ts` — server endpoint that hashes PII (SHA-256, lowercase,
+  trimmed) and POSTs to Meta Graph API v19.
+
+CAPI events are also fired automatically from:
+- `api/lead.ts` — Lead (on any allowlisted contact / lead-magnet submission)
+- `api/cal-webhook.ts` — Schedule + Lead (on BOOKING_CREATED)
+- `api/stripe-webhook.ts` — Purchase (on checkout.session.completed +
+  invoice.payment_succeeded)
+
+When env vars are unset, every CAPI endpoint returns 200 with
+`{"ok": false, "error": "not-configured"}` — graceful degradation, no 500s.
+
+## Friday digest cron (v57A)
+
+`api/friday-digest.ts` runs every Friday at 9am ET (`0 13 * * 5` UTC via
+`vercel.json` cron) and emails a "what we shipped this week" digest to opted-in
+newsletter / founder-log subscribers. Idempotency is enforced via the
+`tya_digest_sent` table (migration `0004_digest_sent.sql`) — each
+`(week_end, email)` tuple can only succeed once per week.
+
+Dry-run any time:
+```
+curl 'https://www.trainyouragent.com/api/friday-digest?token=$ADMIN_TOKEN'
+```
+
 ## Security
 
 See [SECURITY.md](./SECURITY.md) for the vulnerability disclosure policy and [SECURITY_AUDIT.md](./SECURITY_AUDIT.md) for the most recent audit.

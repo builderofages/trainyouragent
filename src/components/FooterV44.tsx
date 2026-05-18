@@ -50,6 +50,11 @@ const TRUST = [
   { label: "Public metrics", to: "/metrics" },
 ];
 
+// v57A: internal-only links — surfaced for the team, not for SEO traffic.
+const INTERNAL = [
+  { label: "Email domain verify", to: "/verify-email-domain" },
+];
+
 const CONNECT = [
   { label: "Book a call", to: "https://cal.com/trainyouragent/30min", ext: true },
   { label: "Contact", to: "/contact" },
@@ -142,6 +147,7 @@ export default function FooterV44() {
           <Col title="Company" items={COMPANY} />
           <Col title="Trust" items={TRUST} />
           <Col title="Connect" items={CONNECT} />
+          <Col title="Internal tools" items={INTERNAL} />
         </div>
 
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between text-[12.5px] text-white/65">

@@ -19,6 +19,8 @@ import LiveActivity from "@/components/LiveActivity";
 import LiveActivityTicker from "@/components/LiveActivityTicker";
 import PageTransition from "@/components/PageTransition";
 import TalkToHumanButton from "@/components/TalkToHumanButton";
+// v57A: ensure Meta Pixel base code is mounted client-side (idempotent w/ index.html)
+import MetaPixel from "@/components/MetaPixel";
 // v53: shared floating-widget mutex + visitor personalization context
 import { FloatersProvider } from "@/lib/floaters";
 import { VisitorProvider } from "@/lib/visitorContext";
@@ -142,6 +144,9 @@ const Whitelabel           = lazy(() => import("./pages/Whitelabel"));
 const Reseller             = lazy(() => import("./pages/Reseller"));
 const DataRoom             = lazy(() => import("./pages/DataRoom"));
 
+// v57A: internal — Resend domain verification helper
+const VerifyEmailDomain    = lazy(() => import("./pages/VerifyEmailDomain"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -172,6 +177,7 @@ const App = () => {
       <BrowserRouter>
         <VisitorProvider>
         <FloatersProvider>
+        <MetaPixel />
         <ContextPill />
         <Suspense fallback={<RouteFallback />}>
           <PageTransition>
@@ -301,6 +307,8 @@ const App = () => {
             <Route path="/whitelabel" element={<Whitelabel />} />
             <Route path="/reseller" element={<Reseller />} />
             <Route path="/data-room" element={<DataRoom />} />
+            {/* v57A: internal — Resend domain verification helper */}
+            <Route path="/verify-email-domain" element={<VerifyEmailDomain />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />

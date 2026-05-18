@@ -22,6 +22,7 @@ import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
 import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors.js";
 import { recordLead } from "./_lib/lead-store.js";
 import { sendEmail, leadMagnetEmailHtml } from "./_lib/resend.js";
+import { sha256Lower, deterministicEventId } from "./_lib/eventid.js";
 
 export const config = { runtime: "edge" };
 
@@ -48,6 +49,13 @@ const NOTIFY_TO = process.env.LEAD_NOTIFY_TO || "hello@trainyouragent.com";
 const NOTIFY_FROM = process.env.LEAD_NOTIFY_FROM || "leads@trainyouragent.com";
 const BEEHIIV_KEY = process.env.BEEHIIV_API_KEY;
 const BEEHIIV_PUB = process.env.BEEHIIV_PUB_ID;
+// v57a: Meta Conversion API mirror for Lead events. Both env names accepted.
+const META_PIXEL_ID = process.env.META_PIXEL_ID || "";
+const META_CAPI_TOKEN = process.env.META_CAPI_ACCESS_TOKEN || process.env.META_CAPI_TOKEN || "";
+const META_GRAPH_URL = META_PIXEL_ID && META_CAPI_TOKEN
+  ? `https://graph.facebook.com/v19.0/${META_PIXEL_ID}/events?access_token=${META_CAPI_TOKEN}`
+  : "";
+const META_LEAD_SOURCE_RE = /^(contact|contact-form|demo-request|lead-magnet-|tool:|report-|founder-log-subscribe|newsletter)/;
 
 const NEWSLETTER_SOURCES = new Set([
   "newsletter",
@@ -263,6 +271,43 @@ export default async function handler(req: Request) {
   try {
     recordLead({ email: body.email, source: body.source, path: body.path, ip });
   } catch { /* never block the lead path on store errors */ }
+
+  // v57a: server-side Meta CAPI mirror. Fires Lead for any source that maps
+  // to a Meta funnel event. event_id is deterministic on (email, source) so a
+  // browser-side fire using the same scheme dedupes against this one.
+  if (META_GRAPH_URL && META_LEAD_SOURCE_RE.test(body.source)) {
+    tasks.push((async () => {
+      const event_id = await deterministicEventId("lead", `${body.email}:${body.source}:${new Date().toISOString().slice(0,10)}`);
+      const user_data: Record<string, unknown> = {
+        em: [await sha256Lower(body.email)],
+        client_ip_address: ip || undefined,
+        client_user_agent: req.headers.get("user-agent") || undefined,
+      };
+      if (body.name) {
+        const [first, ...rest] = body.name.split(/\s+/);
+        if (first) user_data.fn = [await sha256Lower(first)];
+        if (rest.length) user_data.ln = [await sha256Lower(rest.join(" "))];
+      }
+      if (body.phone) user_data.ph = [await sha256Lower(String(body.phone).replace(/[^\d]/g, ""))];
+      const payload = {
+        data: [{
+          event_name: "Lead",
+          event_time: Math.floor(Date.now() / 1000),
+          event_id,
+          event_source_url: body.path ? `https://trainyouragent.com${body.path}` : "https://trainyouragent.com",
+          action_source: "website",
+          user_data,
+          custom_data: { lead_source: body.source, content_name: body.source },
+        }],
+      };
+      return fetch(META_GRAPH_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    })());
+  }
+
 
   await Promise.allSettled(tasks);
   return json({ ok: true }, 200, { ...cors.headers, ...rl.headers });
