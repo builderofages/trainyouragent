@@ -52,7 +52,7 @@ const PRODUCTS: Product[] = [
       "Monthly updates from real deployments",
       "Slack channel with operators in your vertical",
     ],
-    cta: { label: "Get notified at launch →", to: "/saas#waitlist-vertical-playbook" },
+    cta: { label: "Get notified →", to: "/saas#waitlist-vertical-playbook" },
     waitlistSource: "saas-vertical-playbook-waitlist",
   },
   {
@@ -68,7 +68,7 @@ const PRODUCTS: Product[] = [
       "Competitor benchmarking",
       "PDF export to share with stakeholders",
     ],
-    cta: { label: "Get notified at launch →", to: "/saas#waitlist-website-audit-pro" },
+    cta: { label: "Get notified →", to: "/saas#waitlist-website-audit-pro" },
     waitlistSource: "saas-website-audit-pro-waitlist",
   },
 ];
@@ -178,7 +178,7 @@ export default function Saas() {
                       </span>
                     ) : (
                       <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10.5px] font-bold uppercase tracking-[0.12em]">
-                        Coming soon
+                        In development · Get notified
                       </span>
                     )}
                   </div>

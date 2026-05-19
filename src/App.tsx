@@ -169,6 +169,12 @@ const Hire                   = lazy(() => import("./pages/Hire"));
 const Saas                   = lazy(() => import("./pages/Saas"));
 const SaasAgentBuilder       = lazy(() => import("./pages/SaasAgentBuilder"));
 
+// v73-FINAL: flagship /train method page + /everything-ai category map +
+// 10 cornerstone /capabilities/:slug deep playbook pages.
+const Train                  = lazy(() => import("./pages/Train"));
+const EverythingAI           = lazy(() => import("./pages/EverythingAI"));
+const CapabilityDetail       = lazy(() => import("./pages/CapabilityDetail"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -353,6 +359,11 @@ const App = () => {
             <Route path="/hire" element={<Hire />} />
             <Route path="/saas" element={<Saas />} />
             <Route path="/saas/agent-builder" element={<SaasAgentBuilder />} />
+            {/* v73-FINAL: flagship /train method + /everything-ai category map +
+                 10 cornerstone capability playbooks at /capabilities/:slug */}
+            <Route path="/train" element={<Train />} />
+            <Route path="/everything-ai" element={<EverythingAI />} />
+            <Route path="/capabilities/:slug" element={<CapabilityDetail />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />

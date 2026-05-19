@@ -51,22 +51,21 @@ function BrainLogo({ size = 36 }: { size?: number }) {
 /* ------------------------------------------------------------------ */
 /*  Nav data                                                          */
 /* ------------------------------------------------------------------ */
-type LinkItem = { label: string; to: string; sub?: string };
+type LinkItem = { label: string; to: string; sub?: string; badge?: string };
 
-// v69: Everything-AI breadth — 8 solution categories (was 6).
-// Restored "AI receptionists" and "AI sales agents" as standalone offerings
-// and renamed "Custom Websites" to "Brand systems" which is the broader scope.
+// v73-FINAL: Solutions dropdown reframed around the flagship Train Your Agent method.
+// /train sits at the top (FLAGSHIP), /everything-ai is the breadth map,
+// then 3 visible cornerstone playbooks + "see all 10" + 2 keeper categories.
+// Capped at 8 items max per Grok's restraint guidance.
 const SOLUTIONS: LinkItem[] = [
-  { label: "Voice agents",         to: "/solutions#voice",     sub: "Phones answered 24/7 — every call, every after-hours lead, booked." },
-  { label: "Chat agents",          to: "/solutions#chat",      sub: "Web + SMS agents that qualify leads live and close support loops." },
-  { label: "AI receptionists",     to: "/solutions#reception", sub: "Full front-desk replacement — booking, intake, triage." },
-  { label: "AI sales agents",      to: "/solutions#sales",     sub: "Outbound calls, follow-ups, recovery — pipeline that runs itself." },
-  { label: "Marketing AI",         to: "/solutions#growth",    sub: "Content engine, sequences, paid ads ops — calendar fills itself." },
-  { label: "Brand systems",        to: "/solutions#brand",     sub: "Logo, type, voice, site — built for the AI age." },
-  { label: "Internal tooling",     to: "/solutions#infra",     sub: "Dashboards, ops scripts, AI co-pilots wired to your stack." },
-  { label: "Custom AI builds",     to: "/solutions#custom",    sub: "Your specific business problem, scoped, shipped, owned." },
-  // v72: self-serve tier surfaced inside Solutions (was a top-level nav item; moved here to decongest the bar)
-  { label: "Self-serve & developer tools", to: "/saas",        sub: "Build your own agent. $99/mo. Live today." },
+  { label: "Train Your Agent · the method", to: "/train",                badge: "FLAGSHIP", sub: "Discovery → Knowledge Base → Fine-tune → Eval → Production. 21 days." },
+  { label: "Everything-AI · all capabilities", to: "/everything-ai",                       sub: "The full category map — agents, marketing, training, tooling, builds." },
+  { label: "Voice receptionist",             to: "/capabilities/voice-receptionist",       sub: "24/7 phone coverage that books, qualifies, escalates — sounds like your best front-desk." },
+  { label: "Intelligent booking agent",      to: "/capabilities/intelligent-booking-agent",sub: "Calendar-aware agent that never double-books and respects every constraint you have." },
+  { label: "Lead qualification agent",       to: "/capabilities/lead-qualification-agent", sub: "Inbound triage + routing on the first touch — no more dead lead piles." },
+  { label: "See all 10 cornerstone playbooks →", to: "/everything-ai" },
+  { label: "Custom AI builds",               to: "/solutions#custom",   sub: "Your specific business problem, scoped, shipped, owned." },
+  { label: "Self-serve & developer tools",   to: "/saas",               sub: "Build your own agent. $99/mo. Live today." },
 ];
 
 const INDUSTRIES: LinkItem[] = [
@@ -414,8 +413,13 @@ function DesktopDropdown({
                   to={item.to}
                   className="block rounded-lg px-3 py-2.5 hover:bg-[#F6FAFE] transition group"
                 >
-                  <div className="text-[14px] font-semibold text-[#042C53] group-hover:text-[#185FA5]">
-                    {item.label}
+                  <div className="text-[14px] font-semibold text-[#042C53] group-hover:text-[#185FA5] flex items-center gap-2">
+                    <span>{item.label}</span>
+                    {item.badge && (
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-[#042C53] text-white text-[9px] font-bold tracking-[0.12em]">
+                        {item.badge}
+                      </span>
+                    )}
                   </div>
                   {item.sub && (
                     <div className="text-[12px] text-slate-600 mt-0.5 leading-snug">

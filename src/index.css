@@ -519,3 +519,71 @@ All colors MUST be HSL.
     }
   }
 }
+
+/* ============================================================
+   v73 — restrained 2040 visual layer
+   Mesh gradient drift + particle drift + ticker marquee.
+   GPU transforms only; honors prefers-reduced-motion.
+   ============================================================ */
+@layer utilities {
+  @keyframes v73-drift-1 {
+    0%   { transform: translate3d(-12%, -8%, 0) scale(1); }
+    50%  { transform: translate3d(14%, 12%, 0) scale(1.08); }
+    100% { transform: translate3d(-12%, -8%, 0) scale(1); }
+  }
+  @keyframes v73-drift-2 {
+    0%   { transform: translate3d(14%, 10%, 0) scale(1.05); }
+    50%  { transform: translate3d(-12%, -10%, 0) scale(0.95); }
+    100% { transform: translate3d(14%, 10%, 0) scale(1.05); }
+  }
+  @keyframes v73-drift-3 {
+    0%   { transform: translate3d(0%, -6%, 0); }
+    50%  { transform: translate3d(8%, 8%, 0); }
+    100% { transform: translate3d(0%, -6%, 0); }
+  }
+  .v73-drift-1 { animation: v73-drift-1 30s ease-in-out infinite; will-change: transform; }
+  .v73-drift-2 { animation: v73-drift-2 35s ease-in-out infinite; will-change: transform; }
+  .v73-drift-3 { animation: v73-drift-3 42s ease-in-out infinite; will-change: transform; }
+
+  @keyframes v73-particle-a {
+    0%   { transform: translate3d(0, 0, 0); opacity: 0.0; }
+    10%  { opacity: 0.45; }
+    90%  { opacity: 0.45; }
+    100% { transform: translate3d(60px, -120px, 0); opacity: 0.0; }
+  }
+  @keyframes v73-particle-b {
+    0%   { transform: translate3d(0, 0, 0); opacity: 0.0; }
+    10%  { opacity: 0.35; }
+    90%  { opacity: 0.35; }
+    100% { transform: translate3d(-80px, -160px, 0); opacity: 0.0; }
+  }
+  @keyframes v73-particle-c {
+    0%   { transform: translate3d(0, 0, 0); opacity: 0.0; }
+    10%  { opacity: 0.55; }
+    90%  { opacity: 0.55; }
+    100% { transform: translate3d(40px, -200px, 0); opacity: 0.0; }
+  }
+  .v73-particle-a { animation: v73-particle-a 14s linear infinite; will-change: transform, opacity; }
+  .v73-particle-b { animation: v73-particle-b 18s linear infinite; will-change: transform, opacity; }
+  .v73-particle-c { animation: v73-particle-c 22s linear infinite; will-change: transform, opacity; }
+
+  @keyframes v73-marquee {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .v73-marquee {
+    animation: v73-marquee 40s linear infinite;
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .v73-drift-1, .v73-drift-2, .v73-drift-3,
+    .v73-particle-a, .v73-particle-b, .v73-particle-c,
+    .v73-marquee {
+      animation: none !important;
+    }
+    .v73-particle-a, .v73-particle-b, .v73-particle-c {
+      opacity: 0.4 !important;
+    }
+  }
+}

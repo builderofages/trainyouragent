@@ -37,6 +37,10 @@ import { STATS } from "@/lib/siteStats";
 // v71: 8-capability hero chip row — fixes Grok's "voice-heavy" ding by making
 // the Everything-AI breadth visible above the fold without a scroll.
 import HeroCapabilityChips from "@/components/HeroCapabilityChips";
+// v73: restrained 2040 visual layer — mesh gradient, drift particles, live stat ticker.
+import MeshGradientBackdrop from "@/components/visual/MeshGradientBackdrop";
+import ParticleDrift from "@/components/visual/ParticleDrift";
+import LiveStatTicker from "@/components/visual/LiveStatTicker";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
@@ -245,9 +249,23 @@ const Index = () => {
       {/* NAV — canonical service nav */}
       <SiteNav />
 
+      {/* v73: live stat ticker — eyebrow strip above hero. */}
+      <LiveStatTicker />
+
+      {/* v73: brand-anchor eyebrow — flagship positioning above hero. */}
+      <div className="w-full bg-[#042C53] text-white">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-2 text-center text-[10.5px] sm:text-[11px] tracking-[0.18em] uppercase font-semibold font-mono text-[#E6F1FB]">
+          Train Your Agent · 10 productionized playbooks · 569 live URLs ·{" "}
+          <a href="/train" className="underline decoration-[#A8C7E8]/60 decoration-1 underline-offset-2 hover:text-white">See the method</a>
+        </div>
+      </div>
+
       {/* HERO */}
       <main id="main">
       <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-24 px-5 sm:px-8 overflow-hidden">
+        {/* v73: 2040 visual layer behind hero content. */}
+        <MeshGradientBackdrop />
+        <ParticleDrift count={22} />
         <div className="absolute inset-0 -z-10 pointer-events-none">
           <div className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[1200px] h-[1200px] rounded-full opacity-60" style={{ background: "radial-gradient(closest-side, #DCEBFA 0%, rgba(220,235,250,0) 70%)" }} />
         </div>
@@ -365,6 +383,101 @@ const Index = () => {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* v73: TRAINED-AGENT DIFFERENCE — 3-column comparison surfacing the
+          "we don't bolt LLMs on, we train" brand wedge above the fold. */}
+      <section className="relative px-5 sm:px-8 py-14 sm:py-20 bg-white border-y border-slate-200/70">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-10">
+            <div className="inline-block text-[11px] font-semibold tracking-[0.18em] uppercase text-[#185FA5] mb-3 font-mono">
+              What makes a TrainYourAgent agent different
+            </div>
+            <h2 className="text-[28px] sm:text-[40px] md:text-[48px] leading-[1.05] tracking-tight font-semibold text-[#042C53]">
+              An <span className="font-serif italic">untrained</span> agent sounds like a chatbot.
+              <br className="hidden sm:block" />
+              A <span className="font-serif italic">trained</span> agent sounds like your best employee.
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-5 sm:gap-6">
+            {/* Chatbot column */}
+            <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-6">
+              <div className="text-[11px] font-semibold tracking-[0.18em] uppercase text-slate-500 mb-2">Off-the-shelf chatbot</div>
+              <div className="text-[22px] font-semibold text-slate-700 mb-5">Generic, brittle</div>
+              <ul className="space-y-3 text-[14px] text-slate-700">
+                {[
+                  "Knows your offer",
+                  "Handles edge cases",
+                  "Books correctly",
+                  "Sounds like you",
+                  "Escalates appropriately",
+                  "Learns from conversations",
+                ].map((row, i) => (
+                  <li key={i} className="flex items-start gap-2.5">
+                    <span aria-hidden className="mt-0.5 inline-flex w-5 h-5 items-center justify-center rounded-full bg-rose-100 text-rose-600 text-[12px] font-bold">×</span>
+                    <span>{row}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Off-the-shelf AI column */}
+            <div className="rounded-2xl border border-amber-200 bg-amber-50/40 p-6">
+              <div className="text-[11px] font-semibold tracking-[0.18em] uppercase text-amber-700 mb-2">Off-the-shelf AI</div>
+              <div className="text-[22px] font-semibold text-amber-900 mb-5">Plausible, shallow</div>
+              <ul className="space-y-3 text-[14px] text-slate-700">
+                {[
+                  "Knows your offer",
+                  "Handles edge cases",
+                  "Books correctly",
+                  "Sounds like you",
+                  "Escalates appropriately",
+                  "Learns from conversations",
+                ].map((row, i) => (
+                  <li key={i} className="flex items-start gap-2.5">
+                    <span aria-hidden className="mt-0.5 inline-flex w-5 h-5 items-center justify-center rounded-full bg-amber-100 text-amber-700 text-[14px] font-bold">~</span>
+                    <span>{row}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Trained Agent column — flagship */}
+            <div className="rounded-2xl border-2 border-[#042C53] bg-gradient-to-br from-[#E6F1FB] to-white p-6 shadow-sm relative">
+              <div className="absolute -top-3 left-6 px-2.5 py-0.5 rounded-full bg-[#042C53] text-white text-[10px] font-semibold tracking-[0.16em] uppercase">Flagship</div>
+              <div className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#185FA5] mb-2">Trained Agent</div>
+              <div className="text-[22px] font-semibold text-[#042C53] mb-5">
+                <span className="font-serif italic">Trained</span> on your business
+              </div>
+              <ul className="space-y-3 text-[14px] text-slate-800">
+                {[
+                  "Knows your offer",
+                  "Handles edge cases",
+                  "Books correctly",
+                  "Sounds like you",
+                  "Escalates appropriately",
+                  "Learns from conversations",
+                ].map((row, i) => (
+                  <li key={i} className="flex items-start gap-2.5">
+                    <span aria-hidden className="mt-0.5 inline-flex w-5 h-5 items-center justify-center rounded-full bg-[#22A36C] text-white text-[12px] font-bold">✓</span>
+                    <span className="font-medium">{row}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="text-center mt-10">
+            <a
+              href="/train"
+              className="inline-flex items-center gap-2 text-[#042C53] hover:text-[#185FA5] text-[16px] sm:text-[17px]"
+            >
+              <span>See the </span>
+              <span className="font-serif italic text-[18px] sm:text-[20px]">5-step training method</span>
+              <span aria-hidden className="text-[#185FA5]">→</span>
+            </a>
           </div>
         </div>
       </section>

@@ -312,6 +312,37 @@ export default function SaasAgentBuilder() {
         </div>
       </section>
 
+      {/* v73-FINAL: Trojan-horse funnel into custom training */}
+      <section className="px-5 sm:px-8 py-16 sm:py-20 bg-[#F6FAFE] border-y border-slate-200/70">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#185FA5] font-mono mb-3">
+            Want the trained version?
+          </div>
+          <h2 className="text-[28px] sm:text-[40px] leading-tight font-semibold text-[#042C53] mb-5">
+            Want us to <span className="font-serif italic">build and train it for you</span>?
+          </h2>
+          <p className="text-[16px] sm:text-[17px] text-slate-700 max-w-2xl mx-auto mb-7">
+            The self-serve builder ships you a working agent. Custom-trained agents go deeper — your tone, your edge cases, your booking flow, your compliance rules. They start at <span className="font-semibold text-[#042C53]">$4,000</span> and ship in 21 days.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-3">
+            <Link
+              to="/train"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#042C53] text-white font-semibold hover:bg-[#0B3A6B]"
+            >
+              <span>See the </span>
+              <span className="font-serif italic">5-step training method</span>
+              <span aria-hidden>→</span>
+            </Link>
+            <Link
+              to="/everything-ai"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-[#042C53]/15 text-[#042C53] hover:bg-white"
+            >
+              Browse 10 cornerstone playbooks
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <FooterV44 />
     </div>
   );

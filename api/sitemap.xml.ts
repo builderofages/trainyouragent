@@ -87,6 +87,20 @@ const STATIC_PAGES: { path: string; priority: number; changefreq: string }[] = [
   { path: "/hire",                         priority: 0.95, changefreq: "weekly"  },
   { path: "/saas",                         priority: 0.9,  changefreq: "weekly"  },
   { path: "/saas/agent-builder",           priority: 0.9,  changefreq: "weekly"  },
+  // v73-FINAL: flagship /train method + /everything-ai category map
+  { path: "/train",                        priority: 0.9,  changefreq: "weekly"  },
+  { path: "/everything-ai",                priority: 0.85, changefreq: "weekly"  },
+  // v73-FINAL: 10 cornerstone capability playbook pages
+  { path: "/capabilities/voice-receptionist",               priority: 0.8, changefreq: "weekly" },
+  { path: "/capabilities/intelligent-booking-agent",        priority: 0.8, changefreq: "weekly" },
+  { path: "/capabilities/lead-qualification-agent",         priority: 0.8, changefreq: "weekly" },
+  { path: "/capabilities/objection-handling-system",        priority: 0.8, changefreq: "weekly" },
+  { path: "/capabilities/follow-up-no-show-system",         priority: 0.8, changefreq: "weekly" },
+  { path: "/capabilities/client-onboarding-agent",          priority: 0.8, changefreq: "weekly" },
+  { path: "/capabilities/ops-copilot",                      priority: 0.8, changefreq: "weekly" },
+  { path: "/capabilities/local-service-marketing-automation", priority: 0.8, changefreq: "weekly" },
+  { path: "/capabilities/compliance-rag-agent",             priority: 0.8, changefreq: "weekly" },
+  { path: "/capabilities/computer-use-agent",               priority: 0.8, changefreq: "weekly" },
   // v52B: founder log + glossary + whitelabel + reseller (data-room is noindex)
   { path: "/founder-log",               priority: 0.7,  changefreq: "daily"   },
   { path: "/glossary",                  priority: 0.8,  changefreq: "monthly" },
