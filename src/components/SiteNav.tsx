@@ -53,13 +53,18 @@ function BrainLogo({ size = 36 }: { size?: number }) {
 /* ------------------------------------------------------------------ */
 type LinkItem = { label: string; to: string; sub?: string };
 
+// v69: Everything-AI breadth — 8 solution categories (was 6).
+// Restored "AI receptionists" and "AI sales agents" as standalone offerings
+// and renamed "Custom Websites" to "Brand systems" which is the broader scope.
 const SOLUTIONS: LinkItem[] = [
-  { label: "Voice Agents",           to: "/solutions#voice",   sub: "24/7 phone agents that answer, qualify, book." },
-  { label: "Chat Agents",            to: "/solutions#chat",    sub: "Web + SMS agents that close support and lead loops." },
-  { label: "Custom Websites",        to: "/solutions#sites",   sub: "Conversion-tuned sites built by operators." },
-  { label: "Business Infrastructure",to: "/solutions#infra",   sub: "CRM, telephony, GTM stack — wired and shipped." },
-  { label: "AI Media",               to: "/solutions#media",   sub: "Generative video, image, and audio for ads + content." },
-  { label: "Marketing & SEO",        to: "/solutions#growth",  sub: "Content engines, paid funnels, technical SEO." },
+  { label: "Voice agents",         to: "/solutions#voice",     sub: "Phones answered 24/7 — every call, every after-hours lead, booked." },
+  { label: "Chat agents",          to: "/solutions#chat",      sub: "Web + SMS agents that qualify leads live and close support loops." },
+  { label: "AI receptionists",     to: "/solutions#reception", sub: "Full front-desk replacement — booking, intake, triage." },
+  { label: "AI sales agents",      to: "/solutions#sales",     sub: "Outbound calls, follow-ups, recovery — pipeline that runs itself." },
+  { label: "Marketing AI",         to: "/solutions#growth",    sub: "Content engine, sequences, paid ads ops — calendar fills itself." },
+  { label: "Brand systems",        to: "/solutions#brand",     sub: "Logo, type, voice, site — built for the AI age." },
+  { label: "Internal tooling",     to: "/solutions#infra",     sub: "Dashboards, ops scripts, AI co-pilots wired to your stack." },
+  { label: "Custom AI builds",     to: "/solutions#custom",    sub: "Your specific business problem, scoped, shipped, owned." },
 ];
 
 const INDUSTRIES: LinkItem[] = [
@@ -170,7 +175,7 @@ export default function SiteNav({ active }: SiteNavProps) {
 
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-6 text-[14px] text-slate-700">
-            {/* Solutions */}
+            {/* Solutions — v69: 8 categories, two-column wide */}
             <DesktopDropdown
               label="Solutions"
               isOpen={openDesktop === "solutions"}
@@ -178,6 +183,7 @@ export default function SiteNav({ active }: SiteNavProps) {
               onOpen={() => openWithIntent("solutions")}
               onClose={closeWithIntent}
               items={SOLUTIONS}
+              columns={2}
               wide
             />
             {/* Industries */}
@@ -414,7 +420,7 @@ function DesktopDropdown({
       </button>
       {isOpen && (
         <div
-          className={`absolute top-full left-0 pt-3 ${wide ? "min-w-[440px]" : columns === 2 ? "min-w-[380px]" : "min-w-[280px]"}`}
+          className={`absolute top-full left-0 pt-3 ${wide && columns === 2 ? "min-w-[560px]" : wide ? "min-w-[440px]" : columns === 2 ? "min-w-[380px]" : "min-w-[280px]"}`}
         >
           <div className="rounded-2xl bg-white border border-slate-200 shadow-[0_20px_50px_-15px_rgba(4,44,83,0.25)] p-2">
             <div className={columns === 2 ? "grid grid-cols-2 gap-1" : "flex flex-col gap-0.5"}>

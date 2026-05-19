@@ -38,7 +38,7 @@ const AFTER_BOOK = [
   {
     n: "03",
     h: "The call",
-    b: "30 minutes, just you and Alexander. We listen to three of your existing calls, write the scope back to you in writing the same day.",
+    b: "30 minutes with the founder — no SDR layer. We listen to three of your existing calls and write the scope back to you the same day.",
   },
 ];
 
@@ -107,24 +107,24 @@ export default function Book() {
             <h1 className="text-[32px] sm:text-[48px] md:text-[60px] leading-[1.06] sm:leading-[1.04] tracking-tight font-semibold text-[#042C53] max-w-4xl mx-auto">
               {playbook ? (
                 <>
-                  Book your {nicheName} build call —{" "}
+                  30 minutes that turn into{" "}
                   <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
-                    Tampa Bay or Zoom.
+                    your next 12 months of {nicheName.toLowerCase()} revenue captured.
                   </span>
                 </>
               ) : (
                 <>
-                  Pick a 30-min slot —{" "}
+                  30 minutes that turn into{" "}
                   <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
-                    Tampa Bay or Zoom.
+                    your next 12 months of revenue captured.
                   </span>
                 </>
               )}
             </h1>
             <p className="mt-5 text-[17px] sm:text-[19px] text-slate-700 max-w-2xl mx-auto leading-relaxed">
               {playbook
-                ? `30 minutes with a real builder who's shipped agents for ${nicheName.toLowerCase()} shops before. Pricing on the call, written scope in your inbox the same day.`
-                : "You walk through your call patterns with a real builder, not an SDR. Pricing on the call, written scope in your inbox the same day."}
+                ? `Walk through the missed calls, after-hours leads, and unfollowed-up contacts costing you ${nicheName.toLowerCase()} revenue today. Leave with a written scope, a real number, and a 21-day delivery date — in your inbox the same day.`
+                : "Walk through the missed calls, after-hours leads, and unfollowed-up contacts costing you revenue today. Leave with a written scope, a real number, and a 21-day delivery date — in your inbox the same day."}
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-2">
               {TRUST_PILLS.map((t) => (
@@ -139,7 +139,7 @@ export default function Book() {
             {/* v54: real scarcity — quarterly build cap, honest about why */}
             <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-[12.5px] text-amber-900">
               <span aria-hidden="true">•</span>
-              Limited to 12 new builds per quarter — Alexander personally scopes every one.
+              Limited to 12 new builds per quarter — the founder personally scopes every one.
             </div>
           </section>
 

@@ -74,7 +74,7 @@ const PLANS = [
     perks: [
       "One agent, fully built and trained on your docs",
       "Live in 7 business days",
-      "Founder Slack channel direct to Alexander",
+      "Founder Slack channel — direct line to the builder, no SDR layer",
       "Weekly tune-up for the first 90 days",
       "Pay only when calls come in",
     ],
@@ -145,7 +145,7 @@ const STACK_ITEMS = [
   { h: "Production voice OR chat agent, trained on YOUR docs",                            v: 8500 },
   { h: "Native CRM + calendar + phone wiring (HubSpot, GHL, ServiceTitan, Twilio, Cal)",  v: 3500 },
   { h: "Weekly transcript review + script tuning, first 90 days",                         v: 4500 },
-  { h: "Direct Slack or email line to Alexander (no SDR layer)",                          v: 2000 },
+  { h: "Direct Slack or email line to the founder (no SDR layer)",                        v: 2000 },
   { h: "Dashboard with calls answered, booked, escalated, missed",                        v: 1500 },
   { h: "30-day money-back guarantee, no clawback fight",                                  v: 0    },
   { h: "Cancel any time after that — no contract trap, your number ports out",            v: 0    },
@@ -154,7 +154,7 @@ const STACK_TOTAL = STACK_ITEMS.reduce((s, i) => s + i.v, 0); // 21,500
 
 // v46a: what's actually in the box on day one — kills "what do I get?" friction.
 const DELIVERABLES = [
-  { n: "01", h: "Kickoff call with the founder", b: "30-min Zoom with Alexander. We listen to 3 of your existing calls, write the scope back to you in writing the same day. No SDR layer." },
+  { n: "01", h: "Kickoff call with the founder", b: "30-min Zoom with the founder. We listen to 3 of your existing calls and write the scope back to you in writing the same day. No SDR layer." },
   { n: "02", h: "Scoped SOW (one page, plain English)", b: "Exactly what we'll build, what integrations get wired, what success looks like at day 14 and day 30. Signed before any code is written." },
   { n: "03", h: "Working agent in 14 days or less", b: "Voice + chat agent answering on a test number, trained on your docs, integrated with your CRM and calendar. You stress-test it before any real traffic." },
   { n: "04", h: "Voice + handoff training (your team)", b: "60-min screen-share to teach your front-desk / dispatch / sales team when the agent escalates, how transcripts land, and where to tune scripts themselves." },
@@ -515,7 +515,7 @@ const Pricing = () => {
             </h2>
             <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-[12.5px] text-amber-900">
               <span aria-hidden>•</span>
-              Limited to 12 new builds per quarter — Alexander personally scopes every one.
+              Limited to 12 new builds per quarter — the founder personally scopes every one.
             </div>
           </div>
           <CalEmbed height={680} />
@@ -557,7 +557,7 @@ const Pricing = () => {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <a href={CAL_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 shadow-lg">Book a 30-min build call → leave with a written plan</a>
-            <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15">Or DM Alexander on LinkedIn</a>
+            <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15">Or DM the founder on LinkedIn</a>
           </div>
           <p className="mt-4 text-[13px] text-white/65">No card, no obligation — 30 min with the founder, written scope same day.</p>
         </div>

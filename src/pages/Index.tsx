@@ -28,6 +28,12 @@ import NetworkIllo from "@/components/illustrations/NetworkIllo";
 import LeadMagnetForm from "@/components/LeadMagnetForm";
 // v54: Hormozi-style risk reversal block (4 promises)
 import RiskReversalBlock from "@/components/RiskReversalBlock";
+// v69: generic Hell→Heaven block (above the fold, visible to all visitors)
+import HellHeavenBlock from "@/components/HellHeavenBlock";
+// v69: motion primitives for stagger reveal + hover lift
+import { RevealUp, StaggerChildren, HoverLift } from "@/components/motion";
+// v69: single source of truth for all stat claims
+import { STATS } from "@/lib/siteStats";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
@@ -110,12 +116,16 @@ type HeroVariant = {
   id: "A" | "B" | "C";
   headlineHtml: JSX.Element;
 };
+// v69: ALL three variants now lead with CUSTOMER OUTCOME. Operator-velocity
+// proof moved to a smaller strip below the fold. The hero is 100% about the
+// outcome the visitor gets, not about who built it.
 const HERO_VARIANTS: HeroVariant[] = [
   {
     id: "A",
     headlineHtml: (
       <>
-        The AI that's <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>actually running</span> your business by morning.
+        Your phones answered. Your bookings filled.{" "}
+        <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Your hours back.</span>
       </>
     ),
   },
@@ -123,7 +133,8 @@ const HERO_VARIANTS: HeroVariant[] = [
     id: "B",
     headlineHtml: (
       <>
-        Talk to a voice agent in <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>5 seconds.</span> Decide in 30.
+        More appointments. Fewer missed calls.{" "}
+        <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Live in 21 days.</span>
       </>
     ),
   },
@@ -131,7 +142,8 @@ const HERO_VARIANTS: HeroVariant[] = [
     id: "C",
     headlineHtml: (
       <>
-        AI that books appointments <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>while you sleep.</span> Live in 21 days.
+        AI that runs the part of your business{" "}
+        <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>that used to run you.</span>
       </>
     ),
   },
@@ -241,20 +253,25 @@ const Index = () => {
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E6F1FB] text-[#042C53] text-[12px] font-semibold tracking-[0.12em] uppercase mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#22A36C] animate-pulse" /> Live · Agents in production
             </div>
-            <h1
-              className="text-[34px] sm:text-[56px] md:text-[68px] lg:text-[80px] leading-[1.02] sm:leading-[0.98] tracking-tight font-semibold text-[#042C53]"
-              data-hero-variant={heroVariant.id}
-            >
-              {heroVariant.headlineHtml}
-            </h1>
+            <RevealUp as="div" y={20} duration={0.7}>
+              <h1
+                className="text-[34px] sm:text-[56px] md:text-[68px] lg:text-[80px] leading-[1.02] sm:leading-[0.98] tracking-tight font-semibold text-[#042C53]"
+                data-hero-variant={heroVariant.id}
+              >
+                {heroVariant.headlineHtml}
+              </h1>
+            </RevealUp>
             <p className="mt-7 text-[18px] sm:text-[20px] text-slate-700 leading-relaxed max-w-2xl">
+              {/* v69: WHAT + HOW in customer terms. Everything-AI breadth (8 categories).
+                  No "operator", no "4 years", no founder name. Operator-velocity proof
+                  is demoted to a small "Why us" strip below the Hell→Heaven block. */}
               {playbook ? (
                 <>
-                  AI voice and chat agents for <span className="text-[#042C53] font-medium">{nicheName} operators</span> — built by an operator <span className="text-[#042C53] font-medium">4 years deep in applied AI</span>. 339+ public commits, 569 live URLs, working product. <Link to="/proof" className="text-[#185FA5] underline underline-offset-2">See the receipts →</Link>
+                  Voice agents that answer your phone 24/7. Chat agents that qualify your <span className="text-[#042C53] font-medium">{nicheName.toLowerCase()}</span> leads. Marketing AI that fills your calendar. Brand systems, infrastructure, custom builds — the full AI layer for your business, deployed in <span className="text-[#042C53] font-medium">21 days</span>. Pay only when it earns.
                 </>
               ) : (
                 <>
-                  Voice agents, lead gen, creative, infrastructure — built by an operator <span className="text-[#042C53] font-medium">4 years deep in applied AI</span>. 339+ public commits, 569 live URLs, working product. <Link to="/proof" className="text-[#185FA5] underline underline-offset-2">See the receipts →</Link>
+                  Voice agents that answer your phone 24/7. Chat agents that qualify your leads. Marketing AI that books your calendar. Infrastructure builds, brand systems, internal tooling — the full AI layer for your business, deployed in <span className="text-[#042C53] font-medium">21 days</span>. Pay only when it earns.
                 </>
               )}
             </p>
@@ -270,12 +287,14 @@ const Index = () => {
             )}
             {/* v61: removed ShipsCounter — proof strip below has verifiable, sourced numbers */}
             <div className="mt-9 flex flex-col sm:flex-row gap-3">
-              <Link to="/tools/agent-builder" className="px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] transition shadow-lg shadow-[#042C53]/15 flex items-center justify-between gap-3 min-w-[260px]">
-                <span className="flex flex-col items-start leading-tight">
-                  <span className="text-[11px] uppercase tracking-[0.16em] text-[#9CC4EC] font-semibold mb-1">Primary action · 30 seconds</span>
-                  <span>Build your own AI agent →</span>
-                </span>
-              </Link>
+              <HoverLift>
+                <Link to="/tools/agent-builder" className="px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] transition shadow-lg shadow-[#042C53]/15 flex items-center justify-between gap-3 min-w-[260px]">
+                  <span className="flex flex-col items-start leading-tight">
+                    <span className="text-[11px] uppercase tracking-[0.16em] text-[#9CC4EC] font-semibold mb-1">Primary action · 30 seconds</span>
+                    <span>Build your own AI agent →</span>
+                  </span>
+                </Link>
+              </HoverLift>
             </div>
             {/* v61: ONE secondary link — talk to a real AI agent. Other CTAs moved below the hero. */}
             <div className="mt-4">
@@ -291,19 +310,9 @@ const Index = () => {
               </Link>
             </div>
 
-            {/* v46a: founder-credential strip, honest about the team behind the work */}
-            <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] text-slate-700 max-w-2xl">
-              <span className="inline-flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#042C53]" aria-hidden="true" />
-                <strong className="font-semibold text-[#042C53]">Alexander Mills</strong>, Founder
-              </span>
-              <span className="text-slate-400" aria-hidden="true">·</span>
-              <span>Tampa Bay, FL</span>
-              <span className="text-slate-400" aria-hidden="true">·</span>
-              <span>4 yrs in AI</span>
-              <span className="text-slate-400" aria-hidden="true">·</span>
-              <Link to="/metrics" className="text-[#185FA5] font-medium hover:underline">Building this in public →</Link>
-            </div>
+            {/* v69: founder-credential strip REMOVED from hero — moved below
+                the Hell→Heaven block as a small "About the operator" callout.
+                Hero is now 100% about the customer outcome. */}
           </div>
 
           {/* v63: 10x conversion lever — live voice demo embedded directly in
@@ -353,6 +362,31 @@ const Index = () => {
         </div>
       </section>
 
+      {/* v69: HELL → HEAVEN — generic, visible to ALL visitors above the fold.
+          Niche-personalized version still renders further down when a niche
+          is set in VisitorContext. */}
+      <HellHeavenBlock />
+
+      {/* v69: small "About the operator" strip — founder/operator chrome
+          demoted from hero to a supporting signal here. */}
+      <section className="px-5 sm:px-8 py-6 sm:py-7 bg-white border-b border-slate-200/70">
+        <div className="max-w-6xl mx-auto flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] text-slate-700">
+          <span className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold">
+            About the operator
+          </span>
+          <span className="text-slate-300" aria-hidden="true">·</span>
+          <span>
+            Built by <strong className="font-semibold text-[#042C53]">Alexander Mills</strong> in Tampa Bay, FL
+          </span>
+          <span className="text-slate-300" aria-hidden="true">·</span>
+          <span>{STATS.yearsInAI} yrs deep in AI</span>
+          <span className="text-slate-300" aria-hidden="true">·</span>
+          <Link to="/proof" className="text-[#185FA5] font-medium hover:underline">
+            {STATS.publicCommits}+ public commits — see the receipts →
+          </Link>
+        </div>
+      </section>
+
       {/* v63: LIVE KPI STRIP — real numbers pulled from /api/public-metrics,
           above the fold. Closes Grok Heavy's "move /metrics + /proof numbers
           to home page above fold" callout. */}
@@ -377,14 +411,17 @@ const Index = () => {
       {/* v44: animated section divider */}
       <SectionDivider />
 
-      {/* PROOF STRIP — count-up animated; every number is publicly verifiable */}
+      {/* PROOF STRIP — count-up animated; every number is publicly verifiable.
+          v69: numbers now reference STATS (single source of truth). */}
       <section className="px-5 sm:px-8 py-14 border-y border-slate-200 bg-white">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
-          <AnimatedStat value={4}    suffix=" yrs" label="In applied AI · every major model shift" />
-          <AnimatedStat value={339}  suffix="+" label="Public commits · on GitHub" href="https://github.com/builderofages/trainyouragent/commits/main" />
-          <AnimatedStat value={569}             label="Live URLs · in production" href="/sitemap.xml" />
-          <AnimatedStat value={15}              label="Niche playbooks · real cited data" href="/playbooks" />
-        </div>
+        <RevealUp>
+          <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
+            <AnimatedStat value={STATS.yearsInAI}     suffix=" yrs" label="In applied AI · every major model shift" />
+            <AnimatedStat value={STATS.publicCommits} suffix="+"    label="Public commits · on GitHub" href="https://github.com/builderofages/trainyouragent/commits/main" />
+            <AnimatedStat value={STATS.totalRoutes}                 label="Live URLs · in production" href="/sitemap.xml" />
+            <AnimatedStat value={STATS.playbooks}                   label="Niche playbooks · real cited data" href="/playbooks" />
+          </div>
+        </RevealUp>
       </section>
 
       <SectionDivider />
@@ -492,14 +529,14 @@ const Index = () => {
               <NetworkIllo style={{ width: "100%", maxWidth: 360, height: "auto", margin: "0 auto" }} />
             </div>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <StaggerChildren className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3" delay={0.05}>
             {CAPABILITIES.map((c, i) => (
-              <div key={i} className="rounded-2xl bg-white border border-slate-200 p-5 hover:border-[#185FA5] hover:shadow-[0_4px_24px_-8px_rgba(4,44,83,0.18)] transition">
+              <div key={i} className="rounded-2xl bg-white border border-slate-200 p-5 hover:border-[#185FA5] hover:shadow-[0_4px_24px_-8px_rgba(4,44,83,0.18)] hover:-translate-y-0.5 transition-all duration-200">
                 <div className="text-[15px] font-semibold text-[#042C53] mb-2">{c.h}</div>
                 <div className="text-[13px] text-slate-600 leading-relaxed">{c.b}</div>
               </div>
             ))}
-          </div>
+          </StaggerChildren>
         </div>
       </section>
 
@@ -544,9 +581,9 @@ const Index = () => {
               Built for your industry. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Not the average of all of them.</span>
             </h2>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <StaggerChildren className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3" delay={0.05}>
             {VERTICALS.map((v, i) => (
-              <Link key={i} to={v.slug} className="group rounded-2xl bg-white border border-slate-200 p-5 hover:border-[#042C53] hover:shadow-[0_4px_24px_-10px_rgba(4,44,83,0.2)] transition">
+              <Link key={i} to={v.slug} className="group rounded-2xl bg-white border border-slate-200 p-5 hover:border-[#042C53] hover:shadow-[0_4px_24px_-10px_rgba(4,44,83,0.2)] hover:-translate-y-0.5 transition-all duration-200">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <div className="text-[16px] font-semibold text-[#042C53] mb-1">{v.label}</div>
@@ -556,7 +593,7 @@ const Index = () => {
                 </div>
               </Link>
             ))}
-          </div>
+          </StaggerChildren>
         </div>
       </section>
 
@@ -664,7 +701,7 @@ const Index = () => {
                   "Production AI voice OR chat agent (your pick), live in 21 days",
                   "Wiring into your CRM, calendar, and phone stack — we do the integration work",
                   "Weekly transcript review + script tuning for the first 90 days",
-                  "Direct Slack or email line to Alexander (no SDR layer, no account manager)",
+                  "Direct Slack or email line to the founder (no SDR layer, no account manager)",
                   "Real-time dashboard — calls answered, booked, escalated, missed",
                   "30-day money-back guarantee, no clawback fight",
                   "Month-to-month after that — no multi-year contract trap",
@@ -759,10 +796,10 @@ const Index = () => {
               {playbook ? `Book your ${nicheName} build call → 30-min scoping, free` : "Book a 30-min build call → leave with a written plan"}
             </Link>
             <Link to="/voice-demo" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition">Talk to a live AI agent in your browser → 60 sec, no signup</Link>
-            <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition">Or DM Alexander on LinkedIn</a>
+            <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition">Or DM the founder on LinkedIn</a>
           </div>
           <p className="mt-5 text-[13px] text-white/60">
-            Limited to 12 new builds per quarter — Alexander personally scopes every one.
+            Limited to 12 new builds per quarter — the founder personally scopes every one.
           </p>
         </div>
       </section>

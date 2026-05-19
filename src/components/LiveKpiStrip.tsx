@@ -12,6 +12,8 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+// v69: single source of truth for fallback numbers
+import { STATS } from "@/lib/siteStats";
 
 const SESSION_KEY = "tya:home-kpi-v1";
 const CACHE_MS = 30 * 60 * 1000; // 30 min
@@ -89,8 +91,8 @@ export default function LiveKpiStrip() {
     return () => { cancelled = true; };
   }, []);
 
-  const commits = data?.business?.totalCommits ?? 339;
-  const livePages = data?.business?.livePages ?? 569;
+  const commits = data?.business?.totalCommits ?? STATS.publicCommits;
+  const livePages = data?.business?.livePages ?? STATS.totalRoutes;
   const days = daysSinceFirstCommit();
 
   const cards: { value: string; label: string; sub: string; href: string; external?: boolean }[] = [
