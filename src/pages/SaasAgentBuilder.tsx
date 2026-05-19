@@ -124,9 +124,15 @@ export default function SaasAgentBuilder() {
           <div className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[1100px] h-[1100px] rounded-full opacity-60" style={{ background: "radial-gradient(closest-side, #DCEBFA 0%, rgba(220,235,250,0) 70%)" }} />
         </div>
         <div className="max-w-5xl mx-auto">
+          {/* v72: back-link to the full platform — reinforces this is a tier, not the whole company */}
+          <RevealUp y={10}>
+            <Link to="/" className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[#185FA5] hover:text-[#042C53] mb-4">
+              <span aria-hidden>←</span> Back to the full Everything-AI platform
+            </Link>
+          </RevealUp>
           <RevealUp y={18}>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E6F1FB] text-[#042C53] text-[12px] font-semibold tracking-[0.12em] uppercase mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#22A36C] animate-pulse" /> Self-Serve · $99/mo · live today
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22A36C] animate-pulse" /> Self-serve tier · $99/mo · live today · part of the TYA platform
             </div>
           </RevealUp>
           <RevealUp y={22} duration={0.7}>

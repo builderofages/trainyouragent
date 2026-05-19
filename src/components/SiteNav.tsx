@@ -65,6 +65,8 @@ const SOLUTIONS: LinkItem[] = [
   { label: "Brand systems",        to: "/solutions#brand",     sub: "Logo, type, voice, site — built for the AI age." },
   { label: "Internal tooling",     to: "/solutions#infra",     sub: "Dashboards, ops scripts, AI co-pilots wired to your stack." },
   { label: "Custom AI builds",     to: "/solutions#custom",    sub: "Your specific business problem, scoped, shipped, owned." },
+  // v72: self-serve tier surfaced inside Solutions (was a top-level nav item; moved here to decongest the bar)
+  { label: "Self-serve & developer tools", to: "/saas",        sub: "Build your own agent. $99/mo. Live today." },
 ];
 
 const INDUSTRIES: LinkItem[] = [
@@ -221,35 +223,7 @@ export default function SiteNav({ active }: SiteNavProps) {
             >
               Pricing
             </Link>
-            {/* v71: SaaS catalog — productized tiers (no SDR loop) */}
-            <Link
-              to="/saas"
-              className="hover:text-[#042C53] inline-flex items-center gap-1.5"
-              aria-label="Self-serve SaaS products"
-            >
-              SaaS
-              <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[10px] uppercase tracking-[0.1em] font-semibold">
-                New
-              </span>
-            </Link>
-            {/* v71: hire-the-operator direct page */}
-            <Link
-              to="/hire"
-              className="hover:text-[#042C53] inline-flex items-center gap-1.5"
-              aria-label="Hire the operator — direct custom build"
-            >
-              Hire
-            </Link>
-            {/* v38: 7-day live trial pitch surfaced as a top-level destination */}
-            <Link
-              to="/trial"
-              className={`hover:text-[#042C53] inline-flex items-center gap-1.5 ${active === "trial" ? "text-[#042C53] font-semibold" : ""}`}
-            >
-              Trial
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[10px] uppercase tracking-[0.1em] font-semibold">
-                7d
-              </span>
-            </Link>
+            {/* v72: SaaS / Hire / Trial removed from top-level nav to fix Book-a-Call wrap. SaaS lives inside Solutions dropdown. Hire is reachable via /about + footer. Trial CTA lives on /pricing. */}
             <Link
               to="/about"
               className={`hover:text-[#042C53] ${active === "about" ? "text-[#042C53] font-semibold" : ""}`}
@@ -278,7 +252,7 @@ export default function SiteNav({ active }: SiteNavProps) {
               href={CAL_URL}
               target="_blank"
               rel="noopener"
-              className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-semibold hover:bg-[#0A3D6E] shadow-sm transition"
+              className="px-5 py-2.5 rounded-full bg-[#042C53] text-white text-[13px] font-semibold hover:bg-[#0A3D6E] shadow-sm transition whitespace-nowrap min-w-[120px] text-center"
             >
               Book a Call
             </a>
@@ -344,33 +318,7 @@ export default function SiteNav({ active }: SiteNavProps) {
               >
                 Pricing
               </Link>
-              <Link
-                to="/saas"
-                onClick={() => setMobileOpen(false)}
-                className="px-3 py-3 rounded-lg text-[#042C53] font-medium hover:bg-[#F6FAFE] inline-flex items-center gap-2"
-              >
-                SaaS
-                <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[10px] uppercase tracking-[0.1em] font-semibold">
-                  New
-                </span>
-              </Link>
-              <Link
-                to="/hire"
-                onClick={() => setMobileOpen(false)}
-                className="px-3 py-3 rounded-lg text-[#042C53] font-medium hover:bg-[#F6FAFE]"
-              >
-                Hire
-              </Link>
-              <Link
-                to="/trial"
-                onClick={() => setMobileOpen(false)}
-                className="px-3 py-3 rounded-lg text-[#042C53] font-medium hover:bg-[#F6FAFE] inline-flex items-center gap-2"
-              >
-                Trial
-                <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[10px] uppercase tracking-[0.1em] font-semibold">
-                  7-day
-                </span>
-              </Link>
+              {/* v72: mobile SaaS / Hire / Trial removed from top-level. SaaS reachable via Solutions accordion; Hire via /about + footer; Trial via /pricing. */}
               <Link
                 to="/about"
                 onClick={() => setMobileOpen(false)}

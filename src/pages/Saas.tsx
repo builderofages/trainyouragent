@@ -133,19 +133,26 @@ export default function Saas() {
         <div className="max-w-5xl mx-auto">
           <RevealUp y={18}>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E6F1FB] text-[#042C53] text-[12px] font-semibold tracking-[0.12em] uppercase mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#22A36C] animate-pulse" /> 3 SaaS products · 1 live · 2 in build
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22A36C] animate-pulse" /> Self-serve tier · part of the Everything-AI platform
             </div>
           </RevealUp>
           <RevealUp y={22} duration={0.7}>
             <h1 className="text-[36px] sm:text-[58px] md:text-[70px] leading-[1.02] tracking-tight font-semibold text-[#042C53]">
-              Pay-as-you-go AI{" "}
-              <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>without the agency tax.</span>
+              Self-serve the same agents we build for enterprise.{" "}
+              <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Or have us build them for you.</span>
             </h1>
           </RevealUp>
           <RevealUp y={16} delay={0.05}>
             <p className="mt-6 text-[17px] sm:text-[19px] text-slate-700 max-w-3xl leading-relaxed">
-              The agency engagement isn't for everyone. These are the productized SaaS tiers — pick a tool, swipe a card, start using it today. No SDR call required.
+              Three productized tiers built on the platform behind every TrainYourAgent build. Start at $49/mo, or skip ahead to a custom deploy with the operator.
             </p>
+          </RevealUp>
+          {/* v72: band above product grid — keep the premium custom-build path visible */}
+          <RevealUp y={12} delay={0.1}>
+            <div className="mt-7 inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-slate-200 text-[13.5px] text-slate-700">
+              <span className="text-slate-500">Prefer we build it?</span>
+              <Link to="/pricing" className="font-semibold text-[#042C53] hover:text-[#185FA5] inline-flex items-center gap-1">See custom builds →</Link>
+            </div>
           </RevealUp>
         </div>
       </section>
@@ -234,6 +241,16 @@ export default function Saas() {
               </HoverLift>
             ))}
           </StaggerChildren>
+        </div>
+      </section>
+
+      {/* v72: band below product grid — keeps the /hire path discoverable */}
+      <section className="px-5 sm:px-8 pb-6">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#F6FAFE] border border-[#DCEBFA] text-[13.5px] text-slate-700">
+            <span className="text-slate-500">Want the operator to architect it?</span>
+            <Link to="/hire" className="font-semibold text-[#042C53] hover:text-[#185FA5] inline-flex items-center gap-1">Hire him direct →</Link>
+          </div>
         </div>
       </section>
 
