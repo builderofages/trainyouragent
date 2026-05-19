@@ -83,6 +83,10 @@ const STATIC_PAGES: { path: string; priority: number; changefreq: string }[] = [
   { path: "/tools/voice-script-generator", priority: 0.85, changefreq: "monthly" },
   { path: "/tools/cold-dm-generator",      priority: 0.85, changefreq: "monthly" },
   { path: "/tools/diagnose",               priority: 0.85, changefreq: "monthly" },
+  // v71: hire-the-operator + SaaS catalog + paid Agent Builder
+  { path: "/hire",                         priority: 0.95, changefreq: "weekly"  },
+  { path: "/saas",                         priority: 0.9,  changefreq: "weekly"  },
+  { path: "/saas/agent-builder",           priority: 0.9,  changefreq: "weekly"  },
   // v52B: founder log + glossary + whitelabel + reseller (data-room is noindex)
   { path: "/founder-log",               priority: 0.7,  changefreq: "daily"   },
   { path: "/glossary",                  priority: 0.8,  changefreq: "monthly" },

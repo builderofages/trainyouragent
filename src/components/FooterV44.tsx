@@ -7,6 +7,11 @@ const PRODUCT = [
   { label: "Solutions", to: "/solutions" },
   { label: "Playbooks (15 niches)", to: "/playbooks" },
   { label: "Pricing", to: "/pricing" },
+  // v71: productized self-serve SaaS catalog
+  { label: "SaaS catalog", to: "/saas" },
+  { label: "Agent Builder ($99/mo)", to: "/saas/agent-builder" },
+  // v71: direct-hire (custom build engagement)
+  { label: "Hire the operator", to: "/hire" },
   { label: "Trial", to: "/trial" },
   { label: "Integrations", to: "/integrations" },
   { label: "Live demos", to: "/demos" },

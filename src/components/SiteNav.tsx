@@ -221,6 +221,25 @@ export default function SiteNav({ active }: SiteNavProps) {
             >
               Pricing
             </Link>
+            {/* v71: SaaS catalog — productized tiers (no SDR loop) */}
+            <Link
+              to="/saas"
+              className="hover:text-[#042C53] inline-flex items-center gap-1.5"
+              aria-label="Self-serve SaaS products"
+            >
+              SaaS
+              <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[10px] uppercase tracking-[0.1em] font-semibold">
+                New
+              </span>
+            </Link>
+            {/* v71: hire-the-operator direct page */}
+            <Link
+              to="/hire"
+              className="hover:text-[#042C53] inline-flex items-center gap-1.5"
+              aria-label="Hire the operator — direct custom build"
+            >
+              Hire
+            </Link>
             {/* v38: 7-day live trial pitch surfaced as a top-level destination */}
             <Link
               to="/trial"
@@ -324,6 +343,23 @@ export default function SiteNav({ active }: SiteNavProps) {
                 className="px-3 py-3 rounded-lg text-[#042C53] font-medium hover:bg-[#F6FAFE]"
               >
                 Pricing
+              </Link>
+              <Link
+                to="/saas"
+                onClick={() => setMobileOpen(false)}
+                className="px-3 py-3 rounded-lg text-[#042C53] font-medium hover:bg-[#F6FAFE] inline-flex items-center gap-2"
+              >
+                SaaS
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[10px] uppercase tracking-[0.1em] font-semibold">
+                  New
+                </span>
+              </Link>
+              <Link
+                to="/hire"
+                onClick={() => setMobileOpen(false)}
+                className="px-3 py-3 rounded-lg text-[#042C53] font-medium hover:bg-[#F6FAFE]"
+              >
+                Hire
               </Link>
               <Link
                 to="/trial"

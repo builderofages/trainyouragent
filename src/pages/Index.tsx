@@ -34,6 +34,9 @@ import HellHeavenBlock from "@/components/HellHeavenBlock";
 import { RevealUp, StaggerChildren, HoverLift } from "@/components/motion";
 // v69: single source of truth for all stat claims
 import { STATS } from "@/lib/siteStats";
+// v71: 8-capability hero chip row — fixes Grok's "voice-heavy" ding by making
+// the Everything-AI breadth visible above the fold without a scroll.
+import HeroCapabilityChips from "@/components/HeroCapabilityChips";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
@@ -261,6 +264,10 @@ const Index = () => {
                 {heroVariant.headlineHtml}
               </h1>
             </RevealUp>
+            {/* v71: 8-capability chip row — Everything-AI breadth in one glance,
+                no scroll required. Fixes the only visible ding Grok Heavy flagged
+                on the v69 reframe. */}
+            <HeroCapabilityChips />
             <p className="mt-7 text-[18px] sm:text-[20px] text-slate-700 leading-relaxed max-w-2xl">
               {/* v69: WHAT + HOW in customer terms. Everything-AI breadth (8 categories).
                   No "operator", no "4 years", no founder name. Operator-velocity proof

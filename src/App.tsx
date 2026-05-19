@@ -164,6 +164,11 @@ const VoiceScriptGenerator   = lazy(() => import("./pages/tools/VoiceScriptGener
 const ColdDmGenerator        = lazy(() => import("./pages/tools/ColdDmGenerator"));
 const DiagnoseWizard         = lazy(() => import("./pages/tools/DiagnoseWizard"));
 
+// v71: /hire direct-hire page + /saas product catalog + /saas/agent-builder paid tier
+const Hire                   = lazy(() => import("./pages/Hire"));
+const Saas                   = lazy(() => import("./pages/Saas"));
+const SaasAgentBuilder       = lazy(() => import("./pages/SaasAgentBuilder"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -344,6 +349,10 @@ const App = () => {
             {/* v67A: per-niche conversion landing pages — MUST come before
                  /:vertical/:city catchall or it will be swallowed. */}
             <Route path="/build/:niche" element={<BuildLanding />} />
+            {/* v71: hire-the-operator page + SaaS product catalog + paid agent builder */}
+            <Route path="/hire" element={<Hire />} />
+            <Route path="/saas" element={<Saas />} />
+            <Route path="/saas/agent-builder" element={<SaasAgentBuilder />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />

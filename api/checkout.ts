@@ -25,6 +25,8 @@ const PRICE_FOUNDERS  = process.env.STRIPE_PRICE_FOUNDERS_BUILD || "";
 const PRICE_STARTER  = process.env.STRIPE_PRICE_STARTER  || "";
 const PRICE_OPERATOR = process.env.STRIPE_PRICE_OPERATOR || "";
 const PRICE_SCALE    = process.env.STRIPE_PRICE_SCALE    || "";
+// v71: SaaS Self-Serve Agent Builder $99/mo recurring
+const PRICE_SAAS_AGENT_BUILDER = process.env.STRIPE_PRICE_SAAS_AGENT_BUILDER || "";
 
 // Hardcoded success/cancel URLs — never accept these from the client.
 // v38: success URL routes to /onboarding so new customers land in the
@@ -45,6 +47,8 @@ const PLANS: Record<string, { priceEnv: string; mode: "subscription" | "payment"
   starter:   { priceEnv: "STRIPE_PRICE_STARTER",  mode: "subscription" },
   operator:  { priceEnv: "STRIPE_PRICE_OPERATOR", mode: "subscription" },
   scale:     { priceEnv: "STRIPE_PRICE_SCALE",    mode: "subscription" },
+  // v71: SaaS Self-Serve Agent Builder — $99/mo recurring
+  "saas-agent-builder": { priceEnv: "STRIPE_PRICE_SAAS_AGENT_BUILDER", mode: "subscription" },
 };
 
 function resolvePriceId(plan: string): string {
@@ -54,6 +58,7 @@ function resolvePriceId(plan: string): string {
     case "starter":   return PRICE_STARTER;
     case "operator":  return PRICE_OPERATOR;
     case "scale":     return PRICE_SCALE;
+    case "saas-agent-builder": return PRICE_SAAS_AGENT_BUILDER;
     default: return "";
   }
 }

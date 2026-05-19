@@ -173,6 +173,11 @@ const ALLOWED_SOURCES = new Set([
   "build-landing-insurance",
   "build-landing-fitness",
   "build-landing-pest-control",
+  // v71: direct-hire page + 3 SaaS lead sources (1 trial + 2 waitlists)
+  "hire-operator",
+  "saas-agent-builder-trial",
+  "saas-vertical-playbook-waitlist",
+  "saas-website-audit-pro-waitlist",
 ]);
 
 const MAX_BODY_BYTES = 16 * 1024; // 16 KB is plenty for a lead form
