@@ -34,6 +34,10 @@ const ALLOWED_EVENT_TYPES = new Set([
   // v57B: funnel completion events fired from Stripe/Cal webhooks and client-side
   "booking_created",
   "purchase_completed",
+  // v76-B: home hero h1 A/B test telemetry. Source carries the variant
+  // suffix (hero-ab-impression-A / hero-ab-cta-click-B etc).
+  "hero-ab-impression",
+  "hero-ab-cta-click",
 ]);
 
 type Body = {

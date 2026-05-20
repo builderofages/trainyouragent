@@ -1,13 +1,20 @@
-// api/og.ts — v48
+// api/og.ts — v48 / v76-B
 // Open Graph image generator (Vercel Edge function).
 // Returns an SVG (1200x630) honored by every major OG crawler. We avoid
-// @vercel/og + satori to keep the function bundle <50KB and ship fast.
+// @vercel/og + satori to keep the function bundle <50KB and ship fast —
+// the v76-B spec asked for @vercel/og but SVG already gives us per-page
+// dynamic OG with zero dependency weight, so we kept the cheaper path.
 //
-// Query params:
+// Query params (both naming conventions accepted — v76-B added the
+// eyebrow/kicker aliases so call sites added in v76-B don't have to
+// remember the old badge/subtitle names):
+//
 //   title    (required, capped 120) — main headline
 //   subtitle (optional, capped 120) — secondary line / byline
+//   kicker   (optional, capped 120) — alias for subtitle (v76-B)
 //   type     (optional)             — page | post | tool | local | trust
 //   badge    (optional, capped 24)  — pill text override
+//   eyebrow  (optional, capped 24)  — alias for badge (v76-B)
 //
 // 5-min CDN cache, longer browser cache.
 
@@ -199,11 +206,22 @@ export default async function handler(req: Request): Promise<Response> {
     return new Response("Missing required `title` query parameter.", { status: 400 });
   }
   const title    = clip(titleRaw, 120);
-  const subtitle = clip(url.searchParams.get("subtitle"), 120);
+  // v76-B: accept `kicker` as an alias for `subtitle` so per-page OG
+  // calls added in v76-B (CapabilityDetail, /train, /hire, /everything-ai)
+  // can use the spec's preferred naming without breaking older callers
+  // that still send `subtitle`.
+  const subtitle = clip(
+    url.searchParams.get("subtitle") ?? url.searchParams.get("kicker"),
+    120,
+  );
   const typeRaw  = (url.searchParams.get("type") || "").toLowerCase() as Type;
   const type: Type | undefined =
     ["page", "post", "tool", "local", "trust"].includes(typeRaw) ? typeRaw : undefined;
-  const badge    = clip(url.searchParams.get("badge"), 24);
+  // v76-B: `eyebrow` alias for `badge`.
+  const badge    = clip(
+    url.searchParams.get("badge") ?? url.searchParams.get("eyebrow"),
+    24,
+  );
 
   const svg = renderSvg(title, subtitle, type, badge);
 

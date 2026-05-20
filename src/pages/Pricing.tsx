@@ -10,7 +10,9 @@ import CalEmbed from "@/components/CalEmbed";
 import RiskReversalBlock from "@/components/RiskReversalBlock";
 import ToastHost, { toast } from "@/components/Toast";
 import SiteNav from "@/components/SiteNav";
-import DashboardIllo from "@/components/illustrations/DashboardIllo";
+// v76-B: DashboardIllo removed from /pricing — a fake "+38% MoM" growth
+// chart was sitting above the plan cards. Growth charts have no business
+// on a pricing page; spec asked for a clean tier comparison summary.
 import { ogUrl } from "@/lib/og";
 // v53: visitor context for niche-aware recommendations
 import { useVisitor, nicheDisplayName } from "@/lib/visitorContext";
@@ -315,8 +317,33 @@ const Pricing = () => {
               </div>
             </div>
           )}
-          <div className="mt-10 max-w-2xl mx-auto opacity-90">
-            <DashboardIllo style={{ width: "100%", height: "auto" }} />
+          {/* v76-B: clean tier comparison summary (Self-Serve / Custom
+              Build / Hire Operator). Replaces the placeholder "+38% MoM"
+              stylized chart. Compact at-a-glance — full plan cards are
+              the section below. */}
+          <div className="mt-10 max-w-4xl mx-auto">
+            <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+              <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 text-left">
+                <div className="p-5">
+                  <div className="text-[10.5px] uppercase tracking-[0.16em] font-semibold text-[#185FA5] mb-1 font-mono">Self-Serve</div>
+                  <div className="text-[18px] font-semibold text-[#042C53] mb-1">Founders</div>
+                  <div className="text-[13px] text-slate-600 leading-snug mb-3">$0 upfront. Pay $0.18/min only when calls land.</div>
+                  <div className="text-[12px] text-slate-500">Live in 7 days · weekly tune-up · founder Slack</div>
+                </div>
+                <div className="p-5 bg-[#F6FAFE]">
+                  <div className="text-[10.5px] uppercase tracking-[0.16em] font-semibold text-[#22A36C] mb-1 font-mono">Custom Build</div>
+                  <div className="text-[18px] font-semibold text-[#042C53] mb-1">Operators</div>
+                  <div className="text-[13px] text-slate-600 leading-snug mb-3">$4,950 build + $799/mo all-in (4,000 min included).</div>
+                  <div className="text-[12px] text-slate-500">Live in 14 days · CRM + dispatch wired · weekly engineer review</div>
+                </div>
+                <div className="p-5">
+                  <div className="text-[10.5px] uppercase tracking-[0.16em] font-semibold text-[#185FA5] mb-1 font-mono">Hire Operator</div>
+                  <div className="text-[18px] font-semibold text-[#042C53] mb-1">Scale</div>
+                  <div className="text-[13px] text-slate-600 leading-snug mb-3">Custom. Scoped on a 30-min architecture call.</div>
+                  <div className="text-[12px] text-slate-500">Dedicated engineer · SLA · SOC 2 evidence pack</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

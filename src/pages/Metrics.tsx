@@ -10,7 +10,11 @@ import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
 import SectionDivider from "@/components/SectionDivider";
-import DashboardIllo from "@/components/illustrations/DashboardIllo";
+// v76-B: DashboardIllo (placeholder "+38% MoM" stylized chart) removed —
+// directly contradicted the copy 40px above it ("we don't inflate numbers,
+// invent customers, or fake activity"). Replaced with real CommitGraph
+// pulling 52 weekly buckets from /api/github-velocity.
+import CommitGraph from "@/components/CommitGraph";
 // v52B: live GitHub commits feed
 import ShippedThisWeek from "@/components/ShippedThisWeek";
 
@@ -117,8 +121,14 @@ export default function Metrics() {
           <p className="mt-3 text-[13.5px] text-slate-500 max-w-2xl border-l-2 border-amber-300 pl-3 bg-amber-50/40 py-2 rounded-r">
             We publish this page because we'd rather you see honest zeros than fake hundreds. Pre-customer in this exact site/product configuration — see <Link to="/proof" className="text-[#185FA5] underline underline-offset-2">/proof</Link> for what IS verifiable about how we ship.
           </p>
-          <div className="mt-8 max-w-xl opacity-90">
-            <DashboardIllo style={{ width: "100%", height: "auto" }} />
+          {/* v76-B: real GitHub velocity chart — 52 weekly buckets, live
+              from /api/github-velocity. Replaces the placeholder "+38% MoM"
+              stylized chart that contradicted the no-inflation copy above. */}
+          <div className="mt-8">
+            <div className="text-[11px] uppercase tracking-[0.18em] font-semibold text-[#185FA5] mb-2 font-mono">
+              Public commits · last 52 weeks · live from GitHub
+            </div>
+            <CommitGraph />
           </div>
         </section>
 
