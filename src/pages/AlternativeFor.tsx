@@ -62,6 +62,10 @@ export const ALT_COMPETITORS = {
   // v68: capture the two largest "vs TYA" search buckets
   zapier:    { name: "Zapier",     url: "https://zapier.com",     tag: "generic workflow automation glue" },
   intercom:  { name: "Intercom",   url: "https://intercom.com",   tag: "enterprise chat platform for B2B SaaS support" },
+  // v76-B: top-5-most-trafficked competitor pages refresh — add Drift +
+  // Voiceflow as competitor-only landing pages with their own copy.
+  drift:     { name: "Drift",      url: "https://www.drift.com",  tag: "conversational marketing chat platform (Salesloft-owned)" },
+  voiceflow: { name: "Voiceflow",  url: "https://www.voiceflow.com", tag: "drag-and-drop AI agent builder" },
 } as const;
 
 export type AltCompetitorKey = keyof typeof ALT_COMPETITORS;
@@ -170,11 +174,31 @@ type CompetitorOnlyContent = {
   hero: string;
   sections: CompetitorOnlySection[];
   faq: { q: string; a: string }[];
+  // v76-B: link to the matching cornerstone playbook so visitors can see
+  // exactly what TYA's offering looks like in production, not just how we
+  // compare in the abstract.
+  cornerstone?: { slug: string; label: string };
 };
 
+// v76-B: top-5 competitor-only pages refreshed with 2026-current pricing
+// and a "where TrainYourAgent wins" cornerstone deep-link per spec.
+//
+// Pricing notes (all verified as of v76-B / 2026-05):
+//   Zapier:    Free $0 · Pro $29.99/mo · Team $103.50/mo · Enterprise (call)
+//              + per-task billing on Pro/Team tiers.
+//   Intercom:  Essential $39/seat · Advanced $99/seat · Expert $139/seat ·
+//              Fin AI ~$0.99/resolution.
+//   Drift:     Premium $2,500/mo · Advanced $5,000/mo · Enterprise (custom).
+//              Now owned by Salesloft; merger pushed pricing further upmarket.
+//   Voiceflow: Sandbox Free · Pro $60/editor/mo · Teams $250/editor/mo ·
+//              Enterprise (custom). Builder-only — you ship and host the agent.
+//   Bland.ai:  $0.09/min on shared infra · $0.13/min on dedicated · Enterprise
+//              (custom + monthly minimums). Developer-first voice API only —
+//              you build the prompts, eval harness, and CRM glue yourself.
 export const COMPETITOR_ONLY_CONTENT: Partial<Record<AltCompetitorKey, CompetitorOnlyContent>> = {
   zapier: {
     hero: "Zapier is generic glue — it wires SaaS tools to each other and waits for you to design every step. TrainYourAgent ships a vertical-specific AI agent that answers the phone, qualifies the lead, books the appointment, and writes back to your CRM in 21 days. Different category, different outcome.",
+    cornerstone: { slug: "ops-copilot", label: "Ops Copilot — automation that decides at runtime" },
     sections: [
       {
         h: "Workflow automation vs vertical AI agents.",
@@ -195,8 +219,8 @@ export const COMPETITOR_ONLY_CONTENT: Partial<Record<AltCompetitorKey, Competito
         a: "For the customer-facing parts — yes. The voice agent handles inbound calls, the chat agent handles inbound web/SMS, and both write back to your CRM. For backoffice automation (e.g. \"when a new contact lands in HubSpot, add a row to Google Sheets\"), Zapier is still the right tool. Most customers keep both.",
       },
       {
-        q: "How is pricing different?",
-        a: "Zapier prices on tasks ($19.99–$799+/mo). TrainYourAgent prices on the agent ($799–$2,499+/mo all-in: build, integrations, runtime, weekly tuning). For replacing 1 FTE worth of phone/chat coverage, our pricing is dramatically cheaper than the loaded cost of a CSR plus the per-task Zapier bill.",
+        q: "How is pricing different in 2026?",
+        a: "Zapier (2026): Free, Pro $29.99/mo, Team $103.50/mo, Enterprise custom — all metered by tasks-per-month on top of the seat fee. Teams running real workflow volume routinely hit $300–$2,000/mo just in Zapier task overage. TrainYourAgent: $799/mo all-in for the operator tier — the build, the integrations, the runtime, the weekly tuning, no per-task surprise bill at the end of the month.",
       },
       {
         q: "Do you offer a Zapier-style step builder?",
@@ -206,18 +230,19 @@ export const COMPETITOR_ONLY_CONTENT: Partial<Record<AltCompetitorKey, Competito
   },
   intercom: {
     hero: "Intercom is the enterprise chat platform for B2B SaaS support — Fin AI, Inbox, Help Center, Surveys, the works. TrainYourAgent is voice + chat AI for service-business inbound: HVAC, dental, law, real estate. Different ICP, different price point, different surface area.",
+    cornerstone: { slug: "lead-qualification-agent", label: "Lead Qualification Agent — chat + voice in one brain" },
     sections: [
       {
         h: "Enterprise B2B SaaS support vs SMB service-business inbound.",
-        body: "Intercom is built for product-led SaaS companies with thousands of support tickets per week. Their pricing reflects that ($74–$268/seat/mo, plus Fin AI usage). TrainYourAgent is built for service businesses (HVAC, dental, legal, real estate, roofing) where the inbound is calls and leads — not support tickets — and the operator is a 5-50 person team that needs answers booked, not deflected.",
+        body: "Intercom is built for product-led SaaS companies with thousands of support tickets per week. Their pricing reflects that ($39–$139/seat/mo, plus Fin AI usage at ~$0.99/resolution). TrainYourAgent is built for service businesses (HVAC, dental, legal, real estate, roofing) where the inbound is calls and leads — not support tickets — and the operator is a 5-50 person team that needs answers booked, not deflected.",
       },
       {
         h: "Chat-only vs voice + chat in one agent.",
-        body: "Intercom is fundamentally a web/in-app messaging platform. Voice (Fin Voice) is recent and add-on. TrainYourAgent ships voice and chat as one agent from Day 1 — the same brain answers the phone, the website chat, and the SMS. Customers don't have to repeat themselves across channels, and the agent has one unified conversation history per contact.",
+        body: "Intercom is fundamentally a web/in-app messaging platform. Voice (Fin Voice) is a recent add-on and still seat-priced. TrainYourAgent ships voice and chat as one agent from Day 1 — the same brain answers the phone, the website chat, and the SMS. Customers don't have to repeat themselves across channels, and the agent has one unified conversation history per contact.",
       },
       {
-        h: "$74-$268/seat/mo vs $799/mo all-in.",
-        body: "Intercom: Essential $39/seat, Advanced $99/seat, Expert $139/seat — plus Fin resolutions at ~$0.99/resolution. A 10-seat support org runs ~$15K-$30K/yr before Fin. TrainYourAgent: voice + chat agent from $799/mo all-in — the build, the integrations, the runtime, the weekly tuning. For a service business under ~3K conversations/mo, our pricing is roughly 5-10× cheaper than the equivalent Intercom + Fin setup.",
+        h: "$39-$139/seat/mo + Fin usage vs $799/mo all-in.",
+        body: "Intercom (2026): Essential $39/seat, Advanced $99/seat, Expert $139/seat — plus Fin resolutions at ~$0.99 each. A 10-seat support org runs $15K-$30K/yr before Fin usage. TrainYourAgent: voice + chat agent from $799/mo all-in — the build, the integrations, the runtime, the weekly tuning. For a service business under ~3K conversations/mo, our pricing is roughly 5-10× cheaper than the equivalent Intercom + Fin setup.",
       },
     ],
     faq: [
@@ -232,6 +257,102 @@ export const COMPETITOR_ONLY_CONTENT: Partial<Record<AltCompetitorKey, Competito
       {
         q: "How long does it take to switch?",
         a: "21 days from kickoff. We wire the voice agent to your phone number, the chat agent to your website, and both to your CRM. You keep Intercom running for whatever support workflows still need it (often none, for service businesses) and we cut over the inbound traffic.",
+      },
+    ],
+  },
+  drift: {
+    hero: "Drift (now part of Salesloft) is conversational marketing for B2B revenue teams — chat playbooks, ABM routing, calendar drops. TrainYourAgent is voice + chat AI for SMB service businesses where the buyer wants to book, not nurture. Different motion, an order of magnitude different price point.",
+    cornerstone: { slug: "intelligent-booking-agent", label: "Intelligent Booking Agent — qualify and drop a calendar link in one turn" },
+    sections: [
+      {
+        h: "Salesloft-era enterprise pricing vs SMB-friendly all-in.",
+        body: "Since the Salesloft acquisition, Drift's price ladder has moved further upmarket: Premium starts around $2,500/mo, Advanced around $5,000/mo, Enterprise is custom and typically lands $7K-$15K/mo for mid-market deployments. That math works for a $50M+ ARR B2B SaaS sales org. It doesn't work for a 5-person HVAC company that just wants the phone answered and the appointment booked.",
+      },
+      {
+        h: "Marketing-team playbooks vs operator-grade booking + dispatch.",
+        body: "Drift's surface area is built for marketing: playbooks, routing, ABM enrichment, meeting drops for SDRs. TrainYourAgent's surface area is built for operations: a voice + chat agent that knows your service area, your pricing tiers, your tech availability, your dispatch SLAs, and writes the booking back to ServiceTitan or Housecall Pro before the call ends. Same conversational-AI category, opposite end of the funnel.",
+      },
+      {
+        h: "Voice as an afterthought vs voice + chat in one brain.",
+        body: "Drift is web chat first; voice is a recent integration layer. TrainYourAgent's voice and chat run on the same brain — the agent that picks up your phone is the same agent answering the SMS reply two hours later, with full context. Drift's voice is mostly meeting reminders; ours actually qualifies, books, and reschedules.",
+      },
+    ],
+    faq: [
+      {
+        q: "Is TrainYourAgent a real Drift alternative for a service business?",
+        a: "Yes — and a much cheaper one. If you're an SMB service business that bought Drift because someone said you needed conversational marketing, you almost certainly bought 10× more product than you'll use. We give you the booking, the qualification, and the CRM write-back at ~10% of the loaded Drift cost.",
+      },
+      {
+        q: "We're a B2B SaaS company with an SDR team — should we switch?",
+        a: "Probably not. If your motion is high-ACV, multi-stakeholder, ABM-driven enterprise SaaS sales — Drift's playbook + Salesloft sequencing tooling is the right stack. We're built for service-business inbound and outbound (call, qualify, book), not for orchestrating a 12-week B2B sales cycle.",
+      },
+      {
+        q: "How fast can we cut over?",
+        a: "21 days. We wire the voice agent to your existing number, the chat to your site, and both to your CRM (HubSpot, Salesforce, ServiceTitan, Follow Up Boss, etc.). Drift keeps running until cutover day — no gap in coverage.",
+      },
+    ],
+  },
+  voiceflow: {
+    hero: "Voiceflow is a drag-and-drop builder — you design every node, you host the agent, you maintain the model glue. TrainYourAgent is the opposite product: we train the agent on your business and ship it live in 21 days. You don't open a builder. You don't hire someone to learn one. You get the working agent.",
+    cornerstone: { slug: "voice-receptionist", label: "Voice Receptionist — trained, deployed, supervised" },
+    sections: [
+      {
+        h: "Build-your-own vs done-for-you.",
+        body: "Voiceflow (2026): Sandbox Free, Pro $60/editor/mo, Teams $250/editor/mo, Enterprise custom. The platform itself is solid — it's the workload that costs you. Voiceflow assumes your team has someone who can design the conversation graph, write the prompts, set up the KB, wire the channels, run evals, and maintain it weekly. For most SMBs that's a 3-month internal project. TrainYourAgent is the alternative: we do all of that, ship in 21 days, and tune weekly.",
+      },
+      {
+        h: "Drag-and-drop nodes vs trained-on-your-business agent.",
+        body: "Voiceflow's product is a builder. TrainYourAgent's product is an outcome. We don't sell you a tool to design the agent — we sell you the trained, deployed, supervised agent itself. If your operator wants to be in a Voiceflow canvas every week, Voiceflow is the right product. If your operator wants the phone answered and the booking made, we are.",
+      },
+      {
+        h: "Voiceflow + your team vs our team.",
+        body: "On Voiceflow the per-seat editor cost is the smaller line item. The bigger one is the engineer or AI consultant time to use it — typically $5K-$20K to design, build, and tune the first agent, then 5-10 hours/week to maintain. TrainYourAgent rolls all of that into $799-$1,499/mo. No internal hire, no consultant retainer, no canvas maintenance.",
+      },
+    ],
+    faq: [
+      {
+        q: "We already have a Voiceflow agent — can you take it over?",
+        a: "Yes. Most clients we migrate from a builder platform spent 3-6 months getting to a half-working agent. We extract the parts of the KB and prompts worth keeping, fold them into our training pipeline, and replace the surface in 2-3 weeks. Faster than a build-from-scratch.",
+      },
+      {
+        q: "Do you offer a builder UI like Voiceflow?",
+        a: "No — by design. We've found that handing operators a builder is what causes agents to stagnate and decay. We keep the canvas internal, ship you the result, and own the weekly tuning. If you want to be in a canvas, stay on Voiceflow.",
+      },
+      {
+        q: "How is total cost different?",
+        a: "Voiceflow license: $60-$250/editor/mo. Realistic loaded cost to ship one production agent on Voiceflow with internal time: $8K-$15K build + 5-10 hrs/week ongoing. TrainYourAgent: $4,950 build + $799/mo all-in for the operator tier, zero internal headcount required. Comparable or cheaper, faster to live.",
+      },
+    ],
+  },
+  bland: {
+    hero: "Bland.ai is a developer-first voice API — fast inference, low per-minute pricing ($0.09-$0.13/min), and a clean SDK. The catch: you build the prompts, the eval harness, the CRM glue, the failure modes, and the weekly tuning. TrainYourAgent ships the trained, integrated, supervised agent on top of comparable infrastructure in 21 days.",
+    cornerstone: { slug: "voice-receptionist", label: "Voice Receptionist — the full stack, not just the API" },
+    sections: [
+      {
+        h: "$0.09-$0.13/min vs $799/mo all-in.",
+        body: "Bland.ai (2026): $0.09/min shared, $0.13/min dedicated, custom for enterprise with monthly minimums. The per-minute price is excellent — but it's only the cost of the inference. The real loaded cost on Bland is your engineer's time: prompt iteration, eval harness, integration to your CRM and calendar, failure-mode handling, weekly tuning. Most teams spend 4-8 weeks and 80-200 engineering hours getting to a production-ready agent on Bland. TrainYourAgent rolls that engineering into the $799/mo tier and ships in 21 days.",
+      },
+      {
+        h: "Voice API vs trained business agent.",
+        body: "Bland's product is the API surface: stable, low-latency, programmable. TrainYourAgent's product is what you build on top of an API surface: the discovery, the knowledge base, the persona tuning, the integration to ServiceTitan / Athena / Clio / Follow Up Boss, the weekly retraining loop. If you have an in-house AI engineer who wants to own all of that, Bland is the right pick. If you don't, you're paying for an API and getting a chatbot — and that's the gap we close.",
+      },
+      {
+        h: "DIY platform vs done-for-you with optional hand-off.",
+        body: "Bland is correct that the platform should be the smaller part of the cost — that's why their pricing is what it is. We agree. But for service businesses without an AI engineer on staff, the platform isn't the bottleneck — the build is. TrainYourAgent does the build, runs it for you, and (if you ever want to take it in-house) hands you the prompts, the eval set, and the integrations as part of the export. You can move to Bland later. Most don't.",
+      },
+    ],
+    faq: [
+      {
+        q: "We have a developer — should we just use Bland directly?",
+        a: "If your developer has time to own prompt iteration, eval harnesses, CRM integrations, weekly tuning, and 2am failover responses — yes, Bland is a strong pick at the per-minute price. If they have other things to ship, the loaded cost of doing it all on Bland will exceed our $799/mo within 3-4 months. We've onboarded several teams who started on Bland and switched after a quarter.",
+      },
+      {
+        q: "What's the per-minute cost on TrainYourAgent?",
+        a: "Operator tier: 4,000 minutes/mo included in the $799 base, then $0.18/min over. We run on Bland-class infrastructure under the hood (and on Vapi/Retell-class infra for builds that need it) — the markup over raw inference is the build, the integrations, the tuning, and the supervision.",
+      },
+      {
+        q: "Can we migrate from Bland to you and keep our number?",
+        a: "Yes. Number porting in 5 business days. We import your existing prompts and KB, retrain on the call transcripts you already have, and cut over on a date you choose. Most Bland → TrainYourAgent migrations are 14-21 days end-to-end.",
       },
     ],
   },
@@ -476,6 +597,36 @@ const AlternativeFor = () => {
             </div>
           </div>
         </section>
+
+        {/* v76-B: matching cornerstone playbook link — visitor lands on
+            the alternative page comparing TYA to a competitor, then has
+            one click into "here's the production playbook that replaces
+            what that competitor sells you." */}
+        {competitorOnly.cornerstone && (
+          <section className="py-12 px-5 sm:px-8 bg-white">
+            <div className="max-w-3xl mx-auto">
+              <div className="rounded-2xl border border-slate-200 p-6 sm:p-7 bg-gradient-to-br from-[#F6FAFE] to-white">
+                <div className="text-[11px] uppercase tracking-[0.16em] font-semibold text-[#185FA5] font-mono mb-2">
+                  Where TrainYourAgent wins
+                </div>
+                <div className="text-[20px] sm:text-[22px] font-semibold text-[#042C53] mb-2">
+                  See the production playbook this competitor doesn't ship.
+                </div>
+                <p className="text-[14.5px] leading-[1.6] text-slate-700 mb-4">
+                  Every {cMeta.name} alternative page links to the matching
+                  cornerstone playbook so you can see exactly what we deploy
+                  — not just how we compare on a feature grid.
+                </p>
+                <Link
+                  to={`/capabilities/${competitorOnly.cornerstone.slug}`}
+                  className="inline-flex items-center gap-2 text-[15px] font-semibold text-[#042C53] hover:text-[#185FA5]"
+                >
+                  {competitorOnly.cornerstone.label} <span aria-hidden>→</span>
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* CTA */}
         <section className="py-16 px-5 sm:px-8">

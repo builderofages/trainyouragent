@@ -77,6 +77,30 @@ export default function Hire() {
     document.title = "Hire the operator — TrainYourAgent";
     const m = document.querySelector("meta[name='description']") as HTMLMetaElement | null;
     if (m) m.setAttribute("content", "Hire Alexander as your AI build team. One operator. Any AI system. 30 days flat or less. 344+ public commits in 91 days. 569 live URLs. Direct hire — no SDR, no account manager.");
+
+    // v76-B: per-page dynamic OG image so /hire previews on LinkedIn /
+    // Twitter / Slack with a unique card, not the site-wide fallback.
+    const ogImage =
+      "https://www.trainyouragent.com/api/og" +
+      "?title=" + encodeURIComponent("Hire the operator") +
+      "&eyebrow=" + encodeURIComponent("DIRECT HIRE") +
+      "&kicker=" + encodeURIComponent("One builder. Any AI system. 30 days flat.") +
+      "&type=page";
+    const setProp = (p: string, c: string) => {
+      let el = document.querySelector(`meta[property='${p}']`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.setAttribute("property", p); document.head.appendChild(el); }
+      el.setAttribute("content", c);
+    };
+    const setName = (n: string, c: string) => {
+      let el = document.querySelector(`meta[name='${n}']`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.setAttribute("name", n); document.head.appendChild(el); }
+      el.setAttribute("content", c);
+    };
+    setProp("og:image", ogImage);
+    setProp("og:image:width", "1200");
+    setProp("og:image:height", "630");
+    setName("twitter:image", ogImage);
+    setName("twitter:card", "summary_large_image");
   }, []);
 
   async function submit(e: FormEvent) {

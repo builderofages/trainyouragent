@@ -48,6 +48,17 @@ function ServiceSchema({ c }: { c: Cornerstone }) {
     })),
   };
 
+  // v76-B: per-page dynamic OG image. Hits /api/og with this cornerstone's
+  // name + category so every /capabilities/* page shares a distinct preview
+  // card on LinkedIn / Twitter / Slack, instead of all 10 falling back to
+  // the static site-wide /og-fallback.png.
+  const ogImage =
+    `https://www.trainyouragent.com/api/og` +
+    `?title=${encodeURIComponent(c.name)}` +
+    `&eyebrow=${encodeURIComponent(c.category)}` +
+    `&kicker=${encodeURIComponent(c.shortPitch)}` +
+    `&type=page`;
+
   return (
     <Helmet>
       <title>{c.name} — TrainYourAgent</title>
@@ -57,9 +68,13 @@ function ServiceSchema({ c }: { c: Cornerstone }) {
       <meta property="og:description" content={c.shortPitch} />
       <meta property="og:type" content="website" />
       <meta property="og:url" content={`https://www.trainyouragent.com/capabilities/${c.slug}`} />
+      <meta property="og:image" content={ogImage} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={`${c.name} — TrainYourAgent`} />
       <meta name="twitter:description" content={c.shortPitch} />
+      <meta name="twitter:image" content={ogImage} />
       <script type="application/ld+json">{JSON.stringify(schema)}</script>
       <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
     </Helmet>

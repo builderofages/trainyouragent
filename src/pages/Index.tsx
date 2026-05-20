@@ -116,23 +116,39 @@ function AnimatedStat({ value, suffix = "", prefix = "", label, decimals = 0, hr
   return <div>{inner}</div>;
 }
 
-// v63: three hero h1 variants, rotated deterministically per browser session so
-// each visitor sees one consistent variant within a session, but the next visit
-// might land on a different one. Tracked via Meta Pixel/CAPI when a lead fires.
+// v76-B: 50/50 hero h1 A/B framework per spec.
+//
+// Why this exists: v75 audit flagged that we were guessing on hero copy.
+// v76-B locks in two candidate h1s and lets click-through data decide:
+//
+//   A = "AI that runs the part of your business that used to run you."
+//       (the current v73-FINAL flagship h1)
+//   B = "More appointments. Fewer missed calls. Live in 21 days."
+//       (the previous high-converting concrete-outcomes h1)
+//
+// Implementation details from the v76-B spec:
+//   - Random on mount, 50/50 split between A and B
+//   - Sticky per-visitor via localStorage key `tya_hero_variant` so a
+//     returning visitor always sees the variant they were first bucketed
+//     into (avoids cross-session contamination of the test)
+//   - Impressions logged to /api/lead source `hero-ab-impression-{variant}`
+//   - CTA clicks logged to /api/lead source `hero-ab-cta-click-{variant}`
+//
+// Removed the v63 three-variant + sessionStorage rotation in favor of
+// the spec's two-variant + localStorage approach so the data is cleaner.
+type HeroVariantId = "A" | "B";
 type HeroVariant = {
-  id: "A" | "B" | "C";
+  id: HeroVariantId;
   headlineHtml: JSX.Element;
 };
-// v69: ALL three variants now lead with CUSTOMER OUTCOME. Operator-velocity
-// proof moved to a smaller strip below the fold. The hero is 100% about the
-// outcome the visitor gets, not about who built it.
+
 const HERO_VARIANTS: HeroVariant[] = [
   {
     id: "A",
     headlineHtml: (
       <>
-        Your phones answered. Your bookings filled.{" "}
-        <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Your hours back.</span>
+        AI that runs the part of your business{" "}
+        <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>that used to run you.</span>
       </>
     ),
   },
@@ -145,31 +161,51 @@ const HERO_VARIANTS: HeroVariant[] = [
       </>
     ),
   },
-  {
-    id: "C",
-    headlineHtml: (
-      <>
-        AI that runs the part of your business{" "}
-        <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>that used to run you.</span>
-      </>
-    ),
-  },
 ];
+
+const HERO_AB_STORAGE_KEY = "tya_hero_variant";
 
 function pickHeroVariant(): HeroVariant {
   if (typeof window === "undefined") return HERO_VARIANTS[0];
   try {
-    const KEY = "tya:hero-variant-v63";
-    const existing = window.sessionStorage.getItem(KEY);
-    if (existing === "A" || existing === "B" || existing === "C") {
+    const existing = window.localStorage.getItem(HERO_AB_STORAGE_KEY);
+    if (existing === "A" || existing === "B") {
       const found = HERO_VARIANTS.find((v) => v.id === existing);
       if (found) return found;
     }
-    const v = HERO_VARIANTS[Math.floor(Math.random() * HERO_VARIANTS.length)];
-    window.sessionStorage.setItem(KEY, v.id);
+    // 50/50 random — Math.random() < 0.5 → A, else B
+    const v = HERO_VARIANTS[Math.random() < 0.5 ? 0 : 1];
+    window.localStorage.setItem(HERO_AB_STORAGE_KEY, v.id);
     return v;
   } catch {
-    return HERO_VARIANTS[Math.floor(Math.random() * HERO_VARIANTS.length)];
+    // localStorage disabled / private mode — still bucket but don't persist
+    return HERO_VARIANTS[Math.random() < 0.5 ? 0 : 1];
+  }
+}
+
+// v76-B: fire-and-forget telemetry for the hero A/B test. Spec called
+// these `hero-ab-impression` / `hero-ab-cta-click` to /api/lead, but
+// /api/lead enforces an email + source allowlist (it's the real lead
+// store), so we route telemetry through /api/event which is the
+// codebase's canonical anonymous-event endpoint. Same downstream
+// store, no email required. Best-effort, never throws.
+function logHeroAbEvent(
+  kind: "impression" | "cta-click",
+  variant: HeroVariantId,
+): void {
+  try {
+    void fetch("/api/event", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        event_type: `hero-ab-${kind}`,
+        source: `hero-ab-${kind}-${variant}`,
+        meta: { variant, kind, path: "/" },
+      }),
+      keepalive: true,
+    });
+  } catch {
+    /* swallow — never break the UI on a logging failure */
   }
 }
 
@@ -186,6 +222,9 @@ const Index = () => {
     fireSiteVisitOnce();
     // v63: record which hero variant this visitor saw (best-effort, never throws)
     void fireEvent("router_view", { hero_variant: heroVariant.id }, "home-hero-variant");
+    // v76-B: log impression to /api/lead for the hero A/B test so we can
+    // join it against downstream CTA clicks / leads / bookings.
+    logHeroAbEvent("impression", heroVariant.id);
     if (typeof document === "undefined") return;
     if (!document.getElementById("tya-fonts")) {
       const l = document.createElement("link");
@@ -255,7 +294,9 @@ const Index = () => {
       {/* v73: brand-anchor eyebrow — flagship positioning above hero. */}
       <div className="w-full bg-[#042C53] text-white">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-2 text-center text-[10.5px] sm:text-[11px] tracking-[0.18em] uppercase font-semibold font-mono text-[#E6F1FB]">
-          Train Your Agent · 10 productionized playbooks · 569 live URLs ·{" "}
+          {/* v76-B: read both numbers from STATS so the eyebrow + the
+              LiveStatTicker above it can never disagree. */}
+          Train Your Agent · {STATS.cornerstonePlaybooks} productionized playbooks · {STATS.totalRoutes} live URLs ·{" "}
           <a href="/train" className="underline decoration-[#A8C7E8]/60 decoration-1 underline-offset-2 hover:text-white">See the method</a>
         </div>
       </div>
@@ -313,7 +354,13 @@ const Index = () => {
             {/* v61: removed ShipsCounter — proof strip below has verifiable, sourced numbers */}
             <div className="mt-9 flex flex-col sm:flex-row gap-3">
               <HoverLift>
-                <Link to="/tools/agent-builder" className="px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] transition shadow-lg shadow-[#042C53]/15 flex items-center justify-between gap-3 min-w-[260px]">
+                <Link
+                  to="/tools/agent-builder"
+                  // v76-B: log primary hero CTA click against the A/B
+                  // variant so we can compute per-variant CTR.
+                  onClick={() => logHeroAbEvent("cta-click", heroVariant.id)}
+                  className="px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] transition shadow-lg shadow-[#042C53]/15 flex items-center justify-between gap-3 min-w-[260px]"
+                >
                   <span className="flex flex-col items-start leading-tight">
                     <span className="text-[11px] uppercase tracking-[0.16em] text-[#9CC4EC] font-semibold mb-1">Primary action · 30 seconds</span>
                     <span>Build your own AI agent →</span>

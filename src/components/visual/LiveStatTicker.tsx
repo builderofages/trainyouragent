@@ -1,25 +1,21 @@
 // src/components/visual/LiveStatTicker.tsx
-// v73-B — 2040 visual layer.
+// v76-B — bug-fix: every ticker number now reads from STATS (siteStats.ts),
+// the single source of truth. The previous version pulled commits from
+// /api/github-velocity which produced "191" on home while the navy eyebrow
+// strip 40px below showed "569 LIVE URLS" from STATS — a visible mismatch.
 //
-// Horizontal eyebrow strip above the hero. Shows 6 live stats:
-//   - Live agents in production
-//   - Public commits   (live from /api/github-velocity, fallback to STATS.publicCommits)
-//   - Live URLs        (STATS.totalRoutes)
-//   - Days since last ship
-//   - Voice demos served today  (live from /api/recent-activity, fallback constant)
-//   - Niches productized       (STATS.niches)
+// Per v76-B spec, the ticker now shows exactly 6 stats, all sourced from
+// STATS so the eyebrow / hero / footer / metrics page all agree:
 //
-// Each stat: small uppercase label, large number that counts up on mount
-// via IntersectionObserver. Subtle separator dots between stats. Marquee
-// duplicate on mobile so the row scrolls cleanly if it overflows.
+//   AGENTS LIVE 3 · 569 LIVE URLS · 350+ PUBLIC COMMITS ·
+//   10 CORNERSTONE PLAYBOOKS · 15 NICHE PLAYBOOKS · 4 YRS IN APPLIED AI
+//
+// Time-bound metrics carry an explicit "TODAY" prefix per spec (none in
+// this ticker right now — all six are cumulative). The github-velocity and
+// recent-activity fetches are removed because they introduced number drift.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { STATS } from "@/lib/siteStats";
-
-// Pin a known "last ship" anchor. Update on each release; we compute
-// "days since" client-side from this constant so the number ticks forward
-// without a server call. Set to the v72 ship date.
-const LAST_SHIP_ISO = "2026-05-18";
 
 type Stat = {
   label: string;
@@ -28,13 +24,6 @@ type Stat = {
   /** prefix for screen readers / formatter, optional */
   prefix?: string;
 };
-
-function daysSince(iso: string): number {
-  const then = new Date(iso + "T00:00:00Z").getTime();
-  const now = Date.now();
-  const days = Math.max(0, Math.floor((now - then) / 86_400_000));
-  return days;
-}
 
 function useCountUp(target: number, durationMs = 1200, enabled = true) {
   const [v, setV] = useState(0);
@@ -89,8 +78,6 @@ function Separator() {
 }
 
 export default function LiveStatTicker() {
-  const [commits, setCommits] = useState<number>(STATS.publicCommits);
-  const [voiceDemosToday, setVoiceDemosToday] = useState<number>(34);
   const rootRef = useRef<HTMLDivElement>(null);
   const [seen, setSeen] = useState(false);
 
@@ -111,50 +98,29 @@ export default function LiveStatTicker() {
     return () => io.disconnect();
   }, [seen]);
 
-  // Pull live commit count.
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/api/github-velocity")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((j) => {
-        if (cancelled || !j) return;
-        const n = Number(j?.totalCommits);
-        if (Number.isFinite(n) && n > 0) setCommits(n);
-      })
-      .catch(() => { /* silent fallback */ });
-    return () => { cancelled = true; };
-  }, []);
-
-  // Pull voice demos today.
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/api/recent-activity")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((j) => {
-        if (cancelled || !j) return;
-        // Be liberal in what we accept — different shapes across env.
-        const candidates = [
-          j?.voiceDemosToday,
-          j?.metrics?.voiceDemosToday,
-          j?.today?.voiceDemos,
-        ];
-        const n = candidates.map(Number).find((x) => Number.isFinite(x) && x > 0);
-        if (typeof n === "number") setVoiceDemosToday(n);
-      })
-      .catch(() => { /* silent fallback */ });
-    return () => { cancelled = true; };
-  }, []);
-
+  // v76-B: ALL ticker values now come from STATS so the ticker can never
+  // disagree with the eyebrow strip below it ("569 LIVE URLS") or with
+  // any other page on the site.
+  //
+  // Spec order: AGENTS LIVE 3 · 569 LIVE URLS · 350+ PUBLIC COMMITS ·
+  //             10 CORNERSTONE PLAYBOOKS · 15 NICHE PLAYBOOKS · 4 YRS IN APPLIED AI
+  //
+  // "AGENTS LIVE" maps to STATS.agentsLive (the count of cornerstone
+  // playbook implementations actually running in production today — 3),
+  // distinct from STATS.solutionCategories (the breadth of Everything-AI
+  // categories, 8). Using a dedicated key fixes the previous bug where
+  // the ticker showed 8 here, contradicting the "3 agents in production"
+  // claim elsewhere.
   const stats: Stat[] = useMemo(
     () => [
-      { label: "Agents live",      value: STATS.solutionCategories },
-      { label: "Public commits",   value: commits, suffix: "+" },
-      { label: "Live URLs",        value: STATS.totalRoutes },
-      { label: "Days since ship",  value: daysSince(LAST_SHIP_ISO) },
-      { label: "Voice demos today",value: voiceDemosToday },
-      { label: "Niches productized", value: STATS.niches },
+      { label: "Agents live",            value: STATS.agentsLive },
+      { label: "Live URLs",              value: STATS.totalRoutes },
+      { label: "Public commits",         value: STATS.publicCommits, suffix: "+" },
+      { label: "Cornerstone playbooks",  value: STATS.cornerstonePlaybooks },
+      { label: "Niche playbooks",        value: STATS.niches },
+      { label: "Yrs in applied AI",      value: STATS.yearsInAI },
     ],
-    [commits, voiceDemosToday],
+    [],
   );
 
   // Render row twice for the mobile marquee track.

@@ -17,8 +17,10 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
-import MeshGradientBackdrop from "@/components/visual/MeshGradientBackdrop";
-import ParticleDrift from "@/components/visual/ParticleDrift";
+// v76-B: MeshGradientBackdrop + ParticleDrift removed from /train.
+// Per v73-FINAL spec the 2040 visual layer (mesh + particles + LiveStatTicker)
+// is HOME-ONLY — /train has its own hero treatment and the leak was muddling
+// brand. Static gradient remains on the section background.
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 
@@ -171,7 +173,12 @@ export default function Train() {
         <meta property="og:description" content="We train your agent. Then it runs your business. Discovery → KB → Fine-tune → Eval → Production. 21 days." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.trainyouragent.com/train" />
+        {/* v76-B: per-page dynamic OG image (PrismNode-branded SVG). */}
+        <meta property="og:image" content="https://www.trainyouragent.com/api/og?title=Train+Your+Agent&eyebrow=THE+METHOD&kicker=Discovery+%E2%86%92+KB+%E2%86%92+Fine-tune+%E2%86%92+Eval+%E2%86%92+Production&type=page" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://www.trainyouragent.com/api/og?title=Train+Your+Agent&eyebrow=THE+METHOD&kicker=Discovery+%E2%86%92+KB+%E2%86%92+Fine-tune+%E2%86%92+Eval+%E2%86%92+Production&type=page" />
         <script type="application/ld+json">{JSON.stringify(schema)}</script>
       </Helmet>
 
@@ -180,8 +187,8 @@ export default function Train() {
       <main id="main">
         {/* HERO */}
         <section className="relative pt-24 sm:pt-32 pb-20 sm:pb-28 px-5 sm:px-8 overflow-hidden bg-gradient-to-b from-white to-[#F6FAFE]">
-          <MeshGradientBackdrop />
-          <ParticleDrift count={26} />
+          {/* v76-B: home-only visual layer (mesh + particles) removed
+              from /train per v73-FINAL spec. */}
           <div className="max-w-7xl mx-auto grid lg:grid-cols-[1.25fr_1fr] gap-14 items-center relative">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#042C53] text-white text-[11px] font-semibold tracking-[0.18em] uppercase font-mono mb-6">
@@ -300,6 +307,35 @@ export default function Train() {
                   </div>
                 </article>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* v76-c: INTAKE CTA — slot between the 5-step method and the capability cards */}
+        <section className="px-5 sm:px-8 py-14 sm:py-16 bg-white">
+          <div className="max-w-5xl mx-auto">
+            <div className="rounded-3xl border border-[#185FA5]/25 bg-gradient-to-br from-[#E6F1FB]/70 to-white p-7 sm:p-10 shadow-sm">
+              <div className="grid sm:grid-cols-3 gap-6 items-center">
+                <div className="sm:col-span-2">
+                  <div className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#185FA5] font-mono mb-2">
+                    Step 1 — Discovery
+                  </div>
+                  <h3 className="text-[24px] sm:text-[30px] font-semibold text-[#042C53] leading-snug">
+                    Ready to start? <span className="font-serif italic">Fill the 8-minute intake.</span>
+                  </h3>
+                  <p className="mt-3 text-[15px] text-slate-700 leading-relaxed">
+                    Tell us about your business — industry, call volume, top questions, your offer. We respond within 24 hours with a discovery-call invite. No waitlist, no qualification call before the call.
+                  </p>
+                </div>
+                <div className="flex sm:justify-end">
+                  <Link
+                    to="/train/intake"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-[#042C53] text-white text-[15px] font-semibold hover:bg-[#0A3D6E] whitespace-nowrap"
+                  >
+                    Start your intake →
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </section>

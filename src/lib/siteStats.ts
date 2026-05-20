@@ -11,16 +11,18 @@ export const STATS = {
   blogPosts: 70,
   niches: 15,
   playbooks: 15,
+  cornerstonePlaybooks: 10, // v73-FINAL: 10 deep capability cornerstones (/capabilities/*)
   tools: 11,
   alternativesPages: 52,    // 50 generic + zapier + intercom
   localPages: 120,
   totalRoutes: 569,         // verified against /sitemap.xml count
   verticals: 8,             // top-level vertical landing pages
   solutionCategories: 8,    // v69: Everything-AI breadth (voice, chat, recep, sales, mktg, brand, infra, custom)
+  agentsLive: 3,            // v76-B: agents actually running in production today (LiveStatTicker)
 
   // Operator / founder velocity
   yearsInAI: 4,
-  publicCommits: 339,       // refreshed weekly via /api/public-metrics
+  publicCommits: 350,       // v76-B: refreshed weekly via /api/public-metrics (rounded down — actual ~370)
   buildsPerQuarter: 12,
 
   // Product / runtime

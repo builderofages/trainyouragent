@@ -69,6 +69,12 @@ export default function EverythingAI() {
         <meta property="og:description" content="10 cornerstone playbooks + custom builds. Done by one operator who actually ships." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.trainyouragent.com/everything-ai" />
+        {/* v76-B: per-page dynamic OG image. */}
+        <meta property="og:image" content="https://www.trainyouragent.com/api/og?title=Everything-AI&eyebrow=THE+CATEGORY+MAP&kicker=10+cornerstone+playbooks+%2B+custom+builds&type=page" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://www.trainyouragent.com/api/og?title=Everything-AI&eyebrow=THE+CATEGORY+MAP&kicker=10+cornerstone+playbooks+%2B+custom+builds&type=page" />
         <script type="application/ld+json">{JSON.stringify(schema)}</script>
       </Helmet>
 

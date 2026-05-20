@@ -83,24 +83,29 @@ const STATIC_PAGES: { path: string; priority: number; changefreq: string }[] = [
   { path: "/tools/voice-script-generator", priority: 0.85, changefreq: "monthly" },
   { path: "/tools/cold-dm-generator",      priority: 0.85, changefreq: "monthly" },
   { path: "/tools/diagnose",               priority: 0.85, changefreq: "monthly" },
-  // v71: hire-the-operator + SaaS catalog + paid Agent Builder
-  { path: "/hire",                         priority: 0.95, changefreq: "weekly"  },
-  { path: "/saas",                         priority: 0.9,  changefreq: "weekly"  },
-  { path: "/saas/agent-builder",           priority: 0.9,  changefreq: "weekly"  },
-  // v73-FINAL: flagship /train method + /everything-ai category map
-  { path: "/train",                        priority: 0.9,  changefreq: "weekly"  },
-  { path: "/everything-ai",                priority: 0.85, changefreq: "weekly"  },
-  // v73-FINAL: 10 cornerstone capability playbook pages
-  { path: "/capabilities/voice-receptionist",               priority: 0.8, changefreq: "weekly" },
-  { path: "/capabilities/intelligent-booking-agent",        priority: 0.8, changefreq: "weekly" },
-  { path: "/capabilities/lead-qualification-agent",         priority: 0.8, changefreq: "weekly" },
-  { path: "/capabilities/objection-handling-system",        priority: 0.8, changefreq: "weekly" },
-  { path: "/capabilities/follow-up-no-show-system",         priority: 0.8, changefreq: "weekly" },
-  { path: "/capabilities/client-onboarding-agent",          priority: 0.8, changefreq: "weekly" },
-  { path: "/capabilities/ops-copilot",                      priority: 0.8, changefreq: "weekly" },
-  { path: "/capabilities/local-service-marketing-automation", priority: 0.8, changefreq: "weekly" },
-  { path: "/capabilities/compliance-rag-agent",             priority: 0.8, changefreq: "weekly" },
-  { path: "/capabilities/computer-use-agent",               priority: 0.8, changefreq: "weekly" },
+  // v71/v76-B: hire-the-operator + SaaS catalog + paid Agent Builder.
+  // Priorities rebalanced to 0.8 per v76-B spec so /train (flagship method)
+  // and /everything-ai (category map) sit above them in the priority ladder.
+  { path: "/hire",                         priority: 0.8,  changefreq: "weekly"  },
+  { path: "/saas",                         priority: 0.8,  changefreq: "weekly"  },
+  { path: "/saas/agent-builder",           priority: 0.8,  changefreq: "weekly"  },
+  // v73-FINAL / v76-B: flagship /train method + /everything-ai category map.
+  // /train bumped to 0.95 (flagship), /everything-ai to 0.9 per v76-B spec.
+  { path: "/train",                        priority: 0.95, changefreq: "weekly"  },
+  { path: "/everything-ai",                priority: 0.9,  changefreq: "weekly"  },
+  // v73-FINAL / v76-B: 10 cornerstone capability playbook pages — bumped to
+  // 0.85 priority per v76-B spec (was 0.8) so cornerstone playbooks rank
+  // above generic vertical hubs in the sitemap priority ladder.
+  { path: "/capabilities/voice-receptionist",               priority: 0.85, changefreq: "weekly" },
+  { path: "/capabilities/intelligent-booking-agent",        priority: 0.85, changefreq: "weekly" },
+  { path: "/capabilities/lead-qualification-agent",         priority: 0.85, changefreq: "weekly" },
+  { path: "/capabilities/objection-handling-system",        priority: 0.85, changefreq: "weekly" },
+  { path: "/capabilities/follow-up-no-show-system",         priority: 0.85, changefreq: "weekly" },
+  { path: "/capabilities/client-onboarding-agent",          priority: 0.85, changefreq: "weekly" },
+  { path: "/capabilities/ops-copilot",                      priority: 0.85, changefreq: "weekly" },
+  { path: "/capabilities/local-service-marketing-automation", priority: 0.85, changefreq: "weekly" },
+  { path: "/capabilities/compliance-rag-agent",             priority: 0.85, changefreq: "weekly" },
+  { path: "/capabilities/computer-use-agent",               priority: 0.85, changefreq: "weekly" },
   // v52B: founder log + glossary + whitelabel + reseller (data-room is noindex)
   { path: "/founder-log",               priority: 0.7,  changefreq: "daily"   },
   { path: "/glossary",                  priority: 0.8,  changefreq: "monthly" },
@@ -249,8 +254,10 @@ const ALT_VERTICALS = [
   "hvac","healthcare","real-estate","legal","roofing",
   "solar","ecommerce","hospitality","accounting","automotive",
 ];
-// v68: competitor-only alternative pages (no vertical attached)
-const ALT_COMPETITOR_ONLY = ["zapier","intercom"];
+// v68 / v76-B: competitor-only alternative pages (no vertical attached).
+// v76-B refresh — added drift, voiceflow, bland for the top-5 competitor
+// pages covered by COMPETITOR_ONLY_CONTENT in AlternativeFor.tsx.
+const ALT_COMPETITOR_ONLY = ["zapier","intercom","drift","voiceflow","bland"];
 
 // ---- v47B: LOCAL /local/{citySlug}/{verticalSlug} (120 LPs + /local hub) --
 const LOCAL_CITIES = [
