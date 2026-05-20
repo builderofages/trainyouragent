@@ -43,6 +43,7 @@ const COMPANY = [
   { label: "Careers", to: "/careers" },
   { label: "Invest", to: "/invest" },
   { label: "Affiliate", to: "/affiliate-program" },
+  { label: "Affiliates (new)", to: "/affiliates" },
   { label: "Press", to: "/press" },
   { label: "Speaking", to: "/speaking" },
   { label: "Podcast", to: "/podcast-guest" },
