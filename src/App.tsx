@@ -25,6 +25,8 @@ import MetaPixel from "@/components/MetaPixel";
 import { FloatersProvider } from "@/lib/floaters";
 import { VisitorProvider } from "@/lib/visitorContext";
 import ContextPill from "@/components/ContextPill";
+// v76-D: tiny redirect helper for legacy legal URLs (/privacy, /terms, /cookie-policy → /legal/*)
+import LegalRedirect from "@/components/legal/LegalRedirect";
 
 // v41: everything else is lazy-loaded to keep main entry chunk small.
 const Dashboard           = lazy(() => import("./pages/Dashboard"));
@@ -43,9 +45,24 @@ const Technology          = lazy(() => import("./pages/Technology"));
 const ResearchPartners    = lazy(() => import("./pages/ResearchPartners"));
 const Solutions           = lazy(() => import("./pages/Solutions"));
 const Integrations        = lazy(() => import("./pages/Integrations"));
-const Privacy             = lazy(() => import("./pages/Privacy"));
-const Terms               = lazy(() => import("./pages/Terms"));
-const CookiePolicy        = lazy(() => import("./pages/CookiePolicy"));
+// v76-D: legacy single-file legal pages (./pages/Privacy.tsx, Terms.tsx,
+// CookiePolicy.tsx) are preserved in source for reference but no longer routed
+// — the canonical surface is now /legal/*. Legacy URLs redirect via
+// LegalRedirect (imported above).
+
+// v76-D: complete legal surface — 11 docs + index, all under /legal/*.
+const LegalIndex          = lazy(() => import("./pages/legal/Index"));
+const LegalTerms          = lazy(() => import("./pages/legal/Terms"));
+const LegalPrivacy        = lazy(() => import("./pages/legal/Privacy"));
+const LegalCookies        = lazy(() => import("./pages/legal/Cookies"));
+const LegalDpa            = lazy(() => import("./pages/legal/Dpa"));
+const LegalAup            = lazy(() => import("./pages/legal/Aup"));
+const LegalRefund         = lazy(() => import("./pages/legal/Refund"));
+const LegalAiUse          = lazy(() => import("./pages/legal/AiUse"));
+const LegalSla            = lazy(() => import("./pages/legal/Sla"));
+const LegalSubProcessors  = lazy(() => import("./pages/legal/SubProcessors"));
+const LegalGdpr           = lazy(() => import("./pages/legal/Gdpr"));
+const LegalCcpa           = lazy(() => import("./pages/legal/Ccpa"));
 const Comparisons         = lazy(() => import("./pages/Comparisons"));
 const CaseStudies         = lazy(() => import("./pages/CaseStudies"));
 const DemoRequest         = lazy(() => import("./pages/DemoRequest"));
@@ -216,7 +233,10 @@ const App = () => {
             {/* All vertical landing pages route through the unified VerticalPage template */}
             <Route path="/accounting" element={<Vertical />} />
             <Route path="/roofing" element={<Vertical />} />
-            <Route path="/legal" element={<Vertical />} />
+            {/* v76-D: /legal is now the legal-document index. The legal-services
+                vertical lives at /legal-services (VerticalPage normalizes the
+                path back to /legal for content lookup). */}
+            <Route path="/legal-services" element={<Vertical />} />
             <Route path="/healthcare" element={<Vertical />} />
             <Route path="/logistics" element={<Vertical />} />
             <Route path="/bars-nightclubs" element={<Vertical />} />
@@ -249,9 +269,27 @@ const App = () => {
             <Route path="/research" element={<ResearchPartners />} />
             <Route path="/solutions/configurator" element={<SolutionConfigurator />} />
             <Route path="/integrations" element={<Integrations />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/cookie-policy" element={<CookiePolicy />} />
+            {/* v76-D: legacy legal URLs — client-side redirect to the new
+                canonical paths under /legal/*. The page components remain in
+                src/pages/ for reference but are no longer routed. */}
+            <Route path="/privacy" element={<LegalRedirect to="/legal/privacy" />} />
+            <Route path="/terms" element={<LegalRedirect to="/legal/terms" />} />
+            <Route path="/cookie-policy" element={<LegalRedirect to="/legal/cookies" />} />
+            <Route path="/cookies" element={<LegalRedirect to="/legal/cookies" />} />
+            <Route path="/dpa" element={<LegalRedirect to="/legal/dpa" />} />
+            {/* v76-D: complete /legal/* surface. */}
+            <Route path="/legal" element={<LegalIndex />} />
+            <Route path="/legal/terms" element={<LegalTerms />} />
+            <Route path="/legal/privacy" element={<LegalPrivacy />} />
+            <Route path="/legal/cookies" element={<LegalCookies />} />
+            <Route path="/legal/dpa" element={<LegalDpa />} />
+            <Route path="/legal/aup" element={<LegalAup />} />
+            <Route path="/legal/refund" element={<LegalRefund />} />
+            <Route path="/legal/ai-use" element={<LegalAiUse />} />
+            <Route path="/legal/sla" element={<LegalSla />} />
+            <Route path="/legal/sub-processors" element={<LegalSubProcessors />} />
+            <Route path="/legal/gdpr" element={<LegalGdpr />} />
+            <Route path="/legal/ccpa" element={<LegalCcpa />} />
             <Route path="/comparisons" element={<Comparisons />} />
             {/* v67A: replaced hand-coded CaseStudies with JSON-driven index;
                  the old page is preserved at /case-studies-legacy for fallback. */}

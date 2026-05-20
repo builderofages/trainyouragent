@@ -122,10 +122,19 @@ const STATIC_PAGES: { path: string; priority: number; changefreq: string }[] = [
   { path: "/onboarding",                priority: 0.55, changefreq: "monthly" },
   { path: "/portal",                    priority: 0.6,  changefreq: "monthly" },
   { path: "/roadmap",                   priority: 0.7,  changefreq: "weekly"  },
-  // Legal (low priority)
-  { path: "/privacy",                   priority: 0.5,  changefreq: "yearly"  },
-  { path: "/terms",                     priority: 0.5,  changefreq: "yearly"  },
-  { path: "/cookie-policy",             priority: 0.5,  changefreq: "yearly"  },
+  // Legal (low priority) — v76-D: full /legal/* surface, plus the /legal index.
+  { path: "/legal",                     priority: 0.6,  changefreq: "monthly" },
+  { path: "/legal/terms",               priority: 0.5,  changefreq: "yearly"  },
+  { path: "/legal/privacy",             priority: 0.5,  changefreq: "yearly"  },
+  { path: "/legal/cookies",             priority: 0.5,  changefreq: "yearly"  },
+  { path: "/legal/dpa",                 priority: 0.5,  changefreq: "yearly"  },
+  { path: "/legal/aup",                 priority: 0.5,  changefreq: "yearly"  },
+  { path: "/legal/refund",              priority: 0.5,  changefreq: "yearly"  },
+  { path: "/legal/ai-use",              priority: 0.6,  changefreq: "monthly" },
+  { path: "/legal/sla",                 priority: 0.5,  changefreq: "yearly"  },
+  { path: "/legal/sub-processors",      priority: 0.5,  changefreq: "monthly" },
+  { path: "/legal/gdpr",                priority: 0.5,  changefreq: "yearly"  },
+  { path: "/legal/ccpa",                priority: 0.5,  changefreq: "yearly"  },
 ];
 
 // v49: DOCS — 12 articles
