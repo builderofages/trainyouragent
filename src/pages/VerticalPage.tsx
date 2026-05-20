@@ -431,9 +431,16 @@ const FAQ_BY_VERTICAL: Record<string, FAQ[]> = {
   ],
 };
 
+// v76-D: /legal is now the legal-document index; the legal-services vertical
+// lives at /legal-services. We normalize so the V map keyed on /legal still
+// resolves, and the schema/canonical use the public path.
+const normalizeVerticalPath = (p: string): string =>
+  p === "/legal-services" ? "/legal" : p;
+
 const VerticalPage = () => {
   const location = useLocation();
-  const config = V[location.pathname] || V["/solutions"];
+  const verticalKey = normalizeVerticalPath(location.pathname);
+  const config = V[verticalKey] || V["/solutions"];
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [lane, setLane] = useState<LaneId | null>(null);
@@ -466,8 +473,9 @@ const VerticalPage = () => {
     // v33a: Service + FAQPage schema for vertical hubs.
     const schemaId = "tya-schema-vertical";
     document.getElementById(schemaId)?.remove();
-    const slug = (typeof window !== "undefined" ? window.location.pathname : "/").replace(/\/$/, "") || "/";
-    const url = `https://trainyouragent.com${slug}`;
+    const rawSlug = (typeof window !== "undefined" ? window.location.pathname : "/").replace(/\/$/, "") || "/";
+    const slug = normalizeVerticalPath(rawSlug);
+    const url = `https://trainyouragent.com${rawSlug}`;
     const s = document.createElement("script");
     s.id = schemaId;
     s.type = "application/ld+json";
@@ -620,7 +628,7 @@ const VerticalPage = () => {
 
       {/* v34: vertical-aware AgentSimulator — only mounts for slugs we have scenarios for */}
       {(() => {
-        const slug = location.pathname.replace(/^\//, "");
+        const slug = verticalKey.replace(/^\//, "");
         if (!VERTICAL_SCENARIOS[slug]) return null;
         return (
           <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-y border-slate-200/70">
@@ -636,8 +644,8 @@ const VerticalPage = () => {
       })()}
 
       {/* Rich per-niche block — only renders for slugs present in VERTICAL_CONTENT */}
-      {VERTICAL_CONTENT[location.pathname] && (() => {
-        const rc = VERTICAL_CONTENT[location.pathname];
+      {VERTICAL_CONTENT[verticalKey] && (() => {
+        const rc = VERTICAL_CONTENT[verticalKey];
         return (
           <>
             {/* Pain point */}

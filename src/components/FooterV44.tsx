@@ -1,6 +1,8 @@
 // src/components/FooterV44.tsx
 // v44: full-width navy footer with 4-column grid + status pill.
+// v76-D: added Legal column (11 docs), collapsible on mobile to avoid bloat.
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const PRODUCT = [
@@ -62,6 +64,22 @@ const TRUST = [
   { label: "Public metrics", to: "/metrics" },
 ];
 
+// v76-D: complete legal surface — 11 docs + index, all under /legal/*.
+const LEGAL = [
+  { label: "Legal index", to: "/legal" },
+  { label: "Terms of Service", to: "/legal/terms" },
+  { label: "Privacy Policy", to: "/legal/privacy" },
+  { label: "Cookie Policy", to: "/legal/cookies" },
+  { label: "Data Processing Agreement", to: "/legal/dpa" },
+  { label: "Acceptable Use Policy", to: "/legal/aup" },
+  { label: "Refund Policy", to: "/legal/refund" },
+  { label: "AI Use Policy", to: "/legal/ai-use" },
+  { label: "Service Level Agreement", to: "/legal/sla" },
+  { label: "Sub-processors", to: "/legal/sub-processors" },
+  { label: "GDPR Notice", to: "/legal/gdpr" },
+  { label: "CCPA / CPRA Notice", to: "/legal/ccpa" },
+];
+
 // v57A: internal-only links — surfaced for the team, not for SEO traffic.
 const INTERNAL = [
   { label: "Email domain verify", to: "/verify-email-domain" },
@@ -116,7 +134,7 @@ export default function FooterV44() {
       style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 sm:py-14 mb-safe">
-        <div className="grid grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr_1fr] gap-x-6 gap-y-8 md:gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr_1fr_1fr] gap-x-6 gap-y-8 md:gap-10">
           {/* Brand block spans full width on mobile so its long paragraph reads cleanly */}
           <style>{`@media (max-width: 767px) { footer .brand-col-mobile-full { grid-column: 1 / -1; } }`}</style>
           {/* Brand block */}
@@ -159,18 +177,21 @@ export default function FooterV44() {
           <Col title="Company" items={COMPANY} />
           <Col title="Trust" items={TRUST} />
           <Col title="Connect" items={CONNECT} />
+          {/* v76-D: collapsible Legal column to avoid mobile footer bloat. */}
+          <CollapsibleCol title="Legal" items={LEGAL} />
           <Col title="Internal tools" items={INTERNAL} />
         </div>
 
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between text-[12.5px] text-white/65">
           <div>© {new Date().getFullYear()} TrainYourAgent LLC · Tampa Bay, FL · Built by humans</div>
           <div className="flex flex-wrap gap-4">
-            <Link to="/privacy" className="hover:text-white min-h-[24px] inline-block">Privacy</Link>
-            <Link to="/terms" className="hover:text-white min-h-[24px] inline-block">Terms</Link>
+            <Link to="/legal/privacy" className="hover:text-white min-h-[24px] inline-block">Privacy</Link>
+            <Link to="/legal/terms" className="hover:text-white min-h-[24px] inline-block">Terms</Link>
+            <Link to="/legal" className="hover:text-white min-h-[24px] inline-block">Legal</Link>
             <Link to="/trust-center" className="hover:text-white min-h-[24px] inline-block">Trust</Link>
             <Link to="/security" className="hover:text-white min-h-[24px] inline-block">Security</Link>
             <Link to="/status" className="hover:text-white min-h-[24px] inline-block">Status</Link>
-            <Link to="/cookie-policy" className="hover:text-white min-h-[24px] inline-block">Cookies</Link>
+            <Link to="/legal/cookies" className="hover:text-white min-h-[24px] inline-block">Cookies</Link>
             <Link to="/metrics" className="hover:text-white min-h-[24px] inline-block">Metrics</Link>
           </div>
         </div>
@@ -186,6 +207,68 @@ function Col({ title, items }: { title: string; items: { label: string; to: stri
         {title}
       </div>
       <ul className="space-y-2.5">
+        {items.map((i) =>
+          i.ext ? (
+            <li key={i.label}>
+              <a
+                href={i.to}
+                target="_blank"
+                rel="noopener"
+                className="text-[13.5px] text-white/80 hover:text-white inline-block min-h-[24px]"
+              >
+                {i.label}
+              </a>
+            </li>
+          ) : (
+            <li key={i.label}>
+              <Link
+                to={i.to}
+                className="text-[13.5px] text-white/80 hover:text-white inline-block min-h-[24px]"
+              >
+                {i.label}
+              </Link>
+            </li>
+          ),
+        )}
+      </ul>
+    </div>
+  );
+}
+
+// v76-D: same as Col but collapses on mobile behind a chevron button to keep
+// the footer compact on small screens. On md+ it renders open and the button
+// is hidden.
+function CollapsibleCol({
+  title,
+  items,
+}: {
+  title: string;
+  items: { label: string; to: string; ext?: boolean }[];
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div>
+      {/* Mobile: button toggles open. Desktop: static header. */}
+      <button
+        type="button"
+        className="md:cursor-default md:pointer-events-none w-full text-left flex items-center justify-between gap-2 text-[11px] uppercase tracking-[0.18em] font-semibold text-[#9BC3E8] mb-4 min-h-[24px]"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls={`footer-col-${title.toLowerCase()}`}
+      >
+        <span>{title}</span>
+        <span
+          aria-hidden="true"
+          className="md:hidden text-[14px] leading-none transition-transform"
+          style={{ transform: open ? "rotate(180deg)" : "none" }}
+        >
+          {"▾"}
+        </span>
+      </button>
+      <ul
+        id={`footer-col-${title.toLowerCase()}`}
+        className={`space-y-2.5 ${open ? "block" : "hidden"} md:block`}
+      >
         {items.map((i) =>
           i.ext ? (
             <li key={i.label}>
