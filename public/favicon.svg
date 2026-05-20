@@ -1,12 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Filled navy rounded-square background -->
-  <rect width="64" height="64" rx="12" fill="#042C53"/>
-  <!-- Diamond mark in white -->
-  <g stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none">
-    <path d="M 32 12 L 52 32 L 32 52 L 12 32 Z"/>
-    <path d="M 32 12 L 32 52"/>
-    <path d="M 12 32 L 52 32"/>
-  </g>
-  <!-- Center dot in tint -->
-  <circle cx="32" cy="32" r="3.5" fill="#E6F1FB" stroke="none"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="#042C53" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Transparent monoline PrismNode mark (navy on transparent) -->
+  <g stroke-width="4"><path d="M 32 6 L 58 32 L 32 58 L 6 32 Z"/></g>
+  <g stroke-width="2.4"><path d="M 32 6 L 32 58"/><path d="M 6 32 L 58 32"/></g>
+  <circle cx="32" cy="32" r="3" fill="#042C53" stroke="none"/>
 </svg>

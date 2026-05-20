@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- v75: high-contrast app-icon variant of the PrismNode mark.
+       Filled navy rounded-square (8px corner radius on 64x64 canvas),
+       thick white stroke (width 5) so the diamond + cross read at 16px,
+       solid white center dot. Rasterized into all PNG favicon slots. -->
+  <rect width="64" height="64" rx="8" ry="8" fill="#042C53"/>
+  <g stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M 32 10 L 54 32 L 32 54 L 10 32 Z"/>
+    <path d="M 32 10 L 32 54"/>
+    <path d="M 10 32 L 54 32"/>
+  </g>
+  <circle cx="32" cy="32" r="4" fill="#FFFFFF" stroke="none"/>
+</svg>
