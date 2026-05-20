@@ -203,6 +203,11 @@ const Train                  = lazy(() => import("./pages/Train"));
 const EverythingAI           = lazy(() => import("./pages/EverythingAI"));
 const CapabilityDetail       = lazy(() => import("./pages/CapabilityDetail"));
 
+// v76-c: /train/intake discovery questionnaire + /affiliates landing
+const TrainIntake            = lazy(() => import("./pages/TrainIntake"));
+const Affiliates             = lazy(() => import("./pages/Affiliates"));
+const AffiliatesPortal       = lazy(() => import("./pages/AffiliatesPortal"));
+
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
@@ -423,8 +428,12 @@ const App = () => {
             {/* v73-FINAL: flagship /train method + /everything-ai category map +
                  10 cornerstone capability playbooks at /capabilities/:slug */}
             <Route path="/train" element={<Train />} />
+            <Route path="/train/intake" element={<TrainIntake />} />
             <Route path="/everything-ai" element={<EverythingAI />} />
             <Route path="/capabilities/:slug" element={<CapabilityDetail />} />
+            {/* v76-c: /affiliates landing + portal stub */}
+            <Route path="/affiliates" element={<Affiliates />} />
+            <Route path="/affiliates/portal" element={<AffiliatesPortal />} />
             {/* v33a: programmatic SEO — /:vertical/:city */}
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />
