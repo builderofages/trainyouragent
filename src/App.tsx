@@ -125,7 +125,18 @@ const InvestPage           = lazy(() => import("./pages/InvestPage"));
 const AffiliateProgramPage = lazy(() => import("./pages/AffiliateProgramPage"));
 
 // v50A: customer portal + public roadmap
-const Portal               = lazy(() => import("./pages/Portal"));
+// v76-a: customer portal layout + 8 sub-pages (auth-gated)
+const PortalLayout         = lazy(() => import("./components/portal/PortalLayout"));
+const PortalLogin          = lazy(() => import("./pages/portal/Login"));
+const PortalAuthCallback   = lazy(() => import("./pages/portal/AuthCallback"));
+const PortalOverview       = lazy(() => import("./pages/portal/Overview"));
+const PortalTrainingProgress = lazy(() => import("./pages/portal/TrainingProgress"));
+const PortalAgentSettings  = lazy(() => import("./pages/portal/AgentSettings"));
+const PortalConversations  = lazy(() => import("./pages/portal/Conversations"));
+const PortalAnalytics      = lazy(() => import("./pages/portal/Analytics"));
+const PortalBilling        = lazy(() => import("./pages/portal/Billing"));
+const PortalDocuments      = lazy(() => import("./pages/portal/Documents"));
+const PortalSupport        = lazy(() => import("./pages/portal/Support"));
 const Roadmap              = lazy(() => import("./pages/Roadmap"));
 
 // v51B: niche playbook system — /playbooks hub + /playbooks/:slug (15 niches)
@@ -324,7 +335,19 @@ const App = () => {
             <Route path="/affiliate-program" element={<AffiliateProgramPage />} />
 
             {/* v50A: customer portal + public roadmap */}
-            <Route path="/portal" element={<Portal />} />
+            {/* v76-a: customer portal */}
+            <Route path="/portal/login" element={<PortalLogin />} />
+            <Route path="/portal/auth-callback" element={<PortalAuthCallback />} />
+            <Route path="/portal" element={<PortalLayout />}>
+              <Route index element={<PortalOverview />} />
+              <Route path="training" element={<PortalTrainingProgress />} />
+              <Route path="agent" element={<PortalAgentSettings />} />
+              <Route path="conversations" element={<PortalConversations />} />
+              <Route path="analytics" element={<PortalAnalytics />} />
+              <Route path="billing" element={<PortalBilling />} />
+              <Route path="documents" element={<PortalDocuments />} />
+              <Route path="support" element={<PortalSupport />} />
+            </Route>
             <Route path="/roadmap" element={<Roadmap />} />
             {/* v51B: niche playbook system — /playbooks hub + 15 niche playbooks */}
             <Route path="/playbooks" element={<PlaybooksIndex />} />

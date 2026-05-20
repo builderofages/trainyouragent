@@ -47,6 +47,8 @@ const COMPANY = [
   { label: "Speaking", to: "/speaking" },
   { label: "Podcast", to: "/podcast-guest" },
   { label: "Media kit", to: "/media-kit" },
+  // v76-a: customer portal access — direct URL or footer-only (not in top nav).
+  { label: "Customer login", to: "/portal/login" },
 ];
 
 const TRUST = [
@@ -75,7 +77,7 @@ const CONNECT = [
   { label: "White-label", to: "/whitelabel" },
   { label: "Reseller", to: "/reseller" },
   { label: "Roadmap", to: "/roadmap" },
-  { label: "Customer portal", to: "/portal" },
+  { label: "Customer portal", to: "/portal/login" },
 ];
 
 function PrismMark({ size = 32 }: { size?: number }) {

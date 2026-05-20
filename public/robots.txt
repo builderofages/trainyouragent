@@ -10,6 +10,7 @@ Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
 Crawl-delay: 0
+Disallow: /portal/
 
 User-agent: Bingbot
 Allow: /
@@ -17,36 +18,42 @@ Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
 Crawl-delay: 1
+Disallow: /portal/
 
 User-agent: Slurp
 Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
+Disallow: /portal/
 
 User-agent: DuckDuckBot
 Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
+Disallow: /portal/
 
 User-agent: Baiduspider
 Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
+Disallow: /portal/
 
 User-agent: YandexBot
 Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
+Disallow: /portal/
 
 User-agent: Applebot
 Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
+Disallow: /portal/
 
 # ----- Social media crawlers (OG previews) -----
 User-agent: Twitterbot
@@ -67,36 +74,42 @@ Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
+Disallow: /portal/
 
 User-agent: ChatGPT-User
 Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
+Disallow: /portal/
 
 User-agent: Claude-Web
 Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
+Disallow: /portal/
 
 User-agent: anthropic-ai
 Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
+Disallow: /portal/
 
 User-agent: PerplexityBot
 Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
+Disallow: /portal/
 
 User-agent: Google-Extended
 Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
+Disallow: /portal/
 
 # ----- Generic crawlers -----
 User-agent: *
@@ -106,6 +119,7 @@ Disallow: /dashboard
 Disallow: /settings
 Disallow: /admin
 Disallow: /portal
+Disallow: /portal/
 Crawl-delay: 2
 
 # Sitemap
