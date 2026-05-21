@@ -422,6 +422,16 @@ const AlternativeFor = () => {
     setProp("og:url", url);
     setProp("og:type", "website");
     setMeta("twitter:card", "summary_large_image");
+    // v79: per-page OG image via /api/og dynamic renderer.
+    const ogImage = vMeta
+      ? `${SITE_URL}/api/og?title=${encodeURIComponent(`TrainYourAgent vs ${cMeta.name}`)}&eyebrow=${encodeURIComponent(`FOR ${vMeta.label.toUpperCase()}`)}&kicker=${encodeURIComponent("Honest alternative · 21-day ship · operator-led")}&type=alternative`
+      : `${SITE_URL}/api/og?title=${encodeURIComponent(`The honest ${cMeta.name} alternative`)}&eyebrow=${encodeURIComponent("ALTERNATIVES · TRAINYOURAGENT")}&kicker=${encodeURIComponent("Vertical-specific · CRM-wired · 21-day ship")}&type=alternative`;
+    setProp("og:image", ogImage);
+    setProp("og:image:width", "1200");
+    setProp("og:image:height", "630");
+    setMeta("twitter:image", ogImage);
+    setMeta("twitter:title", title);
+    setMeta("twitter:description", desc);
 
     // Canonical
     let canonical = document.querySelector("link[rel='canonical']") as HTMLLinkElement | null;

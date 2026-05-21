@@ -50,15 +50,18 @@ export default function StaggerChildren({
         visible: { transition: { staggerChildren: delay } },
       }}
     >
+      {/* v79: opacity 0→1 fade killed — only slide-up remains. Stacked
+          stagger of fade-ins was a major contributor to the perceived
+          gray-flash on hero load. Children now paint at full opacity. */}
       {items.map((child, i) => (
         <motion.div
           key={i}
           variants={{
-            hidden: { opacity: 0, y },
+            hidden: { opacity: 1, y },
             visible: {
               opacity: 1,
               y: 0,
-              transition: { duration: 0.55, ease: [0.2, 0.7, 0.2, 1] },
+              transition: { duration: 0.45, ease: [0.2, 0.7, 0.2, 1] },
             },
           }}
         >

@@ -42,19 +42,19 @@ export default function RevealUp({
     return <Plain className={className}>{children}</Plain>;
   }
 
-  // v78: starts at opacity 0.55 (not 0) and y/2 (not y) so content is
-  // legible from first paint even before the intersection observer fires
-  // or framer-motion hydrates. Was making hero h1 + CTA look washed-out
-  // gray for 3-4 seconds on every page load — first-impression killer.
-  // Duration also clamped lower so the polish-flash is brief.
+  // v79: opacity fade KILLED entirely — only the y-translate animates now.
+  // v78 still showed a visible "wash-in" because opacity 0.55→1 over 0.4s
+  // is a discernible flash for hero text. Verified live: audit reported
+  // gray-flash still present. Now content paints at full opacity from
+  // frame 0 with a subtle 12px slide-up that doesn't read as "loading".
   return (
     <Tag
       className={className}
-      initial={{ opacity: 0.55, y: y / 2 }}
+      initial={{ opacity: 1, y: y / 2 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount }}
       transition={{
-        duration: Math.min(duration, 0.4),
+        duration: Math.min(duration, 0.45),
         delay,
         ease: [0.2, 0.7, 0.2, 1],
       }}

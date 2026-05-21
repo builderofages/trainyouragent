@@ -30,7 +30,8 @@ export default function PlaybookPage() {
       navigate("/playbooks", { replace: true });
       return;
     }
-    document.title = `AI for ${pb.plural} — The Operator's Playbook | TrainYourAgent`;
+    const _title = `AI for ${pb.plural} — The Operator's Playbook | TrainYourAgent`;
+    document.title = _title;
 
     // Canonical
     let canon = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
@@ -49,6 +50,41 @@ export default function PlaybookPage() {
       document.head.appendChild(desc);
     }
     desc.content = `${pb.plural}: 10 AI use cases with real implementation specifics, tool stack, ${pb.timeline.week4 ? "21-day timeline" : ""}, industry data, and a live embedded demo. The operator's playbook for AI in ${pb.displayName.toLowerCase()}.`;
+
+    // v79: complete OG + Twitter card so playbook pages render as
+    // distinct preview cards on LinkedIn / X / Slack rather than the
+    // homepage default. Per-page dynamic OG via /api/og.
+    const _pbUrl = `${SITE_URL}/playbooks/${pb.slug}`;
+    const _pbOg = `${SITE_URL}/api/og?title=${encodeURIComponent(`AI for ${pb.plural}`)}&eyebrow=${encodeURIComponent("OPERATOR'S PLAYBOOK")}&kicker=${encodeURIComponent("10 use cases · real stack · 21-day ship")}&type=playbook`;
+    const setProp = (p: string, c: string) => {
+      let el = document.querySelector(`meta[property='${p}']`) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute("property", p);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", c);
+    };
+    const setMetaName = (n: string, c: string) => {
+      let el = document.querySelector(`meta[name='${n}']`) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute("name", n);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", c);
+    };
+    setProp("og:title", _title);
+    setProp("og:description", desc.content);
+    setProp("og:url", _pbUrl);
+    setProp("og:type", "article");
+    setProp("og:image", _pbOg);
+    setProp("og:image:width", "1200");
+    setProp("og:image:height", "630");
+    setMetaName("twitter:card", "summary_large_image");
+    setMetaName("twitter:title", _title);
+    setMetaName("twitter:description", desc.content);
+    setMetaName("twitter:image", _pbOg);
 
     // JSON-LD
     const ld = {

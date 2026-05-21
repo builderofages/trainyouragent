@@ -463,7 +463,8 @@ const SolutionDetail = () => {
         "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
       document.head.appendChild(l);
     }
-    document.title = `${pillar.label} — TrainYourAgent`;
+    const _title = `${pillar.label} — TrainYourAgent`;
+    document.title = _title;
     const setMeta = (n: string, c: string) => {
       let el = document.querySelector(`meta[name='${n}']`) as HTMLMetaElement | null;
       if (!el) {
@@ -473,7 +474,31 @@ const SolutionDetail = () => {
       }
       el.setAttribute("content", c);
     };
+    const setProp = (p: string, c: string) => {
+      let el = document.querySelector(`meta[property='${p}']`) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute("property", p);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", c);
+    };
     setMeta("description", pillar.tagline);
+    // v79: full OG + Twitter card so /solutions/:pillar shares render
+    // pillar-specific preview cards instead of homepage fallback.
+    const _solUrl = `https://trainyouragent.com/solutions/${pillar.slug}`;
+    const _solOg = `https://trainyouragent.com/api/og?title=${encodeURIComponent(pillar.label)}&eyebrow=${encodeURIComponent("SOLUTION · TRAINYOURAGENT")}&kicker=${encodeURIComponent(pillar.tagline.slice(0, 120))}&type=solution`;
+    setProp("og:title", _title);
+    setProp("og:description", pillar.tagline);
+    setProp("og:url", _solUrl);
+    setProp("og:type", "website");
+    setProp("og:image", _solOg);
+    setProp("og:image:width", "1200");
+    setProp("og:image:height", "630");
+    setMeta("twitter:card", "summary_large_image");
+    setMeta("twitter:title", _title);
+    setMeta("twitter:description", pillar.tagline);
+    setMeta("twitter:image", _solOg);
 
     // v40a: Service + FAQPage + BreadcrumbList JSON-LD per pillar
     const schemaId = "tya-schema-pillar";

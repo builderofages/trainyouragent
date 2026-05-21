@@ -462,13 +462,37 @@ const VerticalPage = () => {
       l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
       document.head.appendChild(l);
     }
-    document.title = `${config.label} — AI agents that work — TrainYourAgent`;
+    const title = `${config.label} — AI agents that work — TrainYourAgent`;
+    document.title = title;
     const setMeta = (n: string, c: string) => {
       let el = document.querySelector(`meta[name='${n}']`) as HTMLMetaElement | null;
       if (!el) { el = document.createElement("meta"); el.setAttribute("name", n); document.head.appendChild(el); }
       el.setAttribute("content", c);
     };
+    const setProp = (p: string, c: string) => {
+      let el = document.querySelector(`meta[property='${p}']`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.setAttribute("property", p); document.head.appendChild(el); }
+      el.setAttribute("content", c);
+    };
     setMeta("description", config.sub);
+    // v79: complete Open Graph + Twitter card so social shares to a
+    // vertical hub (/hvac, /healthcare, etc.) render a brand-correct
+    // preview card instead of falling back to the site-default homepage
+    // OG image. Was the biggest social-share polish gap on the site.
+    const _rawPath = (typeof window !== "undefined" ? window.location.pathname : "/").replace(/\/$/, "") || "/";
+    const _pageUrl = `https://trainyouragent.com${_rawPath}`;
+    const _ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent(`${config.label} AI agents`)}&eyebrow=${encodeURIComponent(`INDUSTRY · ${config.label.toUpperCase()}`)}&kicker=${encodeURIComponent("Voice + chat · CRM-wired · 21-day ship")}&type=vertical`;
+    setProp("og:title", title);
+    setProp("og:description", config.sub);
+    setProp("og:url", _pageUrl);
+    setProp("og:type", "website");
+    setProp("og:image", _ogImage);
+    setProp("og:image:width", "1200");
+    setProp("og:image:height", "630");
+    setMeta("twitter:card", "summary_large_image");
+    setMeta("twitter:title", title);
+    setMeta("twitter:description", config.sub);
+    setMeta("twitter:image", _ogImage);
 
     // v33a: Service + FAQPage schema for vertical hubs.
     const schemaId = "tya-schema-vertical";
