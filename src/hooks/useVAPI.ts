@@ -42,15 +42,21 @@ export const useVAPI = (industryConfig?: any) => {
   const setupEventListeners = () => {
     if (!vapiRef.current) return;
 
+    // v78: all call-lifecycle console.logs gated behind import.meta.env.DEV
+    // so we don't spam every visitor's browser console in prod.
+    const dlog = (...args: any[]) => {
+      if (import.meta.env.DEV) console.log(...args);
+    };
+
     vapiRef.current.on("call-start", () => {
-      console.log("Call started");
+      dlog("Call started");
       setIsConnected(true);
       setError(null);
       hasStarted.current = true;
     });
 
     vapiRef.current.on("call-end", () => {
-      console.log("Call ended");
+      dlog("Call ended");
       setIsConnected(false);
       setIsListening(false);
       setIsSpeaking(false);
@@ -58,17 +64,17 @@ export const useVAPI = (industryConfig?: any) => {
     });
 
     vapiRef.current.on("speech-start", () => {
-      console.log("User started speaking");
+      dlog("User started speaking");
       setIsListening(true);
     });
 
     vapiRef.current.on("speech-end", () => {
-      console.log("User stopped speaking");
+      dlog("User stopped speaking");
       setIsListening(false);
     });
 
     vapiRef.current.on("message", (message: any) => {
-      console.log("Message received:", message);
+      dlog("Message received:", message);
       
       if (message.type === "transcript" && message.transcriptType === "final") {
         if (message.role === "user") {
@@ -108,7 +114,7 @@ export const useVAPI = (industryConfig?: any) => {
     }
 
     if (isConnected) {
-      console.log("Call already in progress");
+      if (import.meta.env.DEV) console.log("Call already in progress");
       return;
     }
 

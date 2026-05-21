@@ -101,11 +101,13 @@ export default function MediaKit() {
             Everything a writer, editor, or designer needs to render TrainYourAgent correctly in a story, slide, or chyron. If you need a format we haven't published, email <a href="mailto:press@trainyouragent.com" className="underline text-[#185FA5]">press@trainyouragent.com</a>.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href="/press/logos.zip" download
+            {/* v78: ZIP packs not yet bundled — replaced 404 download links
+                with email-request CTAs so the page never breaks on click. */}
+            <a href="mailto:press@trainyouragent.com?subject=Logo+pack+request"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#042C53] text-white font-semibold text-[14px] hover:bg-[#0A3D6E]">
-              Download everything (ZIP)
+              Request the logo pack
             </a>
-            <a href="/press/founder-headshots.zip" download
+            <a href="mailto:press@trainyouragent.com?subject=Founder+headshots+request"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-slate-300 text-slate-700 font-semibold text-[14px] hover:border-[#185FA5] hover:text-[#185FA5]">
               Founder headshots
             </a>
@@ -194,9 +196,10 @@ export default function MediaKit() {
                 <div className="text-[12px] text-white/70 mt-1 max-w-[220px] mx-auto">Formal, candid, on-stage — three full-resolution shots, RGB and CMYK.</div>
               </div>
             </div>
-            <a href="/press/founder-headshots.zip" download
+            {/* v78: ZIP not packaged yet — email request instead. */}
+            <a href="mailto:press@trainyouragent.com?subject=Founder+headshots+request"
               className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#042C53] text-white font-semibold text-[14px] hover:bg-[#0A3D6E]">
-              Download headshots (ZIP)
+              Request headshots
             </a>
           </div>
           <div>

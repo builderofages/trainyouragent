@@ -3,6 +3,8 @@
 
 import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import SiteNav from "@/components/SiteNav";
+import FooterV44 from "@/components/FooterV44";
 import {
   getAllPosts,
   ALL_CATEGORIES,
@@ -91,10 +93,12 @@ export default function BlogIndex() {
           name="description"
           content="Real builds, real numbers. AI voice, AI marketing, AI infrastructure for vertical SMB."
         />
-        <link rel="alternate" type="application/rss+xml" title="Train Your Agent — Blog" href="/rss.xml" />
+        {/* v78: removed broken /rss.xml link — endpoint doesn't exist. */}
       </Helmet>
 
-      <div className="max-w-6xl mx-auto px-6 sm:px-8 py-12 sm:py-20">
+      <SiteNav active="resources" />
+
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 pt-28 sm:pt-32 pb-12 sm:pb-20">
         <div className="mb-10">
           <div
             className="text-[12px] uppercase tracking-[0.18em] font-semibold mb-3"
@@ -163,6 +167,8 @@ export default function BlogIndex() {
           </div>
         )}
       </div>
+
+      <FooterV44 />
     </div>
   );
 }

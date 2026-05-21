@@ -71,8 +71,12 @@ export const trackConversion = (eventName: string, data?: Record<string, any>) =
     (window as any).lintrk('track', { conversion_id: eventName });
   }
 
-  // Console log for debugging
-  console.log(`[Conversion] ${eventName}`, eventData);
+  // v78: gate behind DEV so we don't leak conversion event payloads
+  // (which may include emails / PII) into every visitor's browser console
+  // in production.
+  if (import.meta.env.DEV) {
+    console.log(`[Conversion] ${eventName}`, eventData);
+  }
 };
 
 // Specific conversion event helpers

@@ -3,6 +3,8 @@
 
 import { useParams, Link, Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import SiteNav from "@/components/SiteNav";
+import FooterV44 from "@/components/FooterV44";
 import { getPostsByTag, formatDate } from "@/lib/blog";
 
 const FONT = "'Inter Tight', system-ui, sans-serif";
@@ -26,7 +28,9 @@ export default function BlogTag() {
         />
       </Helmet>
 
-      <div className="max-w-4xl mx-auto px-6 sm:px-8 py-12 sm:py-20">
+      <SiteNav active="resources" />
+
+      <div className="max-w-4xl mx-auto px-6 sm:px-8 pt-28 sm:pt-32 pb-12 sm:pb-20">
         <Link to="/blog" className="text-[13px] text-slate-500 hover:text-slate-700">
           ← All posts
         </Link>
@@ -70,6 +74,8 @@ export default function BlogTag() {
           ))}
         </div>
       </div>
+
+      <FooterV44 />
     </div>
   );
 }

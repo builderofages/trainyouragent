@@ -6,6 +6,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
@@ -104,56 +105,14 @@ export default function LegalLayout({
         <meta name="robots" content="index, follow" />
       </Helmet>
 
-      {/* Top nav (kept simple — full nav lives on marketing pages) */}
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <BrainLogo size={36} />
-            <span className="text-[17px] font-semibold tracking-tight text-[#042C53]">TrainYourAgent</span>
-          </Link>
-          <div className="hidden md:flex items-center gap-7 text-[14px] text-slate-700">
-            <Link to="/legal" className="hover:text-[#042C53]">Legal index</Link>
-            <Link to="/solutions" className="hover:text-[#042C53]">Solutions</Link>
-            <Link to="/security" className="hover:text-[#042C53]">Security</Link>
-            <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
-            <a
-              href={CAL_URL}
-              target="_blank"
-              rel="noopener"
-              className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E]"
-            >
-              Book a call
-            </a>
-          </div>
-          <button
-            className="md:hidden p-2"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Menu"
-          >
-            <span
-              className="block w-4 h-px bg-[#042C53] relative"
-              style={{
-                boxShadow: mobileOpen
-                  ? "none"
-                  : "0 -5px 0 #042C53, 0 5px 0 #042C53",
-                transform: mobileOpen ? "rotate(45deg)" : "none",
-              }}
-            />
-          </button>
-        </div>
-        {mobileOpen && (
-          <div className="md:hidden border-t border-slate-200 px-5 py-3 space-y-3 text-[14px] text-slate-700 bg-white">
-            <Link to="/legal" className="block">Legal index</Link>
-            <Link to="/solutions" className="block">Solutions</Link>
-            <Link to="/security" className="block">Security</Link>
-            <Link to="/pricing" className="block">Pricing</Link>
-            <a href={CAL_URL} target="_blank" rel="noopener" className="block">Book a call</a>
-          </div>
-        )}
-      </nav>
+      {/* v78: use canonical SiteNav instead of the custom stripped-down nav
+          that was previously here. Reading "Legal index · Solutions · Security ·
+          Pricing" on /legal/* was visually inconsistent with every other page on
+          the site — looked like a different product. */}
+      <SiteNav />
 
       {/* Navy hero */}
-      <header className="bg-[#042C53] text-white">
+      <header className="bg-[#042C53] text-white pt-16 sm:pt-20">
         <div className="max-w-5xl mx-auto px-5 sm:px-8 py-14 sm:py-20">
           <div className="text-[11px] sm:text-[12px] uppercase tracking-[0.22em] font-semibold text-[#9BC3E8] mb-4">
             {effectiveEyebrow}

@@ -44,8 +44,12 @@ const COMPANY = [
   { label: "Team", to: "/team" },
   { label: "Careers", to: "/careers" },
   { label: "Invest", to: "/invest" },
-  { label: "Affiliate", to: "/affiliate-program" },
-  { label: "Affiliates (new)", to: "/affiliates" },
+  // v78: consolidated the two affiliate links into one. The old
+  // "Affiliate" (singular) entry pointed at /affiliate-program (the
+  // legacy v49 page) and "Affiliates (new)" pointed at /affiliates
+  // (the canonical v76-c page) — having both was duplicative and the
+  // legacy slug 404'd for some visitors. Single canonical link now.
+  { label: "Affiliate program", to: "/affiliates" },
   { label: "Press", to: "/press" },
   { label: "Speaking", to: "/speaking" },
   { label: "Podcast", to: "/podcast-guest" },
@@ -180,7 +184,12 @@ export default function FooterV44() {
           <Col title="Connect" items={CONNECT} />
           {/* v76-D: collapsible Legal column to avoid mobile footer bloat. */}
           <CollapsibleCol title="Legal" items={LEGAL} />
-          <Col title="Internal tools" items={INTERNAL} />
+          {/* v78: "Internal tools" column hidden from prod — was leaking
+              admin-only utilities like /verify-email-domain to public site
+              visitors. Only renders in dev. */}
+          {import.meta.env.DEV && (
+            <Col title="Internal tools" items={INTERNAL} />
+          )}
         </div>
 
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between text-[12.5px] text-white/65">

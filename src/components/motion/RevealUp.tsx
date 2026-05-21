@@ -42,14 +42,19 @@ export default function RevealUp({
     return <Plain className={className}>{children}</Plain>;
   }
 
+  // v78: starts at opacity 0.55 (not 0) and y/2 (not y) so content is
+  // legible from first paint even before the intersection observer fires
+  // or framer-motion hydrates. Was making hero h1 + CTA look washed-out
+  // gray for 3-4 seconds on every page load — first-impression killer.
+  // Duration also clamped lower so the polish-flash is brief.
   return (
     <Tag
       className={className}
-      initial={{ opacity: 0, y }}
+      initial={{ opacity: 0.55, y: y / 2 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount }}
       transition={{
-        duration,
+        duration: Math.min(duration, 0.4),
         delay,
         ease: [0.2, 0.7, 0.2, 1],
       }}

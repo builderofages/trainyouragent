@@ -3,6 +3,8 @@
 
 import { useParams, Link, Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import SiteNav from "@/components/SiteNav";
+import FooterV44 from "@/components/FooterV44";
 import {
   getPostBySlug,
   getAdjacentPosts,
@@ -102,8 +104,10 @@ export default function BlogPost() {
         </script>
       </Helmet>
 
+      <SiteNav active="resources" />
+
       {/* Hero */}
-      <article className="max-w-3xl mx-auto px-6 sm:px-8 py-12 sm:py-20">
+      <article className="max-w-3xl mx-auto px-6 sm:px-8 pt-28 sm:pt-32 pb-12 sm:pb-20">
         <Link
           to="/blog"
           className="text-[13px] text-slate-500 hover:text-slate-700"
@@ -239,6 +243,8 @@ export default function BlogPost() {
 
       {/* 30-second floater (one-time per session) */}
       <NewsletterFloater />
+
+      <FooterV44 />
     </div>
   );
 }

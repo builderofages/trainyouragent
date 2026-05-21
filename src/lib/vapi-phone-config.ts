@@ -213,7 +213,7 @@ export const sendCallDataToMonday = async (callData: any) => {
       throw new Error("Failed to send call data to Monday.com");
     }
 
-    console.log("Call data sent to Monday.com successfully");
+    if (import.meta.env.DEV) console.log("Call data sent to Monday.com successfully");
   } catch (error) {
     console.error("Error sending call data to Monday.com:", error);
   }
