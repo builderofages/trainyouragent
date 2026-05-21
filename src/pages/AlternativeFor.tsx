@@ -650,14 +650,29 @@ const AlternativeFor = () => {
             <p className="text-[15px] text-slate-600 mb-7 max-w-xl mx-auto">
               30 minutes. We map your inbound, your CRM, your stack. You leave with a build plan and a price — not a sales pitch.
             </p>
-            <a
-              href={CAL_URL}
-              target="_blank"
-              rel="noopener"
-              className="inline-block px-7 py-3.5 rounded-full bg-[#042C53] text-white text-[15px] font-medium hover:bg-[#0A3D6E] shadow-sm"
-            >
-              Book a 30-min build call →
-            </a>
+            <div className="flex flex-col sm:flex-row justify-center gap-3">
+              <a
+                href={CAL_URL}
+                target="_blank"
+                rel="noopener"
+                className="inline-block px-7 py-3.5 rounded-full bg-[#042C53] text-white text-[15px] font-medium hover:bg-[#0A3D6E] shadow-sm"
+              >
+                Book a 30-min build call →
+              </a>
+              {/* v81: alternative pages compete with competitor demo pages.
+                  Give visitors a way to actually HEAR our agent before
+                  committing to a sales call. */}
+              <Link
+                to="/voice-demo"
+                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border-2 border-[#042C53]/20 text-[#042C53] text-[15px] font-medium hover:border-[#042C53]"
+              >
+                <span className="relative inline-flex w-2 h-2" aria-hidden="true">
+                  <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-75 animate-ping" />
+                  <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+                </span>
+                Hear a live agent → 60 sec
+              </Link>
+            </div>
             <div className="mt-6 text-[12px] text-slate-500">
               <Link to="/comparisons" className="underline">All comparisons</Link>
               {" · "}

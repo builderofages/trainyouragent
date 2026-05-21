@@ -83,6 +83,10 @@ const INDUSTRIES: LinkItem[] = [
 ];
 
 const RESOURCES: LinkItem[] = [
+  // v81: voice demo surfaced at top of Resources so it's reachable from
+  // every page on the site, not just home. Free in-browser AI agent —
+  // the single best "let me try it" lever we have.
+  { label: "Hear a live AI agent",  to: "/voice-demo",  badge: "DEMO",     sub: "Talk to the agent in your browser. Web Speech API + Groq Llama 3.3. Free, no signup." },
   { label: "Proof",          to: "/proof",       badge: "RECEIPTS", sub: "Architecture receipts + operator velocity. The numbers behind the claims." },
   { label: "Live metrics",   to: "/metrics",     sub: "Public dashboard. Real-time site + GitHub + agent activity." },
   { label: "Customers",      to: "/customers",   sub: "Operators running TrainYourAgent on real production traffic." },

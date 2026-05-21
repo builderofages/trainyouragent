@@ -588,7 +588,20 @@ const VerticalPage = () => {
           <p className="mt-6 text-[18px] sm:text-[20px] text-slate-700 max-w-3xl leading-relaxed">{config.sub}</p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <a href={CAL_URL} target="_blank" rel="noopener" className="px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] shadow-lg shadow-[#042C53]/15">{overlay ? overlay.ctaPrimary : "Book a build call"} →</a>
-            <a href={HERO_PHONE_TEL} target="_blank" rel="noopener" className="px-6 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] border-2 border-[#042C53]/15 hover:border-[#042C53]">{overlay ? overlay.ctaSecondary : HERO_PHONE_DISPLAY}</a>
+            {/* v81: replaced "Book a 15-min Zoom" duplicate-cal CTA with a
+                direct link to /voice-demo — the in-browser live AI voice
+                receptionist. Audit caught that every vertical landing page
+                sent visitors to Cal.com with no path to actually hear the
+                product. Now any SEO arrival can talk to the agent in one
+                click without leaving the site. Falls back to Web Speech
+                API + Groq, $0 per conversation. */}
+            <Link to="/voice-demo" className="px-6 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] border-2 border-[#042C53]/15 hover:border-[#042C53] inline-flex items-center justify-center gap-2">
+              <span className="relative inline-flex w-2 h-2" aria-hidden="true">
+                <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-75 animate-ping" />
+                <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+              </span>
+              Hear a live AI agent → 60 sec
+            </Link>
           </div>
         </div>
       </section>

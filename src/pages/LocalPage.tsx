@@ -315,6 +315,19 @@ export default function LocalPage() {
               >
                 {ctaCopy}
               </a>
+              {/* v81: surface the in-browser voice demo on local SEO pages.
+                  Was missing — visitors arriving from "hvac ai dallas" search
+                  had no path to actually hear the agent. */}
+              <Link
+                to="/voice-demo"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-[#042C53]/15 text-[#042C53] font-semibold text-[15px] hover:border-[#042C53] min-h-[48px]"
+              >
+                <span className="relative inline-flex w-2 h-2" aria-hidden="true">
+                  <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-75 animate-ping" />
+                  <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+                </span>
+                Hear a live agent → 60 sec
+              </Link>
               <Link
                 to="/pricing"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-xl border border-[#0B1B2B]/15 text-[#042C53] font-semibold text-[15px] hover:bg-[#F5F8FB] min-h-[48px]"
