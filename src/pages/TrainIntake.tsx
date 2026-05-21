@@ -521,6 +521,24 @@ function SuccessPanel({ email, businessName }: { email: string; businessName: st
           ← Back to /train
         </Link>
       </div>
+
+      {/* v83: backup contact rail — if for any reason the intake email
+          notification doesn't reach Alexander (Resend sandbox limit,
+          DNS issue, edge case) the visitor has a direct human path. */}
+      <div className="mt-6 pt-5 border-t border-[#185FA5]/20">
+        <div className="text-[11px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2">If you don't hear back in 24h</div>
+        <div className="text-[13px] text-slate-700 leading-relaxed">
+          DM the founder on{" "}
+          <a href="https://www.linkedin.com/in/agentmills/" target="_blank" rel="noopener noreferrer" className="text-[#185FA5] hover:text-[#042C53] underline decoration-[#185FA5]/40 underline-offset-2 font-semibold">
+            LinkedIn
+          </a>
+          {" "}or email{" "}
+          <a href="mailto:trainyouragent@gmail.com?subject=Discovery%20intake%20follow-up" className="text-[#185FA5] hover:text-[#042C53] underline decoration-[#185FA5]/40 underline-offset-2 font-semibold">
+            trainyouragent@gmail.com
+          </a>
+          {" "}directly. Alexander reads every one.
+        </div>
+      </div>
     </div>
   );
 }
