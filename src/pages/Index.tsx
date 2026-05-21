@@ -321,14 +321,18 @@ const Index = () => {
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E6F1FB] text-[#042C53] text-[12px] font-semibold tracking-[0.12em] uppercase mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#22A36C] animate-pulse" /> Live · Agents in production
             </div>
-            <RevealUp as="div" y={20} duration={0.7}>
-              <h1
-                className="text-[30px] sm:text-[48px] md:text-[64px] lg:text-[80px] leading-[1.05] sm:leading-[1.0] lg:leading-[0.98] tracking-tight font-semibold text-[#042C53] h1-balance break-words"
-                data-hero-variant={heroVariant.id}
-              >
-                {heroVariant.headlineHtml}
-              </h1>
-            </RevealUp>
+            {/* v80: hero h1 unwrapped from RevealUp. The y-translate animation
+                was creating subpixel anti-aliasing during transition that read
+                as a gray-fade flash on first paint. h1 now renders at final
+                position from frame 0 with zero animation. The page's other
+                sections still have scroll-triggered reveals; only the
+                above-the-fold hero is static. */}
+            <h1
+              className="text-[30px] sm:text-[48px] md:text-[64px] lg:text-[80px] leading-[1.05] sm:leading-[1.0] lg:leading-[0.98] tracking-tight font-semibold text-[#042C53] h1-balance break-words"
+              data-hero-variant={heroVariant.id}
+            >
+              {heroVariant.headlineHtml}
+            </h1>
             {/* v71: 8-capability chip row — Everything-AI breadth in one glance,
                 no scroll required. Fixes the only visible ding Grok Heavy flagged
                 on the v69 reframe. */}
