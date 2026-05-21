@@ -90,7 +90,7 @@ export default function EverythingAI() {
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E6F1FB] text-[#042C53] text-[11px] font-semibold tracking-[0.18em] uppercase font-mono mb-6">
               The category map
             </div>
-            <h1 className="text-[40px] sm:text-[64px] md:text-[76px] leading-[1.0] tracking-tight font-semibold text-[#042C53] mb-6">
+            <h1 className="text-[32px] sm:text-[52px] md:text-[64px] lg:text-[76px] leading-[1.08] sm:leading-[1.04] lg:leading-[1.0] tracking-tight font-semibold text-[#042C53] mb-6 h1-balance break-words">
               <span className="font-serif italic">Everything-AI</span> for service businesses.
             </h1>
             <p className="text-[18px] sm:text-[22px] leading-[1.45] text-slate-700 max-w-3xl mx-auto mb-8">

@@ -156,7 +156,7 @@ export default function Hire() {
             </div>
           </RevealUp>
           <RevealUp y={22} duration={0.7}>
-            <h1 className="text-[36px] sm:text-[60px] md:text-[72px] leading-[1.02] tracking-tight font-semibold text-[#042C53]">
+            <h1 className="text-[30px] sm:text-[50px] md:text-[64px] lg:text-[72px] leading-[1.06] sm:leading-[1.04] lg:leading-[1.02] tracking-tight font-semibold text-[#042C53] h1-balance break-words">
               Hire the operator who built{" "}
               <Link to="/proof" className="underline decoration-[#185FA5]/40 hover:decoration-[#042C53] underline-offset-4">
                 <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>this site</span>

@@ -137,7 +137,7 @@ export default function Saas() {
             </div>
           </RevealUp>
           <RevealUp y={22} duration={0.7}>
-            <h1 className="text-[36px] sm:text-[58px] md:text-[70px] leading-[1.02] tracking-tight font-semibold text-[#042C53]">
+            <h1 className="text-[30px] sm:text-[48px] md:text-[60px] lg:text-[70px] leading-[1.08] sm:leading-[1.04] lg:leading-[1.02] tracking-tight font-semibold text-[#042C53] h1-balance break-words">
               Self-serve the same agents we build for enterprise.{" "}
               <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Or have us build them for you.</span>
             </h1>

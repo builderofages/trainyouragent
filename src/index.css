@@ -586,4 +586,41 @@ All colors MUST be HSL.
       opacity: 0.4 !important;
     }
   }
+
+  /* v76-E: legal page tables — horizontally scrollable on narrow viewports.
+     Without this the 5-col sub-processors table (and DPA / Privacy / SLA / Cookies
+     / CCPA tables) overflows the viewport on <640px and breaks the page layout.
+     Wrapping <table> in a block-level overflow container preserves desktop
+     appearance while letting mobile users swipe horizontally to see all columns. */
+  .legal-prose-body table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+    white-space: nowrap;
+    border-collapse: collapse;
+  }
+  .legal-prose-body table thead,
+  .legal-prose-body table tbody {
+    display: table;
+    width: 100%;
+    min-width: 640px;
+    table-layout: auto;
+  }
+  @media (min-width: 768px) {
+    .legal-prose-body table {
+      white-space: normal;
+    }
+    .legal-prose-body table thead,
+    .legal-prose-body table tbody {
+      min-width: 0;
+    }
+  }
+
+  /* v76-E: utility class to balance long h1 lines on narrow screens so they
+     don't wrap awkwardly ("More\nappointments." instead of "More appointments.").
+     Native CSS, supported in Chrome 114+, Safari 17.4+, Firefox 121+. */
+  .h1-balance {
+    text-wrap: balance;
+  }
 }

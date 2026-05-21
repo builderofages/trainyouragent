@@ -158,7 +158,7 @@ export default function LegalLayout({
           <div className="text-[11px] sm:text-[12px] uppercase tracking-[0.22em] font-semibold text-[#9BC3E8] mb-4">
             {effectiveEyebrow}
           </div>
-          <h1 className="text-[36px] sm:text-[56px] leading-[1.04] tracking-tight font-semibold mb-5">
+          <h1 className="text-[30px] sm:text-[44px] md:text-[56px] leading-[1.06] sm:leading-[1.04] tracking-tight font-semibold mb-5 h1-balance break-words">
             {pageTitle}
           </h1>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-[13.5px] text-white/80">
@@ -230,13 +230,15 @@ export default function LegalLayout({
 
         {/* Body */}
         <article
-          className="prose prose-slate max-w-none text-[16px] leading-[1.75] text-slate-700
+          className="legal-prose-body prose prose-slate max-w-none text-[15px] sm:text-[16px] leading-[1.7] sm:leading-[1.75] text-slate-700
                      prose-headings:text-[#042C53] prose-headings:font-semibold
-                     prose-h2:text-[24px] prose-h2:mt-12 prose-h2:mb-3
-                     prose-h3:text-[18px] prose-h3:mt-7 prose-h3:mb-2
+                     prose-h2:text-[20px] sm:prose-h2:text-[24px] prose-h2:mt-10 sm:prose-h2:mt-12 prose-h2:mb-3
+                     prose-h3:text-[17px] sm:prose-h3:text-[18px] prose-h3:mt-6 sm:prose-h3:mt-7 prose-h3:mb-2
                      prose-strong:text-[#042C53]
                      prose-a:text-[#185FA5] prose-a:no-underline hover:prose-a:underline
-                     prose-table:text-[14px] prose-th:bg-slate-50 prose-th:text-[#042C53]
+                     prose-a:break-words
+                     prose-p:break-words
+                     prose-table:text-[13px] sm:prose-table:text-[14px] prose-th:bg-slate-50 prose-th:text-[#042C53]
                      prose-li:my-1
                      prose-hr:my-10"
         >

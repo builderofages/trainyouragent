@@ -317,7 +317,7 @@ const Index = () => {
             </div>
             <RevealUp as="div" y={20} duration={0.7}>
               <h1
-                className="text-[34px] sm:text-[56px] md:text-[68px] lg:text-[80px] leading-[1.02] sm:leading-[0.98] tracking-tight font-semibold text-[#042C53]"
+                className="text-[30px] sm:text-[48px] md:text-[64px] lg:text-[80px] leading-[1.05] sm:leading-[1.0] lg:leading-[0.98] tracking-tight font-semibold text-[#042C53] h1-balance break-words"
                 data-hero-variant={heroVariant.id}
               >
                 {heroVariant.headlineHtml}

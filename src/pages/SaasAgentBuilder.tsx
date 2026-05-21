@@ -136,7 +136,7 @@ export default function SaasAgentBuilder() {
             </div>
           </RevealUp>
           <RevealUp y={22} duration={0.7}>
-            <h1 className="text-[36px] sm:text-[60px] md:text-[72px] leading-[1.02] tracking-tight font-semibold text-[#042C53]">
+            <h1 className="text-[30px] sm:text-[50px] md:text-[62px] lg:text-[72px] leading-[1.08] sm:leading-[1.04] lg:leading-[1.02] tracking-tight font-semibold text-[#042C53] h1-balance break-words">
               Build your own AI agent —{" "}
               <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>unlimited, embeddable, $99/mo.</span>
             </h1>

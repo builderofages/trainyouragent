@@ -194,7 +194,7 @@ export default function Train() {
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#042C53] text-white text-[11px] font-semibold tracking-[0.18em] uppercase font-mono mb-6">
                 The Train-Your-Agent Method
               </div>
-              <h1 className="text-[40px] sm:text-[64px] md:text-[78px] leading-[0.98] tracking-tight font-semibold text-[#042C53] mb-6">
+              <h1 className="text-[34px] sm:text-[54px] md:text-[68px] lg:text-[78px] leading-[1.04] sm:leading-[1.0] lg:leading-[0.98] tracking-tight font-semibold text-[#042C53] mb-6 h1-balance break-words">
                 We <span className="font-serif italic">train</span> your agent.<br />
                 Then it runs your business.
               </h1>
@@ -225,7 +225,38 @@ export default function Train() {
               </div>
             </div>
 
-            {/* Vertical 5-step training pipeline SVG */}
+            {/* v76-E: mobile/tablet compact pipeline (<lg). The desktop SVG below
+                was hidden on <1024px so mobile users got NO visual preview of the
+                5-step method. This compact horizontal timeline gives them one. */}
+            <div className="lg:hidden mt-8">
+              <ol className="relative grid grid-cols-5 gap-1 sm:gap-2">
+                {STEPS.map((s, i) => (
+                  <li key={s.n} className="relative flex flex-col items-center text-center">
+                    {/* Connecting line (drawn between dots, not under last one) */}
+                    {i < STEPS.length - 1 && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute top-[18px] left-1/2 w-full h-px bg-[#042C53]/15"
+                      />
+                    )}
+                    <span className="relative z-10 inline-flex items-center justify-center w-9 h-9 rounded-full bg-white border-2 border-[#042C53] text-[#042C53] text-[13px] font-bold shadow-sm">
+                      {s.n}
+                    </span>
+                    <span className="mt-2 text-[10px] sm:text-[11px] font-semibold tracking-[0.1em] uppercase text-[#185FA5] font-mono leading-tight">
+                      {s.window.replace("Week ", "W")}
+                    </span>
+                    <span className="mt-1 text-[12px] sm:text-[13px] font-semibold text-[#042C53] leading-tight">
+                      {s.name}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+              <p className="mt-4 text-center text-[12px] text-slate-500">
+                Discovery → Knowledge base → Fine-tune → Eval → Production
+              </p>
+            </div>
+
+            {/* Vertical 5-step training pipeline SVG (desktop) */}
             <div className="hidden lg:block">
               <svg viewBox="0 0 360 620" className="w-full max-w-[380px] mx-auto" aria-label="5-step training pipeline">
                 <defs>

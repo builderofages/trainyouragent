@@ -113,7 +113,7 @@ export default function CapabilityDetail() {
             <div className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#185FA5] font-mono mb-4">
               {c.hero.eyebrow}
             </div>
-            <h1 className="text-[34px] sm:text-[52px] md:text-[60px] leading-[1.04] tracking-tight font-semibold text-[#042C53] mb-5">
+            <h1 className="text-[28px] sm:text-[44px] md:text-[54px] lg:text-[60px] leading-[1.08] sm:leading-[1.05] lg:leading-[1.04] tracking-tight font-semibold text-[#042C53] mb-5 h1-balance break-words">
               {c.hero.h1}
             </h1>
             <p className="text-[17px] sm:text-[20px] leading-[1.5] text-slate-700 max-w-3xl mb-8">

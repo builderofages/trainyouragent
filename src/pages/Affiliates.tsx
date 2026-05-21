@@ -166,7 +166,7 @@ export default function Affiliates() {
           <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">
             Affiliate program · Beta
           </div>
-          <h1 className="text-[44px] sm:text-[64px] leading-[1.04] font-semibold text-[#042C53] tracking-tight">
+          <h1 className="text-[32px] sm:text-[52px] md:text-[64px] leading-[1.08] sm:leading-[1.04] font-semibold text-[#042C53] tracking-tight h1-balance break-words">
             Refer a business.{" "}
             <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
               Get 20% recurring for 12 months.
