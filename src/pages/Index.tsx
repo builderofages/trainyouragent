@@ -37,10 +37,11 @@ import { STATS } from "@/lib/siteStats";
 // v71: 8-capability hero chip row — fixes Grok's "voice-heavy" ding by making
 // the Everything-AI breadth visible above the fold without a scroll.
 import HeroCapabilityChips from "@/components/HeroCapabilityChips";
-// v73: restrained 2040 visual layer — mesh gradient, drift particles, live stat ticker.
+/// v73: restrained 2040 visual layer — mesh gradient + drift particles only.
+// v77: LiveStatTicker import removed — it was colliding with the fixed nav
+// and duplicating the numbers already shown in the navy eyebrow strip.
 import MeshGradientBackdrop from "@/components/visual/MeshGradientBackdrop";
 import ParticleDrift from "@/components/visual/ParticleDrift";
-import LiveStatTicker from "@/components/visual/LiveStatTicker";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
@@ -288,11 +289,13 @@ const Index = () => {
       {/* NAV — canonical service nav */}
       <SiteNav />
 
-      {/* v73: live stat ticker — eyebrow strip above hero. */}
-      <LiveStatTicker />
+      {/* v77: header de-clutter — LiveStatTicker pulled (it was colliding
+          with the fixed nav and duplicating numbers already in the navy
+          eyebrow strip below). The strip below is the canonical proof line. */}
 
-      {/* v73: brand-anchor eyebrow — flagship positioning above hero. */}
-      <div className="w-full bg-[#042C53] text-white">
+      {/* v73: brand-anchor eyebrow — flagship positioning above hero.
+          v77: pushed below the fixed nav height so it sits in the right place. */}
+      <div className="w-full bg-[#042C53] text-white" style={{ marginTop: "calc(var(--tya-pill-h, 0px) + 64px)" }}>
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-2 text-center text-[10.5px] sm:text-[11px] tracking-[0.18em] uppercase font-semibold font-mono text-[#E6F1FB]">
           {/* v76-B: read both numbers from STATS so the eyebrow + the
               LiveStatTicker above it can never disagree. */}
@@ -302,8 +305,11 @@ const Index = () => {
       </div>
 
       {/* HERO */}
+      {/* v77: pt-24 -> pt-8 sm:pt-12 because the eyebrow strip above is now
+          correctly positioned below the fixed nav (was previously hiding under
+          the nav, which forced extra hero pt to compensate). */}
       <main id="main">
-      <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-24 px-5 sm:px-8 overflow-hidden">
+      <section className="relative pt-8 sm:pt-12 pb-16 sm:pb-24 px-5 sm:px-8 overflow-hidden">
         {/* v73: 2040 visual layer behind hero content. */}
         <MeshGradientBackdrop />
         <ParticleDrift count={22} />

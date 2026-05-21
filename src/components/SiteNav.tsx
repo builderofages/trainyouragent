@@ -83,6 +83,8 @@ const INDUSTRIES: LinkItem[] = [
 ];
 
 const RESOURCES: LinkItem[] = [
+  { label: "Proof",          to: "/proof",       badge: "RECEIPTS", sub: "Architecture receipts + operator velocity. The numbers behind the claims." },
+  { label: "Live metrics",   to: "/metrics",     sub: "Public dashboard. Real-time site + GitHub + agent activity." },
   { label: "Customers",      to: "/customers",   sub: "Operators running TrainYourAgent on real production traffic." },
   { label: "Testimonials",   to: "/testimonials",sub: "Quotes from founders, operators, and clinic owners." },
   { label: "Blog",           to: "/blog",        sub: "Operator playbooks + AI infrastructure deep dives." },
@@ -229,24 +231,8 @@ export default function SiteNav({ active }: SiteNavProps) {
             >
               About
             </Link>
-            <Link
-              to="/proof"
-              className="hover:text-[#042C53] inline-flex items-center gap-1.5"
-              aria-label="Proof page — operator velocity and architecture receipts"
-            >
-              Proof
-            </Link>
-            <Link
-              to="/metrics"
-              className="hover:text-[#042C53] inline-flex items-center gap-1.5"
-              aria-label="Public metrics dashboard"
-            >
-              <span className="relative inline-flex w-1.5 h-1.5">
-                <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-75 animate-ping" />
-                <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              </span>
-              Live
-            </Link>
+            {/* v77: Proof + Live moved into Resources dropdown to de-clutter
+                the top bar. Top-level is now 6 items + CTA instead of 8 + CTA. */}
             <a
               href={CAL_URL}
               target="_blank"
