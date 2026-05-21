@@ -45,8 +45,13 @@ type Lead = {
 
 const RESEND_KEY = process.env.RESEND_API_KEY;
 const SLACK_URL = process.env.SLACK_WEBHOOK_URL;
-const NOTIFY_TO = process.env.LEAD_NOTIFY_TO || "hello@trainyouragent.com";
-const NOTIFY_FROM = process.env.LEAD_NOTIFY_FROM || "leads@trainyouragent.com";
+// v82: same fail-safe as api/intake.ts — default to the gmail address
+// Resend sandbox is allowed to send to. Override with LEAD_NOTIFY_TO env
+// once the trainyouragent.com domain is verified in Resend.
+const NOTIFY_TO = process.env.LEAD_NOTIFY_TO || "trainyouragent@gmail.com";
+// v82: FROM also defaulted to the verified Resend sandbox sender so
+// nothing 403s before it even tries.
+const NOTIFY_FROM = process.env.LEAD_NOTIFY_FROM || "TrainYourAgent Leads <onboarding@resend.dev>";
 const BEEHIIV_KEY = process.env.BEEHIIV_API_KEY;
 const BEEHIIV_PUB = process.env.BEEHIIV_PUB_ID;
 // v57a: Meta Conversion API mirror for Lead events. Both env names accepted.

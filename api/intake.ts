@@ -25,7 +25,15 @@ import { sendEmail } from "./_lib/resend.js";
 
 export const config = { runtime: "edge" };
 
-const NOTIFY_TO = process.env.INTAKE_NOTIFY_TO || "hello@trainyouragent.com";
+// v82: default NOTIFY_TO now trainyouragent@gmail.com instead of
+// hello@trainyouragent.com. Reason: Resend in sandbox mode (no verified
+// custom domain) can ONLY send to the account-owner's verified email,
+// which is the gmail address. Sending to hello@trainyouragent.com fails
+// silently with a 403 "domain not verified" error, dropping every lead.
+// Using gmail guarantees Alexander receives every intake even with zero
+// DNS setup — the fail-safe path. Override via INTAKE_NOTIFY_TO env var
+// once the trainyouragent.com domain is verified in Resend.
+const NOTIFY_TO = process.env.INTAKE_NOTIFY_TO || "trainyouragent@gmail.com";
 const NOTIFY_FROM =
   process.env.INTAKE_NOTIFY_FROM ||
   "TrainYourAgent Intake <onboarding@resend.dev>";
