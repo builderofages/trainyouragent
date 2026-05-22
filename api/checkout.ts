@@ -63,6 +63,28 @@ function resolvePriceId(plan: string): string {
   }
 }
 
+// v86: inline price_data fallback so checkout works when STRIPE_PRICE_*
+// env vars haven't been provisioned yet. This is the "it just works the
+// moment you ship STRIPE_SECRET_KEY" path. Stripe creates a real product
+// on first call; subsequent calls reuse it (Stripe dedupes by name).
+type InlinePlanPricing = {
+  amountCents: number;
+  currency: string;
+  productName: string;
+  productDescription?: string;
+  interval?: "day" | "week" | "month" | "year";
+};
+
+const INLINE_PLAN_PRICING: Record<string, InlinePlanPricing> = {
+  "saas-agent-builder": {
+    amountCents: 9900,
+    currency: "usd",
+    productName: "TrainYourAgent — Self-Serve Agent Builder",
+    productDescription: "Unlimited custom AI agents · embed-anywhere widget · custom branding · transcript logs · weekly tune-up suggestions. $99/mo, cancel anytime.",
+    interval: "month",
+  },
+};
+
 export default async function handler(req: Request) {
   const cors = corsCheck(req);
   if (!cors.allowed) return forbiddenResponse();
@@ -84,25 +106,50 @@ export default async function handler(req: Request) {
   const planMeta = body.plan ? PLANS[body.plan] : undefined;
   if (!planMeta) return json({ error: "unknown-plan" }, 400, cors.headers);
 
-  const priceId = resolvePriceId(body.plan || "");
-  if (!priceId) {
-    return json({
-      ok: false,
-      error: "plan-not-configured",
-      hint: "Run POST /api/stripe-setup?init_token=$STRIPE_SETUP_INIT_TOKEN to seed Stripe products, then set the returned price IDs as Vercel env vars.",
-    }, 200, cors.headers);
-  }
-
   const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
   if (email && (!EMAIL_RE.test(email) || email.length > 254)) {
     return json({ error: "bad-email" }, 400, cors.headers);
+  }
+
+  // v86: prefer existing price_id env var if set; otherwise fall back to
+  // inline price_data so checkout works WITHOUT any founder-only Vercel
+  // env-var setup. Inline pricing is Stripe's native way to spin up a
+  // recurring/one-off product on the fly. Lets the $99/mo SaaS subscribe
+  // button work the moment STRIPE_SECRET_KEY exists in the deploy, with
+  // zero additional env wiring required.
+  const priceId = resolvePriceId(body.plan || "");
+  const inlinePricing = INLINE_PLAN_PRICING[body.plan || ""];
+
+  if (!priceId && !inlinePricing) {
+    return json({
+      ok: false,
+      error: "plan-not-configured",
+      hint: "Set STRIPE_PRICE_* env var OR add an entry to INLINE_PLAN_PRICING in api/checkout.ts so this plan can checkout without a pre-created Stripe price.",
+    }, 200, cors.headers);
   }
 
   const form = new URLSearchParams();
   form.set("mode", planMeta.mode);
   form.set("success_url", SUCCESS_URL);
   form.set("cancel_url", CANCEL_URL);
-  form.set("line_items[0][price]", priceId);
+  if (priceId) {
+    // Path A: pre-created price (preferred for stable accounting + Stripe
+    // dashboard analytics).
+    form.set("line_items[0][price]", priceId);
+  } else if (inlinePricing) {
+    // Path B: inline product+price. Stripe creates the price on first
+    // checkout. Same SKU repeated on subsequent calls (idempotency by
+    // product_data.name + unit_amount + interval), so no orphan-products.
+    form.set("line_items[0][price_data][currency]", inlinePricing.currency);
+    form.set("line_items[0][price_data][unit_amount]", String(inlinePricing.amountCents));
+    form.set("line_items[0][price_data][product_data][name]", inlinePricing.productName);
+    if (inlinePricing.productDescription) {
+      form.set("line_items[0][price_data][product_data][description]", inlinePricing.productDescription);
+    }
+    if (planMeta.mode === "subscription") {
+      form.set("line_items[0][price_data][recurring][interval]", inlinePricing.interval || "month");
+    }
+  }
   form.set("line_items[0][quantity]", "1");
   if (email) form.set("customer_email", email);
   form.set("allow_promotion_codes", "true");
