@@ -97,8 +97,8 @@ export default function HeroVoiceEmbed() {
         {/* Powered-by + secondary CTA */}
         <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
           <div className="text-[11px] text-slate-500 leading-tight">
-            Powered by Groq Llama 3.3 70B<br />
-            <span className="text-slate-400">Free, in your browser</span>
+            Groq Llama 3.3 + OpenAI TTS<br />
+            <span className="text-slate-400">Same stack as ChatGPT voice mode</span>
           </div>
           <Link
             to="/voice-demo"

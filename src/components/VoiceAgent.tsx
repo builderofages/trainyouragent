@@ -1,8 +1,10 @@
 // src/components/VoiceAgent.tsx
-// v52a: Free, in-browser voice agent demo. Zero ongoing cost.
-//   - STT: Web Speech API (Chrome / Edge / Safari iOS 14.5+)
-//   - LLM: /api/chat with mode="voice-receptionist" (Anthropic -> Groq -> Gemini fallback)
-//   - TTS: window.speechSynthesis (picks a high-quality voice if available)
+// v52a / v91: In-browser voice agent demo. Premium TTS where it counts,
+// free fallback where it doesn't.
+//   - STT: Web Speech API (Chrome / Edge / Safari iOS 14.5+) — FREE
+//   - LLM: /api/chat with mode="voice-receptionist" — Anthropic → Groq → Gemini
+//   - TTS: /api/tts → OpenAI TTS (~$0.015/min) → ElevenLabs ($0.18/min equiv)
+//          → window.speechSynthesis (free fallback if no premium keys set)
 //
 // State machine: idle -> listening -> thinking -> speaking -> idle
 // Designed to be lazy-loaded so it doesn't bloat the main entry chunk.
@@ -120,13 +122,42 @@ export default function VoiceAgent() {
     }
   }, [turns, interim]);
 
+  // v91: TTS pipeline.
+  // Primary path: hit /api/tts → OpenAI TTS (sounds like ChatGPT voice mode)
+  //   or ElevenLabs (best-in-class). Plays the returned audio/mpeg via an
+  //   HTMLAudioElement. Sounds human, no more 2010-GPS robot.
+  // Fallback path: if /api/tts returns 503 (no keys configured), revert to
+  //   browser-native window.speechSynthesis so demo never goes silent.
   const speak = useCallback((text: string): Promise<void> => {
-    return new Promise((resolve) => {
-      if (!text || typeof window === "undefined" || !window.speechSynthesis) {
+    return new Promise(async (resolve) => {
+      if (!text) { resolve(); return; }
+
+      // Try premium TTS first.
+      try {
+        const r = await fetch("/api/tts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text }),
+        });
+        if (r.ok) {
+          const buf = await r.arrayBuffer();
+          const url = URL.createObjectURL(new Blob([buf], { type: "audio/mpeg" }));
+          const audio = new Audio(url);
+          audio.onended = () => { URL.revokeObjectURL(url); resolve(); };
+          audio.onerror = () => { URL.revokeObjectURL(url); resolve(); };
+          await audio.play().catch(() => resolve());
+          return;
+        }
+        // r.status === 503 → fall through to browser TTS
+      } catch {
+        // network error → fall through
+      }
+
+      // Fallback: browser-native (robotic but always works).
+      if (typeof window === "undefined" || !window.speechSynthesis) {
         resolve();
         return;
       }
-      // Cancel any in-flight speech.
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       const v = voiceRef.current || pickBestVoice();
