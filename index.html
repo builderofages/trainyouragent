@@ -173,6 +173,50 @@
       })();
     </script>
     <!-- /Meta Pixel (head) -->
+
+    <!-- v97: Google Analytics 4 — same pattern as Meta Pixel.
+         GA4_MEASUREMENT_ID env var injected at build time via vite.config.ts.
+         When unset, __GA4_MEASUREMENT_ID__ stays as placeholder and the
+         wrapper short-circuits cleanly — no broken gtag, no console noise.
+
+         Boots deferred behind requestIdleCallback so it never blocks LCP. -->
+    <script>
+      (function () {
+        var GA_ID = "__GA4_MEASUREMENT_ID__";
+        // Install a no-op dataLayer first so app code never throws.
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+
+        if (!GA_ID || GA_ID === "__GA4_MEASUREMENT_ID" + "__" || GA_ID.length < 6) {
+          window.gtag.disabled = true;
+          return;
+        }
+
+        function bootGA() {
+          if (window.gtag && window.gtag.loaded) return;
+          var s = document.createElement("script");
+          s.async = true;
+          s.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(GA_ID);
+          document.head.appendChild(s);
+          window.gtag("js", new Date());
+          window.gtag("config", GA_ID, {
+            // Respect Do Not Track. Anonymize IP. Don't send page_view automatically
+            // because the SPA router fires its own page_view via window.gtag().
+            anonymize_ip: true,
+            send_page_view: true,
+          });
+          window.gtag.loaded = true;
+          window.__TYA_GA4_ID__ = GA_ID;
+        }
+
+        if ("requestIdleCallback" in window) {
+          window.requestIdleCallback(bootGA, { timeout: 2500 });
+        } else {
+          window.setTimeout(bootGA, 1500);
+        }
+      })();
+    </script>
+    <!-- /GA4 (head) -->
   </head>
   <body>
     <!-- Meta Pixel noscript fallback. HTML5 disallows <img> inside <noscript>

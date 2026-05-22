@@ -26,6 +26,23 @@ function metaPixelHtmlPlugin() {
   };
 }
 
+/**
+ * v97: GA4 placeholder replacement — same pattern as Meta Pixel.
+ * Set GA4_MEASUREMENT_ID env var in Vercel (e.g. G-XXXXXXXXXX) and
+ * the wrapper in index.html will pick it up at build time. When unset,
+ * placeholder stays and the inline boot script short-circuits cleanly.
+ */
+function ga4HtmlPlugin() {
+  const id = process.env.GA4_MEASUREMENT_ID || "";
+  return {
+    name: "tya-ga4-html",
+    transformIndexHtml(html: string) {
+      if (!id) return html;
+      return html.split("__GA4_MEASUREMENT_ID__").join(id);
+    },
+  };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -48,6 +65,7 @@ export default defineConfig(({ mode }) => ({
     react(),
     mode === "development" && componentTagger(),
     metaPixelHtmlPlugin(),
+    ga4HtmlPlugin(),
     rssPlugin(),
   ].filter(Boolean),
   resolve: {
@@ -59,6 +77,8 @@ export default defineConfig(({ mode }) => ({
     // Mirror the HTML-side pixel ID into the JS bundle so app code can call
     // fbq() with confidence. Empty string when unset.
     "import.meta.env.VITE_META_PIXEL_ID": JSON.stringify(process.env.META_PIXEL_ID || ""),
+    // v97: same for GA4 — lets SPA route changes call window.gtag('event',...)
+    "import.meta.env.VITE_GA4_MEASUREMENT_ID": JSON.stringify(process.env.GA4_MEASUREMENT_ID || ""),
   },
   // v41: manual chunks — keep the main entry small. React + router into
   // `vendor-react`, lucide-react / framer-motion into `vendor-ui`.
