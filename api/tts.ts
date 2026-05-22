@@ -29,15 +29,21 @@ const OPENAI_MODEL = process.env.OPENAI_TTS_MODEL || "tts-1";
 const OPENAI_VOICE = process.env.OPENAI_TTS_VOICE || "alloy";
 
 // ElevenLabs voice IDs (verified production IDs from ElevenLabs voice library):
-//   Charlotte: XB0fDUnXU5powFXDhCwa — smooth, sultry, confident female (BRAND DEFAULT)
-//   Sarah:     EXAVITQu4vr4xnSDxMaL — warm, professional young female
-//   Bella:     EXAVITQu4vr4xnSDxMaL — soft, expressive young female
-//   Rachel:    21m00Tcm4TlvDq8ikWAM — calm, professional female
-// v92: Charlotte picked as default — founder direction: "hot woman's voice, sexy
-// assistant, not too sexual." Charlotte is the closest match in the ElevenLabs
-// stock library: poised, confident, slight rasp, professional edge.
-const ELEVENLABS_VOICE_ID = process.env.ELEVENLABS_VOICE_ID || "XB0fDUnXU5powFXDhCwa";
-const ELEVENLABS_MODEL = process.env.ELEVENLABS_MODEL || "eleven_turbo_v2_5";
+//   Jessica:   cgSgspJ2msm6clMCkdW9 — young AMERICAN, conversational (CURRENT DEFAULT)
+//   Aria:      9BWtsMINqrJLrRacOk9x — expressive American
+//   Sarah:     EXAVITQu4vr4xnSDxMaL — warm American professional
+//   Charlotte: XB0fDUnXU5powFXDhCwa — British (was previous default, sounded too AI)
+//   Rachel:    21m00Tcm4TlvDq8ikWAM — calm professional female
+// v94: Charlotte → Jessica. Founder feedback: "sounds British and AI still."
+// Jessica is the closest in-stock voice to a real American assistant who
+// would answer a service-business phone. Conversational cadence, natural
+// breath patterns. Not breathy/cringe, not robotic.
+const ELEVENLABS_VOICE_ID = process.env.ELEVENLABS_VOICE_ID || "cgSgspJ2msm6clMCkdW9";
+// v94: model upgraded from eleven_turbo_v2_5 (fast but slightly robotic at
+// edges) to eleven_multilingual_v2. ~300ms more latency, dramatically more
+// natural prosody. Pause variation + breath sounds + emotional shading
+// are all materially better. For a real-time demo this is worth the trade.
+const ELEVENLABS_MODEL = process.env.ELEVENLABS_MODEL || "eleven_multilingual_v2";
 
 function withTimeout(p: Promise<Response>): Promise<Response> {
   return new Promise((resolve, reject) => {
@@ -111,10 +117,14 @@ export default async function handler(req: Request): Promise<Response> {
           body: JSON.stringify({
             text,
             model_id: ELEVENLABS_MODEL,
+            // v94: voice settings tuned for "real human" not "consistent AI".
+            // Lower stability = more natural prosody variation.
+            // Higher style = more emotional expressiveness.
+            // similarity_boost stays high to keep Jessica's identity stable.
             voice_settings: {
-              stability: 0.4,
-              similarity_boost: 0.85,
-              style: 0.2,
+              stability: 0.35,
+              similarity_boost: 0.8,
+              style: 0.55,
               use_speaker_boost: true,
             },
           }),

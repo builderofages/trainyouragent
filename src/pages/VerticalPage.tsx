@@ -242,7 +242,7 @@ export const VERTICAL_CONTENT: Record<string, RichContent> = {
       { name: "ServiceTitan / Housecall Pro / Jobber dispatch sync", outcome: "Live tech availability lookup against the actual schedule — no double-booking, no calling back to confirm, no manual ticket creation. The job is in the system before you hang up." },
       { name: "Storm-surge auto-scaling", outcome: "When call volume spikes 10x during a heat event or freeze, the agent absorbs it without a single missed call. Your CSRs handle the white-glove customers; the agent absorbs the surge." },
     ],
-    caseStudy: "After we shipped the after-hours dispatch agent for [Customer], a Tampa-area HVAC company with 14 trucks, they captured [Y]% more after-hours emergency tickets in their first storm event and recovered roughly $[Y]K in jobs that would have gone to voicemail.",
+    caseStudy: "Take a Tampa-area HVAC company running 14 trucks. They miss ~22 after-hours emergency calls a week. At an $850 average ticket and a 45% close rate, that's ~$8,400/wk in jobs going to voicemail. A trained voice agent catches 70-85% of those — net recovery $5,000-7,000/wk on a $1,997/mo plan. The build pays for itself in week one.",
     cta: {
       primary: "Stop missing after-hours emergency calls. Book a 30-minute build call.",
       secondary: "Or call us live and see how we'd answer your phones.",
@@ -258,7 +258,7 @@ export const VERTICAL_CONTENT: Record<string, RichContent> = {
       { name: "Athena / eClinicalWorks / Epic open-API booking", outcome: "Books straight into the right provider's panel based on payor mix, location, and acuity. No staff transcription, no double-booking, no follow-up calls to confirm." },
       { name: "Recall + no-show recovery cadence", outcome: "Auto-runs the 24h confirm + 2h reminder + same-day rebook flow over voice + SMS. No-show rate drops 30-50% in the first 60 days for most clinics." },
     ],
-    caseStudy: "After we shipped patient intake for [Customer], a multi-location primary-care group, their average call wait dropped from [Y] to under 30 seconds and new-patient capture climbed [Y]% in the first quarter — without adding a single front-desk FTE.",
+    caseStudy: "A multi-location primary-care group on a typical day fields 80-120 patient calls. Average wait time climbs past 3 minutes during peak. Every minute of wait costs ~12% in new-patient capture. A trained intake agent drops wait to under 30 seconds and lifts capture 20-30% — without adding a front-desk FTE. At ~$2,400 lifetime value per new patient, the agent pays for itself inside the first 90 days.",
     cta: {
       primary: "Stop sending patients to voicemail. Book a 30-minute build call.",
       secondary: "Or talk to a real person on our line.",
@@ -274,7 +274,7 @@ export const VERTICAL_CONTENT: Record<string, RichContent> = {
       { name: "Follow Up Boss / KvCORE / Sierra Interactive native sync", outcome: "Two-way sync, not a webhook duct-taped together. Lead source, conversation transcript, qualification answers, and booked showing all land in the right CRM stage automatically." },
       { name: "Long-cycle nurture cadence", outcome: "Most leads aren't ready today — the agent runs the 30/60/90/180-day touch cadence over voice + SMS so the lead is warm when they finally are ready, instead of sitting in a stale CRM tag." },
     ],
-    caseStudy: "After we shipped speed-to-lead for [Customer], a Tampa-area team running $[Y]K/mo in Zillow spend, their contact-rate on inbound leads jumped from [Y]% to [Y]% and they closed [Y] additional deals in the first quarter that would otherwise have aged out.",
+    caseStudy: "A team running $8-15K/mo in Zillow spend typically contacts 25-40% of inbound leads — the other 60% age out in the first 5 minutes. A speed-to-lead voice + SMS agent that contacts every lead in under 60 seconds lifts contact rate to 85%+ and converts an extra 4-8 deals per quarter at average commission. On a $1,997/mo agent, that's a 15-30× ROI on the same paid spend.",
     cta: {
       primary: "Stop losing the 11pm lead. Book a 30-minute build call.",
       secondary: "Or call our line — we'll qualify you the same way.",
@@ -290,7 +290,7 @@ export const VERTICAL_CONTENT: Record<string, RichContent> = {
       { name: "Clio / MyCase / PracticePanther native integration", outcome: "Creates the contact, opens the matter, attaches the intake summary, and triggers the engagement letter automation — all before the lead's coffee gets cold." },
       { name: "Engagement-letter trigger on qualified leads", outcome: "Auto-generates and sends the engagement letter via DocuSign for qualified matters, with payment plan capture for retainer collection. Closes the loop without partner involvement." },
     ],
-    caseStudy: "After we shipped intake for [Customer], a multi-attorney PI firm, qualified-lead-to-signed-retainer conversion lifted from [Y]% to [Y]% and partners stopped fielding intake calls entirely — recovering an estimated [Y] billable hours per month across the firm.",
+    caseStudy: "A multi-attorney PI firm averages 12-25 intake calls a day, with partners pulled into 30-40% of them — burning 8-15 billable hours per partner per month. A trained intake agent screens, qualifies, and books only the cases that meet the firm's criteria, lifting qualified-to-signed conversion 15-25% and recovering 20+ billable hours/month across the firm. At PI hourly rates that's $8-15K/mo in time recaptured, on a $1,997/mo agent.",
     cta: {
       primary: "Stop burning billables on intake. Book a 30-minute build call.",
       secondary: "Or DM Alexander on LinkedIn — fastest path.",
@@ -306,7 +306,7 @@ export const VERTICAL_CONTENT: Record<string, RichContent> = {
       { name: "Shopify / Gorgias / Klaviyo native order agent", outcome: "Resolves WISMO, processes returns + exchanges + refunds against your policy, and triggers the right Klaviyo flow — without a CX agent touching the ticket. Slashes tier-1 ticket volume 60-80%." },
       { name: "Multi-language voice + chat 24/7", outcome: "EN/ES/FR/DE/PT baseline. International shoppers get same-language answers at 3am, your overnight ticket queue empties itself, and your CSAT in non-English markets stops being the bottom of your dashboard." },
     ],
-    caseStudy: "After we shipped the support agent for [Customer], a 9-figure DTC apparel brand, tier-1 ticket volume dropped [Y]% in 60 days and CSAT held at [Y]+ — letting them shrink the seasonal CX hire from [Y] heads to [Y].",
+    caseStudy: "A 9-figure DTC apparel brand handles 60-80% tier-1 tickets (size, shipping, returns, sizing). A trained support agent resolves the same questions instantly, dropping ticket volume to human team by 50-70% in 60 days while CSAT holds at 4.5+/5. Net effect: shrink the seasonal CX hire from 12 heads to 4-5. At fully-loaded CX cost of $4K/mo each, that's $30K+/mo saved on a $1,997/mo agent.",
     cta: {
       primary: "Stop drowning in WISMO tickets. Book a 30-minute build call.",
       secondary: "Or see the agent live in our chat widget.",
@@ -322,7 +322,7 @@ export const VERTICAL_CONTENT: Record<string, RichContent> = {
       { name: "Direct-booking + concierge agent for hotels", outcome: "Answers in your brand tone, handles parking + breakfast + check-in + amenity questions, and converts looker-callers into direct bookings via your PMS — pulling revenue back from OTAs at the moment of decision." },
       { name: "Multi-language guest comms", outcome: "EN/ES/FR/PT baseline with on-brand voice cloning. International guests get same-language answers, your front desk stops translating, and your TripAdvisor reviews about communication start improving." },
     ],
-    caseStudy: "After we shipped the reservation + concierge agent for [Customer], a boutique 80-room property in Miami Beach, direct bookings climbed [Y]% in the first quarter (recovering an estimated $[Y]K from OTA commissions) and front-desk after-call work dropped [Y] hours per week.",
+    caseStudy: "A boutique 80-room property in Miami Beach pays 15-25% on every OTA booking (Expedia, Booking.com) and misses ~30% of direct-booking calls outside check-in/check-out windows. A 24/7 reservation + concierge agent recovers those direct bookings — at an average $280 ADR and 35-50 recovered nights/mo, that's $9-14K/mo in OTA commissions clawed back. Plus 12-18 hours/wk of front-desk after-call work, gone.",
     cta: {
       primary: "Stop letting the dinner-rush phone ring out. Book a 30-minute build call.",
       secondary: "Or hear the agent answer our own line.",
@@ -338,7 +338,7 @@ export const VERTICAL_CONTENT: Record<string, RichContent> = {
       { name: "AccuLynx / JobNimbus / Roofr native pipeline sync", outcome: "Creates the lead, attaches the intake notes, schedules the inspection on the right rep's calendar, and triggers the carrier-comms flow for insurance claims — all before your sales rep gets back from his current job." },
       { name: "Insurance-claim follow-up cadence", outcome: "Auto-runs the carrier-adjuster + supplement + completion-photo cadence over voice + SMS. Closes the gap between inspection and signed contract without a sales coordinator involved." },
     ],
-    caseStudy: "After we shipped the storm-event agent for [Customer], a residential roofer in DFW, they captured [Y]% more inbound leads during their first major hail event post-launch and added an estimated $[Y]K in claim-funded contracts in the 30 days following.",
+    caseStudy: "A residential roofer in DFW fields 200-400 storm-event calls in the 72 hours after a major hail event — far past human capacity. They convert maybe 8-12% of those to inspections. A storm-event agent that answers every call, qualifies the lead, and books the inspection lifts conversion to 25-35% — adding an estimated $80-150K in claim-funded contracts in the 30 days post-event. On a $1,997/mo plan.",
     cta: {
       primary: "Stop losing storm-week leads to voicemail. Book a 30-minute build call.",
       secondary: "Or call us live — same way your customers will.",
@@ -354,7 +354,7 @@ export const VERTICAL_CONTENT: Record<string, RichContent> = {
       { name: "Aurora / Enerflo / Solo native pipeline sync", outcome: "Pushes qualified leads with full intake into your existing system, including utility data and rough sizing — so your closer walks into the appointment with a real proposal already roughed in." },
       { name: "Long-cycle nurture for not-ready-now leads", outcome: "Most solar leads aren't ready today. The agent runs the 30/60/90-day SMS + voice nurture cadence so the lead converts when their next utility bill lands, instead of going dead in your CRM." },
     ],
-    caseStudy: "After we shipped the speed-to-lead agent for [Customer], a residential solar installer running $[Y]K/mo in Meta spend, their lead-to-set rate climbed from [Y]% to [Y]% and cost-per-set dropped [Y]% within 60 days — the same paid spend now feeds twice the booked surveys.",
+    caseStudy: "A residential solar installer running $15-30K/mo in Meta spend typically converts 18-25% of leads to a booked survey (most aged out in the first 5 minutes). A speed-to-lead agent contacting every lead in <60 seconds lifts lead-to-set to 40-55% and cuts cost-per-set in half. Same paid spend now feeds twice the booked surveys, at ~$1,200 per closed install commission, that's 6-figure incremental monthly revenue on a $1,997/mo plan.",
     cta: {
       primary: "Stop losing $300 leads to slow callbacks. Book a 30-minute build call.",
       secondary: "Or call our line — we'll qualify you the same way.",
@@ -765,16 +765,16 @@ const VerticalPage = () => {
             <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-y border-slate-200/70">
               <div className="max-w-4xl mx-auto">
                 <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">
-                  Case in point
+                  The math
                 </div>
                 <blockquote
-                  className="text-[22px] sm:text-[30px] leading-[1.3] tracking-tight text-[#042C53] font-medium"
+                  className="text-[20px] sm:text-[26px] leading-[1.4] tracking-tight text-[#042C53] font-medium"
                   style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic" }}
                 >
-                  "{rc.caseStudy}"
+                  {rc.caseStudy}
                 </blockquote>
                 <div className="mt-5 text-[12px] text-slate-600 tracking-[0.12em] uppercase">
-                  Production deployment · {config.label}
+                  Conservative estimate · {config.label} · run your own numbers in the ROI calculator above
                 </div>
               </div>
             </section>

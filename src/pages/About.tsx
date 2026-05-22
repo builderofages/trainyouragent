@@ -158,8 +158,8 @@ const About = () => {
                 {/* If /alexander-mills.jpg exists in /public, swap the placeholder for: */}
                 {/* <img src="/alexander-mills.jpg" alt="Alexander Mills" className="w-full h-full object-cover" /> */}
                 <BrainLogo size={88} />
-                <div className="text-[11px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mt-3">Founder headshot</div>
-                <div className="text-[11px] text-slate-600 mt-1">Real photo replaces this once approved</div>
+                <div className="text-[12px] uppercase tracking-[0.18em] text-[#042C53] font-semibold mt-4">Alexander Mills</div>
+                <div className="text-[11px] text-slate-600 mt-1">Founder · TrainYourAgent</div>
               </div>
               <div className="text-[13px] text-slate-700 leading-relaxed">
                 <div><strong className="font-semibold text-[#042C53]">Alexander Mills</strong></div>

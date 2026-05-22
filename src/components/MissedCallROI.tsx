@@ -72,7 +72,16 @@ export default function MissedCallROI({ vertical = "default", className = "" }: 
         <h2 className="text-[28px] sm:text-[40px] font-semibold text-[#042C53] leading-tight mb-3">
           How much is your{" "}
           <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
-            {preset.label.toLowerCase()} business
+            {/* v94: don't append "business" when label already contains it
+                (e.g. "Service Business business" duplication, or wrong-vertical
+                "Service Business" on /healthcare). Use vertical-specific noun. */}
+            {preset.label.toLowerCase().includes("business")
+              ? preset.label.toLowerCase()
+              : preset.label.toLowerCase() === "law firm"
+                ? "law firm"
+                : preset.label.toLowerCase() === "real estate"
+                  ? "real estate business"
+                  : `${preset.label.toLowerCase()} business`}
           </span>{" "}
           losing to missed calls?
         </h2>
