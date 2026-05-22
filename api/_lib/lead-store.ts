@@ -56,15 +56,29 @@ function truncateIp(ip: string): string {
 
 // ---------- writes ---------------------------------------------------------
 
+// v101: venture federation — every lead carries a `venture` tag so a single
+// Supabase backend can host TYA + Ghost (cnnct.ai) + TYAhq leads. Defaults
+// to 'tya' for backward compat with every caller that doesn't pass one.
+export type Venture = "tya" | "ghost" | "tyahq";
+const VENTURE_DOMAINS: Record<Venture, string> = {
+  tya:   "trainyouragent.com",
+  ghost: "cnnct.ai",
+  tyahq: "tyahq.com",
+};
+
 export function recordLead(input: {
   email: string;
   source: string;
   path?: string;
   ip?: string;
   payload?: unknown;
+  venture?: Venture;
+  brandUrl?: string;
 }): void {
   const masked = maskEmail(input.email);
   const truncIp = input.ip ? truncateIp(input.ip) : undefined;
+  const venture: Venture = input.venture ?? "tya";
+  const brandUrl = input.brandUrl ?? VENTURE_DOMAINS[venture];
   const rec: LeadRecord = {
     ts: Date.now(),
     source: input.source,
@@ -79,15 +93,31 @@ export function recordLead(input: {
   // Best-effort persist to Supabase. Never block on it.
   const sb = getSupabase();
   if (sb) {
-    void sb.from("tya_leads").insert({
-      email: masked,
-      source: input.source,
-      payload: (input.payload as Record<string, unknown>) ?? null,
-      path: input.path ?? null,
-      ip: truncIp ?? null,
-    }).then(({ error }) => {
+    void (async () => {
+      // Cross-sell detection: same email already in another venture?
+      let crossSell = false;
+      try {
+        const { data: prior } = await sb
+          .from("tya_leads")
+          .select("venture")
+          .eq("email", masked)
+          .neq("venture", venture)
+          .limit(1);
+        crossSell = !!(prior && prior.length > 0);
+      } catch { /* ignore — best effort */ }
+
+      const { error } = await sb.from("tya_leads").insert({
+        email: masked,
+        source: input.source,
+        payload: (input.payload as Record<string, unknown>) ?? null,
+        path: input.path ?? null,
+        ip: truncIp ?? null,
+        venture,
+        brand_url: brandUrl,
+        cross_sell: crossSell,
+      });
       if (error) console.error("[lead-store] supabase insert failed", error.message);
-    });
+    })();
   }
 }
 
