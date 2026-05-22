@@ -36,14 +36,19 @@ export const STATS = {
     scale: 28,
   } as const,
 
-  // Pricing
+  // Pricing — canonical (v100). $1,997/mo Operators, $4,997/mo Scale, $99/mo SaaS.
+  // Founders lane stays pay-as-you-go.
   pricing: {
     founderUpfront: 0,
-    founderPerMinute: 0.18,
+    founderPerMinute: 0.39,
     operatorBuildFee: 4950,
-    operatorMonthly: 799,
-    operatorMinutesIncluded: 4000,
+    operatorMonthly: 1997,
+    operatorMinutesIncluded: 5000,
     operatorPerBooking: 15,
+    scaleBuildFee: 9950,
+    scaleMonthly: 4997,
+    scaleMinutesIncluded: 25000,
+    saasMonthly: 99,
   } as const,
 
   // Offer stack value (sum of STACK_ITEMS in Pricing.tsx, kept in sync here)

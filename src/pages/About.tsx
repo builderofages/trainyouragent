@@ -105,7 +105,7 @@ const About = () => {
               We build AI <em className="italic font-normal" style={{ color: "#185FA5" }}>that actually runs</em> your phones.
             </h1>
             <p className="text-slate-600 text-[19px] leading-relaxed max-w-2xl">
-              Not another demo. Not another platform you have to wire up yourself. A real team that designs, trains, deploys and operates voice and chat agents on your live phone line — in days, not quarters.
+              Not another demo. Not another platform you have to wire up yourself. One operator who designs, trains, deploys and operates voice and chat agents on your live phone line — in days, not quarters. Direct line to me. No SDR, no account manager, no delivery team between you and the build.
             </p>
           </div>
         </header>
@@ -119,7 +119,7 @@ const About = () => {
             <div className="text-[#042C53] text-[17px] leading-[1.7] space-y-5">
               <p>I watched the same pattern play out a hundred times. A roofing company, an HVAC outfit, a clinic, a law firm sees a voice-AI demo at a conference. The demo is beautiful. They sign up. They open the platform. They see a flow editor with 200 nodes, settings tabs, webhooks, prompt engineering, a documentation site, and a Slack support channel. Six months later the agent never went live.</p>
               <p>The product gap isn't capability. The models are good enough. The product gap is <em>labor.</em> Building, training, monitoring and refreshing a production voice agent is a real engineering job, not a no-code project. Regional service businesses don't have an AI team. They have a phone line that rings.</p>
-              <p>TrainYourAgent exists to close that gap. We are the team you'd hire if hiring one was actually possible — except we charge a monthly retainer instead of an FTE salary, and the engagement starts shipping in week one.</p>
+              <p>TrainYourAgent exists to close that gap. I am the engineer you'd hire if hiring one was actually possible — except I charge a monthly retainer instead of an FTE salary, and the engagement starts shipping in week one.</p>
             </div>
           </div>
         </section>
@@ -128,13 +128,13 @@ const About = () => {
           <div className="max-w-[900px] mx-auto px-6">
             <div className="text-[11px] tracking-[0.2em] uppercase text-[#185FA5] font-mono mb-4">How we work</div>
             <h2 className="text-[clamp(32px,4vw,52px)] leading-[1.05] tracking-[-0.025em] mb-10" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 500 }}>
-              Five steps. <em className="italic font-normal" style={{ color: "#185FA5" }}>One team. No layers.</em>
+              Five steps. <em className="italic font-normal" style={{ color: "#185FA5" }}>One operator. No layers.</em>
             </h2>
             <div className="space-y-8">
               {[
                 { k: "01", t: "Discovery", b: "30 minutes with the founder. We listen to call recordings if you have them, look at your call flow, and write the scope back to you in writing the same day." },
                 { k: "02", t: "Build", b: "We script the agent, configure the model, wire CRM and calendar integrations, and stand up monitoring. You see drafts the same week." },
-                { k: "03", t: "Stress test", b: "You and your team call in. We watch transcripts in real time and turn every failure case into a permanent guardrail." },
+                { k: "03", t: "Stress test", b: "You and your team call in. I watch transcripts in real time and turn every failure case into a permanent guardrail." },
                 { k: "04", t: "Cutover", b: "Number port or SIP redirect. The agent goes live on your real phone line. You get a dashboard for every call, transcript, and booking." },
                 { k: "05", t: "Run", b: "Weekly model refresh, monthly review with the founder, no account-manager layer. The number of people between you and the build is one." },
               ].map((s) => (
@@ -233,7 +233,7 @@ const About = () => {
             <a href={CAL_URL} target="_blank" rel="noopener" className="hover:text-[#042C53] transition">Book a call</a>
             <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="hover:text-[#042C53] transition">LinkedIn</a>
           </div>
-          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
+          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent LLC</div>
         </div>
       </footer>
     </div>

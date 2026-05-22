@@ -240,7 +240,7 @@ const Trial = () => {
             <Link to="/testimonials" className="hover:text-[#042C53]">Testimonials</Link>
             <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
           </div>
-          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
+          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent LLC</div>
         </div>
       </footer>
     </div>

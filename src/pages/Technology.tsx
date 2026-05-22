@@ -229,7 +229,7 @@ const Technology = () => {
             <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
             <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">LinkedIn</a>
           </div>
-          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
+          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent LLC</div>
         </div>
       </footer>
     </div>

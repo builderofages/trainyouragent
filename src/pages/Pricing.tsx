@@ -247,8 +247,8 @@ const Pricing = () => {
           {
             "@type": "Offer",
             name: "Operators",
-            description: "SMBs already paying humans to answer phones. Includes 4,000 minutes / mo.",
-            price: "799",
+            description: "SMBs already paying humans to answer phones. Includes 5,000 minutes / mo.",
+            price: "1997",
             priceCurrency: "USD",
             url: "https://trainyouragent.com/pricing#operators",
             availability: "https://schema.org/InStock",
@@ -256,7 +256,8 @@ const Pricing = () => {
           {
             "@type": "Offer",
             name: "Scale",
-            description: "Multi-location, multi-brand, agency-scale operations. Custom pricing.",
+            description: "Multi-location, multi-brand, agency-scale operations. Includes 25,000 minutes / mo.",
+            price: "4997",
             priceCurrency: "USD",
             url: "https://trainyouragent.com/pricing#scale",
             availability: "https://schema.org/InStock",
@@ -614,7 +615,7 @@ const Pricing = () => {
             <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
             <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">LinkedIn</a>
           </div>
-          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
+          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent LLC</div>
         </div>
       </footer>
       <ToastHost />

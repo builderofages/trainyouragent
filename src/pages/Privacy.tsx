@@ -61,7 +61,7 @@ const Privacy = () => {
 
         <div className="space-y-10 text-[16px] leading-[1.75] text-slate-700">
           <p>
-            TrainYourAgent, Inc. ("TrainYourAgent," "we," "us") builds and operates AI voice and messaging agents for businesses. This policy explains what personal data we collect, how we use it, and the choices you have. We wrote it in plain English. If anything is unclear, email <a className="text-[#185FA5] underline" href="mailto:privacy@trainyouragent.com">privacy@trainyouragent.com</a>.
+            TrainYourAgent LLC ("TrainYourAgent," "we," "us") builds and operates AI voice and messaging agents for businesses. This policy explains what personal data we collect, how we use it, and the choices you have. We wrote it in plain English. If anything is unclear, email <a className="text-[#185FA5] underline" href="mailto:privacy@trainyouragent.com">privacy@trainyouragent.com</a>.
           </p>
 
           <div>
@@ -136,7 +136,7 @@ const Privacy = () => {
 
           <div>
             <h2 className="text-[22px] font-semibold text-[#042C53] mb-3">12. Contact</h2>
-            <p>TrainYourAgent, Inc.<br />Tampa Bay, Florida, USA<br /><a className="text-[#185FA5] underline" href="mailto:privacy@trainyouragent.com">privacy@trainyouragent.com</a></p>
+            <p>TrainYourAgent LLC<br />Tampa Bay, Florida, USA<br /><a className="text-[#185FA5] underline" href="mailto:privacy@trainyouragent.com">privacy@trainyouragent.com</a></p>
           </div>
         </div>
       </article>
@@ -154,7 +154,7 @@ const Privacy = () => {
             <Link to="/security" className="hover:text-[#042C53]">Security</Link>
             <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
           </div>
-          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
+          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent LLC</div>
         </div>
       </footer>
     </div>

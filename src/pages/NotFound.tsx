@@ -277,7 +277,7 @@ const NotFound = () => {
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-6 flex items-center justify-between text-[12px] text-slate-500">
           <div className="flex items-center gap-2">
             <BrainLogo size={20} />
-            <span>© 2026 TrainYourAgent, Inc.</span>
+            <span>© 2026 TrainYourAgent LLC</span>
           </div>
           <span>Tampa Bay, FL</span>
         </div>

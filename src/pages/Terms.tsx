@@ -35,7 +35,7 @@ const SECTIONS: Array<{ h: string; b: string }> = [
   { h: "12. Subprocessors and security", b: "Our current subprocessors and security posture are described on our Security and Privacy pages. We'll notify customers of material subprocessor changes at least 30 days in advance for in-scope environments." },
   { h: "13. Changes to the Terms", b: "We may update these Terms; if a change is material, we'll email active customers at least 14 days before it takes effect. Continued use after the effective date constitutes acceptance." },
   { h: "14. Governing law", b: "These Terms are governed by the laws of the State of Florida, USA, without regard to conflict of laws. Disputes are resolved in the state or federal courts located in Hillsborough County, Florida, and the parties consent to that exclusive jurisdiction." },
-  { h: "15. Contact", b: "Questions or notices: legal@trainyouragent.com. TrainYourAgent, Inc., Tampa Bay, Florida, USA." },
+  { h: "15. Contact", b: "Questions or notices: legal@trainyouragent.com. TrainYourAgent LLC, Tampa Bay, Florida, USA." },
 ];
 
 const Terms = () => {
@@ -101,7 +101,7 @@ const Terms = () => {
             <Link to="/security" className="hover:text-[#042C53]">Security</Link>
             <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
           </div>
-          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
+          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent LLC</div>
         </div>
       </footer>
     </div>

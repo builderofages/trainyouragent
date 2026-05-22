@@ -155,13 +155,13 @@ const Learn = () => {
                 </ul>
                 <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
                   <span className="text-[11px] text-slate-500">{c.length}</span>
-                  <button
-                    disabled
-                    className="px-4 py-2 rounded-full bg-[#E6F1FB] text-[#185FA5] text-[12px] font-semibold cursor-not-allowed"
-                    title="Recording in progress — drop your email below to be notified."
+                  <Link
+                    to="/newsletter?notify=learn"
+                    className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[12px] font-semibold hover:bg-[#185FA5] transition shadow-sm"
+                    title="Drop your email — I'll send the modules the day they ship."
                   >
-                    Coming soon
-                  </button>
+                    Notify me →
+                  </Link>
                 </div>
               </div>
             ))}
@@ -273,7 +273,7 @@ const Learn = () => {
             <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
             <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="hover:text-[#042C53]">LinkedIn</a>
           </div>
-          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
+          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent LLC</div>
         </div>
       </footer>
     </div>
