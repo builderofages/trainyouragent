@@ -162,7 +162,16 @@ function buildFaq(competitorName: string, verticalLabel: string, nounPlural: str
 }
 
 function buildHeroParagraph(competitor: { name: string; tag: string }, verticalLabel: string, nounPlural: string) {
-  return `${verticalLabel} ${nounPlural} pick ${competitor.name} because it's a ${competitor.tag} — and then most of them realize the platform is the easy part. The hard part is the integrations, the prompt tuning, the failure modes, and the ${verticalLabel.toLowerCase()}-specific edge cases. We ship the working agent in 14 days, tuned weekly by a real engineer, with your CRM and dispatch stack already wired. That's the alternative.`;
+  // v90: fix "HVAC HVAC companies" duplication bug. When the verticalLabel
+  // is already embedded in the nounPlural (e.g. label="HVAC", nounPlural=
+  // "HVAC companies"), don't prefix the label again. Same for "Roofing
+  // roofing companies", etc. Otherwise we prefix the label for verticals
+  // where the plural noun doesn't include it (e.g. label="Legal",
+  // nounPlural="law firms" → "Legal law firms" reads fine).
+  const subject = nounPlural.toLowerCase().startsWith(verticalLabel.toLowerCase())
+    ? nounPlural
+    : `${verticalLabel} ${nounPlural}`;
+  return `${subject.charAt(0).toUpperCase() + subject.slice(1)} pick ${competitor.name} because it's a ${competitor.tag} — and then most of them realize the platform is the easy part. The hard part is the integrations, the prompt tuning, the failure modes, and the ${verticalLabel.toLowerCase()}-specific edge cases. We ship the working agent in 14 days, tuned weekly by a real engineer, with your CRM and dispatch stack already wired. That's the alternative.`;
 }
 
 /* ------------------------------------------------------------------ */

@@ -333,20 +333,20 @@ const Pricing = () => {
                 <div className="p-5">
                   <div className="text-[10.5px] uppercase tracking-[0.16em] font-semibold text-[#185FA5] mb-1 font-mono">Self-Serve</div>
                   <div className="text-[18px] font-semibold text-[#042C53] mb-1">Founders</div>
-                  <div className="text-[13px] text-slate-600 leading-snug mb-3">$0 upfront. Pay $0.18/min only when calls land.</div>
+                  <div className="text-[13px] text-slate-600 leading-snug mb-3">$0 upfront. Pay $0.39/min only when calls land ($250/mo min).</div>
                   <div className="text-[12px] text-slate-500">Live in 7 days · weekly tune-up · founder Slack</div>
                 </div>
                 <div className="p-5 bg-[#F6FAFE]">
                   <div className="text-[10.5px] uppercase tracking-[0.16em] font-semibold text-[#22A36C] mb-1 font-mono">Custom Build</div>
                   <div className="text-[18px] font-semibold text-[#042C53] mb-1">Operators</div>
-                  <div className="text-[13px] text-slate-600 leading-snug mb-3">$4,950 build + $799/mo all-in (4,000 min included).</div>
+                  <div className="text-[13px] text-slate-600 leading-snug mb-3">$4,950 build + $1,997/mo all-in (5,000 min included).</div>
                   <div className="text-[12px] text-slate-500">Live in 14 days · CRM + dispatch wired · weekly engineer review</div>
                 </div>
                 <div className="p-5">
                   <div className="text-[10.5px] uppercase tracking-[0.16em] font-semibold text-[#185FA5] mb-1 font-mono">Hire Operator</div>
                   <div className="text-[18px] font-semibold text-[#042C53] mb-1">Scale</div>
-                  <div className="text-[13px] text-slate-600 leading-snug mb-3">Custom. Scoped on a 30-min architecture call.</div>
-                  <div className="text-[12px] text-slate-500">Dedicated engineer · SLA · SOC 2 evidence pack</div>
+                  <div className="text-[13px] text-slate-600 leading-snug mb-3">$9,950 build + $4,997/mo (25,000 min included).</div>
+                  <div className="text-[12px] text-slate-500">Dedicated engineer · SLA 99.9% · SOC 2 evidence pack</div>
                 </div>
               </div>
             </div>
@@ -447,7 +447,7 @@ const Pricing = () => {
           <h2 className="text-[28px] sm:text-[40px] leading-tight font-semibold text-[#042C53] mb-3">
             ${STACK_TOTAL.toLocaleString()}+ in bundled value.{" "}
             <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
-              Operators start at $799/mo.
+              Operators start at $1,997/mo.
             </span>
           </h2>
           <p className="text-[15px] sm:text-[16px] text-slate-700 leading-relaxed max-w-3xl mb-8">
@@ -475,7 +475,7 @@ const Pricing = () => {
             </div>
           </div>
           <p className="mt-6 text-[14px] text-slate-600 leading-relaxed max-w-3xl">
-            Founders lane pays for it across booked calls, not upfront. Operators lane bundles the build for $4,950 + $799/mo. Scale gets it custom-scoped. <strong className="text-[#042C53]">No tier locks any of these behind a paywall.</strong>
+            Founders lane pays for it across booked calls, not upfront. Operators lane bundles the build for $4,950 + $1,997/mo. Scale lane is $9,950 + $4,997/mo. <strong className="text-[#042C53]">No tier locks any of these behind a paywall.</strong>
           </p>
         </div>
       </section>

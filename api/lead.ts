@@ -183,6 +183,20 @@ const ALLOWED_SOURCES = new Set([
   "saas-agent-builder-trial",
   "saas-vertical-playbook-waitlist",
   "saas-website-audit-pro-waitlist",
+  // v90: generic entry surfaces. Audit found 'home' / 'hero' / 'footer'
+  // were silently 400ing — any new CTA without a registered allowlist
+  // entry dropped its lead. These are the catch-all surfaces used by
+  // forms that don't have their own dedicated source identifier yet.
+  "home",
+  "hero",
+  "footer",
+  "nav",
+  "exit-intent",
+  "newsletter-modal",
+  "founding-cohort",
+  "vertical-cta",
+  "alternative-cta",
+  "test",
 ]);
 
 const MAX_BODY_BYTES = 16 * 1024; // 16 KB is plenty for a lead form
