@@ -155,7 +155,7 @@ export const commonFAQs = {
     },
     {
       question: "What is the cost of AI voice agents?",
-      answer: "Plans start at $497/month for 200 calls, with Growth plans at $997/month for 500 calls. Enterprise unlimited plans are $1,497/month. All plans include setup fees.",
+      answer: "Three lanes: Founders is $0 upfront + $0.39/min with a $250/mo minimum (best for pre-revenue startups). Operators is $4,950 build + $1,997/mo with 5,000 minutes included (best for SMBs paying humans to answer phones today). Scale is $9,950 build + $4,997/mo with 25,000 minutes included plus dedicated engineer and SLA (best for multi-location operators). Self-serve $99/mo Agent Builder plan also available for solo founders who want to build their own.",
     },
     {
       question: "Is there a guarantee?",

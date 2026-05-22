@@ -20,7 +20,7 @@ export const VERTICALS: Vertical[] = [
     buyerPersona: "owner-operators and ops leads at multi-line SMBs",
     painPoint: "missed calls and overflow that drag down booking rates after hours and during lunch",
     outcomeMetric: "cost per answered call",
-    pricingAnchor: "$799/mo",
+    pricingAnchor: "$1,997/mo",
     whatsIncluded: [
       "Custom voice persona trained on your scripts and FAQs",
       "Live transfer to a human plus SMS handoff",
@@ -34,7 +34,7 @@ export const VERTICALS: Vertical[] = [
     buyerPersona: "marketing leads and revenue ops at lead-volume SMBs",
     painPoint: "slow speed-to-lead and tab-juggling reps that lose hot inbound to faster competitors",
     outcomeMetric: "leads qualified per session",
-    pricingAnchor: "$499/mo",
+    pricingAnchor: "$1,997/mo",
     whatsIncluded: [
       "Embedded site widget with brand-matched look and feel",
       "Knowledge base trained on your docs, pricing, and policies",
@@ -48,7 +48,7 @@ export const VERTICALS: Vertical[] = [
     buyerPersona: "practice managers, GMs, and front-office leads",
     painPoint: "front-desk turnover and unpredictable call volume that keeps the phones ringing into voicemail",
     outcomeMetric: "appointments booked per week",
-    pricingAnchor: "$999/mo",
+    pricingAnchor: "$1,997/mo",
     whatsIncluded: [
       "24/7 inbound coverage with calendar booking and confirmation",
       "Multi-line, multi-location routing with smart escalation",

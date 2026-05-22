@@ -76,7 +76,7 @@ export default function RoiCalculator({ onEmailCaptured }: Props) {
     <div className="rounded-3xl bg-white border border-slate-200 p-6 sm:p-8 shadow-[0_4px_40px_-12px_rgba(4,44,83,0.18)]" style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
       <div className="flex items-baseline justify-between mb-1 flex-wrap gap-2">
         <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold">ROI calculator</div>
-        <div className="text-[11px] text-slate-600">Operators plan · $799/mo baseline</div>
+        <div className="text-[11px] text-slate-600">Operators plan · $1,997/mo baseline</div>
       </div>
       <h3 className="text-[24px] sm:text-[32px] leading-tight font-semibold text-[#042C53] mb-6">
         Plug in your numbers. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>See payback in days.</span>

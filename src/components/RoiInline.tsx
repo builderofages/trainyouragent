@@ -131,8 +131,8 @@ export default function RoiInline() {
         </h4>
         <p className="text-[14px] text-white/85 leading-relaxed mb-5 max-w-2xl">
           {result.plan === "founders" && "You're early or low-volume — Founders lane is pay-as-you-go with $0 upfront. Build the agent now, pay only when calls come in."}
-          {result.plan === "operators" && "You're past the messy early stage. Operators is the bulk of our customers: $4,950 build + $799/mo, 4,000 minutes included, live in 21 days."}
-          {result.plan === "scale" && "Multi-location, multi-brand, or high volume. Scale is custom-scoped on a 30-min architecture call — dedicated engineer, SLA, BAA/DPA included."}
+          {result.plan === "operators" && "You're past the messy early stage. Operators is the bulk of our customers: $4,950 build + $1,997/mo, 5,000 minutes included, live in 14 days."}
+          {result.plan === "scale" && "Multi-location, multi-brand, or high volume. Scale is $9,950 build + $4,997/mo with 25,000 minutes included — dedicated engineer, 99.9% SLA, BAA/DPA included."}
         </p>
         <div className="flex flex-col sm:flex-row gap-3">
           <Link

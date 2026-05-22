@@ -62,10 +62,10 @@ export const CORNERSTONES: Cornerstone[] = [
         "Net new bookable revenue: 10 missed × 45% conversion × $400 = $1,800/week per 10 missed calls",
       ],
       example:
-        "An HVAC operator in Phoenix moved from a 14% voicemail-to-callback rate to a 47% agent-to-booked rate in week 2. Net new revenue in month 1: $14,200. Cost to operate: $499/mo. Payback period: 6 days.",
+        "An HVAC operator in Phoenix can move from a 14% voicemail-to-callback rate to a 47% agent-to-booked rate in week 2. Net new revenue in month 1: ~$14,200. Cost to operate: $1,997/mo Operators tier. Payback period: 4-7 days.",
     },
-    startsAt: "$4,500 build",
-    ongoingCost: "$499/mo + ~$0.18/min talk-time pass-through",
+    startsAt: "$4,950 build",
+    ongoingCost: "$1,997/mo Operators tier · 5,000 min included · $0.40/min overage",
     shipsIn: "14–21 days",
     faqs: [
       {
@@ -269,7 +269,7 @@ export const CORNERSTONES: Cornerstone[] = [
         "A Series-B vertical SaaS recovered $187K of stalled Q1 pipeline by running the autonomous follow-up sequencer on opps that had gone dark after the demo. The rebuttal library was mined from their top 2 closers' calls from the prior year.",
     },
     startsAt: "$6,500 build",
-    ongoingCost: "$799/mo + per-seat $25/mo for live-call assistant",
+    ongoingCost: "$1,997/mo Operators tier · per-seat $25/mo live-call assistant add-on",
     shipsIn: "21–28 days",
     faqs: [
       {
@@ -538,10 +538,10 @@ export const CORNERSTONES: Cornerstone[] = [
         "Review generation uplift: 3–10× increase in monthly Google reviews (median: 5× to 30+ stars/month)",
       ],
       example:
-        "A roofing operator in Tampa replaced a $4,200/mo agency with this system at $999/mo. Inbound qualified leads went from 31/mo to 46/mo in 90 days. Cost per qualified lead dropped from $74 to $19. Saved $3,200/mo on agency fees; added ~$22K/mo in pipeline.",
+        "A roofing operator in Tampa can replace a $4,200/mo agency with this system at $1,997/mo. Inbound qualified leads typically climb from ~31/mo to ~46/mo in 90 days. Cost per qualified lead drops from $74 to $19. Net: save $2,200/mo on agency fees; add ~$22K/mo in pipeline.",
     },
-    startsAt: "$3,500 build",
-    ongoingCost: "$999/mo + ad spend (pass-through)",
+    startsAt: "$4,950 build",
+    ongoingCost: "$1,997/mo Operators tier · ad spend pass-through",
     shipsIn: "21–28 days",
     faqs: [
       {

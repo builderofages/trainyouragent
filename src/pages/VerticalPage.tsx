@@ -832,7 +832,10 @@ const VerticalPage = () => {
       <section className="px-5 sm:px-8 py-20 bg-[#042C53] text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-[36px] sm:text-[56px] leading-[1.04] tracking-tight font-semibold">
-            Ready for a {config.label} agent <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>that actually ships?</span>
+            {/* v95: "a/an" detection — "a HVAC" / "a Accounting" / "a Auto"
+                were grammatically wrong because the noun starts with a vowel sound
+                (or an aitch initialism). Pick article from first character. */}
+            Ready for {/^[aeiouAEIOU]|^[Hh][VS]/.test(config.label) ? "an" : "a"} {config.label} agent <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>that actually ships?</span>
           </h2>
           <p className="mt-5 text-[17px] text-white/85 max-w-2xl mx-auto leading-relaxed">Thirty-minute build call. You leave with a written plan and a price.</p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
