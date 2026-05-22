@@ -87,8 +87,9 @@ const RESOURCES: LinkItem[] = [
   // every page on the site, not just home. Free in-browser AI agent —
   // the single best "let me try it" lever we have.
   { label: "Hear a live AI agent",  to: "/voice-demo",  badge: "DEMO",     sub: "Talk to the agent in your browser. Web Speech API + Groq Llama 3.3. Free, no signup." },
-  { label: "Proof",          to: "/proof",       badge: "RECEIPTS", sub: "Architecture receipts + operator velocity. The numbers behind the claims." },
-  { label: "Live metrics",   to: "/metrics",     sub: "Public dashboard. Real-time site + GitHub + agent activity." },
+  // v88: Proof + Live metrics removed from nav per founder direction —
+  // the "build-in-public" framing was reading as dev journal rather than
+  // established company. Routes still exist for SEO; no longer linked.
   { label: "Customers",      to: "/customers",   sub: "Operators running TrainYourAgent on real production traffic." },
   { label: "Testimonials",   to: "/testimonials",sub: "Quotes from founders, operators, and clinic owners." },
   { label: "Blog",           to: "/blog",        sub: "Operator playbooks + AI infrastructure deep dives." },

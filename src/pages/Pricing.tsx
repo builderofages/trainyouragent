@@ -10,6 +10,7 @@ import CalEmbed from "@/components/CalEmbed";
 import RiskReversalBlock from "@/components/RiskReversalBlock";
 import ToastHost, { toast } from "@/components/Toast";
 import SiteNav from "@/components/SiteNav";
+import PoweredByBadges from "@/components/PoweredByBadges";
 // v76-B: DashboardIllo removed from /pricing — a fake "+38% MoM" growth
 // chart was sitting above the plan cards. Growth charts have no business
 // on a pricing page; spec asked for a clean tier comparison summary.
@@ -594,6 +595,10 @@ const Pricing = () => {
           <p className="mt-4 text-[13px] text-white/65">No card, no obligation — 30 min with the founder, written scope same day.</p>
         </div>
       </section>
+
+      {/* v88: stack credibility before footer — reinforces that the pricing
+          is for real infra, not a no-code template. */}
+      <PoweredByBadges variant="grid" eyebrow="THE STACK BEHIND EVERY AGENT WE SHIP" />
 
       <footer className="bg-white border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-600">

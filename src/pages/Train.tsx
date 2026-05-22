@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
+import PoweredByBadges from "@/components/PoweredByBadges";
 // v76-B: MeshGradientBackdrop + ParticleDrift removed from /train.
 // Per v73-FINAL spec the 2040 visual layer (mesh + particles + LiveStatTicker)
 // is HOME-ONLY — /train has its own hero treatment and the leak was muddling
@@ -535,6 +536,9 @@ export default function Train() {
           </div>
         </section>
       </main>
+
+      {/* v88: stack badges — credibility, established-company framing. */}
+      <PoweredByBadges variant="grid" />
 
       <FooterV44 />
     </div>

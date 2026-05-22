@@ -21,6 +21,10 @@ import { fireSiteVisitOnce } from "@/lib/event";
 // v44: hero illustration, footer redesign, animated dividers, count-up
 import HeroIllustration from "@/components/HeroIllustration";
 import FooterV44 from "@/components/FooterV44";
+// v88: tool stack badge strip — shows real infra we ship on (Anthropic,
+// Vapi, ElevenLabs, Pinecone, Supabase, etc) so prospects know we're not
+// vibe-coding on no-code. Credibility lever.
+import PoweredByBadges from "@/components/PoweredByBadges";
 import SectionDivider from "@/components/SectionDivider";
 import { useCountUp } from "@/hooks/useCountUp";
 import NetworkIllo from "@/components/illustrations/NetworkIllo";
@@ -289,25 +293,15 @@ const Index = () => {
       {/* NAV — canonical service nav */}
       <SiteNav />
 
-      {/* v77: header de-clutter — LiveStatTicker pulled (it was colliding
-          with the fixed nav and duplicating numbers already in the navy
-          eyebrow strip below). The strip below is the canonical proof line. */}
-
-      {/* v73: brand-anchor eyebrow — flagship positioning above hero.
-          v77: pushed below the fixed nav height so it sits in the right place. */}
-      <div className="w-full bg-[#042C53] text-white" style={{ marginTop: "calc(var(--tya-pill-h, 0px) + 64px)" }}>
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-2 text-center text-[10.5px] sm:text-[11px] tracking-[0.18em] uppercase font-semibold font-mono text-[#E6F1FB]">
-          {/* v76-B: read both numbers from STATS so the eyebrow + the
-              LiveStatTicker above it can never disagree. */}
-          Train Your Agent · {STATS.cornerstonePlaybooks} productionized playbooks · {STATS.totalRoutes} live URLs ·{" "}
-          <a href="/train" className="underline decoration-[#A8C7E8]/60 decoration-1 underline-offset-2 hover:text-white">See the method</a>
-        </div>
-      </div>
+      {/* v88: removed "10 productionized playbooks · 569 live URLs" navy
+          eyebrow strip per founder direction. The build-in-public framing
+          (commit counts, URL counts, "see what we shipped") was reading as
+          dev journal instead of established company. The new $1,997/mo
+          retainer price needs a brand that LOOKS like it's worth that.
+          Spacer below replaces the strip's height so hero pt unchanged. */}
+      <div style={{ marginTop: "calc(var(--tya-pill-h, 0px) + 64px)" }} aria-hidden="true" />
 
       {/* HERO */}
-      {/* v77: pt-24 -> pt-8 sm:pt-12 because the eyebrow strip above is now
-          correctly positioned below the fixed nav (was previously hiding under
-          the nav, which forced extra hero pt to compensate). */}
       <main id="main">
       <section className="relative pt-8 sm:pt-12 pb-16 sm:pb-24 px-5 sm:px-8 overflow-hidden">
         {/* v73: 2040 visual layer behind hero content. */}
@@ -443,6 +437,11 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* v88: powered-by tech-stack badge strip immediately after the hero.
+          Establishes credibility — these are real infra primitives, same
+          stack as Cursor / Linear / Anthropic prod. */}
+      <PoweredByBadges variant="grid" />
 
       {/* v73: TRAINED-AGENT DIFFERENCE — 3-column comparison surfacing the
           "we don't bolt LLMs on, we train" brand wedge above the fold. */}
