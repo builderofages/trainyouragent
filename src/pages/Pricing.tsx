@@ -60,6 +60,11 @@ function BrainLogo({ size = 40 }: { size?: number }) {
   );
 }
 
+// v87: pricing raised to actually sustain unit economics. Old prices
+// ($799/mo Operators, $99/mo unlimited SaaS) were under cost-to-serve
+// once you account for VAPI ($0.05-0.15/min) + Twilio ($0.013/min) +
+// ElevenLabs ($0.30/1k chars) + LLM tokens + support + infra overhead.
+// New prices target 60-70% gross margin on a real operator account.
 const PLANS = [
   {
     id: "founders",
@@ -67,9 +72,9 @@ const PLANS = [
     forWho: "Pre-revenue or early-revenue startups. Build now, pay as you grow.",
     upfront: "$0",
     upfrontNote: "build fee deferred",
-    monthly: "$0.18",
+    monthly: "$0.39",
     monthlyUnit: "per minute answered",
-    booking: "$25",
+    booking: "$35",
     bookingNote: "per booked appointment (optional add-on)",
     cta: "Apply for the Founder lane → $0 upfront, live in 7 days",
     accent: false,
@@ -78,7 +83,7 @@ const PLANS = [
       "Live in 7 business days",
       "Founder Slack channel — direct line to the builder, no SDR layer",
       "Weekly tune-up for the first 90 days",
-      "Pay only when calls come in",
+      "Pay only when calls come in — minimum $250/mo billing",
     ],
   },
   {
@@ -87,9 +92,9 @@ const PLANS = [
     forWho: "SMBs already paying humans to answer phones, qualify leads, or run support.",
     upfront: "$4,950",
     upfrontNote: "one-time build + integration",
-    monthly: "$799",
-    monthlyUnit: "per month, includes 4,000 minutes",
-    booking: "$15",
+    monthly: "$1,997",
+    monthlyUnit: "per month, includes 5,000 minutes",
+    booking: "$25",
     bookingNote: "per booked appointment after the included pool",
     cta: "Start the Operator build → first agent live in 21 days or it's free",
     accent: true,
@@ -105,19 +110,19 @@ const PLANS = [
     id: "scale",
     label: "Scale",
     forWho: "Multi-location, multi-brand, or agency-scale operations.",
-    upfront: "Custom",
-    upfrontNote: "scoped from a 30-min call",
-    monthly: "Custom",
-    monthlyUnit: "volume-tiered",
-    booking: "Custom",
-    bookingNote: "tied to your conversion model",
-    cta: "Get a custom Scale quote → 30-min architecture call",
+    upfront: "$9,950",
+    upfrontNote: "one-time build + multi-site integration",
+    monthly: "$4,997",
+    monthlyUnit: "per month, includes 25,000 minutes",
+    booking: "$15",
+    bookingNote: "per booked appointment after the included pool",
+    cta: "Get a Scale quote → 30-min architecture call",
     accent: false,
     perks: [
       "Unlimited agents across brands or locations",
       "Dedicated engineer + monthly architecture review",
       "Custom integrations, custom training data",
-      "SLA-backed uptime, priority incident response",
+      "SLA-backed uptime (99.9%), priority incident response",
       "BAA, DPA, SOC 2 evidence pack included",
     ],
   },
@@ -220,7 +225,7 @@ const Pricing = () => {
       "@context": "https://schema.org",
       "@type": "Product",
       name: "TrainYourAgent — AI Voice Agents",
-      description: "AI voice + messaging agents for SMBs and startups. Three lanes: Founders (pay-as-you-go), Operators ($799/mo + 4,000 minutes), Scale (custom).",
+      description: "AI voice + messaging agents for SMBs and startups. Three lanes: Founders (pay-as-you-go $0.39/min), Operators ($1,997/mo + 5,000 minutes), Scale ($4,997/mo + 25,000 minutes).",
       brand: { "@type": "Brand", name: "TrainYourAgent" },
       offers: {
         "@type": "AggregateOffer",

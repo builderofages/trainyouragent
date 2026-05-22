@@ -49,6 +49,8 @@ const PLANS: Record<string, { priceEnv: string; mode: "subscription" | "payment"
   scale:     { priceEnv: "STRIPE_PRICE_SCALE",    mode: "subscription" },
   // v71: SaaS Self-Serve Agent Builder — $99/mo recurring
   "saas-agent-builder": { priceEnv: "STRIPE_PRICE_SAAS_AGENT_BUILDER", mode: "subscription" },
+  // v87: SaaS Pro tier — $299/mo recurring, 3 agents + 25k conversations
+  "saas-agent-builder-pro": { priceEnv: "STRIPE_PRICE_SAAS_AGENT_BUILDER_PRO", mode: "subscription" },
 };
 
 function resolvePriceId(plan: string): string {
@@ -79,8 +81,18 @@ const INLINE_PLAN_PRICING: Record<string, InlinePlanPricing> = {
   "saas-agent-builder": {
     amountCents: 9900,
     currency: "usd",
-    productName: "TrainYourAgent — Self-Serve Agent Builder",
-    productDescription: "Unlimited custom AI agents · embed-anywhere widget · custom branding · transcript logs · weekly tune-up suggestions. $99/mo, cancel anytime.",
+    productName: "TrainYourAgent — Agent Builder (Starter)",
+    productDescription: "1 fully-trained AI agent · 5,000 conversations/mo · embed-anywhere widget · custom branding · transcript logs · weekly tune-up suggestions. $99/mo, cancel anytime. $0.02 per conversation over the included pool.",
+    interval: "month",
+  },
+  // v87: Pro tier — captures power users (agencies + multi-product founders)
+  // who would otherwise abuse the $99 unlimited tier. 3x conversation pool +
+  // 3 agents for ~3x the price keeps margin healthy at higher usage.
+  "saas-agent-builder-pro": {
+    amountCents: 29900,
+    currency: "usd",
+    productName: "TrainYourAgent — Agent Builder (Pro)",
+    productDescription: "3 fully-trained AI agents · 25,000 conversations/mo · embed-anywhere widget · white-label branding · API access · priority Slack support. $299/mo, cancel anytime. $0.015 per conversation over the included pool.",
     interval: "month",
   },
 };

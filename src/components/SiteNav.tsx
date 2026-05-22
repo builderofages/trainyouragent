@@ -181,7 +181,7 @@ export default function SiteNav({ active }: SiteNavProps) {
           </Link>
 
           {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-6 text-[14px] text-slate-700">
+          <div className="hidden lg:flex items-center gap-6 text-[14px] text-slate-700">
             {/* Solutions — v69: 8 categories, two-column wide */}
             <DesktopDropdown
               label="Solutions"
@@ -250,7 +250,7 @@ export default function SiteNav({ active }: SiteNavProps) {
           {/* Mobile toggle */}
           <button
             type="button"
-            className="md:hidden p-2 -mr-2"
+            className="lg:hidden p-2 -mr-2"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
@@ -267,7 +267,7 @@ export default function SiteNav({ active }: SiteNavProps) {
 
         {/* Mobile drawer */}
         {mobileOpen && (
-          <div className="md:hidden border-t border-slate-200 bg-white max-h-[calc(100dvh-64px)] overflow-y-auto">
+          <div className="lg:hidden border-t border-slate-200 bg-white max-h-[calc(100dvh-64px)] overflow-y-auto">
             <div className="max-w-7xl mx-auto px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex flex-col gap-1 text-[15px]">
               <MobileSection
                 label="Solutions"

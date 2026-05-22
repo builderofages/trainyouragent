@@ -12,11 +12,16 @@ import { RevealUp, StaggerChildren, HoverLift } from "@/components/motion";
 import { fireEvent } from "@/lib/event";
 import { Infinity as InfinityIcon, Code2, Palette } from "lucide-react";
 
+// v87: "Unlimited" replaced with real metered caps so a single chatty
+// customer can't bankrupt the SaaS. Variable cost per conversation is
+// real ($0.001 LLM tokens + $0.0003 RAG + 2 KB of TTS if voice). At 5k
+// conversations the floor cost is ~$15/mo per customer — leaves real
+// margin on $99. Pro tier ($299) captures power users with 25k cap.
 const FEATURES = [
   {
     Icon: InfinityIcon,
-    title: "Unlimited agents",
-    body: "Free tier gets 1. Paid gets unlimited. Build one per product line, one per niche, one per audience — iterate without a quota.",
+    title: "1 agent · 5,000 conversations/mo",
+    body: "Build one fully-trained agent. Up to 5,000 visitor conversations a month included. Upgrade to Pro ($299/mo) for 3 agents + 25,000 conversations.",
   },
   {
     Icon: Code2,
@@ -31,7 +36,9 @@ const FEATURES = [
 ];
 
 const DETAILED_FEATURES = [
-  "Unlimited agent drafts",
+  "1 fully-trained agent (3 on Pro tier)",
+  "5,000 visitor conversations/mo (25,000 on Pro)",
+  "$0.02 per conversation over the included pool",
   "Embeddable widget for any website",
   "Custom branding (colors, logo, no watermark)",
   "Save, share, version every agent",
@@ -55,7 +62,7 @@ export default function SaasAgentBuilder() {
     if (typeof document === "undefined") return;
     document.title = "Self-Serve Agent Builder — $99/mo · TrainYourAgent";
     const m = document.querySelector("meta[name='description']") as HTMLMetaElement | null;
-    if (m) m.setAttribute("content", "Build your own AI agent — unlimited drafts, embed anywhere, $99/mo. 7-day free trial, no card required. Iterate, brand, deploy — all yours.");
+    if (m) m.setAttribute("content", "Build your own AI agent — 1 agent + 5,000 conversations/mo for $99/mo, Pro tier 3 agents + 25k conversations for $299/mo. Embed anywhere. 7-day free trial, no card required.");
   }, []);
 
   async function submitTrial(e: FormEvent) {
