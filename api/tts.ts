@@ -28,9 +28,15 @@ const TIMEOUT_MS = 15_000;
 const OPENAI_MODEL = process.env.OPENAI_TTS_MODEL || "tts-1";
 const OPENAI_VOICE = process.env.OPENAI_TTS_VOICE || "alloy";
 
-// ElevenLabs: voiceId from the user's library. Defaults to "Rachel" — widely
-// recognized warm female voice that ships in the free tier. Override per-call.
-const ELEVENLABS_VOICE_ID = process.env.ELEVENLABS_VOICE_ID || "21m00Tcm4TlvDq8ikWAM";
+// ElevenLabs voice IDs (verified production IDs from ElevenLabs voice library):
+//   Charlotte: XB0fDUnXU5powFXDhCwa — smooth, sultry, confident female (BRAND DEFAULT)
+//   Sarah:     EXAVITQu4vr4xnSDxMaL — warm, professional young female
+//   Bella:     EXAVITQu4vr4xnSDxMaL — soft, expressive young female
+//   Rachel:    21m00Tcm4TlvDq8ikWAM — calm, professional female
+// v92: Charlotte picked as default — founder direction: "hot woman's voice, sexy
+// assistant, not too sexual." Charlotte is the closest match in the ElevenLabs
+// stock library: poised, confident, slight rasp, professional edge.
+const ELEVENLABS_VOICE_ID = process.env.ELEVENLABS_VOICE_ID || "XB0fDUnXU5powFXDhCwa";
 const ELEVENLABS_MODEL = process.env.ELEVENLABS_MODEL || "eleven_turbo_v2_5";
 
 function withTimeout(p: Promise<Response>): Promise<Response> {
@@ -86,43 +92,10 @@ export default async function handler(req: Request): Promise<Response> {
   }
 
   // ── PROVIDER CHAIN ─────────────────────────────────────────────────────────
-  // 1) OpenAI TTS — primary (cheap, fast, sounds human)
-  if (process.env.OPENAI_API_KEY) {
-    try {
-      const r = await withTimeout(fetch("https://api.openai.com/v1/audio/speech", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          model: OPENAI_MODEL,
-          voice: body.voice || OPENAI_VOICE,
-          input: text,
-          response_format: "mp3",
-          speed: 1.05, // slightly faster than default — feels more natural
-        }),
-      }));
-      if (r.ok) {
-        const buf = await r.arrayBuffer();
-        return new Response(buf, {
-          status: 200,
-          headers: {
-            "content-type": "audio/mpeg",
-            "cache-control": "public, max-age=3600",
-            "x-tts-provider": "openai",
-            ...cors.headers,
-            ...rl.headers,
-          },
-        });
-      }
-      // 4xx/5xx from OpenAI — fall through
-    } catch {
-      // network / timeout — fall through
-    }
-  }
-
-  // 2) ElevenLabs — fallback (best quality, expensive)
+  // v92: ElevenLabs PRIMARY (founder has account + voice picked = Charlotte).
+  // OpenAI TTS is secondary fallback (still cheaper if ElevenLabs runs out
+  // of monthly char budget). Browser TTS is last-resort.
+  // 1) ElevenLabs — primary (best human voice, Charlotte = sultry-professional)
   if (process.env.ELEVENLABS_API_KEY) {
     try {
       const voiceId = body.voice || ELEVENLABS_VOICE_ID;
@@ -155,6 +128,41 @@ export default async function handler(req: Request): Promise<Response> {
             "content-type": "audio/mpeg",
             "cache-control": "public, max-age=3600",
             "x-tts-provider": "elevenlabs",
+            ...cors.headers,
+            ...rl.headers,
+          },
+        });
+      }
+    } catch {
+      // fall through
+    }
+  }
+
+  // 2) OpenAI TTS — fallback (if ElevenLabs char budget exhausted or key missing)
+  if (process.env.OPENAI_API_KEY) {
+    try {
+      const r = await withTimeout(fetch("https://api.openai.com/v1/audio/speech", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          model: OPENAI_MODEL,
+          voice: body.voice || OPENAI_VOICE,
+          input: text,
+          response_format: "mp3",
+          speed: 1.05,
+        }),
+      }));
+      if (r.ok) {
+        const buf = await r.arrayBuffer();
+        return new Response(buf, {
+          status: 200,
+          headers: {
+            "content-type": "audio/mpeg",
+            "cache-control": "public, max-age=3600",
+            "x-tts-provider": "openai",
             ...cors.headers,
             ...rl.headers,
           },
