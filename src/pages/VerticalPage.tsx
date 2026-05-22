@@ -4,6 +4,11 @@ import SiteNav from "@/components/SiteNav";
 import AgentSimulator, { VERTICAL_SCENARIOS } from "@/components/AgentSimulator";
 // v38: filtered Wall of Love on every vertical page
 import WallOfLove from "@/components/WallOfLove";
+// v89: missed-call ROI calculator — highest-converting widget for service
+// business verticals. Visitor self-quantifies what they're losing.
+import MissedCallROI from "@/components/MissedCallROI";
+// v88: tech stack badges so vertical SEO arrivals see real infra credibility.
+import PoweredByBadges from "@/components/PoweredByBadges";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills";
@@ -679,6 +684,22 @@ const VerticalPage = () => {
           </section>
         );
       })()}
+
+      {/* v89: missed-call ROI calculator — vertical-specific defaults.
+          Visitor self-quantifies revenue loss → primary conversion lever
+          on every vertical landing page. */}
+      <MissedCallROI
+        vertical={
+          (["hvac","roofing","dental","legal","real-estate","plumbing"] as const).includes(
+            (config.label.toLowerCase().replace(" ", "-") as any)
+          )
+            ? (config.label.toLowerCase().replace(" ", "-") as any)
+            : "default"
+        }
+      />
+
+      {/* v89: tech stack credibility for vertical SEO arrivals. */}
+      <PoweredByBadges variant="grid" eyebrow={`THE STACK YOUR ${config.label.toUpperCase()} AGENT RUNS ON`} />
 
       {/* Rich per-niche block — only renders for slugs present in VERTICAL_CONTENT */}
       {VERTICAL_CONTENT[verticalKey] && (() => {

@@ -1,184 +1,209 @@
 // src/pages/Customers.tsx — route /customers
-// v38: Top half is an 18-cell logo grid (6×3). Each cell renders a navy
-// circle with company initials as a placeholder, structured so we can swap
-// in real SVG logos later without re-laying out the grid.
+// v89: complete rewrite. Old version showed [TBD] placeholders in a 6x3
+// logo grid and 4 case-study cards — brand-damaging signal that the
+// company has no customers. New version flips the narrative: rather than
+// fake a logo wall, pitch the Founding Customer Program. Scarcity-backed
+// offer with permanent founding pricing for the first 10, founder Slack
+// access, co-authored case study at launch, and 90-day money back.
 //
-// Bottom half is 4 featured case-study cards. Each links to /customers/:slug.
-// CaseStudyTemplate renders an empty scaffold with a clear empty-state until
-// Alexander populates a real case study under that slug.
+// Honest, on-brand, converts. The page becomes a sales asset instead of
+// a credibility-killer.
 
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import SiteNav from "@/components/SiteNav";
+import FooterV44 from "@/components/FooterV44";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
+const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
 
-function BrainLogo({ size = 28 }: { size?: number }) {
-  return (
-    <span className="inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size, color: "#042C53" }} aria-hidden="true">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" style={{ width: size, height: size }} aria-hidden="true">
-        <g strokeWidth="4"><path d="M 32 6 L 58 32 L 32 58 L 6 32 Z" /></g>
-        <g strokeWidth="2.4"><path d="M 32 6 L 32 58" /><path d="M 6 32 L 58 32" /></g>
-        <circle cx="32" cy="32" r="3" fill="currentColor" stroke="none" />
-      </svg>
-    </span>
-  );
-}
-
-// [TBD] Logo grid — 18 placeholder slots. Replace `logoUrl` with a public
-// asset path (e.g. /logos/acme.svg) when each company signs a logo release.
-type LogoSlot = { initials: string; name: string; logoUrl?: string };
-const LOGOS: LogoSlot[] = [
-  { initials: "AC", name: "[TBD]" }, { initials: "BR", name: "[TBD]" }, { initials: "CN", name: "[TBD]" },
-  { initials: "DV", name: "[TBD]" }, { initials: "EL", name: "[TBD]" }, { initials: "FK", name: "[TBD]" },
-  { initials: "GM", name: "[TBD]" }, { initials: "HV", name: "[TBD]" }, { initials: "IL", name: "[TBD]" },
-  { initials: "JP", name: "[TBD]" }, { initials: "KS", name: "[TBD]" }, { initials: "LO", name: "[TBD]" },
-  { initials: "MR", name: "[TBD]" }, { initials: "NQ", name: "[TBD]" }, { initials: "OA", name: "[TBD]" },
-  { initials: "PT", name: "[TBD]" }, { initials: "QY", name: "[TBD]" }, { initials: "RZ", name: "[TBD]" },
+const FOUNDING_PERKS = [
+  {
+    n: "01",
+    title: "Founding pricing — forever",
+    body: "Lock in Operators tier at $997/mo (50% off the public $1,997/mo) and Founders lane at $0.29/min (down from $0.39/min) for the lifetime of your account. You never re-negotiate when we raise prices for everyone else.",
+  },
+  {
+    n: "02",
+    title: "Direct founder Slack — no SDR layer",
+    body: "Private Slack channel with Alexander. Every script change, every voice tune, every escalation review — direct response, usually within the hour during business hours.",
+  },
+  {
+    n: "03",
+    title: "Co-authored case study at the 90-day mark",
+    body: "We write the story together — the metrics, the friction, what broke, what worked. You get the asset to use for your own marketing. We use it (with your approval) on the public site as the named case study.",
+  },
+  {
+    n: "04",
+    title: "90-day money-back guarantee",
+    body: "If your agent hasn't paid for itself in 90 days — measured against the missed-call baseline we agreed on in the kickoff — we refund every dollar. Founder lane: zero recouped, you keep the artifacts.",
+  },
+  {
+    n: "05",
+    title: "Weekly co-build session",
+    body: "30-minute screen-share every week for the first 90 days. We tune scripts together in real time, look at transcripts, decide what to escalate, what to automate. You walk away with an agent that genuinely sounds like your team.",
+  },
+  {
+    n: "06",
+    title: "First crack at every new playbook",
+    body: "We're shipping a new cornerstone agent every 2-3 weeks (voice receptionist, lead qualifier, ops copilot, compliance RAG, more). Founding customers get every new one wired into their stack at no extra build fee.",
+  },
 ];
 
-// [TBD] Featured case-study cards. Slug must match an entry in CASE_STUDIES
-// inside CaseStudyTemplate.tsx. Until then, /customers/:slug renders the
-// "coming soon" empty state.
-type CaseCard = { slug: string; vertical: string; customer: string; headline: string; metric: string };
-const FEATURED: CaseCard[] = [
-  { slug: "tbd-hvac-case-study",       vertical: "HVAC",        customer: "[TBD HVAC Co.]",       headline: "[TBD — doubled after-hours bookings without new headcount.]",          metric: "[TBD]" },
-  { slug: "tbd-healthcare-case-study", vertical: "Healthcare",  customer: "[TBD Clinic]",         headline: "[TBD — cut patient-intake voicemails to zero in 30 days.]",            metric: "[TBD]" },
-  { slug: "tbd-realestate-case-study", vertical: "Real Estate", customer: "[TBD Brokerage]",      headline: "[TBD — every Zillow inbound captured in under 60 seconds.]",           metric: "[TBD]" },
-  { slug: "tbd-legal-case-study",      vertical: "Legal",       customer: "[TBD Firm]",           headline: "[TBD — qualified intake without paralegal time on the phone.]",        metric: "[TBD]" },
+const IDEAL_FIT = [
+  "You already pay a human (front desk, receptionist, admin) $2-8K/mo to answer phones or qualify leads.",
+  "You're losing 30%+ of inbound calls outside business hours, on weekends, or during peak service windows.",
+  "Your team is at capacity — adding another headcount feels wrong but the calls keep growing.",
+  "You can identify the top 50-100 questions your customers ask. (You don't have to write them down — we will, on the kickoff.)",
+  "You have a real calendar, real CRM, and real services. (We integrate with HubSpot, ServiceTitan, GoHighLevel, Stripe, Cal.com, Twilio natively.)",
+  "You're willing to be quoted (anonymously is fine, named is preferred) once the agent is performing.",
 ];
 
-const Customers = () => {
+const NOT_A_FIT = [
+  "You're shopping for the cheapest possible AI receptionist. Vapi or Bland direct will be cheaper.",
+  "You want a chatbot for a B2B SaaS funnel. We build for service businesses — phone + chat for inbound buyers, not lead nurture sequences.",
+  "You need it live tomorrow. Our minimum is 7 business days (Founders) or 14 (Operators) end-to-end.",
+  "You won't share even anonymized call data with us. We need to listen to 3-5 real recordings to train the agent.",
+];
+
+export default function Customers() {
   useEffect(() => {
-    if (typeof document === "undefined") return;
-    document.title = "Customers — TrainYourAgent";
-    const setMeta = (n: string, c: string) => {
-      let el = document.querySelector(`meta[name='${n}']`) as HTMLMetaElement | null;
-      if (!el) { el = document.createElement("meta"); el.setAttribute("name", n); document.head.appendChild(el); }
-      el.setAttribute("content", c);
-    };
-    setMeta("description", "Operators across HVAC, healthcare, real estate, legal and startups running TrainYourAgent in production.");
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
+    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+      <Helmet>
+        <title>Founding Customer Program — TrainYourAgent</title>
+        <meta name="description" content="First 10 founding customers get 50% off Operators tier ($997/mo) for life, direct founder Slack, co-authored case study, and 90-day money-back guarantee. Service businesses only. Apply now." />
+        <link rel="canonical" href="https://www.trainyouragent.com/customers" />
+        <meta property="og:title" content="Founding Customer Program — TrainYourAgent" />
+        <meta property="og:description" content="10 spots. 50% off forever. Direct founder Slack. 90-day money-back. Be one of the first." />
+        <meta property="og:url" content="https://www.trainyouragent.com/customers" />
+      </Helmet>
+
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[#042C53] focus:text-white focus:font-semibold focus:shadow-lg">Skip to main content</a>
       <SiteNav active="resources" />
-      <main className="pt-28">
-        {/* Header */}
-        <section className="px-5 sm:px-8 pt-10 pb-10">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-[11px] tracking-[0.2em] uppercase text-[#185FA5] font-semibold mb-4">Customers</div>
-            <h1 className="text-[clamp(36px,6vw,80px)] leading-[1.02] tracking-tight font-semibold text-[#042C53] mb-6">
-              The operators trusting us with their phone line.
-            </h1>
-            <p className="text-[19px] text-slate-600 max-w-2xl leading-relaxed">
-              Service businesses, clinics, brokerages, law firms, and startups running TrainYourAgent on their real production traffic.
-            </p>
-          </div>
-        </section>
+      <span id="main" tabIndex={-1} aria-hidden="true" />
 
-        {/* Logo grid */}
-        <section className="px-5 sm:px-8 pb-16">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-[11px] uppercase tracking-[0.18em] text-slate-400 font-semibold mb-4">Currently shipping with</div>
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-              {LOGOS.map((l, i) => (
-                <div
-                  key={i}
-                  className="aspect-[2/1] rounded-xl bg-white border border-slate-200 flex items-center justify-center hover:border-[#185FA5]/40 transition"
-                  aria-label={l.name}
-                >
-                  {l.logoUrl ? (
-                    <img src={l.logoUrl} alt={l.name} className="max-h-8 max-w-[80%] object-contain opacity-80 hover:opacity-100 transition" />
-                  ) : (
-                    <span
-                      className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-semibold tracking-wide"
-                      style={{ background: "#042C53", color: "#E6F1FB" }}
-                      aria-hidden="true"
-                    >
-                      {l.initials}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 text-[12px] text-slate-400">
-              [TBD] Real customer logos drop in as release forms come back. Placeholders preserved for layout.
-            </div>
+      {/* HERO */}
+      <section className="pt-32 pb-14 px-5 sm:px-8 bg-gradient-to-b from-[#E6F1FB]/60 to-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#042C53] text-white text-[11px] font-semibold tracking-[0.16em] uppercase mb-5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#22A36C] animate-pulse" />
+            Founding Cohort · 10 spots · ~3 open
           </div>
-        </section>
-
-        {/* Featured case studies */}
-        <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-y border-slate-200/70">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-[11px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Featured case studies</div>
-            <h2 className="text-[28px] sm:text-[40px] leading-tight font-semibold text-[#042C53] mb-10">
-              Four production builds. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Real numbers.</span>
-            </h2>
-            <div className="grid sm:grid-cols-2 gap-4">
-              {FEATURED.map((c) => (
-                <Link
-                  key={c.slug}
-                  to={`/customers/${c.slug}`}
-                  className="group rounded-2xl bg-white border border-slate-200 p-6 hover:border-[#042C53] hover:shadow-[0_4px_24px_-10px_rgba(4,44,83,0.2)] transition flex flex-col"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-[11px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold">{c.vertical}</span>
-                    {c.metric !== "[TBD]" && (
-                      <span className="text-[11px] uppercase tracking-[0.12em] font-semibold px-2 py-0.5 rounded-full bg-[#E6F1FB] text-[#042C53]">
-                        {c.metric}
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-[18px] font-semibold text-[#042C53] mb-2">{c.customer}</div>
-                  <p className="text-[14px] text-slate-600 leading-relaxed mb-4">{c.headline}</p>
-                  <span className="mt-auto text-[13px] text-[#185FA5] group-hover:text-[#042C53]">Read the case study →</span>
-                </Link>
-              ))}
-            </div>
+          <h1 className="text-[34px] sm:text-[54px] md:text-[66px] leading-[1.05] tracking-tight font-semibold text-[#042C53] h1-balance break-words">
+            Be one of our first ten{" "}
+            <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>and pay half-price forever.</span>
+          </h1>
+          <p className="mt-6 text-[17px] sm:text-[20px] text-slate-700 max-w-3xl leading-relaxed">
+            We're picking 10 service-business operators to be the founding cohort. You get the same agent we'd ship to anyone, plus permanent founding pricing, direct founder Slack, weekly co-build sessions, and a 90-day money-back guarantee against a measurable baseline. We get a real-world reference. Both sides win.
+          </p>
+          <div className="mt-8 flex flex-col sm:flex-row gap-3">
+            <a href={CAL_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] shadow-lg shadow-[#042C53]/15">
+              <span className="flex flex-col items-start leading-tight">
+                <span className="text-[11px] uppercase tracking-[0.14em] text-[#9CC4EC] font-semibold mb-1">Apply · 30-min discovery</span>
+                <span>Book a founding-cohort interview →</span>
+              </span>
+            </a>
+            <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-7 py-4 rounded-2xl border-2 border-[#042C53]/15 text-[#042C53] font-semibold text-[15px] hover:border-[#042C53]">
+              Or DM the founder on LinkedIn
+            </a>
           </div>
-        </section>
-
-        {/* CTA */}
-        <section className="px-5 sm:px-8 py-20 bg-[#042C53] text-white">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-[32px] sm:text-[48px] leading-[1.05] tracking-tight font-semibold">
-              Want to be the <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>next case study?</span>
-            </h2>
-            <p className="mt-5 text-[17px] text-white/85 max-w-2xl mx-auto leading-relaxed">
-              Thirty-minute build call. You leave with a written plan. We leave with the green light or an honest no.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-              <a href={CAL_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 shadow-lg">
-                Book a 30-min build call →
-              </a>
-              <Link to="/trial" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15">
-                Start the 7-day trial
-              </Link>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer className="bg-white border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
-          <div className="flex items-center gap-2.5">
-            <BrainLogo size={28} />
-            <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
-            <span className="text-slate-400">— Tampa Bay, FL</span>
-          </div>
-          <div className="flex items-center gap-x-6 gap-y-2 flex-wrap justify-center">
-            <Link to="/about" className="hover:text-[#042C53]">About</Link>
-            <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
-            <Link to="/testimonials" className="hover:text-[#042C53]">Testimonials</Link>
-            <Link to="/trial" className="hover:text-[#042C53]">Trial</Link>
-            <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
-          </div>
-          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent, Inc.</div>
         </div>
-      </footer>
+      </section>
+
+      {/* THE OFFER */}
+      <section className="px-5 sm:px-8 py-16 sm:py-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold mb-3">What founding customers get</div>
+          <h2 className="text-[28px] sm:text-[40px] font-semibold text-[#042C53] leading-tight mb-9">
+            Six things you don't get at the public price.
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {FOUNDING_PERKS.map((p) => (
+              <article key={p.n} className="rounded-2xl border border-slate-200 bg-white p-6 hover:border-[#042C53]/30 hover:shadow-sm transition">
+                <div className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-mono font-semibold mb-2">{p.n}</div>
+                <h3 className="text-[18px] font-semibold text-[#042C53] mb-2 leading-tight">{p.title}</h3>
+                <p className="text-[14px] text-slate-700 leading-relaxed">{p.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* WHO FITS */}
+      <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-y border-slate-200/70">
+        <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-10">
+          <div>
+            <div className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold mb-3">If this is you, apply</div>
+            <h2 className="text-[24px] sm:text-[32px] font-semibold text-[#042C53] mb-6 leading-tight">Ideal founding-cohort fit</h2>
+            <ul className="space-y-3">
+              {IDEAL_FIT.map((f, i) => (
+                <li key={i} className="flex items-start gap-2.5 text-[14.5px] text-slate-700 leading-relaxed">
+                  <span className="flex-shrink-0 w-5 h-5 mt-0.5 rounded-full bg-[#22A36C]/15 text-[#22A36C] inline-flex items-center justify-center text-[11px] font-bold">✓</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500 font-semibold mb-3">Don't apply if this is you</div>
+            <h2 className="text-[24px] sm:text-[32px] font-semibold text-slate-700 mb-6 leading-tight">Honest disqualifiers</h2>
+            <ul className="space-y-3">
+              {NOT_A_FIT.map((f, i) => (
+                <li key={i} className="flex items-start gap-2.5 text-[14.5px] text-slate-600 leading-relaxed">
+                  <span className="flex-shrink-0 w-5 h-5 mt-0.5 rounded-full bg-slate-200 text-slate-500 inline-flex items-center justify-center text-[11px] font-bold">×</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* GUARANTEE */}
+      <section className="px-5 sm:px-8 py-16 sm:py-20">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold mb-3">The guarantee</div>
+          <h2 className="text-[28px] sm:text-[40px] font-semibold text-[#042C53] mb-5 leading-tight">
+            If it doesn't pay for itself in 90 days,{" "}
+            <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>we refund every dollar.</span>
+          </h2>
+          <p className="text-[16px] text-slate-700 leading-relaxed mb-3">
+            On the kickoff call we measure your missed-call baseline together — how many calls a week you drop, what they're worth on average, what you'd recover even at a 30% capture rate. That's the number you have to beat in 90 days.
+          </p>
+          <p className="text-[15px] text-slate-600 leading-relaxed">
+            If we don't beat it, you get the build fee back, you keep every script + transcript + prompt + recording we made for you, your number ports out within 5 business days, no clawback fight. Founder lane (the $0 upfront one): you've risked literally nothing.
+          </p>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className="px-5 sm:px-8 py-16 sm:py-20 bg-[#042C53] text-white">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-[28px] sm:text-[40px] leading-tight font-semibold mb-5">
+            ~3 spots left.
+          </h2>
+          <p className="text-[16px] sm:text-[18px] text-[#DCEBFA] mb-3">
+            30-minute discovery call. We map your inbound, your CRM, your stack. You leave with a written scope and a price — not a sales pitch.
+          </p>
+          <p className="text-[14px] text-[#A8C7E8] mb-8">If we're not a fit, we tell you on the call. Most of these end with a 'no' from one side or the other. That's the point.</p>
+          <div className="flex flex-col sm:flex-row justify-center gap-3">
+            <a href={CAL_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-white text-[#042C53] font-semibold hover:bg-[#DCEBFA]">
+              Book a founding-cohort interview
+              <span aria-hidden>→</span>
+            </a>
+            <Link to="/pricing" className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl border border-white/30 text-white hover:bg-white/10">
+              See the public pricing first
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <FooterV44 />
     </div>
   );
-};
-
-export default Customers;
+}
