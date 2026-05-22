@@ -142,7 +142,7 @@ const FAQS = [
   },
   {
     q: "How much does the full training method cost, end to end?",
-    a: "Custom builds start at $4,000 for a single tightly-scoped agent (one channel, one workflow). Most production deployments land at $7,500–$15,000 build + $499–$1,499/mo ongoing depending on volume and the complexity of the integrations. Computer-use agents and compliance-grade RAG sit higher ($8,500–$15,000 build). Detailed pricing per cornerstone is on each /capabilities/* page.",
+    a: "Custom builds start at $4,950 for a single tightly-scoped agent (one channel, one workflow) on our Operators tier ($1,997/mo ongoing, 5,000 minutes included). Multi-location and high-volume deployments land on the Scale tier ($9,950 build + $4,997/mo, 25,000 minutes). Founders lane is $0 upfront with pay-per-minute usage. Detailed pricing per plan on /pricing.",
   },
   {
     q: "Can I just hire you to train one specific thing and own the IP?",
@@ -468,8 +468,8 @@ export default function Train() {
               Pricing
             </div>
             <h2 className="text-[32px] sm:text-[48px] leading-tight font-semibold mb-6">
-              Custom training builds start at <span className="font-serif italic">$4,000</span>.<br />
-              Ongoing operations <span className="font-serif italic">$499/mo</span>.
+              Custom training builds start at <span className="font-serif italic">$4,950</span>.<br />
+              Ongoing operations <span className="font-serif italic">$1,997/mo</span>.
             </h2>
             <p className="text-[16px] sm:text-[18px] text-[#DCEBFA] max-w-2xl mx-auto mb-9">
               Most agents pay for themselves in under 30 days.

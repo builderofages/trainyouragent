@@ -63,7 +63,7 @@ const PILLARS: Pillar[] = [
       "Human-handoff rules you control, transcript on every call",
     ],
     seeItLive: { label: "See it live (HVAC)", to: "/hvac" },
-    price: "Starts at $799/mo + $4,950 build",
+    price: "Starts at $1,997/mo + $4,950 build",
   },
   {
     id: "chat",
@@ -75,7 +75,7 @@ const PILLARS: Pillar[] = [
       "Trained on your docs, pricing, returns policy — not the open internet",
     ],
     seeItLive: { label: "See it live (E-commerce)", to: "/ecommerce" },
-    price: "Starts at $499/mo + $2,950 build",
+    price: "Starts at $1,997/mo + $4,950 build",
   },
   {
     id: "sites",

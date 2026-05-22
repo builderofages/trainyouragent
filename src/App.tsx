@@ -266,6 +266,17 @@ const App = () => {
             <Route path="/gym" element={<Vertical />} />
             <Route path="/ecommerce" element={<Vertical />} />
             <Route path="/hospitality" element={<Vertical />} />
+            {/* v96: 6 missing industry routes audit found returning 404
+                despite being linked from NicheDirectory, PathwayRouter,
+                Start, and searchIndex. All route through VerticalPage
+                which falls back to a generic-but-on-brand layout when
+                config data isn't present. */}
+            <Route path="/restaurants" element={<Vertical />} />
+            <Route path="/plumbing" element={<Vertical />} />
+            <Route path="/electrical" element={<Vertical />} />
+            <Route path="/landscaping" element={<Vertical />} />
+            <Route path="/property-management" element={<Vertical />} />
+            <Route path="/pest-control" element={<Vertical />} />
             {/* /solutions */}
             <Route path="/solutions" element={<Solutions />} />
             <Route path="/solutions/:slug" element={<SolutionDetail />} />
