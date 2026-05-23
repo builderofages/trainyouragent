@@ -25,6 +25,7 @@ import FooterV44 from "@/components/FooterV44";
 // Vapi, ElevenLabs, Pinecone, Supabase, etc) so prospects know we're not
 // vibe-coding on no-code. Credibility lever.
 import PoweredByBadges from "@/components/PoweredByBadges";
+import WhyWeAreDifferent from "@/components/WhyWeAreDifferent";
 import SectionDivider from "@/components/SectionDivider";
 import { useCountUp } from "@/hooks/useCountUp";
 import NetworkIllo from "@/components/illustrations/NetworkIllo";
@@ -442,6 +443,11 @@ const Index = () => {
           Establishes credibility — these are real infra primitives, same
           stack as Cursor / Linear / Anthropic prod. */}
       <PoweredByBadges variant="grid" />
+
+      {/* v108: Why we win — Hormozi/Cuban/Cardone-grade competitor callout
+          + founder credentials. The conversion section the homepage was
+          missing. Links to the long-form /vs page for AEO depth. */}
+      <WhyWeAreDifferent />
 
       {/* v73: TRAINED-AGENT DIFFERENCE — 3-column comparison surfacing the
           "we don't bolt LLMs on, we train" brand wedge above the fold. */}

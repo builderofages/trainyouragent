@@ -44,11 +44,43 @@ export function organizationLd(): Json {
     url: SITE_URL,
     logo: `${SITE_URL}/og.png`,
     foundingDate: "2022",
+    description:
+      "Production AI voice agents for SMBs and startups. Built and operated end-to-end by a senior operator network — not a no-code reseller, not an Instagram agency. 21-day production builds, $1,997/month, no platform lock-in.",
+    slogan: "Voice agents that actually run your business.",
     founder: {
       "@type": "Person",
       name: "Alexander Mills",
       url: LINKEDIN_URL,
+      jobTitle: "Founder & Operator",
+      alumniOf: [
+        { "@type": "Organization", name: "A major Los Angeles social media marketing agency" },
+        { "@type": "Organization", name: "EndCreations (gaming infrastructure)" },
+      ],
     },
+    // v108: senior operator network. Roles are concrete; we deliberately
+    // describe credentials by category, not by named client, because the
+    // CRM lead and lead engineer are still embedded at their primary
+    // employers and the relationships are confidential.
+    employee: [
+      {
+        "@type": "Person",
+        name: "Alexander Mills",
+        jobTitle: "Founder & Operator",
+        url: LINKEDIN_URL,
+      },
+      {
+        "@type": "Person",
+        jobTitle: "CRM & Operations Lead",
+        description:
+          "Senior operator currently embedded at one of the largest telecommunications carriers on Earth. Owns CRM architecture and voice-pipeline reliability.",
+      },
+      {
+        "@type": "Person",
+        jobTitle: "Lead Engineer",
+        description:
+          "10+ years of high-stakes engineering in gaming and brand systems. Custom integrations, real-time pipelines, compliance surfaces.",
+      },
+    ],
     address: {
       "@type": "PostalAddress",
       addressLocality: "Tampa",
@@ -73,6 +105,14 @@ export function organizationLd(): Json {
         contactType: "security",
         email: "security@trainyouragent.com",
       },
+    ],
+    knowsAbout: [
+      "AI voice agents",
+      "Conversational AI",
+      "Voice AI for SMB",
+      "Production voice agent deployment",
+      "Twilio + Anthropic + ElevenLabs runtime",
+      "21-day production voice AI builds",
     ],
   };
 }
