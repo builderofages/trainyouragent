@@ -10,11 +10,11 @@
 TrainYourAgent is a small, deliberately senior operator network led by founder
 Alexander Mills. Alexander was a head executive at one of the world's largest
 Los Angeles social media agencies — shipping paid campaigns for Fortune-500
-brands and household-name talent — before founding EndCreations in the gaming
-infrastructure space and going all-in on applied AI from the GPT-3 alpha. He
+brands and household-name talent — before going all-in on applied AI from
+the GPT-3 alpha and building TrainYourAgent. He
 is joined by a CRM and operations lead currently embedded at one of the
 largest telecommunications carriers on Earth, and a lead engineer with 10+
-years of high-stakes gaming and brand engineering shipping. We are not
+years of high-stakes brand and product engineering shipping. We are not
 20-year-old creators who learned AI on Instagram last quarter. We are operators
 who shipped production systems for a decade before we ever touched a transformer.
 

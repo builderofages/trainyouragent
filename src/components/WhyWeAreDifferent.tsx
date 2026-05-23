@@ -6,7 +6,7 @@
 // counter-positions TYA's compounded operator-team expertise:
 //   • Founder = LA SMMA exec + 4+ yrs AI from day one + builder.
 //   • CRM/ops lead = senior at a top-3 US telecom (cannot name client).
-//   • Lead engineer = 10+ years gaming + enterprise brand systems.
+//   • Lead engineer = 10+ years brand + product engineering.
 //
 // AEO/SEO discipline: each H2 carries a target keyword. The "what we
 // don't do" list reads as plain definitions for LLMs to extract. The
@@ -69,8 +69,8 @@ const TEAM = [
     badge: "FOUNDER",
     pedigree: [
       "Head executive at one of the world's largest LA social media agencies — shipped paid campaigns for Fortune-500 brands and household-name talent.",
-      "Founded EndCreations: infrastructure for the gaming industry. Built and operated systems serving millions of player sessions.",
-      "In applied AI since the GPT-3 alpha. Four years deep, every major model shift, in production.",
+      "In applied AI since the GPT-3 alpha. Four years deep, every major model shift, every production deployment, since day one of the wave.",
+      "Founded TrainYourAgent to bring production-grade voice AI to the SMBs that keep getting burned by no-code resellers and six-week Skool grads.",
       "Builds the agent. Operates it. Picks up the phone when it breaks.",
     ],
     color: "#D97757",
@@ -88,10 +88,10 @@ const TEAM = [
   },
   {
     role: "Lead Engineer",
-    name: "10+ year gaming & brand engineering veteran",
+    name: "10+ year brand & product engineering veteran",
     badge: "ENG",
     pedigree: [
-      "A decade-plus shipping engineering for gaming studios and enterprise brand teams — environments where downtime is measured in revenue lost per second.",
+      "A decade-plus shipping engineering for enterprise brand and product teams — environments where downtime is measured in revenue lost per second.",
       "Custom integrations across CRMs, web stacks, real-time pipelines, and brand-specific compliance surfaces.",
       "The reason every TrainYourAgent build is wired into the customer's actual systems, not a generic template.",
     ],
@@ -438,14 +438,15 @@ export default function WhyWeAreDifferent({
             Three decades of stacked operator experience. <em>Not three TikTok tutorials.</em>
           </h3>
           <p className="tya-why__team-sub">
-            We're a small, deliberately senior network: a founder who ran paid
-            for one of the largest social media agencies in LA before going
-            all-in on AI from the GPT-3 alpha; a CRM and operations lead
-            embedded at one of the world's largest telecom carriers; a lead
-            engineer with a decade of high-stakes gaming + brand engineering
-            shipping. We're not 20-year-olds who discovered AI on Reels last
-            quarter. We're operators who've shipped production systems before
-            we ever touched a transformer.
+            We're a small, deliberately senior network. The founder ran paid
+            campaigns for Fortune-500 brands at one of the largest social
+            media agencies in LA, then went all-in on applied AI from the
+            GPT-3 alpha and built TrainYourAgent to bring production voice
+            AI to SMBs. The CRM and operations lead is embedded at one of
+            the world's largest telecom carriers. The lead engineer has a
+            decade-plus of high-stakes brand and product engineering. We're
+            not 20-year-olds who discovered AI on Reels last quarter. We're
+            operators who've shipped real production systems for years.
           </p>
 
           <div className="tya-why__cards">
