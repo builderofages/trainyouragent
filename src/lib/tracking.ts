@@ -297,8 +297,10 @@ export const initializeTracking = () => {
   captureUTMParams();
   
   // Initialize GA4 if measurement ID exists
-  if (import.meta.env.VITE_GA_MEASUREMENT_ID) {
-    (window as any).gtag?.('config', import.meta.env.VITE_GA_MEASUREMENT_ID, {
+  // v127: fixed env var name — vite.config.ts exposes VITE_GA4_MEASUREMENT_ID (with the 4),
+  // not VITE_GA_MEASUREMENT_ID. Off-by-one was silently dropping all SPA route GA events.
+  if (import.meta.env.VITE_GA4_MEASUREMENT_ID) {
+    (window as any).gtag?.('config', import.meta.env.VITE_GA4_MEASUREMENT_ID, {
       send_page_view: true,
       page_path: window.location.pathname
     });
