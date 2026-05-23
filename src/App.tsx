@@ -72,6 +72,7 @@ const AgencyPartner       = lazy(() => import("./pages/AgencyPartner"));
 const SolutionDetail      = lazy(() => import("./pages/SolutionDetail"));
 const VersusPage          = lazy(() => import("./pages/VersusPage"));
 const Vs                  = lazy(() => import("./pages/Vs"));
+const Apply               = lazy(() => import("./pages/Apply"));
 const AlternativeFor      = lazy(() => import("./pages/AlternativeFor"));
 const Admin               = lazy(() => import("./pages/Admin"));
 
@@ -283,6 +284,7 @@ const App = () => {
             <Route path="/solutions/:slug" element={<SolutionDetail />} />
             <Route path="/agency-partner" element={<AgencyPartner />} />
             <Route path="/vs" element={<Vs />} />
+            <Route path="/apply" element={<Apply />} />
             <Route path="/vs/:competitor" element={<VersusPage />} />
             <Route path="/alternatives/:slug" element={<AlternativeFor />} />
             <Route path="/admin" element={<Admin />} />
