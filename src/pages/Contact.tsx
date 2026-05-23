@@ -168,7 +168,7 @@ const Contact = () => {
                 {sent ? "Opening your email…" : "Send build request"}
               </button>
               <div className="text-[11px] text-slate-600 leading-relaxed mt-1">
-                By submitting you agree to our <Link to="/privacy" className="underline">privacy policy</Link>. We don't share your details with anyone outside the team building your agent.
+                By submitting you agree to our <Link to="/privacy" className="underline">privacy policy</Link>. I don't share your details with anyone outside the build.
               </div>
             </form>
           </div>

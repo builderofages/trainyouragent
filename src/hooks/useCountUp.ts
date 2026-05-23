@@ -1,6 +1,12 @@
 // src/hooks/useCountUp.ts
 // v44: tiny dependency-free count-up. Animates from `from` -> `to` over `duration` ms
 // once the element using it becomes visible. Respects prefers-reduced-motion.
+//
+// v104: kill the 0/0/0/0 ghost on first paint. Above-the-fold counters had a
+// race where the first few frames showed `from` (0) before the IntersectionObserver
+// callback ran. Now we synchronously check getBoundingClientRect() on mount; if
+// the element is already in view, animation fires immediately. Off-screen
+// elements still use IO to lazy-fire when scrolled into view.
 
 import { useEffect, useRef, useState } from "react";
 
@@ -22,6 +28,20 @@ export function useCountUp<T extends Element = HTMLElement>(to: number, duration
       runAnimation();
       return;
     }
+
+    // v104: synchronous viewport check — kills the 0/0/0/0 ghost on
+    // above-the-fold counters by firing immediately when already in view.
+    const rect = node.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const vw = window.innerWidth  || document.documentElement.clientWidth;
+    const alreadyVisible =
+      rect.bottom > 0 && rect.right > 0 && rect.top < vh && rect.left < vw;
+    if (alreadyVisible) {
+      startedRef.current = true;
+      runAnimation();
+      return;
+    }
+
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
