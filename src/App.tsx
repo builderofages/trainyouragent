@@ -444,6 +444,12 @@ const App = () => {
             <Route path="/hire" element={<Hire />} />
             <Route path="/saas" element={<Saas />} />
             <Route path="/saas/agent-builder" element={<SaasAgentBuilder />} />
+            {/* v148: bounce stale /saas-agent + /changelog hits to canonical
+                routes. /saas-agent was 404'ing for bots / old marketing
+                material. /changelog was referenced in LiveKpiStrip with no
+                Route registered. */}
+            <Route path="/saas-agent" element={<Navigate to="/saas/agent-builder" replace />} />
+            <Route path="/changelog" element={<Navigate to="/roadmap" replace />} />
             {/* v73-FINAL: flagship /train method + /everything-ai category map +
                  10 cornerstone capability playbooks at /capabilities/:slug */}
             <Route path="/train" element={<Train />} />

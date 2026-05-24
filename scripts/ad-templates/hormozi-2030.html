@@ -1,0 +1,174 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Hormozi 2030 Ad</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;800;900&family=Anton:wght@400&family=Caveat:wght@700&family=Bebas+Neue&family=JetBrains+Mono:wght@600;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: var(--w, 1080px); height: var(--h, 1920px); overflow: hidden;
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    background: $BG_COLOR;
+    color: #fff; position: relative;
+  }
+  /* Grid noise/texture */
+  body::before {
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.04) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(255,255,255,0.03) 0%, transparent 50%);
+  }
+  /* Breaking badge top-left */
+  .live-badge {
+    position: absolute; top: 60px; left: 60px;
+    display: flex; align-items: center; gap: 12px;
+    background: #ff003c; padding: 14px 22px; border-radius: 6px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; letter-spacing: 0.12em;
+    box-shadow: 0 0 40px rgba(255,0,60,0.5);
+    z-index: 5;
+  }
+  .live-badge::before {
+    content: ''; display: inline-block; width: 14px; height: 14px;
+    border-radius: 50%; background: #fff;
+    box-shadow: 0 0 12px rgba(255,255,255,0.9);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.85); } }
+  /* Niche tag top-right */
+  .niche-tag {
+    position: absolute; top: 72px; right: 60px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px; letter-spacing: 0.15em;
+    color: $ACCENT_COLOR; text-transform: uppercase;
+    z-index: 5;
+  }
+  /* Main copy block */
+  .copy {
+    position: absolute; top: 18%; left: 60px; right: 60px;
+    z-index: 4;
+  }
+  .eyebrow {
+    font-family: 'Caveat', cursive; font-size: 46px;
+    color: $ACCENT_COLOR; transform: rotate(-2deg);
+    margin-bottom: 8px; line-height: 1;
+  }
+  .headline {
+    font-family: 'Anton', sans-serif; font-size: var(--hl-size, 200px);
+    line-height: 0.86; letter-spacing: -0.02em;
+    text-transform: uppercase; color: #fff;
+    margin-bottom: 28px;
+  }
+  .headline .hl {
+    display: inline-block; background: $ACCENT_COLOR; color: #0a0a0a;
+    padding: 0 14px; transform: rotate(-1.5deg);
+    margin: 0 6px; box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .headline .strike {
+    position: relative; opacity: 0.65;
+  }
+  .headline .strike::after {
+    content: ''; position: absolute; left: -4%; right: -4%; top: 52%;
+    height: 12px; background: #ff003c; transform: rotate(-3deg);
+  }
+  /* Big number stack */
+  .stack { display: flex; flex-direction: column; gap: 18px; margin-top: 36px; }
+  .stack-row { display: flex; align-items: baseline; gap: 18px; }
+  .stack-row .label {
+    font-family: 'Inter Tight', sans-serif; font-weight: 600;
+    font-size: 28px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    min-width: 220px;
+  }
+  .stack-row .val {
+    font-family: 'JetBrains Mono', monospace; font-weight: 800;
+    font-size: 56px; color: #fff; font-feature-settings: 'tnum';
+  }
+  .stack-row .val.neg { color: #ff5547; }
+  .stack-row .val.pos { color: #5ee18a; }
+  .stack-row .val.huge { font-size: 100px; line-height: 1; }
+  /* Fake market chart on right */
+  .chart {
+    position: absolute; bottom: 280px; right: 60px;
+    width: 280px; height: 160px; opacity: 0.85;
+    z-index: 3;
+  }
+  /* Bottom CTA bar */
+  .cta {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: $ACCENT_COLOR; color: #0a0a0a;
+    padding: 32px 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 5;
+  }
+  .cta .brand {
+    display: flex; align-items: center; gap: 14px;
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 900; font-size: 30px;
+  }
+  .cta .brand .diamond {
+    display: inline-block; width: 22px; height: 22px;
+    transform: rotate(45deg); border: 3px solid #0a0a0a;
+  }
+  .cta .url {
+    font-family: 'JetBrains Mono', monospace; font-weight: 800;
+    font-size: 24px; letter-spacing: 0.04em;
+  }
+  .cta .arrow {
+    background: #0a0a0a; color: $ACCENT_COLOR;
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 900; margin-left: 18px;
+  }
+  /* Receipts / proof bar */
+  .receipts {
+    position: absolute; bottom: 140px; left: 60px; right: 60px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px; padding: 18px 24px;
+    display: flex; gap: 24px; align-items: center;
+    z-index: 4;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 22px;
+  }
+  .receipts .check { color: #5ee18a; font-weight: 900; font-size: 28px; }
+  .receipts .item { color: rgba(255,255,255,0.85); }
+  .receipts .sep { color: rgba(255,255,255,0.25); }
+</style></head>
+<body data-w="$W" data-h="$H">
+  <div class="live-badge">$BADGE</div>
+  <div class="niche-tag">$NICHE_TAG</div>
+  <div class="copy">
+    <div class="eyebrow">$EYEBROW</div>
+    <div class="headline">$HEADLINE</div>
+    <div class="stack">
+      <div class="stack-row">
+        <span class="label">$LABEL_1</span>
+        <span class="val $VAL_1_CLASS">$VAL_1</span>
+      </div>
+      <div class="stack-row">
+        <span class="label">$LABEL_2</span>
+        <span class="val $VAL_2_CLASS huge">$VAL_2</span>
+      </div>
+    </div>
+  </div>
+  <svg class="chart" viewBox="0 0 280 160" fill="none">
+    <path d="M0,120 L40,100 L80,110 L120,85 L160,90 L200,55 L240,40 L280,15" stroke="$ACCENT_COLOR" stroke-width="3" fill="none"/>
+    <path d="M0,120 L40,100 L80,110 L120,85 L160,90 L200,55 L240,40 L280,15 L280,160 L0,160 Z" fill="$ACCENT_COLOR" opacity="0.15"/>
+    <text x="0" y="155" fill="rgba(255,255,255,0.4)" font-family="JetBrains Mono" font-size="10">M  T  W  T  F  S  S</text>
+  </svg>
+  <div class="receipts">
+    <span class="check">✓</span>
+    <span class="item">$RECEIPT_1</span>
+    <span class="sep">·</span>
+    <span class="item">$RECEIPT_2</span>
+    <span class="sep">·</span>
+    <span class="item">$RECEIPT_3</span>
+  </div>
+  <div class="cta">
+    <div class="brand"><span class="diamond"></span> TrainYourAgent</div>
+    <div style="display:flex;align-items:center;">
+      <span class="url">trainyouragent.com/apply</span>
+      <span class="arrow">→</span>
+    </div>
+  </div>
+</body></html>

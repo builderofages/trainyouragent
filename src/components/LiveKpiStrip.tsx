@@ -119,7 +119,7 @@ export default function LiveKpiStrip() {
       value: `${days}`,
       label: "Days building in public",
       sub: "since first commit",
-      href: "/changelog",
+      href: "/roadmap",
     },
   ];
 
