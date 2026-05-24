@@ -52,6 +52,7 @@ cat > "$OUT" <<HTML
   .fw.urgency { background:rgba(245,158,11,0.16); color:#fbbf24; border:1px solid rgba(245,158,11,0.3); }
   .fw.contrarian { background:rgba(99,102,241,0.16); color:#a5b4fc; border:1px solid rgba(99,102,241,0.3); }
   .fw.ui { background:rgba(255,214,10,0.16); color:#fde047; border:1px solid rgba(255,214,10,0.3); font-weight:700; }
+  .fw.hormozi { background:linear-gradient(90deg,#FF003C,#FFD60A); color:#0a0a0a; border:1px solid #FFD60A; font-weight:900; }
   .ad-cell { background:#12161e; border:1px solid rgba(255,255,255,0.08); border-radius:10px; overflow:hidden; position:relative; transition:transform .12s, border-color .12s; }
   .ad-cell:hover { transform:translateY(-2px); border-color:var(--accent); }
   .ad-cell img { width:100%; height:auto; display:block; }
@@ -84,6 +85,35 @@ echo "$NICHES" | while read niche; do
   <h2>$niche</h2>
   <div class="niche-sub">4 hook frameworks · 3 aspect ratios each = 12 ads</div>
 HTML
+
+  # v150 Hormozi-2030 framework (pure-typography) — show first
+  has_hz=false
+  for asp in 9x16 4x5 1x1; do
+    if [[ -f "$STATIC_DIR/TYA_${niche}_hormozi-2030_${asp}.png" ]]; then
+      has_hz=true; break
+    fi
+  done
+  if [[ "$has_hz" == "true" ]]; then
+    cat >> "$OUT" <<HTML
+  <div class="framework-row">
+    <div class="framework-label"><span class="fw hormozi">2030</span></div>
+HTML
+    for asp in 9x16 4x5 1x1; do
+      f="$STATIC_DIR/TYA_${niche}_hormozi-2030_${asp}.png"
+      if [[ -f "$f" ]]; then
+        rel="static/$(basename "$f")"
+        asp_disp=$(echo "$asp" | tr x :)
+        cat >> "$OUT" <<HTML
+    <div class="ad-cell"><a href="$rel" target="_blank"><img src="$rel" alt="$niche hormozi-2030 $asp"><span class="aspect-tag">$asp_disp</span></a></div>
+HTML
+      else
+        cat >> "$OUT" <<HTML
+    <div class="ad-cell" style="opacity:0.3; min-height:120px;"></div>
+HTML
+      fi
+    done
+    echo "  </div>" >> "$OUT"
+  fi
 
   # Photo-format frameworks
   for fw in pain outcome urgency contrarian; do
@@ -160,5 +190,5 @@ cat >> "$OUT" <<HTML
 </footer>
 HTML
 
-echo "==> $OUT  ($TOTAL ads, ${#NICHES[@]} niches)"
+echo "==> $OUT  ($TOTAL ads, $NICHE_COUNT niches)"
 echo "==> open: open $OUT"
