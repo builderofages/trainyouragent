@@ -4,11 +4,15 @@
   @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;800;900&family=Anton:wght@400&family=Caveat:wght@700&family=Bebas+Neue&family=JetBrains+Mono:wght@600;800&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    width: var(--w, 1080px); height: var(--h, 1920px); overflow: hidden;
+    width: $WPXpx; height: $HPXpx; overflow: hidden;
     font-family: 'Inter Tight', system-ui, sans-serif;
     background: $BG_COLOR;
     color: #fff; position: relative;
   }
+  /* v151b: per-aspect typography scale + layout density */
+  body[data-aspect="9x16"] { --hl-size: 168px; --eb-size: 42px; --copy-top: 17%; --stack-mt: 36px; --val-huge: 100px; --val-size: 56px; --label-size: 26px; --rcp-bottom: 150px; --rcp-size: 22px; --chart-show: block; }
+  body[data-aspect="4x5"]  { --hl-size: 112px; --eb-size: 30px; --copy-top: 16%; --stack-mt: 18px; --val-huge: 68px;  --val-size: 40px; --label-size: 20px; --rcp-bottom: 130px; --rcp-size: 18px; --chart-show: none; }
+  body[data-aspect="1x1"]  { --hl-size: 86px;  --eb-size: 24px; --copy-top: 17%; --stack-mt: 12px; --val-huge: 52px;  --val-size: 32px; --label-size: 16px; --rcp-bottom: 105px; --rcp-size: 15px; --chart-show: none; }
   /* Grid noise/texture */
   body::before {
     content:''; position:absolute; inset:0; pointer-events:none;
@@ -18,14 +22,16 @@
   }
   /* Breaking badge top-left */
   .live-badge {
-    position: absolute; top: 60px; left: 60px;
-    display: flex; align-items: center; gap: 12px;
-    background: #ff003c; padding: 14px 22px; border-radius: 6px;
+    position: absolute; top: 50px; left: 50px;
+    display: flex; align-items: center; gap: 10px;
+    background: #ff003c; padding: var(--badge-py, 14px) var(--badge-px, 22px); border-radius: 6px;
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 36px; letter-spacing: 0.12em;
+    font-size: var(--badge-size, 36px); letter-spacing: 0.12em;
     box-shadow: 0 0 40px rgba(255,0,60,0.5);
     z-index: 5;
   }
+  body[data-aspect="4x5"] .live-badge { --badge-size: 28px; --badge-py: 10px; --badge-px: 18px; }
+  body[data-aspect="1x1"] .live-badge { --badge-size: 22px; --badge-py: 8px;  --badge-px: 14px; }
   .live-badge::before {
     content: ''; display: inline-block; width: 14px; height: 14px;
     border-radius: 50%; background: #fff;
@@ -35,27 +41,29 @@
   @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.85); } }
   /* Niche tag top-right */
   .niche-tag {
-    position: absolute; top: 72px; right: 60px;
+    position: absolute; top: 62px; right: 50px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 22px; letter-spacing: 0.15em;
+    font-size: var(--niche-size, 22px); letter-spacing: 0.15em;
     color: $ACCENT_COLOR; text-transform: uppercase;
     z-index: 5;
   }
+  body[data-aspect="4x5"] .niche-tag { --niche-size: 17px; top: 56px; }
+  body[data-aspect="1x1"] .niche-tag { --niche-size: 13px; top: 48px; }
   /* Main copy block */
   .copy {
-    position: absolute; top: 18%; left: 60px; right: 60px;
+    position: absolute; top: var(--copy-top, 17%); left: 60px; right: 60px;
     z-index: 4;
   }
   .eyebrow {
-    font-family: 'Caveat', cursive; font-size: 46px;
+    font-family: 'Caveat', cursive; font-size: var(--eb-size, 42px);
     color: $ACCENT_COLOR; transform: rotate(-2deg);
     margin-bottom: 8px; line-height: 1;
   }
   .headline {
-    font-family: 'Anton', sans-serif; font-size: var(--hl-size, 200px);
+    font-family: 'Anton', sans-serif; font-size: var(--hl-size, 168px);
     line-height: 0.86; letter-spacing: -0.02em;
     text-transform: uppercase; color: #fff;
-    margin-bottom: 28px;
+    margin-bottom: 22px;
   }
   .headline .hl {
     display: inline-block; background: $ACCENT_COLOR; color: #0a0a0a;
@@ -71,40 +79,49 @@
     height: 12px; background: #ff003c; transform: rotate(-3deg);
   }
   /* Big number stack */
-  .stack { display: flex; flex-direction: column; gap: 18px; margin-top: 36px; }
+  .stack { display: flex; flex-direction: column; gap: 14px; margin-top: var(--stack-mt, 36px); }
   .stack-row { display: flex; align-items: baseline; gap: 18px; }
   .stack-row .label {
     font-family: 'Inter Tight', sans-serif; font-weight: 600;
-    font-size: 28px; letter-spacing: 0.08em; text-transform: uppercase;
+    font-size: var(--label-size, 26px); letter-spacing: 0.08em; text-transform: uppercase;
     color: rgba(255,255,255,0.55);
-    min-width: 220px;
+    min-width: 200px;
   }
   .stack-row .val {
     font-family: 'JetBrains Mono', monospace; font-weight: 800;
-    font-size: 56px; color: #fff; font-feature-settings: 'tnum';
+    font-size: var(--val-size, 56px); color: #fff; font-feature-settings: 'tnum';
   }
   .stack-row .val.neg { color: #ff5547; }
   .stack-row .val.pos { color: #5ee18a; }
-  .stack-row .val.huge { font-size: 100px; line-height: 1; }
+  .stack-row .val.huge { font-size: var(--val-huge, 100px); line-height: 1; }
   /* Fake market chart on right */
   .chart {
     position: absolute; bottom: 280px; right: 60px;
     width: 280px; height: 160px; opacity: 0.85;
     z-index: 3;
+    display: var(--chart-show, block);
   }
   /* Bottom CTA bar */
   .cta {
     position: absolute; bottom: 0; left: 0; right: 0;
     background: $ACCENT_COLOR; color: #0a0a0a;
-    padding: 32px 60px;
+    padding: var(--cta-py, 28px) var(--cta-px, 50px);
     display: flex; align-items: center; justify-content: space-between;
     z-index: 5;
   }
+  body[data-aspect="4x5"] .cta { --cta-py: 22px; --cta-px: 40px; }
+  body[data-aspect="1x1"] .cta { --cta-py: 16px; --cta-px: 30px; }
   .cta .brand {
-    display: flex; align-items: center; gap: 14px;
+    display: flex; align-items: center; gap: 12px;
     font-family: 'Inter Tight', sans-serif;
-    font-weight: 900; font-size: 30px;
+    font-weight: 900; font-size: var(--brand-size, 28px);
   }
+  body[data-aspect="4x5"] .cta .brand { --brand-size: 22px; }
+  body[data-aspect="1x1"] .cta .brand { --brand-size: 18px; }
+  body[data-aspect="4x5"] .cta .url { font-size: 19px; }
+  body[data-aspect="1x1"] .cta .url { font-size: 15px; }
+  body[data-aspect="4x5"] .cta .arrow { width: 44px; height: 44px; font-size: 24px; }
+  body[data-aspect="1x1"] .cta .arrow { width: 36px; height: 36px; font-size: 20px; margin-left: 12px; }
   .cta .brand .diamond {
     display: inline-block; width: 22px; height: 22px;
     transform: rotate(45deg); border: 3px solid #0a0a0a;
@@ -121,20 +138,20 @@
   }
   /* Receipts / proof bar */
   .receipts {
-    position: absolute; bottom: 140px; left: 60px; right: 60px;
+    position: absolute; bottom: var(--rcp-bottom, 150px); left: 60px; right: 60px;
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 16px; padding: 18px 24px;
-    display: flex; gap: 24px; align-items: center;
+    border-radius: 14px; padding: 14px 20px;
+    display: flex; gap: 18px; align-items: center;
     z-index: 4;
     font-family: 'Inter Tight', sans-serif;
-    font-size: 22px;
+    font-size: var(--rcp-size, 22px);
   }
-  .receipts .check { color: #5ee18a; font-weight: 900; font-size: 28px; }
+  .receipts .check { color: #5ee18a; font-weight: 900; font-size: calc(var(--rcp-size, 22px) + 6px); }
   .receipts .item { color: rgba(255,255,255,0.85); }
   .receipts .sep { color: rgba(255,255,255,0.25); }
 </style></head>
-<body data-w="$W" data-h="$H">
+<body data-aspect="$ASPECT">
   <div class="live-badge">$BADGE</div>
   <div class="niche-tag">$NICHE_TAG</div>
   <div class="copy">

@@ -185,7 +185,7 @@ def build_html(template_path, niche_key, aspect):
     "$VAL_2_CLASS": data["val_2_class"],
     "$RECEIPT_1": data["receipt_1"], "$RECEIPT_2": data["receipt_2"],
     "$RECEIPT_3": data["receipt_3"],
-    "$W": str(w), "$H": str(h),
+    "$W": str(w), "$H": str(h), "$WPX": str(w), "$HPX": str(h), "$ASPECT": aspect,
   }
   with open(template_path) as f:
     s = f.read()
