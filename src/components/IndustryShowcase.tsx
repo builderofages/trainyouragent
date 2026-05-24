@@ -49,7 +49,7 @@ const INDUSTRIES: Industry[] = [
     emoji: "🏥",
   },
   {
-    slug: "/legal",
+    slug: "/legal-services",
     name: "Legal — solo + small firm",
     agent: "Intake screener + conflict check + scheduling",
     before: "Partners answering intake calls themselves. Conflict checks delayed 24-72h. Lost retainers.",

@@ -259,13 +259,17 @@ const App = () => {
             <Route path="/healthcare" element={<Vertical />} />
             <Route path="/logistics" element={<Vertical />} />
             <Route path="/bars-nightclubs" element={<Vertical />} />
+            <Route path="/bars" element={<Navigate to="/bars-nightclubs" replace />} />
             <Route path="/hvac" element={<Vertical />} />
             <Route path="/spas" element={<Vertical />} />
             <Route path="/hotels" element={<Vertical />} />
             <Route path="/automotive" element={<Vertical />} />
             <Route path="/real-estate" element={<Vertical />} />
+            <Route path="/realestate" element={<Navigate to="/real-estate" replace />} />
             <Route path="/solar" element={<Vertical />} />
             <Route path="/gym" element={<Vertical />} />
+            <Route path="/gyms" element={<Navigate to="/gym" replace />} />
+            <Route path="/property-mgmt" element={<Navigate to="/property-management" replace />} />
             <Route path="/ecommerce" element={<Vertical />} />
             <Route path="/hospitality" element={<Vertical />} />
             {/* v96: 6 missing industry routes audit found returning 404
