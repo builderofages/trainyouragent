@@ -19,7 +19,7 @@ OUT="${OUT:-ads/REVIEW.html}"
 cd "$(dirname "$0")/.."
 
 # Collect ads — macOS bash 3.2 compatible (no mapfile, no associative arrays)
-FILES=$(find "$STATIC_DIR" -name 'TYA_*_photo_*.png' | sort)
+FILES=$(find "$STATIC_DIR" -name 'TYA_*.png' | sort)
 TOTAL=$(echo "$FILES" | grep -c . || echo 0)
 
 # Extract unique niches in original order
@@ -51,6 +51,7 @@ cat > "$OUT" <<HTML
   .fw.outcome { background:rgba(34,163,108,0.16); color:#5bd49a; border:1px solid rgba(34,163,108,0.3); }
   .fw.urgency { background:rgba(245,158,11,0.16); color:#fbbf24; border:1px solid rgba(245,158,11,0.3); }
   .fw.contrarian { background:rgba(99,102,241,0.16); color:#a5b4fc; border:1px solid rgba(99,102,241,0.3); }
+  .fw.ui { background:rgba(255,214,10,0.16); color:#fde047; border:1px solid rgba(255,214,10,0.3); font-weight:700; }
   .ad-cell { background:#12161e; border:1px solid rgba(255,255,255,0.08); border-radius:10px; overflow:hidden; position:relative; transition:transform .12s, border-color .12s; }
   .ad-cell:hover { transform:translateY(-2px); border-color:var(--accent); }
   .ad-cell img { width:100%; height:auto; display:block; }
@@ -84,8 +85,8 @@ echo "$NICHES" | while read niche; do
   <div class="niche-sub">4 hook frameworks · 3 aspect ratios each = 12 ads</div>
 HTML
 
+  # Photo-format frameworks
   for fw in pain outcome urgency contrarian; do
-    # Check if this niche has this framework
     has_any=false
     for asp in 9x16 4x5 1x1; do
       if [[ -f "$STATIC_DIR/TYA_${niche}_${fw}_photo_${asp}.png" ]]; then
@@ -106,6 +107,37 @@ HTML
         asp_disp=$(echo "$asp" | tr x :)
         cat >> "$OUT" <<HTML
     <div class="ad-cell"><a href="$rel" target="_blank"><img src="$rel" alt="$niche $fw $asp"><span class="aspect-tag">$asp_disp</span></a></div>
+HTML
+      else
+        cat >> "$OUT" <<HTML
+    <div class="ad-cell" style="opacity:0.3; min-height:120px;"></div>
+HTML
+      fi
+    done
+    echo "  </div>" >> "$OUT"
+  done
+
+  # UI-mockup formats
+  for fmt in imessage lockscreen calculator before-after; do
+    has_any=false
+    for asp in 9x16 4x5 1x1; do
+      if [[ -f "$STATIC_DIR/TYA_${niche}_ui-${fmt}_${asp}.png" ]]; then
+        has_any=true; break
+      fi
+    done
+    [[ "$has_any" != "true" ]] && continue
+
+    cat >> "$OUT" <<HTML
+  <div class="framework-row">
+    <div class="framework-label"><span class="fw ui">UI · $fmt</span></div>
+HTML
+    for asp in 9x16 4x5 1x1; do
+      f="$STATIC_DIR/TYA_${niche}_ui-${fmt}_${asp}.png"
+      if [[ -f "$f" ]]; then
+        rel="static/$(basename "$f")"
+        asp_disp=$(echo "$asp" | tr x :)
+        cat >> "$OUT" <<HTML
+    <div class="ad-cell"><a href="$rel" target="_blank"><img src="$rel" alt="$niche ui $fmt $asp"><span class="aspect-tag">$asp_disp</span></a></div>
 HTML
       else
         cat >> "$OUT" <<HTML
