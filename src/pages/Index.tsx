@@ -47,6 +47,8 @@ import HeroCapabilityChips from "@/components/HeroCapabilityChips";
 // and duplicating the numbers already shown in the navy eyebrow strip.
 import MeshGradientBackdrop from "@/components/visual/MeshGradientBackdrop";
 import ParticleDrift from "@/components/visual/ParticleDrift";
+// v131: Hormozi-style live $-leak counter, pinned bottom-right, fires GA4 events.
+import LiveLeakTicker from "@/components/conversion/LiveLeakTicker";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
@@ -990,6 +992,9 @@ const Index = () => {
 
  {/* v44: redesigned footer */}
  <FooterV44 />
+
+ {/* v131: floating live $-leak counter — Hormozi pain visible in real time */}
+ <LiveLeakTicker />
  </div>
  );
 };
