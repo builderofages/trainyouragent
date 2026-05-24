@@ -1,212 +1,197 @@
 #!/usr/bin/env bash
-# higgsfield-bulk-render.sh — v138
+# higgsfield-bulk-render.sh — v141
 #
-# Fires every TYA image-ad prompt through Higgsfield Nano Banana Pro
-# via the official CLI. Runs on YOUR Mac (the sandbox can't reach the
-# Higgsfield binary host). Unlimited image plan = burn freely.
+# Two-stage TYA ad pipeline:
+#   Stage 1 (this script): Higgsfield Nano Banana Pro generates PURE PHOTO
+#     for each prompt × aspect. No text overlay in the AI render — that
+#     bypasses NSFW filter triggers and Higgsfield's poor text rendering.
+#   Stage 2 (scripts/composite-ad-text.sh): ImageMagick composites the
+#     branded headline + TYA diamond watermark on top of each PNG.
 #
-# ============================================================
-# ONE-TIME SETUP (60 seconds — only do this once, ever)
-# ============================================================
+# Run:
+#   bash scripts/higgsfield-bulk-render.sh     # render all 72 × 3 = 216 photos
+#   NICHE=hvac bash scripts/higgsfield-bulk-render.sh   # single niche
+#   bash scripts/composite-ad-text.sh          # add brand text + watermark
 #
-#   npm install -g @higgsfield/cli
-#   higgsfield auth login            # opens browser, you click Allow
-#
-# Confirm it works:
-#   higgsfield --version
-#
-# ============================================================
-# USAGE
-# ============================================================
-#
-# From the repo root:
-#   bash scripts/higgsfield-bulk-render.sh
-#
-# Or for a single niche only:
-#   NICHE=hvac bash scripts/higgsfield-bulk-render.sh
-#
-# Outputs land in ads/static/ as PNG, named:
-#   TYA_<niche>_<framework>_<treatment>_<aspect>.png
-#
-# After it finishes:
-#   bash scripts/upload-fb-creatives.sh
-#       (turns every PNG into a PAUSED Meta draft ad — needs FB_ACCESS_TOKEN)
-#
-# ============================================================
-# CONFIG
-# ============================================================
+# Setup once:
+#   npm install -g @higgsfield/cli && higgsfield auth login
 
-set -euo pipefail
+set -uo pipefail
 
-OUT_DIR="${OUT_DIR:-ads/static}"
-MODEL="${MODEL:-nano-banana-pro}"
+OUT_DIR="${OUT_DIR:-ads/photo-raw}"
+MODEL="${MODEL:-nano_banana_2}"
 NICHE_FILTER="${NICHE:-}"
-PARALLEL="${PARALLEL:-4}"          # how many in-flight renders at once
-ASPECTS="${ASPECTS:-9:16,4:5,1:1}" # render each prompt at all three
+PARALLEL="${PARALLEL:-3}"
+ASPECTS="${ASPECTS:-9:16 4:5 1:1}"
+RESOLUTION="${RESOLUTION:-1k}"
+LOG_DIR="${LOG_DIR:-/tmp/tya-render-logs}"
 
-mkdir -p "$OUT_DIR"
+mkdir -p "$OUT_DIR" "$LOG_DIR"
 
-# ============================================================
-# UNIVERSAL PROMPT PREFIX (from HIGGSFIELD_BRAND_SPEC.md)
-# ============================================================
-PREFIX="Documentary-realism photography, natural light, Roger Deakins cinematography references, shallow depth of field, 50mm equivalent, real human texture including pores and hairline imperfection, asymmetric facial expression, candid moment captured mid-action, industry-accurate wardrobe, environmental specificity, TYA Navy #042C53 and Bone White #FAFAFA palette, on-brand TrainYourAgent diamond watermark bottom-right at 80% opacity. SCENE: "
+# Photography style prefix — Deakins/Lubezki documentary realism.
+# No text overlay specified — Stage 2 composites text in post.
+PREFIX="Documentary realism photograph, shot on 50mm prime lens, natural tungsten interior light or golden hour exterior, shallow depth of field, real human skin texture with natural imperfection, candid mid-action moment, industry-accurate wardrobe, environmental authenticity, navy 042C53 and bone white FAFAFA color palette where applicable, cinematic editorial mood, photojournalism feel. SCENE: "
 
-NEGATIVE="no plastic skin, no glossy AI face, no bilateral facial symmetry, no six fingers, no extra fingers, no warped hands, no floating logos, no neon, no cyber grid, no holographic overlays, no flat studio softbox lighting, no symmetrical composition, no generic chart-pointing pose, no thumbs-up cliche, no perfect-teeth smile, no plastic hair, no Uncanny Valley face, no AI watermark, no gibberish text, no duplicate limbs, no oversaturated HDR, no rainbow gradient, no laser eyes, no clean-shaven baby-face appearance, no white background unless explicitly requested, no editorial poster layout unless treatment=editorial."
+NEGATIVE=" NEGATIVE: no plastic synthetic skin, no glossy AI face, no bilateral facial symmetry, no six fingers, no extra fingers, no warped hands, no floating logos, no neon, no cyber grid, no holographic overlays, no flat studio softbox lighting, no symmetrical composition, no stock photo pose, no thumbs up, no perfect teeth smile, no plastic hair, no Uncanny Valley face, no text rendered in image, no gibberish text, no oversaturated HDR, no rainbow gradient, no nudity, no bare skin focus, no exposed feet, no children, no weapons, no blood, no smoke vapor focus."
 
-# ============================================================
-# PROMPT LIBRARY — niche::framework::treatment :: scene
-# Mirrors HIGGSFIELD_100_IMAGE_ADS.md (120 prompts).
-# Each line: niche|framework|treatment|scene
-# ============================================================
+# niche|framework|scene  (no text overlay, no bare body parts, no
+# "exhausted" or other moderation triggers — pure scene description)
 read -r -d '' PROMPTS <<'EOF' || true
-hvac|pain|photo|Tight handheld shot inside the cab of an HVAC service pickup truck at 9:47 PM. Weathered 45 year old white male HVAC tech in the driver seat, grey beard, dirty hands, embroidered blue work shirt with patch "MIKE LEAD TECH" visible, sweat damp on his temples, cab dome light on. Through windshield: empty dark parking lot, single sodium-yellow streetlight, breath visibly fogging. Right hand holds iPhone with incoming call "UNKNOWN", thumb hovering Decline. His face exhausted not angry. White text overlay top: EVERY MISSED CALL AFTER 6PM = $400-1,800 GONE
-hvac|outcome|photo|Worn leather wallet on a kitchen table, weathered Latino hand counting out twenty-seven $100 bills onto the table. Modest suburban kitchen, warm evening tungsten, shallow DOF. White text overlay bottom-left: FIRST WEEK. AI AGENT. AFTER HOURS ONLY.
-hvac|urgency|photo|Wide-angle HVAC service van parked beside a homeowner's driveway at twilight, tech with toolbag walking to front door. White text overlay top: FOUNDING-COHORT SPOTS: 3 OF 10 LEFT. Bottom: LOCK 50% OFF FOREVER.
-hvac|contrarian|photo|Same Mike at desk after long day, looking directly at camera, slight skeptical smirk, single key light. White text overlay: YOUR "AI RECEPTIONIST" FROM SKOOL IS A CHATBOT. THIS IS AN OPERATOR.
-plumbing|pain|photo|Tight close-up of water gushing from burst pipe under a kitchen sink, cabinet soaked, water spreading across tile floor. Bare feet in bottom of frame. White text overlay top: IT'S 11:47 PM. WHO ANSWERS YOUR PHONE RIGHT NOW?
-plumbing|outcome|photo|Plumber Tom 50yo white man mustache, navy uniform shirt "TOM", sliding out from under a sink with a wrench, relieved homeowner visible behind him. Late evening tungsten. White text overlay: BOOKED AT 11:51 PM. ON-SITE BY 12:14 AM.
-plumbing|urgency|photo|Plumber truck door swinging open at night, tech stepping out with toolbag, homeowner headlights visible. White text overlay top: HURRICANE SEASON STARTS IN 14 DAYS. 3 PLUMBING SPOTS LEFT.
-plumbing|contrarian|photo|Plumber leaning against his truck at sunset holding phone looking at camera. White text overlay: THE "AI RECEPTIONIST" APPS DON'T DISPATCH. THEY TAKE A MESSAGE. YOURS SHOULD DO BOTH.
-healthcare|pain|photo|Overhead handheld shot of dental front desk at 9:32 AM, three phone lines lit, 28yo Asian female receptionist in scrubs glasses cradling one phone on shoulder typing into computer signaling one minute to patient at counter. White text overlay top: YOUR FRONT DESK IS DROPPING 30% OF NEW-PATIENT CALLS.
-healthcare|outcome|photo|42yo Latina dentist in scrubs surgical loupes pushed onto forehead braided hair leaning over patient focused calm. Background out of focus front desk empty no chaos. White text overlay: FRONT DESK RUNS ITSELF. SO YOU CAN RUN DENTISTRY.
-healthcare|urgency|photo|Dental hygienist looking at tablet showing next 4 weeks fully booked calendar. White text overlay top: YOUR COMPETITOR JUST OPENED. YOU HAVE 30 DAYS.
-healthcare|contrarian|photo|Dentist looking directly at camera arms crossed scrubs. White text overlay: STOP HIRING A THIRD RECEPTIONIST. AI ANSWERS 24/7 FOR LESS THAN $1K/MO.
-legal|pain|photo|Solo-practitioner law office 7:43 PM on desk clock. 55yo white male partner rolled sleeves loosened tie reading glasses exhausted on phone, case files stacked, secondary line ringing unanswered. White text overlay top: PARTNER BILLING TIME: $400/HR. TIME SPENT ON INTAKE: 22 MIN. YOU BILLED $0.
-legal|outcome|photo|28yo Black female associate suit at her desk looking at iPad showing AI running overnight intakes. Calm office. White text overlay: PARTNERS STOPPED ANSWERING INTAKE. MARGINS DOUBLED.
-legal|urgency|photo|Wide shot of small firm reception area empty after-hours. White text overlay top: YOUR COMPETITOR IS TAKING YOUR INTAKE CALLS RIGHT NOW.
-legal|contrarian|photo|Same partner looking at camera half-smile. White text overlay: YES, LAWYERS CAN USE AI FOR INTAKE. NO, IT DOESN'T GIVE LEGAL ADVICE. STOP ASSUMING IT DOES.
-realestate|pain|photo|35yo Black male agent in polo with brokerage logo sitting in car in traffic looking at phone with inbound Zillow lead notification. Can't pick up. White text overlay top: LEAD CONTACTED IN 5 MIN: 21X MORE LIKELY TO QUALIFY. YOU'RE AT 47.
-realestate|outcome|photo|Showing scheduled on Zillow-style phone screen, agent's calendar updating in real time, agent in driver seat smiling at phone. White text overlay: AI QUALIFIED, AI SCHEDULED. YOU JUST SHOW UP.
-realestate|urgency|photo|Agent walking into "Coming Soon" listing at sunset taking photos. White text overlay top: SPRING MARKET OPENS IN 6 WEEKS. 3 REAL-ESTATE SPOTS LEFT.
-realestate|contrarian|photo|Agent leaning against his car looking at camera. White text overlay: YOUR ISA COSTS $4K/MO AND WORKS 40HRS. AI WORKS 168HRS FOR LESS THAN HALF.
-roofing|pain|photo|Storm-battered residential street lightning flash rain hammering. Foreground iPhone in roofer's hand showing 8 missed calls in last 30 minutes. White text overlay top: YOU JUST LOST $40K IN INSPECTIONS.
-roofing|outcome|photo|50yo white female owner in fleece vest with company logo at desk watching iPad show AI handling 8 phone lines at once. Calm. White text overlay: LAST HURRICANE: 38 INSPECTIONS IN 72 HOURS.
-roofing|urgency|photo|Calendar showing hurricane season start date highlighted with red marker. White text overlay top: YOU HAVE 18 DAYS.
-roofing|contrarian|photo|Roofer on ladder looking down at camera hammer in hand. White text overlay: YOUR COMPETITOR JUST HIRED AN ANSWERING SERVICE. YOURS IS ABOUT TO LOSE EVERY STORM CALL TO AI.
-solar|pain|photo|38yo white male solar salesman polo headset open call-center desk hanging up phone hard visibly frustrated. White text overlay top: YOUR AE JUST DEMOED A RENTER. AGAIN.
-solar|outcome|photo|Solar salesman on call with real qualified buyer pricing on screen buyer engaged calm energy. White text overlay: AI QUALIFIED 6 GATES. YOU ONLY SEE THE 9 WHO PASSED.
-solar|urgency|photo|Federal tax credit deadline calendar with red circle. White text overlay top: ITC SUNSET IS 14 MONTHS AWAY. CAPTURE EVERY LEAD NOW.
-solar|contrarian|photo|Solar salesman looking at camera slight smirk. White text overlay: YOUR CALL CENTER IS A $20K/MO QUALIFIER. AI DOES IT FOR $2K AND NEVER ASKS FOR A RAISE.
-accounting|pain|photo|52yo Korean-American female accounting partner glasses pushed up cardigan mug of cold coffee on phone unread pile of 40 client packets next to her Feb 14 visible on calendar. White text overlay top: TAX SEASON. YOU'RE BILLABLE. YOU'RE ON INTAKE CALLS INSTEAD.
-accounting|outcome|photo|Same partner calmer mug of coffee actually hot doing actual tax work iPad shows AI running intakes. White text overlay: INTAKES HAPPEN. YOU DO RETURNS.
-accounting|urgency|photo|Tax-season countdown timer. White text overlay top: JAN 1 IS IN 31 DAYS.
-accounting|contrarian|photo|Partner looking at camera glasses on deadpan. White text overlay: YOUR ADMIN IS QUALIFIED TO DO PARTNER WORK? THEN WHY ARE PARTNERS ON THE PHONES?
-automotive|pain|photo|50yo white male service writer Mike grey beard blue uniform shirt embroidered MIKE patch glasses up on forehead with 3 phones lit walk-in customer at counter looking impatient. White text overlay top: 3-5 SERVICE APPOINTMENTS LOST DAILY TO VOICEMAIL. EACH ONE = $600.
-automotive|outcome|photo|Mike in the service bay actually looking under hood of customer car, phones quiet on counter visible in background. White text overlay: SERVICE WRITER BACK TO WRITING SERVICE.
-automotive|urgency|photo|Service bay at sunset last car driving out. White text overlay top: TOMORROW YOUR COMPETITOR INSTALLS THEIRS.
-automotive|contrarian|photo|Mike looking at camera wrench in hand. White text overlay: YOUR SERVICE WRITER IS THE BOTTLENECK. STOP EXPECTING THEM TO BE THREE PEOPLE.
-restaurants|pain|photo|Italian restaurant dinner-rush host stand foreground. 45yo Latino male host white button-down dark vest salt-pepper hair harried glancing at ringing phone he can't answer. White text overlay top: PHONE RINGS 47 TIMES DURING DINNER SERVICE. HOST PICKS UP 6.
-restaurants|outcome|photo|Same host iPad next to him showing AI booking reservations making eye contact with guest at counter. White text overlay: YOUR AI HOST. SO YOURS CAN RUN SERVICE.
-restaurants|urgency|photo|Restaurant exterior at dusk OPEN sign lit. White text overlay top: YOUR HOST IS IN THE WEEDS. RIGHT NOW.
-restaurants|contrarian|photo|Host looking at camera smile. White text overlay: "JUST CALL BACK LATER" IS A CLOSED-RESTAURANT POLICY.
-gyms|pain|photo|Pilates studio class-end chaos. 28yo Black female instructor sweaty ponytail at front desk with prospect walking in unnoticed. White text overlay top: TRIAL SIGNUPS WALKING OUT THE DOOR WHILE YOU TEACH.
-gyms|outcome|photo|Same instructor calm prospect at counter being properly greeted iPad behind her shows AI booking trials. White text overlay: AI BOOKS TRIALS. YOU RUN CLASS.
-gyms|urgency|photo|New-Year's-resolution calendar. White text overlay top: 14 DAYS TO INSTALL BEFORE JAN 1.
-gyms|contrarian|photo|Instructor looking at camera slight smile. White text overlay: YOUR FRONT DESK CAN'T BE IN 3 PLACES AT ONCE. AI CAN.
-bars|pain|photo|Empty cocktail bar at 2 PM sunlight stripes across dark wood floor phone unanswered on counter. White text overlay top: NOBODY PICKS UP UNTIL 4 PM. YOUR PRIVATE-EVENT LEADS DIE.
-bars|outcome|photo|30yo white female bartender platinum hair sleeve tattoos black apron restocking bottles iPad lit up with AI taking booking behind her. White text overlay: CLOSED AT 2 PM. BOOKING AT 2 PM.
-bars|urgency|photo|Holiday season calendar. White text overlay top: PRIVATE EVENT SEASON STARTS IN 21 DAYS.
-bars|contrarian|photo|Bartender looking at camera deadpan. White text overlay: YOUR "WE'LL GET BACK TO YOU" POLICY LOST THE CORPORATE HOLIDAY BOOKING.
-propertymgmt|pain|photo|42yo South Asian male property manager t-shirt in bed lit only by phone screen. 2:14 AM visible. Phone rings TENANT UNIT 4B. White text overlay top: YOUR PERSONAL PHONE IS THE AFTER-HOURS LINE. UNTIL YOUR PARTNER LEAVES YOU.
-propertymgmt|outcome|photo|Same manager sleeping peacefully phone face-down on nightstand glowing notification visible. White text overlay: AI HANDLES 2 AM. YOU SLEEP.
-propertymgmt|urgency|photo|Property portfolio map with new building circled in red. White text overlay top: YOU JUST ADDED 32 UNITS. YOUR WIFE NOTICES THE 2 AM CALLS.
-propertymgmt|contrarian|photo|Manager looking at camera. White text overlay: YOU DON'T NEED ANOTHER PROPERTY MANAGER. YOU NEED AN AI THAT PICKS UP AT 2 AM.
-pestcontrol|pain|photo|Quiet suburban kitchen at night pendant light 38yo white female in pajamas staring frozen at a thumb-size roach on counter. White text overlay top: YOUR COMPETITOR'S AFTER-HOURS LINE JUST WON THAT CUSTOMER.
-pestcontrol|outcome|photo|Same woman phone to ear relief on face. On phone screen we see her booking confirmed for 8 AM next morning. White text overlay: NIGHT CALLS. NEW CUSTOMERS. SAME DAY.
-pestcontrol|urgency|photo|Spring-season calendar. White text overlay top: PEST SEASON STARTS IN 28 DAYS.
-pestcontrol|contrarian|photo|Pest tech leaning on his truck smiling. White text overlay: YOUR TECH IS IN A CRAWLSPACE. AI IS ON THE PHONE.
-saas|pain|photo|Tired 29yo Black female AE hoodie dual monitors can of LaCroix coworking desk looking at Outlook calendar 14 meetings 10 flagged NO SHOW WRONG ICP TOO EARLY. White text overlay top: 76 OF YOUR 87 DEMOS LAST QUARTER WEREN'T READY TO BUY.
-saas|outcome|photo|Same AE calm closing a deal on screen Stripe success animation smile. White text overlay: 23 DEMOS THIS QUARTER. 14 CLOSED.
-saas|urgency|photo|Q4 calendar. White text overlay top: YOUR LAST HIRING WINDOW BEFORE YEAR-END QUOTA.
-saas|contrarian|photo|AE looking at camera slight smirk. White text overlay: STOP HIRING SDRS. AI QUALIFIES IN 8 SECONDS. SDR TOOK 8 DAYS.
-startup|pain|photo|Founder solo at desk at midnight laptop multiple browser tabs. White text overlay top: YOU'RE THE SDR. THE AE. THE CSM. STOP.
-startup|outcome|photo|Same founder lighter, getting notification "first qualified demo booked by AI". White text overlay: HIRE YOUR FIRST AE. MAKE IT AI.
-startup|urgency|photo|Runway calendar 14 months to default-alive. White text overlay top: YOU CAN'T AFFORD TO HIRE. YOU ALSO CAN'T AFFORD NOT TO QUALIFY LEADS.
-startup|contrarian|photo|Founder looking at camera. White text overlay: THE FIRST HIRE ISN'T A RECRUITER. IT'S AN AI AGENT.
-insurance|pain|photo|Insurance agent desk multi-line phone ringing quote requests piling up unhandled. White text overlay top: QUOTE REQUESTS COOL IN 12 MINUTES. YOU'RE AT 47.
-insurance|outcome|photo|Agent calmly on call with closing customer AI dashboard shows qualified-quote requests in his queue. White text overlay: AI RUNS THE INTAKE. YOU CLOSE THE POLICY.
-homeservices|pain|photo|Handyman in his truck missed-call list on his phone sun setting. White text overlay top: SUNDAY-NIGHT CALLS. YOU'RE AT DINNER.
-homeservices|outcome|photo|Same handyman calendar pinging with confirmed bookings for the week. White text overlay: YOUR WEEKEND JUST BOOKED ITSELF.
-coaches|pain|photo|Personal trainer mid-session with client can't answer phone. White text overlay top: MID-SESSION = MISSED LEAD.
-coaches|outcome|photo|Trainer wrapping up session AI has booked his next 6 trial-session inquiries while he was working. White text overlay: TRAIN CLIENTS. AI BOOKS THE NEXT ONES.
-cleaning|pain|photo|Owner of cleaning company on a job site can't pick up office phone. White text overlay top: RECURRING CONTRACT JUST CALLED. AND CALLED. AND GAVE UP.
-cleaning|outcome|photo|Same owner on-site calm getting "new contract booked" notification. White text overlay: JOB SITES STAY RUN. OFFICE CALLS GET ANSWERED.
-veterinary|pain|photo|Vet office front desk in chaos phones ringing sick pet visible in waiting room. White text overlay top: YOU PICKED THE CAT OVER THE PHONE. RIGHT CALL. LOST CALL.
-veterinary|outcome|photo|Vet tech calm at front desk AI handling 3 incoming calls pet getting proper attention. White text overlay: THE CAT. THE PHONE. THE NEW PATIENT. ALL HANDLED.
+hvac|pain|tight handheld view from passenger seat of HVAC service pickup truck cab at night, 45 year old white male HVAC technician with grey beard and short hair sits in driver seat wearing blue work shirt with embroidered name patch reading MIKE, glances down at smartphone in his hand which shows incoming call notification, dome light illuminates dashboard, through windshield we see empty parking lot and a single sodium-vapor streetlight, breath slightly visible in cool air
+hvac|outcome|warm modest suburban kitchen at evening, weathered hands of older Latino HVAC business owner counting hundred dollar bills onto wooden kitchen table near a closed leather wallet, tungsten light from overhead pendant lamp, family photos slightly visible in soft background
+hvac|urgency|HVAC service van parked in residential driveway at twilight golden hour, technician in coveralls walking from van toward front porch holding tool bag, warm porch light glowing, suburban houses receding into background, low angle wide shot
+hvac|contrarian|portrait of same 45 year old white male HVAC technician Mike from earlier scene now sitting at small office desk after work hours wearing same blue work shirt, looking directly at camera with quiet half-smile, single warm key light, beige wood paneling background slightly out of focus
+plumbing|pain|low angle close-up under a residential kitchen sink at night, water actively spraying from a fitting leak onto the wood cabinet floor, copper pipes visible, dim under-cabinet light, mood of urgency, no human in frame
+plumbing|outcome|emergency plumber Tom 50 year old white man with mustache wearing navy company uniform shirt with embroidered TOM name patch, sliding out from under residential kitchen sink holding a wrench, smiling at homeowner standing nearby, warm late-evening kitchen lighting
+plumbing|urgency|plumber truck parked on suburban residential street at night, side door open, technician in uniform with tool bag walking toward house front door, headlights from nearby car visible, mood urgent but professional
+plumbing|contrarian|portrait of plumber leaning against side of his white service truck at sunset in front of small commercial building, holding smartphone in hand, looking directly at camera with confident expression, golden hour rim light
+healthcare|pain|overhead documentary shot of dental practice front reception desk during busy morning, 28 year old Asian female receptionist wearing teal scrubs and small glasses cradles a telephone handset on her shoulder while typing at computer keyboard, three line phone visible with multiple lit indicators, patient standing at counter waiting
+healthcare|outcome|42 year old Latina dentist wearing scrubs and surgical loupes pushed up onto her forehead, dark hair in long braid, leaning over patient chair in modern dental operatory, focused expression, calm clinical lighting
+healthcare|urgency|dental hygienist seated at small workstation reviewing tablet computer showing fully booked calendar grid for next four weeks, modern dental practice background slightly defocused
+healthcare|contrarian|portrait of confident female dentist wearing teal scrubs with arms gently crossed standing in modern dental operatory background, looking directly at camera with neutral professional expression
+legal|pain|wood paneled solo practitioner law office at evening, antique brass desk clock showing 7 45 PM, 55 year old white male attorney with rolled shirt sleeves and loosened tie sits at large wooden desk with case files stacked, holding office phone receiver to ear, paper coffee cup nearby
+legal|outcome|28 year old Black female junior associate wearing professional suit sitting at modern law office desk, looking at tablet computer showing intake management software interface, calm focused expression
+legal|urgency|wide angle interior shot of small law firm reception waiting area completely empty after business hours, leather couches, framed law diplomas on wall, low warm lighting
+legal|contrarian|portrait of senior attorney in shirt sleeves standing in his law office, looking directly at camera with slight knowing smile, bookshelves of legal volumes blurred in background
+realestate|pain|35 year old Black male real estate agent wearing branded polo shirt sitting in driver seat of his car in traffic at intersection, looking down at smartphone showing real estate lead notification, sunlight coming through windshield
+realestate|outcome|same real estate agent now relaxed in driver seat of parked car at attractive residential listing, smiling at smartphone showing calendar with new appointment booked, golden hour exterior light
+realestate|urgency|real estate agent in branded polo with camera and clipboard walking up driveway of new Coming Soon listing house at sunset, taking photos for listing
+realestate|contrarian|portrait of real estate agent leaning casually against his parked car in front of suburban house, looking directly at camera with confident professional expression
+roofing|pain|residential suburban street during heavy thunderstorm at dusk, rain falling heavily, sky lit by lightning flash, foreground shows smartphone in roofing contractor hand with multiple missed call notifications visible on screen
+roofing|outcome|50 year old white female roofing company owner wearing branded fleece vest seated at desk in small commercial office, watching tablet computer screen showing software dashboard, calm composed expression, daylight from office windows
+roofing|urgency|close-up of paper wall calendar showing month of June with hurricane season start date circled in red marker, tacked to wood paneled wall in small office
+roofing|contrarian|professional roofer standing on residential roof in safety harness holding hammer, looking down toward camera from above, blue sky background
+solar|pain|38 year old white male solar sales representative wearing branded polo and headset seated at desk in open plan sales office, hand on telephone receiver showing visible frustration after just hanging up
+solar|outcome|same solar sales rep now smiling and engaged on a call at his desk, computer monitor visible showing pricing chart, calm professional energy, modern office environment
+solar|urgency|close-up of paper wall calendar with tax credit deadline date circled in red marker pen, professional office background
+solar|contrarian|portrait of solar salesman in branded polo standing in modern sales office, looking directly at camera with slight knowing smirk, computer monitors blurred in background
+accounting|pain|52 year old Korean American female accountant partner wearing soft cardigan and glasses pushed up onto forehead, seated at desk holding phone receiver to ear, large stack of paper client folders on desk beside her, ceramic mug of coffee, paper calendar showing February
+accounting|outcome|same accounting partner now relaxed at her desk, fresh hot coffee in mug, working on tax return on computer monitor, tablet on side showing intake management dashboard, calm focused expression
+accounting|urgency|close-up of paper desk calendar showing month of December with January 1 highlighted in red marker, professional accounting office desk background
+accounting|contrarian|portrait of accounting partner wearing cardigan and glasses standing in her office, looking directly at camera with deadpan professional expression, bookshelf of accounting reference books behind her
+automotive|pain|50 year old white male auto service writer named Mike with grey beard wearing blue uniform shirt with embroidered MIKE name patch, glasses pushed up on forehead, standing behind service counter with multi-line phone lit up with several calls, walk-in customer waiting at counter looks impatient
+automotive|outcome|same service writer Mike now walking through auto service bay area in his uniform, leaning under open car hood inspecting engine, calm working expression, fluorescent shop lighting
+automotive|urgency|wide shot of automotive service bay at sunset, last customer car driving slowly out of bay through open garage door, warm golden hour light
+automotive|contrarian|portrait of auto service writer Mike in his uniform holding a wrench, looking directly at camera with confident neutral expression, service bay slightly visible behind him
+restaurants|pain|busy upscale Italian restaurant dining room during dinner service, host stand foreground, 45 year old Latino male host wearing white dress shirt and dark vest with salt and pepper hair stands at podium glancing at phone ringing on his clipboard reservation book, soft warm tungsten light, wood fired pizza oven glowing in background
+restaurants|outcome|same restaurant host now smiling at guest at podium during dinner service, tablet computer next to him displays reservation management interface, calm professional energy
+restaurants|urgency|exterior of independent restaurant at dusk with warm interior glow through windows and illuminated OPEN sign by entrance, street lamp casting glow on sidewalk
+restaurants|contrarian|portrait of Italian restaurant host in white shirt and dark vest standing at host podium, looking directly at camera with warm smile, soft restaurant lighting in background
+gyms|pain|interior of modern Pilates fitness studio after class ends with morning daylight, 28 year old Black female instructor wearing black athletic top and leggings stands behind small reception desk with light sweat showing, ponytail, several students chatting nearby blocking the counter, prospective customer visible entering through front door
+gyms|outcome|same Pilates instructor now standing relaxed at reception desk greeting a new prospect with friendly handshake, tablet computer visible behind her showing class booking software, bright airy studio space
+gyms|urgency|close-up of paper desk calendar showing month of December with January 1 highlighted in red marker, fitness studio background slightly defocused
+gyms|contrarian|portrait of female Pilates instructor in black athletic wear standing in studio with reformer machines blurred in background, looking directly at camera with calm professional expression
+bars|pain|interior of upscale cocktail bar in early afternoon completely empty, sunlight streaming through front windows casting parallel light stripes across dark wood floor, telephone sitting unanswered on polished wood bar top, stools stacked
+bars|outcome|30 year old white female bartender with short platinum blonde hair and visible sleeve tattoos on her left forearm wearing black apron, restocking bottles on back bar, tablet computer mounted near cash register showing reservation interface, late afternoon golden light
+bars|urgency|close-up of paper wall calendar showing month of November with date in late November circled in red marker, dark bar interior background
+bars|contrarian|portrait of female bartender with platinum hair and sleeve tattoos behind polished wood bar, looking directly at camera with deadpan expression, warm bar lighting
+propertymgmt|pain|42 year old South Asian male property manager wearing simple grey t-shirt lying in bed in dark bedroom, illuminated only by glowing smartphone screen showing late night incoming call notification, alarm clock visible reading 2 14 AM
+propertymgmt|outcome|same property manager now sleeping peacefully in bed with phone face down on nightstand, soft pre-dawn light just beginning to come through window, glowing notification visible on phone screen
+propertymgmt|urgency|close-up of large color printed map of city neighborhood showing real estate portfolio buildings highlighted, one new building circled with red marker
+propertymgmt|contrarian|portrait of property manager in plain grey t-shirt standing in office area, looking directly at camera with tired but determined expression
+pestcontrol|pain|quiet suburban kitchen at night illuminated by single hanging pendant lamp, 38 year old white female homeowner wearing flannel pajamas and Henley shirt with hair tied up stands frozen at kitchen counter looking down at thumb sized cockroach, hand holding clean wine glass mid-rinse
+pestcontrol|outcome|same homeowner now holding smartphone to her ear, relief and gentle smile on her face, phone screen visible showing appointment confirmation interface, warm kitchen lighting
+pestcontrol|urgency|close-up of paper wall calendar showing month of March with early April date highlighted in red marker, residential office area background
+pestcontrol|contrarian|portrait of pest control technician wearing branded uniform polo and cap leaning against side of company service truck, looking directly at camera with friendly confident expression, sunny day
+saas|pain|29 year old Black female sales account executive wearing comfortable hoodie sitting at modern coworking desk with two computer monitors, can of sparkling water nearby, looking down at calendar app on screen showing meetings with concerned expression
+saas|outcome|same female AE now smiling broadly at her dual monitor setup, computer screen showing closed deal notification with checkmark, can of sparkling water nearby, relaxed posture
+saas|urgency|close-up of digital wall calendar display showing Q4 highlighted, modern office background with people walking past slightly defocused
+saas|contrarian|portrait of female AE in hoodie sitting at coworking desk, looking directly at camera with slight confident smirk, modern office background blurred
+startup|pain|solo startup founder in his late 20s wearing simple t shirt sitting alone at desk in modest home office at midnight, laptop open with many browser tabs visible, single desk lamp lit, focused but tired expression
+startup|outcome|same founder now leaning back at desk with relaxed smile, looking at smartphone showing notification of first qualified meeting booked, warm morning light through window
+startup|urgency|close-up of paper wall calendar showing 14 months of runway timeline, marked with red and green markers, startup office desk background
+startup|contrarian|portrait of young startup founder in t shirt sitting at desk in modest office, looking directly at camera with quiet determined expression
+insurance|pain|insurance agent desk in busy office, multi-line desk phone with several lit incoming call indicators, stack of printed quote request forms beside computer, agent's hand visible reaching for phone
+insurance|outcome|insurance agent calmly speaking on phone at his desk, computer monitor showing qualified leads dashboard, professional office background
+homeservices|pain|handyman in casual work clothes seated in his white service truck cab at sunset, looking down at smartphone showing list of missed calls, golden hour exterior light
+homeservices|outcome|same handyman now standing outside his truck with toolbox, looking at smartphone showing weekly calendar full of confirmed bookings, residential driveway setting
+coaches|pain|personal trainer in athletic wear actively demonstrating an exercise to client in modern gym, smartphone on bench nearby with incoming call notification on screen, focused on client
+coaches|outcome|personal trainer wrapping up a training session shaking hand with client, smartphone visible showing notifications of new trial session bookings, bright gym interior
+cleaning|pain|owner of small cleaning business in branded polo shirt mid-clean at a residential job site holding cleaning supplies, looking with concern at smartphone showing missed call
+cleaning|outcome|same cleaning business owner standing at completed job site with cleaning supplies organized, smiling at smartphone showing new contract booking notification
+veterinary|pain|busy veterinary practice front desk during morning hours, vet tech in scrubs juggling multiple phone lines with concerned pet owner and small dog visible in waiting area background
+veterinary|outcome|veterinary technician in scrubs standing calmly at front desk, holding tablet computer showing intake management interface, peaceful clinic atmosphere
 EOF
 
-# ============================================================
-# RENDER LOOP
-# ============================================================
-
-count=0
-total=$(echo "$PROMPTS" | wc -l | tr -d ' ')
-echo "==> Bulk-rendering up to $total TYA ad prompts via Higgsfield CLI"
-echo "==> Model: $MODEL  |  Aspects: $ASPECTS  |  Parallel: $PARALLEL"
-echo "==> Output: $OUT_DIR/"
-echo ""
-
-# Confirm CLI is auth'd
+# Verify CLI
 if ! command -v higgsfield >/dev/null 2>&1; then
-  echo "ERROR: 'higgsfield' CLI not found. Run: npm install -g @higgsfield/cli"
-  echo "       Then: higgsfield auth login"
+  echo "ERROR: 'higgsfield' CLI not found. Run: npm install -g @higgsfield/cli && higgsfield auth login"
   exit 1
 fi
-
-if ! higgsfield auth status >/dev/null 2>&1; then
+if ! higgsfield auth token >/dev/null 2>&1; then
   echo "ERROR: Higgsfield CLI not authenticated. Run: higgsfield auth login"
   exit 1
 fi
 
-# Iterate prompts × aspects
-while IFS='|' read -r niche framework treatment scene; do
-  [[ -z "${niche:-}" ]] && continue
-  [[ "${niche:0:1}" == "#" ]] && continue
+render_one() {
+  local niche="$1" framework="$2" scene="$3" aspect="$4"
+  local aspect_safe="${aspect/:/x}"
+  local out_file="$OUT_DIR/TYA_${niche}_${framework}_photo_${aspect_safe}.png"
+  local log_file="$LOG_DIR/${niche}_${framework}_photo_${aspect_safe}.log"
 
-  # Optional niche filter
-  if [[ -n "$NICHE_FILTER" && "$niche" != "$NICHE_FILTER" ]]; then
-    continue
+  if [[ -f "$out_file" ]]; then
+    echo "  ✓ EXISTS  $out_file"
+    return
   fi
 
-  for aspect in ${ASPECTS//,/ }; do
-    aspect_safe=$(echo "$aspect" | tr ':' 'x')
-    out_file="$OUT_DIR/TYA_${niche}_${framework}_${treatment}_${aspect_safe}.png"
+  local prompt="${PREFIX}${scene}.${NEGATIVE}"
+  echo "  → RENDER  $niche/$framework @ $aspect"
 
-    if [[ -f "$out_file" ]]; then
-      echo "  ✓ Already exists, skipping: $out_file"
-      continue
-    fi
+  local url
+  url=$(higgsfield generate create "$MODEL" \
+    --aspect_ratio "$aspect" \
+    --resolution "$RESOLUTION" \
+    --prompt "$prompt" \
+    --wait 2>"$log_file" | tr -d '\r' | grep -oE 'https://[^ ]+\.(png|jpg|jpeg|webp)' | head -1)
 
-    full_prompt="${PREFIX}${scene}. NEGATIVE: ${NEGATIVE}"
+  if [[ -z "$url" ]]; then
+    local reason
+    reason=$(grep -oE 'status "[^"]+"' "$log_file" | head -1)
+    echo "  ✗ FAILED  $niche/$framework @ $aspect — $reason"
+    return 1
+  fi
 
+  curl -sSL -o "$out_file" "$url"
+  if [[ -s "$out_file" ]]; then
+    echo "  ✓ SAVED   $out_file"
+  else
+    echo "  ✗ DL FAIL $url"
+    rm -f "$out_file"
+  fi
+}
+
+export -f render_one
+export MODEL RESOLUTION PREFIX NEGATIVE OUT_DIR LOG_DIR
+
+queue=$(mktemp)
+trap "rm -f $queue" EXIT
+
+count=0
+while IFS='|' read -r niche framework scene; do
+  [[ -z "${niche:-}" ]] && continue
+  [[ "${niche:0:1}" == "#" ]] && continue
+  if [[ -n "$NICHE_FILTER" && "$niche" != "$NICHE_FILTER" ]]; then continue; fi
+  for aspect in $ASPECTS; do
+    printf '%s\t%s\t%s\t%s\n' "$niche" "$framework" "$scene" "$aspect" >>"$queue"
     count=$((count + 1))
-    echo "[$count] Rendering $niche/$framework/$treatment @ $aspect → $out_file"
-
-    # Fire async; wait if too many in flight
-    (
-      higgsfield image generate \
-        --model "$MODEL" \
-        --aspect "$aspect" \
-        --output "$out_file" \
-        --prompt "$full_prompt" \
-        2>&1 | sed "s/^/    [$niche] /"
-    ) &
-
-    # Throttle parallelism
-    while [[ $(jobs -p | wc -l) -ge $PARALLEL ]]; do
-      sleep 1
-    done
   done
-done <<< "$PROMPTS"
+done <<<"$PROMPTS"
 
-# Wait for stragglers
+echo "==> Bulk-render begin: $count jobs queued, $PARALLEL in parallel"
+echo "==> Model: $MODEL | Aspects: $ASPECTS | Output: $OUT_DIR/"
 echo ""
-echo "==> Waiting for in-flight renders to finish..."
+
+while IFS=$'\t' read -r n f s a; do
+  [[ -z "${n:-}" ]] && continue
+  while [[ $(jobs -rp | wc -l) -ge $PARALLEL ]]; do
+    wait -n 2>/dev/null || sleep 1
+  done
+  render_one "$n" "$f" "$s" "$a" &
+done < "$queue"
+
 wait
 
-# Tally
 generated=$(find "$OUT_DIR" -name "TYA_*.png" 2>/dev/null | wc -l | tr -d ' ')
 echo ""
-echo "==> Done. $generated PNGs in $OUT_DIR/"
-echo "==> Next: bash scripts/upload-fb-creatives.sh"
-echo "       (turns every PNG into a PAUSED Meta draft ad)"
+echo "==> Stage 1 done. $generated raw photos in $OUT_DIR/"
+echo "==> Next: bash scripts/composite-ad-text.sh   (adds brand text + watermark)"

@@ -59,3 +59,17 @@ google-credentials*.json
 .DS_Store
 *.swp
 Thumbs.db
+
+# v141: Higgsfield ad renders — bulky, regen on demand via scripts/higgsfield-bulk-render.sh
+ads/photo-raw/*.png
+ads/photo-raw/*.jpg
+ads/photo-raw/*.jpeg
+ads/photo-raw/*.webp
+ads/static/TYA_*.png
+ads/static/TYA_*.jpg
+ads/static/TYA_*.jpeg
+ads/static/TYA_*.webp
+ads/video/*.mp4
+ads/video/*.mov
+ads/swipe/*.png
+ads/swipe/*.jpg
