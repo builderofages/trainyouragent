@@ -14,6 +14,10 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
+// v134: 14-industry ROI showcase grid + Trustpilot scaffold replace the
+// old empty-state placeholders without faking customers.
+import IndustryShowcase from "@/components/IndustryShowcase";
+import TrustpilotWidget from "@/components/TrustpilotWidget";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
@@ -115,6 +119,10 @@ export default function Customers() {
         </div>
       </section>
 
+      {/* v134: 14-vertical ROI showcase grid — replaces missing-logo wall.
+          Honest social proof via specific industry math, no fake logos. */}
+      <IndustryShowcase />
+
       {/* THE OFFER */}
       <section className="px-5 sm:px-8 py-16 sm:py-20">
         <div className="max-w-6xl mx-auto">
@@ -178,6 +186,30 @@ export default function Customers() {
           <p className="text-[15px] text-slate-600 leading-relaxed">
             If we don't beat it, you get the build fee back, you keep every script + transcript + prompt + recording we made for you, your number ports out within 5 business days, no clawback fight. Founder lane (the $0 upfront one): you've risked literally nothing.
           </p>
+        </div>
+      </section>
+
+      {/* v134: Trustpilot scaffold — hidden until first review lands. Set
+          VITE_TRUSTPILOT_VISIBLE=1 + VITE_TRUSTPILOT_BUSINESSUNIT_ID in
+          Vercel env once a review exists, and the real widget renders. */}
+      <section className="px-5 sm:px-8 py-12 bg-[#F6FAFE]">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-[11px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3 text-center">
+            Reviews
+          </div>
+          <h2 className="text-[22px] sm:text-[28px] font-semibold text-[#042C53] mb-5 leading-tight text-center">
+            Public, verified, Trustpilot.
+          </h2>
+          <p className="text-[14px] sm:text-[15px] text-slate-600 leading-relaxed max-w-2xl mx-auto mb-6 text-center">
+            We're a young company. Our Trustpilot profile is open and we ask every
+            founding-cohort customer to leave a review at the 90-day mark — only
+            after the agent has paid for itself against the kickoff baseline.
+            No incentivized reviews, no fake reviews, no AI-written reviews.
+            Just real operators when they have a real result to report.
+          </p>
+          <div className="max-w-md mx-auto">
+            <TrustpilotWidget variant="card" />
+          </div>
         </div>
       </section>
 

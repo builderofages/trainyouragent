@@ -104,8 +104,10 @@ export default function LiveLeakTicker() {
       role="region"
       aria-label="Live revenue leak counter"
       style={{
+        // v134: raised bottom from 20 → 96 to clear the chat-widget bubble
+        // (~64px tall at bottom-right). Was overlapping at the corner.
         position: "fixed",
-        bottom: 20,
+        bottom: 96,
         right: 20,
         zIndex: 60,
         maxWidth: 320,
