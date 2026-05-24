@@ -1,0 +1,39 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>iOS Lockscreen Ad</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; }
+  body { width: var(--w, 1080px); height: var(--h, 1920px); background-image: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 35%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0.85) 100%), linear-gradient(160deg, #1a1f2e 0%, #2c1810 100%); color: #fff; overflow: hidden; position: relative; }
+  .time { text-align: center; padding-top: 220px; font-size: 180px; font-weight: 200; letter-spacing: -6px; line-height: 1; text-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+  .date { text-align: center; font-size: 36px; font-weight: 500; opacity: 0.95; margin-top: 8px; }
+  .stack { position: absolute; bottom: 220px; left: 32px; right: 32px; display: flex; flex-direction: column; gap: 10px; }
+  .notif { background: rgba(45, 45, 52, 0.78); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); border-radius: 22px; padding: 22px 28px; display: flex; align-items: flex-start; gap: 18px; }
+  .notif .icon { width: 52px; height: 52px; border-radius: 12px; background: #34c759; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+  .notif .icon.miss { background: #ff3b30; }
+  .notif .icon.tya { background: linear-gradient(135deg, #042C53, #185FA5); }
+  .notif .body { flex: 1; min-width: 0; }
+  .notif .body .row { display: flex; justify-content: space-between; align-items: baseline; }
+  .notif .body .app { font-size: 22px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85; }
+  .notif .body .when { font-size: 22px; opacity: 0.6; }
+  .notif .body .title { font-size: 30px; font-weight: 600; margin-top: 2px; }
+  .notif .body .preview { font-size: 26px; opacity: 0.8; margin-top: 4px; line-height: 1.25; }
+  .stack-summary { background: rgba(28, 28, 32, 0.6); backdrop-filter: blur(40px); border-radius: 16px; padding: 14px 22px; font-size: 22px; opacity: 0.75; text-align: center; }
+  .badge { position: absolute; top: 280px; right: 60px; background: #ff3b30; color: #fff; min-width: 56px; height: 56px; border-radius: 28px; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; padding: 0 16px; box-shadow: 0 4px 18px rgba(255,59,48,0.6); }
+  .footer { position: absolute; bottom: 40px; left: 32px; right: 32px; background: rgba(4, 44, 83, 0.92); backdrop-filter: blur(30px); border-radius: 22px; padding: 22px 28px; display: flex; align-items: center; justify-content: space-between; }
+  .footer .brand { font-size: 26px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+  .footer .brand .diamond { display: inline-block; width: 20px; height: 20px; transform: rotate(45deg); border: 3px solid #fff; }
+  .footer .cta { font-size: 20px; opacity: 0.85; }
+  .swipe-hint { position: absolute; bottom: 168px; left: 0; right: 0; text-align: center; font-size: 22px; opacity: 0.5; }
+</style></head>
+<body data-w="$W" data-h="$H">
+  <div class="time">$TIME</div>
+  <div class="date">$DATE</div>
+  <div class="badge">$BADGE_COUNT</div>
+  <div class="stack">
+    $NOTIFS
+    <div class="stack-summary">$STACK_SUMMARY</div>
+  </div>
+  <div class="footer">
+    <div class="brand"><span class="diamond"></span> TrainYourAgent</div>
+    <div class="cta">trainyouragent.com/apply</div>
+  </div>
+</body></html>

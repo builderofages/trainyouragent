@@ -1,0 +1,57 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Calculator Ad</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif; }
+  body { width: var(--w, 1080px); height: var(--h, 1920px); background: #000; color: #fff; overflow: hidden; display: flex; flex-direction: column; }
+  .header { padding: 80px 48px 0; text-align: center; }
+  .header .label { font-size: 28px; font-weight: 600; color: #ff3b30; letter-spacing: 0.18em; text-transform: uppercase; }
+  .header .niche { font-size: 38px; font-weight: 500; opacity: 0.7; margin-top: 8px; }
+  .display { flex: 1; padding: 48px 48px 24px; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; text-align: right; gap: 16px; }
+  .calc-line { font-size: 56px; font-weight: 300; opacity: 0.75; font-feature-settings: 'tnum'; }
+  .calc-line .label { font-size: 30px; opacity: 0.55; display: block; text-align: right; margin-bottom: -2px; font-weight: 400; }
+  .calc-line .op { color: #fb923c; padding: 0 8px; }
+  .equals { width: 100%; border-top: 2px solid #fb923c; padding-top: 18px; margin-top: 18px; }
+  .total { font-size: 140px; font-weight: 600; color: #ff3b30; line-height: 1; font-feature-settings: 'tnum'; letter-spacing: -3px; }
+  .total .currency { font-size: 80px; vertical-align: top; margin-right: 4px; opacity: 0.85; }
+  .total-label { font-size: 32px; color: #fff; opacity: 0.85; font-weight: 600; margin-top: 12px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .keypad { padding: 0 48px 48px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .key { aspect-ratio: 1; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 52px; font-weight: 400; }
+  .key.op { background: #fb923c; color: #fff; font-weight: 500; }
+  .key.special { background: #a5a5a5; color: #000; font-size: 44px; }
+  .key.zero { aspect-ratio: unset; grid-column: span 2; border-radius: 100px; justify-content: flex-start; padding-left: 56px; }
+  .footer { background: #042C53; padding: 26px 48px; display: flex; align-items: center; justify-content: space-between; }
+  .footer .brand { font-size: 30px; font-weight: 700; display: flex; align-items: center; gap: 12px; }
+  .footer .brand .diamond { display: inline-block; width: 22px; height: 22px; transform: rotate(45deg); border: 3px solid #fff; }
+  .footer .cta { font-size: 22px; opacity: 0.85; }
+  .footer .cta strong { color: #FFD60A; }
+</style></head>
+<body data-w="$W" data-h="$H">
+  <div class="header">
+    <div class="label">YOUR MONTHLY LEAK</div>
+    <div class="niche">$NICHE_LABEL</div>
+  </div>
+  <div class="display">
+    <div class="calc-line"><span class="label">Missed calls/month</span>$CALLS</div>
+    <div class="calc-line"><span class="op">×</span> <span class="label" style="display:inline-block;font-size:30px;">avg ticket value</span> <span class="currency">$</span>$TICKET</div>
+    <div class="equals">
+      <div class="total"><span class="currency">$</span>$TOTAL</div>
+      <div class="total-label">LOST. EVERY MONTH.</div>
+    </div>
+  </div>
+  <div class="keypad">
+    <div class="key special">AC</div>
+    <div class="key special">+/-</div>
+    <div class="key special">%</div>
+    <div class="key op">÷</div>
+    <div class="key">7</div><div class="key">8</div><div class="key">9</div><div class="key op">×</div>
+    <div class="key">4</div><div class="key">5</div><div class="key">6</div><div class="key op">−</div>
+    <div class="key">1</div><div class="key">2</div><div class="key">3</div><div class="key op">+</div>
+    <div class="key zero">0</div>
+    <div class="key">.</div>
+    <div class="key op">=</div>
+  </div>
+  <div class="footer">
+    <div class="brand"><span class="diamond"></span> TrainYourAgent</div>
+    <div class="cta"><strong>Stop the leak →</strong> trainyouragent.com/apply</div>
+  </div>
+</body></html>
