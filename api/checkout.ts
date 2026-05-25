@@ -142,7 +142,7 @@ export default async function handler(req: Request) {
   const rl = rateLimit(`checkout:${ip}`, { limit: 10, windowMs: 60 * 60 * 1000 });
   if (!rl.ok) return json({ error: "rate-limited" }, 429, { ...cors.headers, ...rl.headers });
 
-  let body: { plan?: string; email?: string };
+  let body: { plan?: string; email?: string; coupon?: string };
   try { body = await req.json(); } catch { return json({ error: "bad-json" }, 400, cors.headers); }
 
   const planMeta = body.plan ? PLANS[body.plan] : undefined;
@@ -196,6 +196,14 @@ export default async function handler(req: Request) {
   if (email) form.set("customer_email", email);
   form.set("allow_promotion_codes", "true");
   form.set("billing_address_collection", "required");
+  // v165: allow inline coupon (e.g. EXIT200 from exit-intent modal) — Stripe
+  // applies via `discounts[0][coupon]` only if the coupon ID is pre-created
+  // in the Stripe dashboard. Silently no-op if coupon doesn't exist (Stripe
+  // returns 400 + we fall through). Keep coupon code in metadata for tracking.
+  if (body.coupon && /^[A-Z0-9_-]{3,40}$/i.test(body.coupon)) {
+    form.set("discounts[0][coupon]", body.coupon.toUpperCase());
+    form.set("metadata[applied_coupon]", body.coupon.toUpperCase());
+  }
 
   let r: Response;
   try {

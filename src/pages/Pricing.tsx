@@ -17,6 +17,8 @@ import PoweredByBadges from "@/components/PoweredByBadges";
 import { ogUrl } from "@/lib/og";
 // v161-verify: Product + FAQPage JSON-LD for Google Rich Results
 import { injectJsonLdMany, allPricingProductsLd, faqPageLd } from "@/lib/jsonld";
+// v165: exit-intent modal — last-shot $200 off Done-WITH-You for abandoners
+import ExitIntentModal from "@/components/conversion/ExitIntentModal";
 // v53: visitor context for niche-aware recommendations
 import { useVisitor, nicheDisplayName } from "@/lib/visitorContext";
 
@@ -710,6 +712,7 @@ const Pricing = () => {
           Pinned bottom on both mobile + desktop, hidden until past hero. */}
       <StickyDoneWithYouBar />
       <ToastHost />
+      <ExitIntentModal />
     </div>
   );
 };
