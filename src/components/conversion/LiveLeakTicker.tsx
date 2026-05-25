@@ -141,13 +141,16 @@ export default function LiveLeakTicker() {
         SMBs. Counter started when you opened the page.
       </p>
 
-      <Link
-        to="/apply"
+      {/* v167: full-page navigation (not React Router SPA) so a stale
+          lazy-chunk can never silently fail and white-screen the user.
+          The /apply route is the money page — bullet-proof it. */}
+      <a
+        href="/apply"
         onClick={onCtaClick}
         className="mt-2.5 inline-flex items-center gap-1 text-xs font-semibold underline decoration-2 underline-offset-2 hover:text-red-600 transition-colors"
       >
         Stop the leak <span aria-hidden>→</span>
-      </Link>
+      </a>
     </div>
   );
 }
