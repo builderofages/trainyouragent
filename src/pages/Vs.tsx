@@ -178,7 +178,7 @@ export default function Vs() {
 
  return (
  <div
- className="min-h-screen bg-[#020C18] text-[#E6F1FB]"
+ className="min-h-screen bg-white text-[#0B1B2B] overflow-x-hidden"
  style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}
  >
  <Helmet>
@@ -197,17 +197,17 @@ export default function Vs() {
 
  <header className="relative pt-32 sm:pt-44 pb-12 sm:pb-20 px-5 sm:px-8 overflow-hidden">
  <div className="max-w-[1080px] mx-auto relative z-10">
- <div className="text-[11px] font-mono uppercase tracking-[0.24em] text-[#9CC4EC]">
+ <div className="text-[11px] font-mono uppercase tracking-[0.24em] text-[#185FA5]">
  COMPETITIVE POSITIONING · WHY US
  </div>
- <h1 className="mt-5 text-[clamp(36px,6vw,72px)] leading-[1.02] tracking-[-0.022em] font-semibold text-white max-w-[920px]">
+ <h1 className="mt-5 text-[clamp(36px,6vw,72px)] leading-[1.02] tracking-[-0.022em] font-semibold text-[#042C53] max-w-[920px]">
  Every AI agency in your inbox is{" "}
- <em className="italic font-normal" style={{ fontFamily: "'Playfair Display', serif", color: "#85B7EB" }}>
+ <em className="italic font-normal" style={{ fontFamily: "'Playfair Display', serif", color: "#042C53" }}>
  the same six-week Skool graduate.
  </em>{" "}
  We're not.
  </h1>
- <p id="vs-lede" className="mt-6 max-w-[780px] text-[17px] sm:text-[19px] leading-[1.6] text-[rgba(230,241,251,0.78)]">
+ <p id="vs-lede" className="mt-6 max-w-[780px] text-[17px] sm:text-[19px] leading-[1.6] text-[#42526E]">
  You've been pitched the same voice AI offer twelve times. Same
  funnel, same VSL, same flow-editor screenshot, same $5K/mo
  retainer, same vague "we customize it." It's the same offer
@@ -223,12 +223,12 @@ export default function Vs() {
 
  <WhyWeAreDifferent hideFooterLink className="" />
 
- <section className="py-24 px-5 sm:px-8" style={{ background: "radial-gradient(1100px 700px at 50% 0%, rgba(4,44,83,0.85) 0%, rgba(2,12,24,1) 70%)" }}>
+ <section className="py-24 px-5 sm:px-8" style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FAF6EE 60%, #FFFFFF 100%)" }}>
  <div className="max-w-[1100px] mx-auto">
- <div className="text-[11px] font-mono uppercase tracking-[0.24em] text-[#9CC4EC]">
+ <div className="text-[11px] font-mono uppercase tracking-[0.24em] text-[#185FA5]">
  SIDE-BY-SIDE · ON EVERY AXIS THAT MATTERS
  </div>
- <h2 className="mt-5 text-[clamp(28px,4vw,48px)] leading-[1.05] tracking-[-0.02em] font-semibold text-white max-w-[800px]">
+ <h2 className="mt-5 text-[clamp(28px,4vw,48px)] leading-[1.05] tracking-[-0.02em] font-semibold text-[#042C53] max-w-[800px]">
  What you're actually comparing.
  </h2>
 
@@ -238,16 +238,16 @@ export default function Vs() {
  key={c.axis}
  className="grid grid-cols-1 md:grid-cols-[260px_1fr_1fr] gap-4 md:gap-6 p-5 sm:p-6 rounded-2xl"
  style={{
- background: "linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))",
- border: "1px solid rgba(255,255,255,0.08)",
- backdropFilter: "blur(12px)",
+ background: "#FFFFFF",
+ border: "1px solid rgba(4,44,83,0.08)",
+ boxShadow: "0 4px 24px -10px rgba(4,44,83,0.10)",
  }}
  >
- <div className="text-[14px] sm:text-[15px] font-semibold text-white tracking-tight">
+ <div className="text-[14px] sm:text-[15px] font-semibold text-[#042C53] tracking-tight">
  {c.axis}
  </div>
- <div className="text-[14px] leading-[1.55] text-[rgba(255,180,180,0.85)]">
- <span className="block text-[10.5px] uppercase tracking-[0.18em] text-[rgba(255,180,180,0.75)] mb-1.5 font-mono">
+ <div className="text-[14px] leading-[1.55] text-[#9B2C2C]">
+ <span className="block text-[10.5px] uppercase tracking-[0.18em] text-[#9B2C2C] mb-1.5 font-mono">
  Them
  </span>
  {c.them}
@@ -264,12 +264,12 @@ export default function Vs() {
  </div>
  </section>
 
- <section className="py-24 px-5 sm:px-8 bg-[#020C18]">
+ <section className="py-24 px-5 sm:px-8 bg-[#FAFBFC] border-y border-slate-200/70">
  <div className="max-w-[1100px] mx-auto">
- <div className="text-[11px] font-mono uppercase tracking-[0.24em] text-[#9CC4EC]">
+ <div className="text-[11px] font-mono uppercase tracking-[0.24em] text-[#185FA5]">
  VS NAMED ALTERNATIVES
  </div>
- <h2 className="mt-5 text-[clamp(28px,4vw,48px)] leading-[1.05] tracking-[-0.02em] font-semibold text-white">
+ <h2 className="mt-5 text-[clamp(28px,4vw,48px)] leading-[1.05] tracking-[-0.02em] font-semibold text-[#042C53]">
  The specific tools we get compared to.
  </h2>
  <p className="mt-5 text-[16px] leading-[1.6] text-[rgba(230,241,251,0.7)] max-w-[760px]">
@@ -283,12 +283,12 @@ export default function Vs() {
  key={a.name}
  className="p-6 rounded-2xl"
  style={{
- background: "linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))",
- border: "1px solid rgba(255,255,255,0.08)",
- backdropFilter: "blur(12px)",
+ background: "#FFFFFF",
+ border: "1px solid rgba(4,44,83,0.08)",
+ boxShadow: "0 4px 24px -10px rgba(4,44,83,0.10)",
  }}
  >
- <h3 className="text-[18px] font-semibold text-white tracking-tight">{a.name}</h3>
+ <h3 className="text-[18px] font-semibold text-[#042C53] tracking-tight">{a.name}</h3>
  <p className="mt-3 text-[13.5px] leading-[1.55] text-[rgba(255,180,180,0.78)]">
  <span className="font-mono uppercase tracking-[0.15em] text-[10.5px] block mb-1.5">What they are</span>
  {a.them}
@@ -305,10 +305,10 @@ export default function Vs() {
 
  <section className="py-24 px-5 sm:px-8" style={{ background: "radial-gradient(1100px 700px at 50% 0%, rgba(4,44,83,0.7) 0%, rgba(2,12,24,1) 70%)" }}>
  <div className="max-w-[820px] mx-auto">
- <div className="text-[11px] font-mono uppercase tracking-[0.24em] text-[#9CC4EC]">
+ <div className="text-[11px] font-mono uppercase tracking-[0.24em] text-[#185FA5]">
  FAQ · THE QUESTIONS BUYERS ACTUALLY ASK
  </div>
- <h2 className="mt-5 text-[clamp(28px,4vw,44px)] leading-[1.1] tracking-[-0.02em] font-semibold text-white">
+ <h2 className="mt-5 text-[clamp(28px,4vw,44px)] leading-[1.1] tracking-[-0.02em] font-semibold text-[#042C53]">
  What you'd ask on the discovery call.
  </h2>
 
@@ -318,15 +318,15 @@ export default function Vs() {
  key={i}
  className="p-5 sm:p-6 rounded-2xl"
  style={{
- background: "linear-gradient(160deg, rgba(255,255,255,0.045), rgba(255,255,255,0.01))",
- border: "1px solid rgba(255,255,255,0.08)",
+ background: "#FFFFFF",
+ border: "1px solid rgba(4,44,83,0.08)",
  }}
  >
- <summary className="cursor-pointer text-[15.5px] sm:text-[17px] font-semibold text-white tracking-tight list-none flex items-start gap-3">
+ <summary className="cursor-pointer text-[15.5px] sm:text-[17px] font-semibold text-[#042C53] tracking-tight list-none flex items-start gap-3">
  <span className="text-[#85B7EB] mt-1">→</span>
  <span>{f.question}</span>
  </summary>
- <p className="mt-4 text-[14.5px] leading-[1.65] text-[rgba(230,241,251,0.78)] pl-7">
+ <p className="mt-4 text-[14.5px] leading-[1.65] text-[#42526E] pl-7">
  {f.answer}
  </p>
  </details>
@@ -335,9 +335,9 @@ export default function Vs() {
  </div>
  </section>
 
- <section className="py-24 px-5 sm:px-8 bg-[#020C18]">
+ <section className="py-24 px-5 sm:px-8 bg-[#FAFBFC] border-y border-slate-200/70">
  <div id="vs-verdict" className="max-w-[820px] mx-auto text-center">
- <h2 className="text-[clamp(28px,4vw,48px)] leading-[1.05] tracking-[-0.02em] font-semibold text-white">
+ <h2 className="text-[clamp(28px,4vw,48px)] leading-[1.05] tracking-[-0.02em] font-semibold text-[#042C53]">
  The verdict.
  </h2>
  <p className="mt-6 text-[17px] leading-[1.6] text-[rgba(230,241,251,0.8)]">
@@ -359,7 +359,7 @@ export default function Vs() {
  </Link>
  <a
  href="/pricing"
- className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl border border-white/20 text-white font-semibold text-[15.5px] hover:bg-white/5"
+ className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl border border-[#042C53]/20 text-[#042C53] font-semibold text-[15.5px] hover:bg-white/5"
  >
  See pricing
  </a>
