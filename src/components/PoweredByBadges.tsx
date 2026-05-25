@@ -126,26 +126,48 @@ export default function PoweredByBadges({
                 minHeight: 96,
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "rgba(24,95,165,0.35)";
+                e.currentTarget.style.borderColor = "rgba(71,85,105,0.25)";
                 e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.boxShadow = "0 14px 30px -16px rgba(4,44,83,0.18)";
+                e.currentTarget.style.boxShadow = "0 14px 30px -16px rgba(15,23,42,0.12)";
+                const brand = e.currentTarget.querySelector(".tya-tool__icon-brand") as HTMLImageElement | null;
+                const rest  = e.currentTarget.querySelector(".tya-tool__icon-rest")  as HTMLImageElement | null;
+                if (brand) brand.style.opacity = "1";
+                if (rest)  rest.style.opacity  = "0";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "rgba(4,44,83,0.08)";
+                e.currentTarget.style.borderColor = "rgba(15,23,42,0.06)";
                 e.currentTarget.style.transform = "translateY(0)";
                 e.currentTarget.style.boxShadow = "none";
+                const brand = e.currentTarget.querySelector(".tya-tool__icon-brand") as HTMLImageElement | null;
+                const rest  = e.currentTarget.querySelector(".tya-tool__icon-rest")  as HTMLImageElement | null;
+                if (brand) brand.style.opacity = "0";
+                if (rest)  rest.style.opacity  = "1";
               }}
             >
-              <img
-                src={`https://cdn.simpleicons.org/${t.slug}/042C53`}
-                alt={`${t.name} logo`}
-                width={22}
-                height={22}
-                loading="lazy"
-                style={{ display: "block" }}
-                // Hover swap to brand color via CSS-only would require a separate <img>;
-                // keep monochrome navy at rest for editorial calm, no rainbow chaos.
-              />
+              {/* v168b: graphite (#475569) at rest — NOT navy. User audit said
+                  the all-navy treatment made the whole section "too blue."
+                  Hover swap to real brand color via second <img> + CSS opacity. */}
+              <div style={{ width: 22, height: 22, position: "relative" }}>
+                <img
+                  src={`https://cdn.simpleicons.org/${t.slug}/475569`}
+                  alt={`${t.name} logo`}
+                  width={22}
+                  height={22}
+                  loading="lazy"
+                  className="tya-tool__icon-rest"
+                  style={{ display: "block", position: "absolute", inset: 0, transition: "opacity 240ms ease" }}
+                />
+                <img
+                  src={`https://cdn.simpleicons.org/${t.slug}`}
+                  alt=""
+                  aria-hidden="true"
+                  width={22}
+                  height={22}
+                  loading="lazy"
+                  className="tya-tool__icon-brand"
+                  style={{ display: "block", position: "absolute", inset: 0, opacity: 0, transition: "opacity 240ms ease" }}
+                />
+              </div>
               <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.005em" }}>
                 {t.name}
               </div>

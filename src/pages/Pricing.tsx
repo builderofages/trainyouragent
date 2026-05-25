@@ -830,21 +830,23 @@ function DoneWithYouCallout() {
             </div>
           )}
         </div>
-        <div className="p-7 sm:p-9 bg-[#185FA5] text-white flex flex-col justify-center">
-          <div className="text-[11px] uppercase tracking-[0.18em] text-[#FFD60A] font-semibold mb-1">Agent in a Day</div>
-          <div className="flex items-baseline gap-1.5">
+        {/* v169: was full navy panel — user audit said too blue. Now cream
+            with navy accent text only. Matches editorial brand. */}
+        <div className="p-7 sm:p-9 bg-[#FAF6EE] flex flex-col justify-center border-l border-[#042C53]/8">
+          <div className="text-[11px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-1">Agent in a Day</div>
+          <div className="flex items-baseline gap-1.5 text-[#042C53]">
             <div className="text-[44px] sm:text-[56px] font-semibold tracking-tight leading-none">$497</div>
-            <div className="text-[15px] text-white/70">one-time</div>
+            <div className="text-[15px] text-[#042C53]/60">one-time</div>
           </div>
-          <div className="text-[13px] text-white/70 mt-2 mb-6">USD · 4 hours · full refund if we don't ship</div>
+          <div className="text-[13px] text-[#042C53]/65 mt-2 mb-6">USD · 4 hours · full refund if we don't ship</div>
           <button
             onClick={buy}
             disabled={loading}
-            className="w-full px-5 py-3.5 rounded-full font-semibold text-[15px] transition bg-white text-[#042C53] hover:bg-[#FFD60A] disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full px-5 py-3.5 rounded-full font-semibold text-[15px] transition bg-[#042C53] text-white hover:bg-[#0A3D6E] disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading ? "Loading checkout…" : "Book my build day →"}
           </button>
-          <div className="mt-5 text-[11px] text-white/60 leading-relaxed">
+          <div className="mt-5 text-[11px] text-[#042C53]/55 leading-relaxed">
             Stripe checkout. After payment we send a Calendly link to pick the 4-hour block within 7 days.
           </div>
         </div>
@@ -1000,27 +1002,28 @@ function SelfServeCallout() {
             </div>
           )}
         </div>
-        <div className="p-7 sm:p-9 bg-[#042C53] text-white flex flex-col justify-center">
-          <div className="text-[11px] uppercase tracking-[0.18em] text-[#FFD60A] font-semibold mb-1">Starter</div>
-          <div className="flex items-baseline gap-1.5">
+        {/* v169: navy → cream. Match editorial brand. */}
+        <div className="p-7 sm:p-9 bg-[#FAF6EE] flex flex-col justify-center border-l border-[#042C53]/8">
+          <div className="text-[11px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-1">Starter</div>
+          <div className="flex items-baseline gap-1.5 text-[#042C53]">
             <div className="text-[44px] sm:text-[56px] font-semibold tracking-tight leading-none">$99</div>
-            <div className="text-[15px] text-white/70">/ month</div>
+            <div className="text-[15px] text-[#042C53]/60">/ month</div>
           </div>
-          <div className="text-[13px] text-white/70 mt-2 mb-6">USD · billed monthly · cancel anytime</div>
+          <div className="text-[13px] text-[#042C53]/65 mt-2 mb-6">USD · billed monthly · cancel anytime</div>
           <button
             onClick={subscribe}
             disabled={loading}
-            className="w-full px-5 py-3.5 rounded-full font-semibold text-[15px] transition bg-[#FFD60A] text-[#042C53] hover:bg-white disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full px-5 py-3.5 rounded-full font-semibold text-[15px] transition bg-[#042C53] text-white hover:bg-[#0A3D6E] disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading ? "Loading checkout…" : "Subscribe — $99/mo →"}
           </button>
-          <Link
-            to="/saas/agent-builder"
-            className="mt-3 text-center text-[12.5px] text-white/70 hover:text-white underline underline-offset-2"
+          <a
+            href="/saas/agent-builder"
+            className="mt-3 text-center text-[12.5px] text-[#185FA5] hover:text-[#042C53] underline underline-offset-2"
           >
             See full feature list
-          </Link>
-          <div className="mt-5 text-[11px] text-white/60 leading-relaxed">
+          </a>
+          <div className="mt-5 text-[11px] text-[#042C53]/55 leading-relaxed">
             Secure checkout via Stripe. SSL/TLS 1.3. We never see your card.
           </div>
         </div>
