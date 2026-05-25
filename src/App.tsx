@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { lazy, Suspense, useEffect } from "react";
+import { Component, lazy, Suspense, useEffect, type ReactNode } from "react";
 import { initAttribution } from "@/lib/affiliate";
 
 // Critical / above-the-fold routes — eager.
@@ -213,23 +213,140 @@ const AffiliatesPortal       = lazy(() => import("./pages/AffiliatesPortal"));
 
 const queryClient = new QueryClient();
 
+// v163: Branded RouteFallback — eliminates the perceived "white screen"
+// during React Router lazy-chunk fetch (2-3s gap between click + render).
+// Earlier "Loading…" text on white background was indistinguishable from
+// a broken page. This version shows a centered brand mark, a name, a
+// shimmer progress bar, AND a top-of-page indeterminate progress strip
+// so the user knows the click registered and something is happening.
 const RouteFallback = () => (
-  <div
-    role="status"
-    aria-live="polite"
-    style={{
-      minHeight: "60vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      color: "#185FA5",
-      fontFamily: "'Inter Tight', system-ui, sans-serif",
-      fontSize: 14,
-    }}
-  >
-    Loading…
-  </div>
+  <>
+    {/* Top progress strip — always visible at very top of viewport */}
+    <div
+      aria-hidden="true"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 3,
+        background: "linear-gradient(90deg, transparent 0%, #185FA5 30%, #042C53 60%, #185FA5 80%, transparent 100%)",
+        backgroundSize: "200% 100%",
+        animation: "tya-loader-strip 1.2s linear infinite",
+        zIndex: 9999,
+        pointerEvents: "none",
+      }}
+    />
+    <div
+      role="status"
+      aria-live="polite"
+      aria-label="Loading next page"
+      style={{
+        minHeight: "80vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 18,
+        background: "#FAFBFC",
+        fontFamily: "'Inter Tight', system-ui, sans-serif",
+      }}
+    >
+      <svg
+        width="56"
+        height="56"
+        viewBox="0 0 64 64"
+        fill="none"
+        stroke="#042C53"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        style={{ animation: "tya-loader-pulse 1.6s ease-in-out infinite" }}
+        aria-hidden="true"
+      >
+        <g strokeWidth="4"><path d="M 32 6 L 58 32 L 32 58 L 6 32 Z" /></g>
+        <g strokeWidth="2.4"><path d="M 32 6 L 32 58" /><path d="M 6 32 L 58 32" /></g>
+        <circle cx="32" cy="32" r="3" fill="#042C53" stroke="none" />
+      </svg>
+      <div style={{ color: "#042C53", fontSize: 15, fontWeight: 600, letterSpacing: "-0.01em" }}>
+        TrainYourAgent
+      </div>
+      <div style={{ color: "#6B7B8F", fontSize: 13, letterSpacing: "0.04em" }}>
+        Loading next page…
+      </div>
+      <style>{`
+        @keyframes tya-loader-strip {
+          0% { background-position: 100% 0; }
+          100% { background-position: -100% 0; }
+        }
+        @keyframes tya-loader-pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.5; transform: scale(0.92); }
+        }
+      `}</style>
+    </div>
+  </>
 );
+
+// v163: Route-level error boundary — catches any thrown error inside a
+// lazy-loaded route (chunk-load failure, render exception, etc.) and shows
+// a branded "let's reload" card instead of a white screen + blank console.
+class RouteErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean; err?: Error }> {
+  constructor(props: { children: ReactNode }) { super(props); this.state = { hasError: false }; }
+  static getDerivedStateFromError(err: Error) { return { hasError: true, err }; }
+  componentDidCatch(err: Error, info: unknown) {
+    // Log to console (Vercel will capture) + best-effort to /api/event
+    console.error("[RouteErrorBoundary]", err, info);
+    try {
+      void fetch("/api/event", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          event_type: "route_render_error",
+          source: "error-boundary",
+          meta: { message: err.message?.slice(0, 200), path: window.location.pathname },
+        }),
+        keepalive: true,
+      });
+    } catch {}
+  }
+  reset = () => { this.setState({ hasError: false, err: undefined }); window.location.reload(); };
+  render() {
+    if (!this.state.hasError) return this.props.children;
+    return (
+      <div style={{
+        minHeight: "80vh", display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center", gap: 16,
+        background: "#FAFBFC", padding: 24, textAlign: "center",
+        fontFamily: "'Inter Tight', system-ui, sans-serif",
+      }}>
+        <svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#042C53" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <g strokeWidth="4"><path d="M 32 6 L 58 32 L 32 58 L 6 32 Z" /></g>
+          <g strokeWidth="2.4"><path d="M 32 6 L 32 58" /><path d="M 6 32 L 58 32" /></g>
+          <circle cx="32" cy="32" r="3" fill="#042C53" stroke="none" />
+        </svg>
+        <div style={{ fontSize: 19, fontWeight: 600, color: "#042C53" }}>
+          This page hiccupped on the way in.
+        </div>
+        <div style={{ fontSize: 14, color: "#6B7B8F", maxWidth: 480, lineHeight: 1.5 }}>
+          Usually a slow chunk fetch. Hit reload and it'll come up. If it keeps happening, email alexander@trainyouragent.com — we want to fix it.
+        </div>
+        <button
+          onClick={this.reset}
+          style={{
+            marginTop: 8, padding: "10px 22px", borderRadius: 999,
+            background: "#042C53", color: "#fff", fontSize: 14, fontWeight: 600,
+            border: "none", cursor: "pointer",
+          }}
+        >
+          Reload this page
+        </button>
+        <a href="/" style={{ marginTop: 4, fontSize: 12, color: "#185FA5" }}>
+          Or back to home →
+        </a>
+      </div>
+    );
+  }
+}
 
 const App = () => {
   useEffect(() => { initAttribution(); }, []);
@@ -245,6 +362,7 @@ const App = () => {
         <ContextPill />
         <Suspense fallback={<RouteFallback />}>
           <PageTransition>
+          <RouteErrorBoundary>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/start" element={<Start />} />
@@ -472,6 +590,7 @@ const App = () => {
             <Route path="/:vertical/:city" element={<LocationPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </RouteErrorBoundary>
           </PageTransition>
         </Suspense>
         <AiChat />
