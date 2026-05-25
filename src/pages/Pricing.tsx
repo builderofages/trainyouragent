@@ -355,6 +355,16 @@ const Pricing = () => {
         </div>
       </section>
 
+      {/* v156: Direct-checkout self-serve SaaS tier above the 3 done-for-you
+          lanes. Skips Cal.com — clicks Subscribe and lands in Stripe checkout
+          in 2 seconds. Fixes the monetization hole where /pricing had ZERO
+          direct purchase paths (all 3 lanes routed to Cal.com only). */}
+      <section className="px-5 sm:px-8 pb-10">
+        <div className="max-w-7xl mx-auto">
+          <SelfServeCallout />
+        </div>
+      </section>
+
       <section className="px-5 sm:px-8 pb-20">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-5">
           {PLANS.map((p) => {
@@ -624,3 +634,104 @@ const Pricing = () => {
 };
 
 export default Pricing;
+
+// v156: Self-Serve SaaS callout — direct Stripe checkout, no Cal.com hop.
+// Mounted above the 3 done-for-you lanes so a buyer ready to swipe their card
+// has a path that doesn't go through a sales call.
+function SelfServeCallout() {
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  async function subscribe() {
+    setErr(null);
+    setLoading(true);
+    try {
+      const r = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ plan: "saas-agent-builder" }),
+      });
+      const j = (await r.json().catch(() => ({}))) as { url?: string; error?: string };
+      if (j?.url) {
+        window.location.href = j.url;
+        return;
+      }
+      if (j?.error === "stripe-not-configured" || j?.error === "plan-not-configured") {
+        setErr("Checkout being wired — email alexander@trainyouragent.com for manual access.");
+      } else {
+        setErr("Couldn't start checkout. Try again or email alexander@trainyouragent.com.");
+      }
+    } catch {
+      setErr("Network error. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="rounded-3xl overflow-hidden border border-[#FFD60A] bg-gradient-to-br from-[#FFFBEA] via-white to-[#F6FAFE] shadow-[0_20px_50px_-20px_rgba(255,214,10,0.4)]">
+      <div className="grid md:grid-cols-[1.4fr_1fr] gap-0">
+        <div className="p-7 sm:p-9">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#042C53] text-white text-[10.5px] uppercase tracking-[0.18em] font-semibold mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FFD60A] animate-pulse" />
+            Self-Serve · No call
+          </div>
+          <h2 className="text-[26px] sm:text-[34px] leading-[1.1] tracking-tight font-semibold text-[#042C53]">
+            Or skip the call.{" "}
+            <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
+              Build it yourself
+            </span>{" "}
+            for $99/mo.
+          </h2>
+          <p className="mt-3 text-[15px] sm:text-[16px] text-slate-700 leading-relaxed max-w-xl">
+            One AI agent, fully trained on your docs. 5,000 conversations/mo, embed-anywhere widget, transcript logs, weekly tune-up suggestions. Live in 7 days. 30-day money-back. Cancel anytime.
+          </p>
+          <ul className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2 text-[13.5px] text-slate-700">
+            {[
+              "$99/mo, billed monthly",
+              "5,000 conversations included",
+              "Embed widget on any site",
+              "Your brand, your voice, your docs",
+              "Stripe checkout — pay & go live in 5 min",
+              "Cancel any time, no contracts",
+            ].map((p) => (
+              <li key={p} className="flex items-start gap-2">
+                <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[#22A36C] mt-2" />
+                <span>{p}</span>
+              </li>
+            ))}
+          </ul>
+          {err && (
+            <div className="mt-4 text-[13px] text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+              {err}
+            </div>
+          )}
+        </div>
+        <div className="p-7 sm:p-9 bg-[#042C53] text-white flex flex-col justify-center">
+          <div className="text-[11px] uppercase tracking-[0.18em] text-[#FFD60A] font-semibold mb-1">Starter</div>
+          <div className="flex items-baseline gap-1.5">
+            <div className="text-[44px] sm:text-[56px] font-semibold tracking-tight leading-none">$99</div>
+            <div className="text-[15px] text-white/70">/ month</div>
+          </div>
+          <div className="text-[13px] text-white/70 mt-2 mb-6">USD · billed monthly · cancel anytime</div>
+          <button
+            onClick={subscribe}
+            disabled={loading}
+            className="w-full px-5 py-3.5 rounded-full font-semibold text-[15px] transition bg-[#FFD60A] text-[#042C53] hover:bg-white disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {loading ? "Loading checkout…" : "Subscribe — $99/mo →"}
+          </button>
+          <Link
+            to="/saas/agent-builder"
+            className="mt-3 text-center text-[12.5px] text-white/70 hover:text-white underline underline-offset-2"
+          >
+            See full feature list
+          </Link>
+          <div className="mt-5 text-[11px] text-white/60 leading-relaxed">
+            Secure checkout via Stripe. SSL/TLS 1.3. We never see your card.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
