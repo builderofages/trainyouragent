@@ -369,7 +369,12 @@ const App = () => {
             <Route path="/tools/model-selector" element={<ModelSelector />} />
             <Route path="/tools/automation-roi" element={<AutomationRoi />} />
             {/* v44: public metrics — built-in-public */}
-            <Route path="/metrics" element={<Metrics />} />
+            {/* v159: /metrics gated — pre-revenue "2 leads, 0 purchases"
+                publicly displayed kills SMB buyer trust. Hormozi audit.
+                Founder-only view moved to /admin/metrics. Public /metrics
+                redirects to /proof which highlights demos + capabilities. */}
+            <Route path="/metrics" element={<Navigate to="/proof" replace />} />
+            <Route path="/admin/metrics" element={<Metrics />} />
             {/* v42: live AI demos */}
             <Route path="/demos/sales-objection-handler" element={<SalesObjectionHandler />} />
             <Route path="/demos/sop-writer" element={<SopWriter />} />
