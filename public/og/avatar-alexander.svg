@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- v161: founder avatar placeholder — Alexander Mills. Geometric navy
+     square with white "AM" initials in Inter Tight 700. Swap for real
+     headshot at /public/alexander-mills.jpg whenever the photo is ready;
+     About.tsx already has a commented-out <img> line waiting for it. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Alexander Mills">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#042C53"/>
+      <stop offset="100%" stop-color="#0A3D6E"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#185FA5"/>
+      <stop offset="100%" stop-color="#22A36C"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="200" height="200" rx="28" ry="28" fill="url(#bg)"/>
+  <!-- corner ticks -->
+  <path d="M 16 16 L 36 16 M 16 16 L 16 36" stroke="#185FA5" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+  <path d="M 184 16 L 164 16 M 184 16 L 184 36" stroke="#185FA5" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+  <path d="M 16 184 L 36 184 M 16 184 L 16 164" stroke="#185FA5" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+  <path d="M 184 184 L 164 184 M 184 184 L 184 164" stroke="#185FA5" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+  <!-- AM monogram, Inter Tight 700 -->
+  <text x="100" y="118" text-anchor="middle"
+        font-family="'Inter Tight', 'Inter', system-ui, -apple-system, sans-serif"
+        font-weight="700" font-size="82" letter-spacing="-3" fill="#FFFFFF">AM</text>
+  <!-- micro caption -->
+  <text x="100" y="156" text-anchor="middle"
+        font-family="'Inter Tight', 'Inter', system-ui, -apple-system, sans-serif"
+        font-weight="600" font-size="9" letter-spacing="2.5" fill="#85B7EB">FOUNDER · TYA</text>
+  <!-- accent bar -->
+  <rect x="62" y="170" width="76" height="2" rx="1" fill="url(#accent)"/>
+</svg>

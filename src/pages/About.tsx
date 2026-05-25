@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
 // v38: trust signals
 import BuiltInPublic from "@/components/BuiltInPublic";
+import FounderBlock from "@/components/FounderBlock"; // v161
 import ShipsCounter from "@/components/ShipsCounter";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
@@ -150,48 +151,11 @@ const About = () => {
  </div>
  </section>
 
- <section className="py-16 sm:py-24 bg-white border-y border-slate-200">
- <div className="max-w-[1080px] mx-auto px-6 grid md:grid-cols-[260px_1fr] gap-10 items-start">
- {/* v46a: Founder photo slot — Alexander to drop real headshot at /alexander-mills.jpg */}
- <div className="flex flex-col gap-4">
- <div className="aspect-square rounded-3xl border border-slate-200 bg-gradient-to-br from-[#E6F1FB] to-[#DCEBFA] flex flex-col items-center justify-center text-center px-4 overflow-hidden">
- {/* If /alexander-mills.jpg exists in /public, swap the placeholder for: */}
- {/* <img src="/alexander-mills.jpg" alt="Alexander Mills" className="w-full h-full object-cover" /> */}
- <BrainLogo size={88} />
- <div className="text-[12px] uppercase tracking-[0.18em] text-[#042C53] font-semibold mt-4">Alexander Mills</div>
- <div className="text-[11px] text-slate-600 mt-1">Founder · TrainYourAgent</div>
- </div>
- <div className="text-[13px] text-slate-700 leading-relaxed">
- <div><strong className="font-semibold text-[#042C53]">Alexander Mills</strong></div>
- <div>Founder, TrainYourAgent</div>
- <div>Tampa Bay, Florida</div>
- <div>Founded 2022</div>
- <div className="mt-2">
- <a href="mailto:alexander@trainyouragent.com" className="text-[#185FA5] underline decoration-[#185FA5]/40 hover:decoration-[#185FA5]">alexander@trainyouragent.com</a>
- </div>
- </div>
- </div>
-
- <div>
- <div className="text-[11px] tracking-[0.2em] uppercase text-[#185FA5] font-mono mb-4">Founder</div>
- <h2 className="text-[clamp(32px,4vw,52px)] leading-[1.05] tracking-[-0.025em] mb-6" style={{ fontFamily: "'Playfair Display', serif", fontWeight: 500 }}>
- Alexander <em className="italic font-normal" style={{ color: "#185FA5" }}>Mills.</em>
- </h2>
- <div className="text-[#0B1B2B] text-[16.5px] leading-[1.7] space-y-4 mb-8">
- <p>I'm the founder of TrainYourAgent — a Tampa-based AI company building the voice and chat agents that actually run service businesses.</p>
- <p>Before AI, I built across categories most founders never touch: shipping social campaigns for global brands and household-name talent at one of the world's largest social media marketing agencies in Los Angeles,. The pattern: walk into industries the polished operators ignore, learn how the work actually gets done, and rebuild it.</p>
- <p>I'm now four years deep in applied AI — through every model release, every tool shift, every capability jump — and I ship the same way I always have: faster than anyone you've met, with a thesis you can argue with.</p>
- <p>That thesis: AI isn't a feature. It's the evolutionary step that takes humans out of cubicles. The next decade of business gets won by the operators who wire it into the work first. TrainYourAgent is the agency that wires it for them.</p>
- <p>When you sign with TYA, you don't get an SDR or an account manager — you get me on discovery, scoping, and at every monthly check-in after. DM the word <code className="font-mono text-[15px] bg-slate-100 px-2 py-0.5 rounded">AGENT</code> on LinkedIn and I'll record a live build walkthrough for you on the spot.</p>
- </div>
- <div className="flex gap-3 flex-wrap">
- <a href={CAL_URL} target="_blank" rel="noopener" className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] text-[15px] font-semibold text-white bg-[#185FA5] hover:bg-[#0C447C] transition rounded-full">Book 30 min with me →</a>
- <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] text-[15px] font-semibold text-[#042C53] bg-white hover:bg-slate-50 border border-slate-200 transition rounded-full">Connect on LinkedIn →</a>
- </div>
- {/* v38: live ship counter under the bio */}
- <div className="mt-8"><ShipsCounter variant="hero" /></div>
- </div>
- </div>
+ {/* v161: founder block — shared component used here AND under the
+ homepage hero so the bio + credentials live in one place. */}
+ <FounderBlock variant="page" />
+ <section className="px-6 py-8 max-w-[1080px] mx-auto">
+ <ShipsCounter variant="hero" />
  </section>
 
  {/* v38: built-in-public timeline pulled live from GitHub */}

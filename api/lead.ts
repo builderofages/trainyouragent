@@ -23,6 +23,8 @@ import { corsCheck, preflightResponse, forbiddenResponse } from "./_lib/cors.js"
 import { recordLead } from "./_lib/lead-store.js";
 import { sendEmail, leadMagnetEmailHtml } from "./_lib/resend.js";
 import { sha256Lower, deterministicEventId } from "./_lib/eventid.js";
+// v161: 5-touch nurture drip enqueued via Resend scheduled_at on every lead.
+import { enqueueNurture } from "./nurture-enqueue.js";
 
 export const config = { runtime: "edge" };
 
@@ -290,6 +292,26 @@ export default async function handler(req: Request) {
   const wantsNewsletter = body.subscribeToNewsletter === true || NEWSLETTER_SOURCES.has(body.source);
   if (wantsNewsletter && BEEHIIV_KEY && BEEHIIV_PUB) {
     tasks.push(forwardToBeehiiv(body));
+  }
+
+  // v161: 5-email nurture drip — every captured email gets enqueued via
+  // Resend's `scheduled_at` so we don't depend on the cron tick to fire the
+  // welcome touch. Niche taken from payload.niche when present (set by
+  // playbook/vertical lead forms).
+  if (RESEND_KEY && body.email) {
+    let niche: string | undefined;
+    if (body.payload && typeof body.payload === "object" && !Array.isArray(body.payload)) {
+      const v = (body.payload as Record<string, unknown>).niche;
+      if (typeof v === "string" && v.length > 0 && v.length < 64) niche = v;
+    }
+    tasks.push(
+      enqueueNurture({
+        email: body.email,
+        source: body.source,
+        niche,
+        firstName: body.name?.split(/\s+/)[0],
+      })
+    );
   }
 
   // v52a: lead-magnet auto-delivery. Fire-and-forget so we never block the

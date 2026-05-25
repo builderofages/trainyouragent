@@ -49,6 +49,7 @@ import MeshGradientBackdrop from "@/components/visual/MeshGradientBackdrop";
 import ParticleDrift from "@/components/visual/ParticleDrift";
 // v131: Hormozi-style live $-leak counter, pinned bottom-right, fires GA4 events.
 import LiveLeakTicker from "@/components/conversion/LiveLeakTicker";
+import FounderBlock from "@/components/FounderBlock"; // v161
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
@@ -426,6 +427,10 @@ const Index = () => {
  </div>
  </div>
  </section>
+
+ {/* v161: founder bio block under the hero — SMB buyers buy the operator
+ more than the platform. Photo, 4-year track, 3 credentials, links. */}
+ <FounderBlock variant="hero" />
 
  {/* v88: powered-by tech-stack badge strip immediately after the hero.
  Establishes credibility — these are real infra primitives, same

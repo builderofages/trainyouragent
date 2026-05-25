@@ -19,6 +19,9 @@ import { Helmet } from "react-helmet";
 import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
 import PoweredByBadges from "@/components/PoweredByBadges";
+// v161: technically verifiable artifacts block (GitHub count, LLM
+// fallback chain diagram, voice latency benchmark, code snippet, honesty block).
+import VerifiableProofBlock from "@/components/proof/VerifiableProofBlock";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
@@ -173,6 +176,11 @@ export default function Proof() {
           </div>
         </div>
       </section>
+
+      {/* v161: technically verifiable receipts (GitHub commit count via
+          /api/github-velocity, LLM fallback chain SVG, 487ms voice
+          latency, integration badges, inline code snippet, honesty block). */}
+      <VerifiableProofBlock />
 
       {/* WORKING TOOLS GRID */}
       <section className="px-5 sm:px-8 py-16 bg-[#F6FAFE] border-y border-slate-200/70">

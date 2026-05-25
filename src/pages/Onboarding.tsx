@@ -1,5 +1,9 @@
 // src/pages/Onboarding.tsx — route /onboarding
-// v38: Post-purchase onboarding flow. Stripe checkout success URL points
+// v161: Post-purchase top-tier experience. Adds canvas-confetti burst on
+// arrival with ?session_id, embedded Cal.com (CalEmbed) inside step 2, and
+// an inline founder Loom placeholder iframe in step 1. v38 5-step checklist
+// preserved — this is an upgrade, not a rewrite.
+// (v38: Post-purchase onboarding flow.) Stripe checkout success URL points
 // here with ?session_id={CHECKOUT_SESSION_ID} appended.
 //
 // 5 steps with progress indicator + per-step localStorage completion.
@@ -14,6 +18,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import confetti from "canvas-confetti"; // v161
+import CalEmbed from "@/components/CalEmbed"; // v161
 import SiteNav from "@/components/SiteNav";
 
 const CAL_URL_BOOK = "https://cal.com/trainyouragent/30min";
@@ -72,6 +78,30 @@ const Onboarding = () => {
     if (typeof document === "undefined") return;
     document.title = "Welcome — Onboarding — TrainYourAgent";
   }, []);
+
+  // v161: confetti burst when a real purchase arrives (only if ?session_id is
+  // present — never fire on a bare /onboarding visit). Once-per-session via
+  // sessionStorage so a refresh doesn't re-fire.
+  useEffect(() => {
+    if (!sessionId) return;
+    try {
+      const k = `tya:confetti:${sessionId}`;
+      if (window.sessionStorage.getItem(k) === "1") return;
+      window.sessionStorage.setItem(k, "1");
+    } catch {}
+    const burst = (origin: number) =>
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        startVelocity: 45,
+        origin: { x: origin, y: 0.3 },
+        colors: ["#042C53", "#185FA5", "#22A36C", "#FFD60A", "#85B7EB"],
+        ticks: 200,
+      });
+    burst(0.2);
+    setTimeout(() => burst(0.8), 250);
+    setTimeout(() => burst(0.5), 500);
+  }, [sessionId]);
 
   // Re-save whenever complete changes.
   useEffect(() => { saveComplete(complete); }, [complete]);
@@ -132,10 +162,26 @@ const Onboarding = () => {
               done={!!complete.welcome}
               onToggle={(v) => mark("welcome", v)}
             >
-              <div className="aspect-video rounded-2xl bg-gradient-to-br from-[#E6F1FB] to-[#DCEBFA] border border-slate-200 flex flex-col items-center justify-center text-[#042C53] text-center px-6">
-                <div className="text-[14px] uppercase tracking-[0.18em] font-semibold text-[#185FA5] mb-2">Welcome video</div>
-                <div className="text-[16px] font-semibold max-w-md leading-snug">Recording in progress — kickoff Looms go live as each new customer signs.</div>
-                <div className="text-[13px] text-slate-700 mt-3 max-w-md">For now, Alexander records a personal welcome Loom inside 24 hours of your purchase and emails it directly.</div>
+              {/* v161: founder welcome Loom slot. Replace LOOM_EMBED_URL
+                  with the real Loom share-embed URL once the welcome video
+                  is recorded. Until then, /voice-demo is the "watch the
+                  product" payoff so the slot is never empty. */}
+              <div className="aspect-video rounded-2xl bg-[#0B1B2B] border border-slate-200 overflow-hidden relative">
+                <iframe
+                  src="https://www.loom.com/embed/placeholder?hide_share=true&hide_title=true&hideEmbedTopBar=true"
+                  title="Welcome from Alexander — TrainYourAgent"
+                  className="absolute inset-0 w-full h-full"
+                  frameBorder={0}
+                  allowFullScreen
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#042C53]/95 to-[#0B1B2B]/95 flex flex-col items-center justify-center text-white text-center px-6 pointer-events-none">
+                  <div className="text-[11px] uppercase tracking-[0.18em] font-semibold text-[#FFD60A] mb-2 font-mono">Personal welcome from the founder</div>
+                  <div className="text-[18px] sm:text-[20px] font-semibold max-w-md leading-snug">Alexander records you a Loom within 24 hours — it lands in your inbox today.</div>
+                  <a href="/voice-demo" className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-[#042C53] text-[12.5px] font-semibold pointer-events-auto hover:bg-[#FFD60A]">
+                    Meanwhile: talk to the live agent (60 sec) &rarr;
+                  </a>
+                </div>
               </div>
               <p className="text-[14px] text-slate-700 mt-4 leading-relaxed">
                 Three-minute intro from Alexander on how the next week works and who you'll be talking to. Sent direct to your inbox within one business day of purchase.
@@ -148,18 +194,18 @@ const Onboarding = () => {
               done={!!complete.kickoff}
               onToggle={(v) => mark("kickoff", v)}
             >
-              <div className="rounded-2xl bg-[#F6FAFE] border border-slate-200 p-5">
-                <div className="text-[14px] text-[#042C53] mb-4">
+              {/* v161: inline Cal embed instead of a button-out — buyers
+                  who already paid shouldn't have to tab-hop to schedule. */}
+              <div className="rounded-2xl bg-[#F6FAFE] border border-slate-200 p-3 sm:p-4">
+                <div className="text-[14px] text-[#042C53] mb-3 px-2 pt-2">
                   Pick the first slot that works. We aim to do the kickoff within 48 hours of purchase.
                 </div>
-                <a
-                  href={CAL_URL_BOOK}
-                  target="_blank"
-                  rel="noopener"
-                  className="inline-flex px-6 py-3 rounded-xl bg-[#042C53] text-white font-semibold text-[14px] hover:bg-[#0A3D6E] shadow-sm"
-                >
-                  Book kickoff on Cal.com →
-                </a>
+                <div className="rounded-xl overflow-hidden bg-white border border-slate-200">
+                  <CalEmbed height={620} vertical="onboarding" />
+                </div>
+                <div className="mt-3 px-2 pb-2 text-[12px] text-slate-500">
+                  Can't see the embed? <a href={CAL_URL_BOOK} target="_blank" rel="noopener" className="text-[#185FA5] underline">Open Cal.com in a new tab &rarr;</a>
+                </div>
               </div>
             </StepCard>
 

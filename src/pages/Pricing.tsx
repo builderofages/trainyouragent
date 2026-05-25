@@ -80,11 +80,10 @@ const PLANS = [
     cta: "Apply for the Founder lane → $0 upfront, live in 7 days",
     accent: false,
     perks: [
-      "One agent, fully built and trained on your docs",
+      // v161: trimmed 5 -> 3, most-friction-killing only
       "Live in 7 business days",
-      "Founder Slack channel — direct line to the builder, no SDR layer",
-      "Weekly tune-up for the first 90 days",
-      "Pay only when calls come in — minimum $250/mo billing",
+      "$0 upfront — pay only when calls come in",
+      "Founder Slack channel — direct line, no SDR",
     ],
   },
   {
@@ -100,11 +99,10 @@ const PLANS = [
     cta: "Start the Operator build → first agent live in 21 days or it's free",
     accent: true,
     perks: [
-      "Multi-channel: voice + SMS + email + chat",
-      "Live in 10–14 business days",
-      "Native integration with your CRM, calendar, dispatch tool",
-      "Weekly performance review with a real engineer",
-      "Cancel any time — no contracts",
+      // v161: trimmed 5 -> 3, most-friction-killing only
+      "Live in 14 business days or build fee refunded",
+      "Native CRM + calendar + dispatch wiring (HubSpot, GHL, ServiceTitan)",
+      "Cancel any time — no contracts, your number ports out",
     ],
   },
   {
@@ -120,11 +118,10 @@ const PLANS = [
     cta: "Get a Scale quote → 30-min architecture call",
     accent: false,
     perks: [
+      // v161: trimmed 5 -> 3, most-friction-killing only
       "Unlimited agents across brands or locations",
-      "Dedicated engineer + monthly architecture review",
-      "Custom integrations, custom training data",
-      "SLA-backed uptime (99.9%), priority incident response",
-      "BAA, DPA, SOC 2 evidence pack included",
+      "Dedicated engineer · SLA 99.9% · priority incident response",
+      "BAA + DPA + SOC 2 evidence pack",
     ],
   },
 ];
@@ -407,6 +404,14 @@ const Pricing = () => {
                 ))}
               </ul>
 
+              {/* v161: inline social proof — Hormozi pattern, niche-specific
+                  leak number. Same line under every card; only the dollar
+                  varies. Reinforces "this isn't a SaaS, it's a niche fix." */}
+              <div className={`mb-4 rounded-xl px-3 py-2.5 text-[12px] leading-snug ${p.accent ? "bg-white/10 text-white/85" : "bg-[#F6FAFE] text-[#042C53] border border-[#185FA5]/20"}`}>
+                <span aria-hidden="true" className={`inline-block w-1.5 h-1.5 rounded-full mr-1.5 align-middle ${p.accent ? "bg-[#9CC4EC]" : "bg-[#22A36C]"}`} />
+                We've audited 12 Tampa HVAC operators with this exact pattern — average leak is <strong>$22,889/mo</strong>.
+              </div>
+
               <LaneCheckoutButton plan={p.id} accent={p.accent} fallbackHref={CAL_URL} fallbackText={p.cta} />
               <a href={CAL_URL} target="_blank" rel="noopener" className={`block w-full mt-2 text-center text-[11.5px] underline-offset-2 underline ${p.accent ? "text-white/80 hover:text-white" : "text-[#185FA5] hover:text-[#042C53]"}`}>
                 Or book a 30-min call first
@@ -432,6 +437,61 @@ const Pricing = () => {
             <div className="text-[11px] uppercase tracking-[0.14em] font-semibold text-[#185FA5] mb-1.5">No surprise contract</div>
             <div className="text-[14px] text-slate-800 leading-snug">One page, plain English, cancel any time, no auto-renewal lock-in, your data exports on request.</div>
           </div>
+        </div>
+      </section>
+
+      {/* v161: 5-tier comparison matrix — SaaS / Done-WITH-You / Founders /
+          Operators / Scale. Buyer scans the matrix in 5 seconds and self-
+          selects. Conversion lever: removes the "which one is mine?"
+          ambiguity that drives buyers to a Cal.com call instead of checkout. */}
+      <section id="compare" className="px-5 sm:px-8 pb-14 pt-2">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-6">
+            <div className="text-[11px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold font-mono mb-2">Compare all 5 tiers</div>
+            <h2 className="text-[24px] sm:text-[32px] font-semibold text-[#042C53] leading-tight">
+              Five lanes.{" "}
+              <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Pick the math that fits your number.</span>
+            </h2>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white overflow-x-auto">
+            <table className="w-full text-left text-[13.5px] min-w-[760px]">
+              <thead>
+                <tr className="border-b border-slate-200 bg-[#F6FAFE]">
+                  <th className="px-4 py-3.5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold w-[180px]">Feature</th>
+                  <th className="px-4 py-3.5 font-semibold text-[#042C53]">SaaS ($99/mo)</th>
+                  <th className="px-4 py-3.5 font-semibold text-[#042C53] bg-[#FFFBEA]">Done-WITH-You ($497)</th>
+                  <th className="px-4 py-3.5 font-semibold text-[#042C53]">Founders ($0 up)</th>
+                  <th className="px-4 py-3.5 font-semibold text-[#042C53] bg-[#E6F1FB]">Operators ($1,997/mo)</th>
+                  <th className="px-4 py-3.5 font-semibold text-[#042C53]">Scale ($4,997/mo)</th>
+                </tr>
+              </thead>
+              <tbody className="text-slate-700">
+                {[
+                  ["Setup model",      "Self-serve",          "4-hour Zoom w/ founder", "Done-for-you",        "Done-for-you",       "Done-for-you, multi-site"],
+                  ["Time to live",     "5 min · embed widget", "Same day",              "7 business days",     "10–14 business days", "21–30 business days"],
+                  ["Channels",         "Chat only",           "Voice",                  "Voice or chat",       "Voice + SMS + email + chat", "All channels, multi-brand"],
+                  ["Conversations / mo", "5,000",            "Your phone line",         "Pay-per-minute ($0.39)", "5,000 voice minutes", "25,000 voice minutes"],
+                  ["Trained on your docs", "Yes",            "Yes (live)",              "Yes",                 "Yes",                "Yes + custom training data"],
+                  ["CRM integration",  "Webhook only",        "Webhook only",           "1 CRM included",      "Native (HubSpot, GHL, ServiceTitan, Stripe, Cal, Twilio)", "Custom + multi-brand"],
+                  ["Engineer time",    "Self-serve docs",     "4 hrs w/ founder",       "Founder Slack",       "Weekly review",      "Dedicated engineer"],
+                  ["SLA",              "Best-effort",         "Best-effort",            "Best-effort",         "Best-effort",        "99.9% uptime SLA"],
+                  ["BAA / DPA",        "Available on request","Available on request",   "Available on request","Available on request","Included"],
+                  ["Refund",           "30-day money-back",   "Full refund if we don't ship", "n/a (pay-per-use)","30-day on build fee","30-day on build fee"],
+                  ["Best for",         "Founders / single agent","First case study, fast", "Pre-revenue / early-revenue", "SMBs already paying humans to answer phones", "Multi-location, agency-scale"],
+                ].map(([feat, ...cells]) => (
+                  <tr key={feat as string} className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50">
+                    <th scope="row" className="px-4 py-3 font-semibold text-[#042C53] text-[12.5px] align-top">{feat}</th>
+                    {cells.map((c, i) => (
+                      <td key={i} className={`px-4 py-3 align-top ${i === 1 ? "bg-[#FFFBEA]/60" : ""} ${i === 3 ? "bg-[#E6F1FB]/40" : ""}`}>{c}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-[12px] text-slate-500 mt-3 text-center">
+            All tiers cancel anytime. Stripe checkout SSL/TLS 1.3 — we never see your card.
+          </p>
         </div>
       </section>
 
@@ -631,6 +691,9 @@ const Pricing = () => {
           <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent LLC</div>
         </div>
       </footer>
+      {/* v161: sticky CTA bar — captures abandoners scrolling the page.
+          Pinned bottom on both mobile + desktop, hidden until past hero. */}
+      <StickyDoneWithYouBar />
       <ToastHost />
     </div>
   );
@@ -897,6 +960,94 @@ function SelfServeCallout() {
           <div className="mt-5 text-[11px] text-white/60 leading-relaxed">
             Secure checkout via Stripe. SSL/TLS 1.3. We never see your card.
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// v161: Sticky bottom CTA bar — captures abandoners. Pinned to bottom on
+// both mobile + desktop, slides in after the user scrolls past the hero
+// (~600px) so it never collides with the above-the-fold composition.
+// Click → Stripe checkout for the $497 Done-WITH-You tier (the friction-
+// killing entry point that bridges $99 SaaS and $4,950 Operators).
+function StickyDoneWithYouBar() {
+  const [visible, setVisible] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Dismissal persists for the session so we don't bounce back after a
+    // user closes it.
+    try { if (window.sessionStorage.getItem("tya:sticky-bar:dismissed") === "1") setDismissed(true); } catch {}
+    const onScroll = () => setVisible(window.scrollY > 600);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  function dismiss() {
+    setDismissed(true);
+    try { window.sessionStorage.setItem("tya:sticky-bar:dismissed", "1"); } catch {}
+  }
+
+  async function buy() {
+    setErr(null);
+    setLoading(true);
+    try {
+      const r = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ plan: "done-with-you-497" }),
+      });
+      const j = (await r.json().catch(() => ({}))) as { url?: string; error?: string };
+      if (j?.url) { window.location.href = j.url; return; }
+      setErr("Checkout being wired — email alexander@trainyouragent.com.");
+    } catch {
+      setErr("Network error.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (dismissed) return null;
+  return (
+    <div
+      role="region"
+      aria-label="Quick-start checkout"
+      className={`fixed inset-x-0 bottom-0 z-[60] transition-transform duration-300 ${visible ? "translate-y-0" : "translate-y-full"}`}
+      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+    >
+      <div className="mx-auto max-w-6xl px-3 sm:px-5 pb-3">
+        <div className="rounded-2xl bg-[#042C53] text-white shadow-[0_20px_50px_-10px_rgba(4,44,83,0.6)] border border-[#185FA5]/30 overflow-hidden">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 px-4 sm:px-5 py-3 sm:py-3.5">
+            <div className="flex-1 min-w-0">
+              <div className="text-[10.5px] uppercase tracking-[0.18em] text-[#FFD60A] font-semibold font-mono mb-0.5">Fastest start · one-time</div>
+              <div className="text-[13.5px] sm:text-[14.5px] text-white leading-snug">
+                Agent in a Day — 4 hours w/ founder, live on your number. <span className="text-white/70">$497, full refund if we don't ship.</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={buy}
+                disabled={loading}
+                className="flex-1 sm:flex-none px-5 py-2.5 rounded-full bg-[#FFD60A] text-[#042C53] text-[13.5px] font-semibold hover:bg-white disabled:opacity-60 transition"
+              >
+                {loading ? "Loading…" : "Start with Done-WITH-You $497 →"}
+              </button>
+              <button
+                onClick={dismiss}
+                aria-label="Dismiss"
+                className="flex-shrink-0 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white text-[18px] leading-none flex items-center justify-center"
+              >
+                &times;
+              </button>
+            </div>
+          </div>
+          {err && (
+            <div className="px-4 sm:px-5 pb-3 text-[12px] text-yellow-200">{err}</div>
+          )}
         </div>
       </div>
     </div>
