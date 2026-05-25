@@ -5,6 +5,8 @@ import SiteNav from "@/components/SiteNav";
 import BuiltInPublic from "@/components/BuiltInPublic";
 import FounderBlock from "@/components/FounderBlock"; // v161
 import ShipsCounter from "@/components/ShipsCounter";
+// v166: LocalBusiness JSON-LD for Tampa SEO + aggregate rating placeholder
+import { injectJsonLd, localBusinessLd, aggregateRatingLd } from "@/lib/jsonld";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
@@ -85,7 +87,14 @@ const About = () => {
  ],
  });
  document.head.appendChild(s);
- return () => { document.getElementById(id)?.remove(); };
+ // v166: LocalBusiness JSON-LD for Tampa local SEO + AggregateRating placeholder
+ injectJsonLd("about-local-business", localBusinessLd({ areaServed: "United States" }));
+ injectJsonLd("about-aggregate-rating", aggregateRatingLd());
+ return () => {
+   document.getElementById(id)?.remove();
+   document.getElementById("tya-jsonld-about-local-business")?.remove();
+   document.getElementById("tya-jsonld-about-aggregate-rating")?.remove();
+ };
  }, []);
 
  return (

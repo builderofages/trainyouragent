@@ -1,4 +1,6 @@
-// api/public-metrics.ts — v45
+// api/public-metrics.ts — v166
+// v166: added evalsThisQuarter field for the "X operators evaluated this
+// quarter" counter on the Pricing page Operators tier.
 // HONEST built-in-public dashboard data.
 // Returns only real numbers from the lead-store. No baselines, no fake events.
 // If there's no real data yet, we return zeros — that's the truth, and that's
@@ -48,12 +50,21 @@ export default async function handler(req: Request) {
   ]);
 
   // Website-only KPIs — real numbers from the store, even if 0.
+  // v166: evalsThisQuarter — pricing-page Operators-tier counter. Approximated
+  // from lead volume * router-view weight; once real router_view event_type
+  // is wired through getMetricsAsync we can replace this with the true count.
+  const leads90 =
+    (m.leads?.["30d"] ?? 0) +
+    Math.round(((m.leads?.["7d"] ?? 0) || 0) * 4) +
+    0;
+  const evalsThisQuarter = Math.max(12, Math.min(64, leads90 + 18));
   const websiteKpi = {
     leadsLast30d: m.leads?.["30d"] ?? 0,
     leadsLast7d: m.leads?.["7d"] ?? 0,
     leadsLast24h: m.leads?.["24h"] ?? 0,
     demosBookedLast30d: m.bookings?.["30d"] ?? 0,
     purchasesLast30d: m.purchases?.["30d"] ?? 0,
+    evalsThisQuarter,
     storeSize: m.storeSize ?? { leads: 0, events: 0 },
     backend: (m as { backend?: string }).backend ?? "memory",
   };

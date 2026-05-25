@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Component, lazy, Suspense, useEffect, type ReactNode } from "react";
 import { initAttribution } from "@/lib/affiliate";
+// v168: lazy-with-auto-reload — wraps every dynamic import so stale chunks
+// after a deploy force a hard reload instead of white-screening. THE fix.
+import { lazyWithReload } from "@/lib/lazyWithReload";
 
 // Critical / above-the-fold routes — eager.
 import Index from "./pages/Index";
@@ -29,187 +32,187 @@ import ContextPill from "@/components/ContextPill";
 import LegalRedirect from "@/components/legal/LegalRedirect";
 
 // v41: everything else is lazy-loaded to keep main entry chunk small.
-const Dashboard           = lazy(() => import("./pages/Dashboard"));
-const NicheLanding        = lazy(() => import("./pages/NicheLanding"));
-const Vertical            = lazy(() => import("./pages/VerticalPage"));
-const LocationPage        = lazy(() => import("./pages/LocationPage"));
-const SalesToolkit        = lazy(() => import("./pages/SalesToolkit"));
-const Settings            = lazy(() => import("./pages/Settings"));
-const Resources           = lazy(() => import("./pages/Resources"));
-const ResourceArticle     = lazy(() => import("./pages/ResourceArticle"));
-const Demos               = lazy(() => import("./pages/Demos"));
-const About               = lazy(() => import("./pages/About"));
-const Team                = lazy(() => import("./pages/Team"));
-const Security            = lazy(() => import("./pages/Security"));
-const Technology          = lazy(() => import("./pages/Technology"));
-const ResearchPartners    = lazy(() => import("./pages/ResearchPartners"));
-const Solutions           = lazy(() => import("./pages/Solutions"));
-const Integrations        = lazy(() => import("./pages/Integrations"));
+const Dashboard           = lazyWithReload(() => import("./pages/Dashboard"));
+const NicheLanding        = lazyWithReload(() => import("./pages/NicheLanding"));
+const Vertical            = lazyWithReload(() => import("./pages/VerticalPage"));
+const LocationPage        = lazyWithReload(() => import("./pages/LocationPage"));
+const SalesToolkit        = lazyWithReload(() => import("./pages/SalesToolkit"));
+const Settings            = lazyWithReload(() => import("./pages/Settings"));
+const Resources           = lazyWithReload(() => import("./pages/Resources"));
+const ResourceArticle     = lazyWithReload(() => import("./pages/ResourceArticle"));
+const Demos               = lazyWithReload(() => import("./pages/Demos"));
+const About               = lazyWithReload(() => import("./pages/About"));
+const Team                = lazyWithReload(() => import("./pages/Team"));
+const Security            = lazyWithReload(() => import("./pages/Security"));
+const Technology          = lazyWithReload(() => import("./pages/Technology"));
+const ResearchPartners    = lazyWithReload(() => import("./pages/ResearchPartners"));
+const Solutions           = lazyWithReload(() => import("./pages/Solutions"));
+const Integrations        = lazyWithReload(() => import("./pages/Integrations"));
 // v76-D: legacy single-file legal pages (./pages/Privacy.tsx, Terms.tsx,
 // CookiePolicy.tsx) are preserved in source for reference but no longer routed
 // — the canonical surface is now /legal/*. Legacy URLs redirect via
 // LegalRedirect (imported above).
 
 // v76-D: complete legal surface — 11 docs + index, all under /legal/*.
-const LegalIndex          = lazy(() => import("./pages/legal/Index"));
-const LegalTerms          = lazy(() => import("./pages/legal/Terms"));
-const LegalPrivacy        = lazy(() => import("./pages/legal/Privacy"));
-const LegalCookies        = lazy(() => import("./pages/legal/Cookies"));
-const LegalDpa            = lazy(() => import("./pages/legal/Dpa"));
-const LegalAup            = lazy(() => import("./pages/legal/Aup"));
-const LegalRefund         = lazy(() => import("./pages/legal/Refund"));
-const LegalAiUse          = lazy(() => import("./pages/legal/AiUse"));
-const LegalSla            = lazy(() => import("./pages/legal/Sla"));
-const LegalSubProcessors  = lazy(() => import("./pages/legal/SubProcessors"));
-const LegalGdpr           = lazy(() => import("./pages/legal/Gdpr"));
-const LegalCcpa           = lazy(() => import("./pages/legal/Ccpa"));
-const Comparisons         = lazy(() => import("./pages/Comparisons"));
-const CaseStudies         = lazy(() => import("./pages/CaseStudies"));
-const DemoRequest         = lazy(() => import("./pages/DemoRequest"));
-const SolutionConfigurator= lazy(() => import("./pages/SolutionConfigurator"));
-const DemoVideo           = lazy(() => import("./pages/DemoVideo"));
-const AgencyPartner       = lazy(() => import("./pages/AgencyPartner"));
-const SolutionDetail      = lazy(() => import("./pages/SolutionDetail"));
-const VersusPage          = lazy(() => import("./pages/VersusPage"));
-const Vs                  = lazy(() => import("./pages/Vs"));
-const Apply               = lazy(() => import("./pages/Apply"));
-const AlternativeFor      = lazy(() => import("./pages/AlternativeFor"));
-const Admin               = lazy(() => import("./pages/Admin"));
+const LegalIndex          = lazyWithReload(() => import("./pages/legal/Index"));
+const LegalTerms          = lazyWithReload(() => import("./pages/legal/Terms"));
+const LegalPrivacy        = lazyWithReload(() => import("./pages/legal/Privacy"));
+const LegalCookies        = lazyWithReload(() => import("./pages/legal/Cookies"));
+const LegalDpa            = lazyWithReload(() => import("./pages/legal/Dpa"));
+const LegalAup            = lazyWithReload(() => import("./pages/legal/Aup"));
+const LegalRefund         = lazyWithReload(() => import("./pages/legal/Refund"));
+const LegalAiUse          = lazyWithReload(() => import("./pages/legal/AiUse"));
+const LegalSla            = lazyWithReload(() => import("./pages/legal/Sla"));
+const LegalSubProcessors  = lazyWithReload(() => import("./pages/legal/SubProcessors"));
+const LegalGdpr           = lazyWithReload(() => import("./pages/legal/Gdpr"));
+const LegalCcpa           = lazyWithReload(() => import("./pages/legal/Ccpa"));
+const Comparisons         = lazyWithReload(() => import("./pages/Comparisons"));
+const CaseStudies         = lazyWithReload(() => import("./pages/CaseStudies"));
+const DemoRequest         = lazyWithReload(() => import("./pages/DemoRequest"));
+const SolutionConfigurator= lazyWithReload(() => import("./pages/SolutionConfigurator"));
+const DemoVideo           = lazyWithReload(() => import("./pages/DemoVideo"));
+const AgencyPartner       = lazyWithReload(() => import("./pages/AgencyPartner"));
+const SolutionDetail      = lazyWithReload(() => import("./pages/SolutionDetail"));
+const VersusPage          = lazyWithReload(() => import("./pages/VersusPage"));
+const Vs                  = lazyWithReload(() => import("./pages/Vs"));
+const Apply               = lazyWithReload(() => import("./pages/Apply"));
+const AlternativeFor      = lazyWithReload(() => import("./pages/AlternativeFor"));
+const Admin               = lazyWithReload(() => import("./pages/Admin"));
 
 // Blog (lazy)
-const BlogIndex      = lazy(() => import("./pages/blog/BlogIndex"));
-const BlogPost       = lazy(() => import("./pages/blog/BlogPost"));
-const BlogCategory   = lazy(() => import("./pages/blog/BlogCategory"));
-const BlogTag        = lazy(() => import("./pages/blog/BlogTag"));
-const Newsletter     = lazy(() => import("./pages/Newsletter"));
+const BlogIndex      = lazyWithReload(() => import("./pages/blog/BlogIndex"));
+const BlogPost       = lazyWithReload(() => import("./pages/blog/BlogPost"));
+const BlogCategory   = lazyWithReload(() => import("./pages/blog/BlogCategory"));
+const BlogTag        = lazyWithReload(() => import("./pages/blog/BlogTag"));
+const Newsletter     = lazyWithReload(() => import("./pages/Newsletter"));
 
 // v34: trust + academy + exit intent
-const Learn     = lazy(() => import("./pages/Learn"));
-const Status    = lazy(() => import("./pages/Status"));
-const Careers   = lazy(() => import("./pages/Careers"));
-const Press     = lazy(() => import("./pages/Press"));
+const Learn     = lazyWithReload(() => import("./pages/Learn"));
+const Status    = lazyWithReload(() => import("./pages/Status"));
+const Careers   = lazyWithReload(() => import("./pages/Careers"));
+const Press     = lazyWithReload(() => import("./pages/Press"));
 
 // v38: trust + conversion infrastructure
-const Customers        = lazy(() => import("./pages/Customers"));
-const CaseStudyTemplate= lazy(() => import("@/components/CaseStudyTemplate"));
-const Trial            = lazy(() => import("./pages/Trial"));
-const Testimonials     = lazy(() => import("./pages/Testimonials"));
-const Onboarding       = lazy(() => import("./pages/Onboarding"));
+const Customers        = lazyWithReload(() => import("./pages/Customers"));
+const CaseStudyTemplate= lazyWithReload(() => import("@/components/CaseStudyTemplate"));
+const Trial            = lazyWithReload(() => import("./pages/Trial"));
+const Testimonials     = lazyWithReload(() => import("./pages/Testimonials"));
+const Onboarding       = lazyWithReload(() => import("./pages/Onboarding"));
 
 // v41: new pages
-const Community         = lazy(() => import("./pages/Community"));
-const Partners          = lazy(() => import("./pages/Partners"));
-const ToolsIndex        = lazy(() => import("./pages/tools/ToolsIndex"));
-const CostEstimator     = lazy(() => import("./pages/tools/CostEstimator"));
-const RoiCalculator     = lazy(() => import("./pages/tools/RoiCalculator"));
-const PromptCritic      = lazy(() => import("./pages/tools/PromptCritic"));
-const ScenarioGenerator = lazy(() => import("./pages/tools/ScenarioGenerator"));
-const LatencySimulator  = lazy(() => import("./pages/tools/LatencySimulator"));
+const Community         = lazyWithReload(() => import("./pages/Community"));
+const Partners          = lazyWithReload(() => import("./pages/Partners"));
+const ToolsIndex        = lazyWithReload(() => import("./pages/tools/ToolsIndex"));
+const CostEstimator     = lazyWithReload(() => import("./pages/tools/CostEstimator"));
+const RoiCalculator     = lazyWithReload(() => import("./pages/tools/RoiCalculator"));
+const PromptCritic      = lazyWithReload(() => import("./pages/tools/PromptCritic"));
+const ScenarioGenerator = lazyWithReload(() => import("./pages/tools/ScenarioGenerator"));
+const LatencySimulator  = lazyWithReload(() => import("./pages/tools/LatencySimulator"));
 
 // v42: live AI demos
-const SalesObjectionHandler = lazy(() => import("./pages/demos/SalesObjectionHandler"));
-const SopWriter             = lazy(() => import("./pages/demos/SopWriter"));
-const SeoCluster            = lazy(() => import("./pages/demos/SeoCluster"));
+const SalesObjectionHandler = lazyWithReload(() => import("./pages/demos/SalesObjectionHandler"));
+const SopWriter             = lazyWithReload(() => import("./pages/demos/SopWriter"));
+const SeoCluster            = lazyWithReload(() => import("./pages/demos/SeoCluster"));
 
 // v42: lead-magnet report page
-const StateOfAiOps2026  = lazy(() => import("./pages/StateOfAiOps2026"));
+const StateOfAiOps2026  = lazyWithReload(() => import("./pages/StateOfAiOps2026"));
 
 // v44: three new tools + public metrics dashboard
-const PromptLibrary     = lazy(() => import("./pages/tools/PromptLibrary"));
-const ModelSelector     = lazy(() => import("./pages/tools/ModelSelector"));
-const AutomationRoi     = lazy(() => import("./pages/tools/AutomationRoi"));
-const Metrics           = lazy(() => import("./pages/Metrics"));
+const PromptLibrary     = lazyWithReload(() => import("./pages/tools/PromptLibrary"));
+const ModelSelector     = lazyWithReload(() => import("./pages/tools/ModelSelector"));
+const AutomationRoi     = lazyWithReload(() => import("./pages/tools/AutomationRoi"));
+const Metrics           = lazyWithReload(() => import("./pages/Metrics"));
 
 // v47A: trust + authority infrastructure
-const Speaking          = lazy(() => import("./pages/Speaking"));
-const PodcastGuest      = lazy(() => import("./pages/PodcastGuest"));
-const Compliance        = lazy(() => import("./pages/Compliance"));
-const Accessibility     = lazy(() => import("./pages/Accessibility"));
-const TrustCenter       = lazy(() => import("./pages/TrustCenter"));
-const Uptime            = lazy(() => import("./pages/Uptime"));
-const MediaKit          = lazy(() => import("./pages/MediaKit"));
+const Speaking          = lazyWithReload(() => import("./pages/Speaking"));
+const PodcastGuest      = lazyWithReload(() => import("./pages/PodcastGuest"));
+const Compliance        = lazyWithReload(() => import("./pages/Compliance"));
+const Accessibility     = lazyWithReload(() => import("./pages/Accessibility"));
+const TrustCenter       = lazyWithReload(() => import("./pages/TrustCenter"));
+const Uptime            = lazyWithReload(() => import("./pages/Uptime"));
+const MediaKit          = lazyWithReload(() => import("./pages/MediaKit"));
 
 // v47B: programmatic local SEO (30 cities x 4 verticals = 120 pages)
-const LocalIndex        = lazy(() => import("./pages/LocalIndex"));
-const LocalPage         = lazy(() => import("./pages/LocalPage"));
+const LocalIndex        = lazyWithReload(() => import("./pages/LocalIndex"));
+const LocalPage         = lazyWithReload(() => import("./pages/LocalPage"));
 
 // v48: polished booking page wrapping Cal.com embed
-const Book              = lazy(() => import("./pages/Book"));
+const Book              = lazyWithReload(() => import("./pages/Book"));
 
 // v49: docs, api-docs, mission, invest, affiliate
-const DocsPage             = lazy(() => import("./pages/DocsPage"));
-const ApiDocsPage          = lazy(() => import("./pages/ApiDocsPage"));
-const MissionPage          = lazy(() => import("./pages/MissionPage"));
-const InvestPage           = lazy(() => import("./pages/InvestPage"));
+const DocsPage             = lazyWithReload(() => import("./pages/DocsPage"));
+const ApiDocsPage          = lazyWithReload(() => import("./pages/ApiDocsPage"));
+const MissionPage          = lazyWithReload(() => import("./pages/MissionPage"));
+const InvestPage           = lazyWithReload(() => import("./pages/InvestPage"));
 // v80: AffiliateProgramPage import removed — /affiliate-program now
 // redirects to /affiliates (the canonical v76-c page).
 
 // v50A: customer portal + public roadmap
 // v76-a: customer portal layout + 8 sub-pages (auth-gated)
-const PortalLayout         = lazy(() => import("./components/portal/PortalLayout"));
-const PortalLogin          = lazy(() => import("./pages/portal/Login"));
-const PortalAuthCallback   = lazy(() => import("./pages/portal/AuthCallback"));
-const PortalOverview       = lazy(() => import("./pages/portal/Overview"));
-const PortalTrainingProgress = lazy(() => import("./pages/portal/TrainingProgress"));
-const PortalAgentSettings  = lazy(() => import("./pages/portal/AgentSettings"));
-const PortalConversations  = lazy(() => import("./pages/portal/Conversations"));
-const PortalAnalytics      = lazy(() => import("./pages/portal/Analytics"));
-const PortalBilling        = lazy(() => import("./pages/portal/Billing"));
-const PortalDocuments      = lazy(() => import("./pages/portal/Documents"));
-const PortalSupport        = lazy(() => import("./pages/portal/Support"));
-const Roadmap              = lazy(() => import("./pages/Roadmap"));
+const PortalLayout         = lazyWithReload(() => import("./components/portal/PortalLayout"));
+const PortalLogin          = lazyWithReload(() => import("./pages/portal/Login"));
+const PortalAuthCallback   = lazyWithReload(() => import("./pages/portal/AuthCallback"));
+const PortalOverview       = lazyWithReload(() => import("./pages/portal/Overview"));
+const PortalTrainingProgress = lazyWithReload(() => import("./pages/portal/TrainingProgress"));
+const PortalAgentSettings  = lazyWithReload(() => import("./pages/portal/AgentSettings"));
+const PortalConversations  = lazyWithReload(() => import("./pages/portal/Conversations"));
+const PortalAnalytics      = lazyWithReload(() => import("./pages/portal/Analytics"));
+const PortalBilling        = lazyWithReload(() => import("./pages/portal/Billing"));
+const PortalDocuments      = lazyWithReload(() => import("./pages/portal/Documents"));
+const PortalSupport        = lazyWithReload(() => import("./pages/portal/Support"));
+const Roadmap              = lazyWithReload(() => import("./pages/Roadmap"));
 
 // v51B: niche playbook system — /playbooks hub + /playbooks/:slug (15 niches)
-const PlaybooksIndex       = lazy(() => import("./pages/PlaybooksIndex"));
-const PlaybookPage         = lazy(() => import("./pages/PlaybookPage"));
+const PlaybooksIndex       = lazyWithReload(() => import("./pages/PlaybooksIndex"));
+const PlaybookPage         = lazyWithReload(() => import("./pages/PlaybookPage"));
 
 // v52a: free in-browser voice agent demo + branded 500 page
-const VoiceDemo            = lazy(() => import("./pages/VoiceDemo"));
-const ServerError          = lazy(() => import("./pages/ServerError"));
+const VoiceDemo            = lazyWithReload(() => import("./pages/VoiceDemo"));
+const ServerError          = lazyWithReload(() => import("./pages/ServerError"));
 
 // v52B: vendor matrix + founder log + glossary + whitelabel + reseller + data room
-const VendorMatrix         = lazy(() => import("./pages/tools/VendorMatrix"));
-const FounderLog           = lazy(() => import("./pages/FounderLog"));
-const Glossary             = lazy(() => import("./pages/Glossary"));
-const Whitelabel           = lazy(() => import("./pages/Whitelabel"));
-const Reseller             = lazy(() => import("./pages/Reseller"));
-const DataRoom             = lazy(() => import("./pages/DataRoom"));
+const VendorMatrix         = lazyWithReload(() => import("./pages/tools/VendorMatrix"));
+const FounderLog           = lazyWithReload(() => import("./pages/FounderLog"));
+const Glossary             = lazyWithReload(() => import("./pages/Glossary"));
+const Whitelabel           = lazyWithReload(() => import("./pages/Whitelabel"));
+const Reseller             = lazyWithReload(() => import("./pages/Reseller"));
+const DataRoom             = lazyWithReload(() => import("./pages/DataRoom"));
 
 // v57A: internal — Resend domain verification helper
-const VerifyEmailDomain    = lazy(() => import("./pages/VerifyEmailDomain"));
+const VerifyEmailDomain    = lazyWithReload(() => import("./pages/VerifyEmailDomain"));
 
 // v58: proof reframe — cornerstone trust pages
-const Proof                = lazy(() => import("./pages/Proof"));
-const HowWeWin             = lazy(() => import("./pages/HowWeWin"));
+const Proof                = lazyWithReload(() => import("./pages/Proof"));
+const HowWeWin             = lazyWithReload(() => import("./pages/HowWeWin"));
 
 // v59: AI website audit tool + public real-time event stream
-const WebsiteAudit         = lazy(() => import("./pages/tools/WebsiteAudit"));
-const AgentBuilder         = lazy(() => import("./pages/tools/AgentBuilder"));
-const Live                 = lazy(() => import("./pages/Live"));
+const WebsiteAudit         = lazyWithReload(() => import("./pages/tools/WebsiteAudit"));
+const AgentBuilder         = lazyWithReload(() => import("./pages/tools/AgentBuilder"));
+const Live                 = lazyWithReload(() => import("./pages/Live"));
 
 // v67A: case-study renderer + per-niche /build/{niche} + 3 Groq-powered tools
-const CaseStudyDetail        = lazy(() => import("./pages/CaseStudy"));
-const CaseStudiesIndexNew    = lazy(() => import("./pages/CaseStudiesIndex"));
-const BuildLanding           = lazy(() => import("./pages/BuildLanding"));
-const VoiceScriptGenerator   = lazy(() => import("./pages/tools/VoiceScriptGenerator"));
-const ColdDmGenerator        = lazy(() => import("./pages/tools/ColdDmGenerator"));
-const DiagnoseWizard         = lazy(() => import("./pages/tools/DiagnoseWizard"));
+const CaseStudyDetail        = lazyWithReload(() => import("./pages/CaseStudy"));
+const CaseStudiesIndexNew    = lazyWithReload(() => import("./pages/CaseStudiesIndex"));
+const BuildLanding           = lazyWithReload(() => import("./pages/BuildLanding"));
+const VoiceScriptGenerator   = lazyWithReload(() => import("./pages/tools/VoiceScriptGenerator"));
+const ColdDmGenerator        = lazyWithReload(() => import("./pages/tools/ColdDmGenerator"));
+const DiagnoseWizard         = lazyWithReload(() => import("./pages/tools/DiagnoseWizard"));
 
 // v71: /hire direct-hire page + /saas product catalog + /saas/agent-builder paid tier
-const Hire                   = lazy(() => import("./pages/Hire"));
-const Saas                   = lazy(() => import("./pages/Saas"));
-const SaasAgentBuilder       = lazy(() => import("./pages/SaasAgentBuilder"));
+const Hire                   = lazyWithReload(() => import("./pages/Hire"));
+const Saas                   = lazyWithReload(() => import("./pages/Saas"));
+const SaasAgentBuilder       = lazyWithReload(() => import("./pages/SaasAgentBuilder"));
 
 // v73-FINAL: flagship /train method page + /everything-ai category map +
 // 10 cornerstone /capabilities/:slug deep playbook pages.
-const Train                  = lazy(() => import("./pages/Train"));
-const EverythingAI           = lazy(() => import("./pages/EverythingAI"));
-const CapabilityDetail       = lazy(() => import("./pages/CapabilityDetail"));
+const Train                  = lazyWithReload(() => import("./pages/Train"));
+const EverythingAI           = lazyWithReload(() => import("./pages/EverythingAI"));
+const CapabilityDetail       = lazyWithReload(() => import("./pages/CapabilityDetail"));
 
 // v76-c: /train/intake discovery questionnaire + /affiliates landing
-const TrainIntake            = lazy(() => import("./pages/TrainIntake"));
-const Affiliates             = lazy(() => import("./pages/Affiliates"));
-const AffiliatesPortal       = lazy(() => import("./pages/AffiliatesPortal"));
+const TrainIntake            = lazyWithReload(() => import("./pages/TrainIntake"));
+const Affiliates             = lazyWithReload(() => import("./pages/Affiliates"));
+const AffiliatesPortal       = lazyWithReload(() => import("./pages/AffiliatesPortal"));
 
 const queryClient = new QueryClient();
 

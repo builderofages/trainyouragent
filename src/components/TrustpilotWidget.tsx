@@ -1,7 +1,8 @@
+// v166: graceful empty-state always shows productive CTA instead of dead pill.
 import { useEffect, useState } from "react";
 
 /**
- * TrustpilotWidget (v134)
+ * TrustpilotWidget (v166)
  *
  * Scaffold for the Trustpilot review widget. Stays hidden until at least
  * one published review exists on our profile so we never display an empty
@@ -67,29 +68,48 @@ export default function TrustpilotWidget({
     document.head.appendChild(s);
   }, [visible, businessUnitId]);
 
-  // Pre-launch state — small honest pill, no fake stars, no zero-review embed
+  // v166: Pre-launch state — graceful empty-state with a PRODUCTIVE CTA
+  // ("be one of the first 5 testimonials"). Never a dead pill, never an
+  // empty embed, never fake stars. The widget always sells something.
   if (!visible || !businessUnitId) {
     if (variant === "inline-pill") {
       return (
         <a
-          href={PROFILE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-[12px] text-slate-600 hover:border-[#042C53]/30"
+          href="/apply"
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F6FAFE] border border-[#185FA5]/30 text-[12px] text-[#042C53] hover:border-[#042C53] hover:bg-white transition-colors font-medium"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          Trustpilot reviews coming soon · we just opened the account
+          First 5 testimonials = free · be one of them &rarr;
         </a>
       );
     }
     return (
-      <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
-        <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500 font-semibold mb-2">
-          Trustpilot
+      <div className="rounded-2xl border border-[#185FA5]/25 bg-gradient-to-br from-[#F6FAFE] to-white p-6 sm:p-7 text-center shadow-[0_2px_20px_-8px_rgba(24,95,165,0.15)]">
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <span className="relative inline-flex w-2 h-2" aria-hidden="true">
+            <span className="absolute inset-0 rounded-full bg-emerald-500 opacity-75 animate-ping" />
+            <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+          </span>
+          <span className="text-[11px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold">
+            Founding cohort · open seats
+          </span>
         </div>
-        <p className="text-[14px] text-slate-600 leading-relaxed">
-          Reviews start landing as our founding cohort hits the 90-day mark.
-          Our public profile is{" "}
+        <h3 className="text-[20px] sm:text-[22px] font-semibold text-[#042C53] mb-2 leading-tight">
+          First 5 testimonials = free build credit
+        </h3>
+        <p className="text-[14px] text-slate-700 leading-relaxed mb-4 max-w-[440px] mx-auto">
+          We will not display fake stars. We are deliberately taking only 5
+          founding-cohort customers per quarter — and crediting their build
+          fee in exchange for a public review at the 90-day mark.
+        </p>
+        <a
+          href="/apply"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#042C53] text-white text-[14px] font-semibold hover:bg-[#185FA5] transition-colors"
+        >
+          Apply for the founding cohort &rarr;
+        </a>
+        <p className="text-[11px] text-slate-500 mt-3">
+          Our Trustpilot profile is{" "}
           <a
             className="underline decoration-[#042C53]/40 hover:text-[#042C53]"
             href={PROFILE_URL}
@@ -98,7 +118,7 @@ export default function TrustpilotWidget({
           >
             here
           </a>{" "}
-          — open and ready for the first review.
+          — open and ready.
         </p>
       </div>
     );

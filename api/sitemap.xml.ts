@@ -1,4 +1,4 @@
-// api/sitemap.xml.ts — v40b
+// api/sitemap.xml.ts — v166 (long-tail SEO posts added)
 // Dynamic sitemap. Vercel edge function. Returns application/xml.
 //
 // Why dynamic: every time we add a programmatic LP (alternatives, locations,
@@ -243,6 +243,12 @@ const BLOG_SLUGS = [
   "claude-vs-gpt-vs-llama-vs-gemini-when-each-wins-2026",
   "the-voice-agent-tech-stack-twilio-deepgram-cartesia-anthropic",
   "agent-deployment-zero-to-prod-in-72-hours-the-runbook",
+  // v166: long-tail SEO posts
+  "ai-voice-agent-for-hvac-business-2026",
+  "ai-receptionist-cost-per-call-2026-real-numbers",
+  "how-to-replace-your-answering-service-with-ai-in-2026",
+  "vapi-vs-elevenlabs-vs-bland-vs-synthflow-2026-honest-comparison",
+  "tampa-hvac-after-hours-call-leak-the-data",
 ];
 
 // ---- LOCATION /:vertical/:city (200 LPs) ----------------------------------

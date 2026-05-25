@@ -11,6 +11,9 @@ import FooterV44 from "@/components/FooterV44";
 import { RevealUp, StaggerChildren, HoverLift } from "@/components/motion";
 import { fireEvent } from "@/lib/event";
 import { Infinity as InfinityIcon, Code2, Palette } from "lucide-react";
+// v166: SoftwareApplication JSON-LD for SaaS-tier rich-results
+import { injectJsonLd, softwareApplicationLd, aggregateRatingLd } from "@/lib/jsonld";
+import { applySeoMeta, SEO } from "@/lib/seoMeta";
 
 // v87: "Unlimited" replaced with real metered caps so a single chatty
 // customer can't bankrupt the SaaS. Variable cost per conversation is
@@ -60,9 +63,10 @@ export default function SaasAgentBuilder() {
 
   useEffect(() => {
     if (typeof document === "undefined") return;
-    document.title = "Self-Serve Agent Builder — $99/mo · TrainYourAgent";
-    const m = document.querySelector("meta[name='description']") as HTMLMetaElement | null;
-    if (m) m.setAttribute("content", "Build your own AI agent — 1 agent + 5,000 conversations/mo for $99/mo, Pro tier 3 agents + 25k conversations for $299/mo. Embed anywhere. 7-day free trial, no card required.");
+    // v166: centralized SEO meta + SoftwareApplication JSON-LD
+    applySeoMeta(SEO.saas);
+    injectJsonLd("saas-software-app", softwareApplicationLd());
+    injectJsonLd("saas-aggregate-rating", aggregateRatingLd({ itemReviewed: "TrainYourAgent Self-Serve Agent Builder" }));
   }, []);
 
   async function submitTrial(e: FormEvent) {

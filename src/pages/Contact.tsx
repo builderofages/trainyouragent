@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
+// v166: LocalBusiness JSON-LD + centralized SEO meta
+import { injectJsonLd, localBusinessLd } from "@/lib/jsonld";
+import { applySeoMeta, SEO } from "@/lib/seoMeta";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills";
@@ -70,6 +73,9 @@ const Contact = () => {
       l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap";
       document.head.appendChild(l);
     }
+    // v166: centralized SEO meta + LocalBusiness JSON-LD for local SEO
+    applySeoMeta(SEO.contact);
+    injectJsonLd("contact-local-business", localBusinessLd({ areaServed: "United States" }));
   }, []);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

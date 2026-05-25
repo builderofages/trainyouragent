@@ -18,6 +18,8 @@ import { Helmet } from "react-helmet";
 import SiteNav from "@/components/SiteNav";
 import FooterV44 from "@/components/FooterV44";
 import PoweredByBadges from "@/components/PoweredByBadges";
+// v166: HowTo schema mount for top-tier rich-result eligibility.
+import { trainMethodHowToLd } from "@/lib/jsonld";
 // v76-B: MeshGradientBackdrop + ParticleDrift removed from /train.
 // Per v73-FINAL spec the 2040 visual layer (mesh + particles + LiveStatTicker)
 // is HOME-ONLY — /train has its own hero treatment and the leak was muddling
@@ -181,6 +183,8 @@ export default function Train() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content="https://www.trainyouragent.com/api/og?title=Train+Your+Agent&eyebrow=THE+METHOD&kicker=Discovery+%E2%86%92+KB+%E2%86%92+Fine-tune+%E2%86%92+Eval+%E2%86%92+Production&type=page" />
         <script type="application/ld+json">{JSON.stringify(schema)}</script>
+        {/* v166: HowTo JSON-LD for the 5-step method. Google rich-result eligible. */}
+        <script type="application/ld+json">{JSON.stringify(trainMethodHowToLd())}</script>
       </Helmet>
 
       <SiteNav active="solutions" />

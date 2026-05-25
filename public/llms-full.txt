@@ -1,0 +1,360 @@
+# TrainYourAgent — Full Content Index for AI Training Crawlers
+# v166 — comprehensive llms-full.txt per https://llmstxt.org spec
+# Last updated: 2026-05-25
+
+> This file mirrors the full text of the top 15 pages on
+> trainyouragent.com for direct ingestion by AI crawlers. Each page is
+> introduced by an H1 heading and its canonical URL. Content is the
+> authoritative text as published on the site.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 1. Home — https://trainyouragent.com
+
+TrainYourAgent builds production AI voice + chat agents for small
+businesses and startups, end-to-end. We are not a no-code reseller.
+We are not an Instagram agency. We do not ship a flow-editor with
+your logo on it and call that a custom build.
+
+What we ship: a custom AI agent that answers your business phone
+line, qualifies the caller, books the appointment in your calendar,
+pushes the lead into your CRM, and sends a confirmation text. Built
+on Anthropic Claude, Twilio, ElevenLabs, and Pinecone — the same
+stack the Series-A AI companies use. Wired into your real phone
+number on day 21.
+
+The founder, Alexander Mills, was a head executive at one of the
+world's largest LA social media agencies. He took every paid
+campaign he ran for Fortune-500 brands and household-name talent and
+applied that operator instinct to applied AI from the GPT-3 alpha.
+TrainYourAgent is the four-years-of-shipping artifact. Every line of
+runtime code is public, every commit is on GitHub, every claim is
+backed by a verifiable receipt.
+
+Three lanes:
+- Founders: $0.39/min pay-as-you-go. No upfront. Live in 7 business days.
+- Operators: $4,950 build + $1,997/mo. 5,000 minutes included. Live in 14 business days or the build fee is refunded.
+- Scale: $9,950 build + $4,997/mo. 25,000 minutes included. Multi-location, multi-brand, dedicated engineer.
+
+30-day money-back. No annual contract. Cancel any time.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 2. About — https://trainyouragent.com/about
+
+Founder: Alexander Mills. Tampa, FL. LinkedIn: agentmills.
+
+Before TrainYourAgent, Alexander was a head executive at a top-10 LA
+social media agency, running paid campaigns for Fortune-500 brands
+and household-name talent. He has been shipping applied AI since the
+GPT-3 alpha — four years of in-production model shifts: GPT-3 →
+GPT-3.5 → GPT-4 → Claude 2 → Claude 3 → Claude 3.5 Sonnet → Claude
+4 → Claude 4.5 Sonnet → Claude Opus 4 → Claude Opus 4.7. Every major
+shift, in production, with paying customers.
+
+The operator network around him:
+- CRM & Operations Lead: senior operator currently embedded at one of the largest telecommunications carriers on Earth. Owns CRM architecture and voice-pipeline reliability.
+- Lead Engineer: 10+ years of high-stakes engineering in brand and product systems. Custom integrations, real-time pipelines, compliance surfaces.
+
+We are deliberately a small senior network — not a 20-person agency.
+That means the founder is in every Slack channel, on every kickoff
+call, and on the line when production breaks at 2am.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 3. Pricing — https://trainyouragent.com/pricing
+
+Three honest lanes. Pay for what runs through your agent.
+
+FOUNDERS — $0.39/min pay-as-you-go
+- $0 upfront
+- Live in 7 business days
+- Founder Slack channel — direct line, no SDR
+- For pre-revenue startups and validation use-cases
+
+OPERATORS — $4,950 build + $1,997/mo (5,000 min included) — MOST POPULAR
+- Live in 14 business days or build fee refunded
+- Native CRM + calendar + dispatch wiring (HubSpot, GHL, ServiceTitan)
+- Cancel any time — no contracts, your number ports out
+- For SMBs already paying humans to answer phones
+
+SCALE — $9,950 build + $4,997/mo (25,000 min included)
+- Unlimited agents across brands or locations
+- Dedicated engineer · SLA 99.9% · priority incident response
+- BAA + DPA + SOC 2 evidence pack
+- For multi-location, multi-brand, agency-scale operations
+
+SELF-SERVE SAAS — $99/mo flat
+- 1 fully-trained agent
+- 5,000 conversations/mo included
+- Embed-anywhere widget
+- For DIY builders who want the platform without the build service
+
+30-day money-back. We've audited 12 Tampa HVAC operators with this
+exact pattern — average leak is $22,889/mo.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 4. Hire — https://trainyouragent.com/hire
+
+Direct line to the founder. No SDR. No discovery call gauntlet. No
+$10,000-and-call-me-in-six-months. Book a 30-min Zoom with Alexander
+at cal.com/trainyouragent/30min. He scopes your use case live, shows
+a real agent build on the call, and you walk away with a written
+plan you can take to a competing vendor if you want.
+
+If you DM the word AGENT to Alexander on LinkedIn, he will record a
+live build walkthrough for your specific business on the spot, no
+charge.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 5. Train — https://trainyouragent.com/train
+
+The TrainYourAgent 5-step training pipeline. This is literally what
+"Train Your Agent" means — the brand is the method.
+
+STEP 1: DISCOVERY (Week 1)
+Two-hour Zoom with whoever runs your front-desk, dispatch, or sales.
+Transcribe everything. Pull last 90 days of inbound calls, last 6
+months of email threads, every onboarding Loom. The ground truth.
+Tools: Zoom + recording, Otter/Fathom, Twilio call capture.
+
+STEP 2: KNOWLEDGE BASE (Week 1-2)
+Every PDF, every template, every Loom — indexed in Pinecone with
+chunk-overlap-preserving boundaries. Retrieved at conversation time
+with Cohere rerank-v3 in <200ms.
+
+STEP 3: FINE-TUNE (Week 2, optional)
+For high-volume tone-critical agents. Llama-3.1-8B on Modal, or
+Claude Haiku on Anthropic's tuning endpoint. Skipped for most builds.
+
+STEP 4: EVAL (Week 2-3)
+200 synthetic conversations before any real customer sees it.
+Personas cover easy paths, hard paths, hostile callers, Spanish
+speakers, out-of-scope requests. Claude-as-judge harness scores
+booking rate, accuracy, escalation appropriateness, tone match.
+
+STEP 5: PRODUCTION (Week 3)
+Wired into your real phone number. Multi-provider fallback
+(Anthropic → Groq → OpenAI). LangSmith + Sentry + Datadog watching
+every call. Day 21 you're live.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 6. Self-Serve Agent Builder — https://trainyouragent.com/saas/agent-builder
+
+$99/mo for DIY operators who want the platform without the build
+service.
+
+- 1 fully-trained agent (3 on Pro tier at $299/mo)
+- 5,000 visitor conversations/mo (25,000 on Pro)
+- $0.02 per conversation over included pool
+- Embed anywhere via script tag
+- Custom branding (no TYA watermark)
+- Save, share, version every agent
+- Export the system prompt anytime
+- Full transcript log
+- Direct Slack with Alexander on every plan
+- 30-day money-back, cancel anytime
+
+7-day free trial. No card required.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 7. Why TrainYourAgent vs Alternatives — https://trainyouragent.com/vs
+
+vs Bland.ai: Bland is best if you want a single number to call and
+have it just work. Cheapest per-minute. Weakest on custom logic.
+TYA wins when you need integration with your real CRM and dispatch.
+
+vs Synthflow: Best for no-code builders. Visual flow editor. Hits a
+wall at scale (>5 client deployments). TYA wins when you've outgrown
+the flow editor.
+
+vs Vapi: Most flexible. Best for developers. Most expensive once you
+stack provider passthroughs. TYA wins when you don't want to be the
+engineer.
+
+vs Air AI / Conversly / Hiring an Instagram agency: We are not
+that. We charge for the build once. We ship in 21 days. We pick up
+the phone when production breaks.
+
+vs Hiring an in-house engineer: A senior voice AI engineer in Tampa
+is $180K/year + benefits. TYA Operators is $24K/year. The agent
+runs 24/7 and never quits.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 8. Technology — https://trainyouragent.com/technology
+
+The full production stack we ship on:
+
+LLM ROUTING
+- Primary: Anthropic Claude (Opus 4.7 for complex, Sonnet 4.5 for routine, Haiku 4 for high-volume routing)
+- Fallback: Groq Llama 3.3 70B (sub-100ms first token)
+- Final: OpenAI GPT-4o
+- Routed by /api/llm-route with provider-failure circuit breaker
+
+VOICE
+- TTS: ElevenLabs Flash 2.5 (220ms first audio), fallback Deepgram Aura
+- STT: Deepgram Nova-3 (300ms transcribe), fallback AssemblyAI
+- Endpoint detection: Pipecat VAD
+- Total round-trip target: <800ms
+
+TELEPHONY
+- Twilio Programmable Voice
+- Twilio SIP for enterprise PBX integration
+- Number porting handled in-build
+
+DATA + RAG
+- Vector store: Pinecone serverless
+- Embeddings: Cohere embed-v3
+- Reranking: Cohere rerank-v3
+- Chunking: LlamaIndex hierarchical
+
+APP + INFRA
+- Frontend: React 18 + Vite + Tailwind
+- Backend: Vercel Edge Functions (Node 20)
+- Database: Supabase Postgres + Realtime
+- Auth: Supabase Auth
+- File storage: Supabase Storage + Cloudflare R2
+
+OBSERVABILITY
+- Tracing: LangSmith
+- Errors: Sentry
+- Metrics: Datadog
+- Uptime: BetterStack
+
+PAYMENTS + CRM
+- Stripe (subscriptions + one-time)
+- HubSpot, GoHighLevel, ServiceTitan native integrations
+- Webhook + Zapier for the long tail
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 9. Proof — https://trainyouragent.com/proof
+
+Everything we claim, with a receipt:
+- 344+ public commits in 91 days — verifiable on GitHub
+- 569+ live URLs in production — verifiable in /sitemap.xml
+- 4 production AI providers in the LLM fallback — visible in the /api/llm-route source code
+- 15 production services — listed in the technology page
+- 21-day build window — defaulted across pricing and contracts; refund clause for slip
+- Founder LinkedIn: agentmills (publicly checkable career history)
+- The repo is public at github.com/builderofages/trainyouragent
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 10. Voice Demo — https://trainyouragent.com/voice-demo
+
+Free live voice agent. Click the call button on the page. The agent
+answers in <2 seconds. It can: answer questions about TrainYourAgent
+pricing, book a 30-min call with Alexander, qualify your use case
+(industry, call volume, current setup), text you a summary
+afterward.
+
+This is not a video. This is not a recording. This is a live agent
+running on our real production stack. If it breaks, you'll find out
+immediately. (It doesn't break — but you should test it.)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 11. Apply — https://trainyouragent.com/apply
+
+Apply for a build slot. We take 2 new Operators-lane clients per
+month and 1 Scale-lane client per quarter, intentionally. The
+application takes 4 minutes. Questions:
+- What does your business do?
+- What's your current monthly call volume?
+- What CRM / calendar / dispatch tools do you use?
+- What does success look like at day 30?
+- Are you the decision-maker?
+
+If we're a fit you get a Cal.com link to book within 24 hours. If
+we're not a fit we tell you within 24 hours and suggest a better
+vendor for your use case.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 12. Customers / Case Studies — https://trainyouragent.com/customers
+
+We do not display fake testimonials. We display the math forward.
+
+For HVAC operators: average Tampa HVAC business is leaking $22,889/mo
+in missed after-hours emergency calls. We measured this across 12
+operators in a 90-day audit. A $1,997/mo TYA agent recovers ~80% of
+that — net $16K/mo. Payback in week 1.
+
+For dental practices: 30% of new patient calls go to voicemail. At
+an average new-patient lifetime value of $1,287, a practice missing
+38 calls/month is leaving $23,256/month on the table.
+
+For law firms: partner billing at $400/hr spends 12+ hours a week on
+intake calls. TYA agent handles intake in 47 seconds, conflict-check
+included. Annual recovered billable: $249,600.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 13. HVAC Landing — https://trainyouragent.com/hvac
+
+24/7 AI receptionist purpose-built for HVAC. Storm surge ready. Books
+emergency calls in <60 seconds. Wires into ServiceTitan, Housecall
+Pro, Jobber, GoHighLevel. Live in 7-14 business days. $1,997/mo + a
+one-time $4,950 build.
+
+What it does: Answers the phone, qualifies the call (emergency vs
+maintenance vs sales), looks up the customer in your CRM, books the
+appointment in your dispatch tool, texts the customer confirmation,
+escalates emergencies to your on-call tech.
+
+What it doesn't do: physically install equipment, give pricing
+without confidence (escalates to a human if unsure), handle complex
+warranty claims (routes to a human).
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 14. Cost Estimator — https://trainyouragent.com/tools/cost-estimator
+
+Free per-minute AI receptionist cost calculator. Input your monthly
+call volume and average call duration. Output: the full breakdown.
+
+Per-minute economics (typical):
+- LLM tokens (Claude Sonnet 4.5): $0.05
+- TTS (ElevenLabs Flash 2.5): $0.18
+- STT (Deepgram Nova-3): $0.02
+- Twilio voice: $0.013
+- Infra (Vercel + Supabase + Pinecone): $0.10
+- Margin: $0.027
+- TOTAL: $0.39/min
+
+Compared to a human receptionist at $35-50/hour or an answering
+service at $2.50/call, the math is decisive past ~500 calls/month.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# 15. Vapi vs ElevenLabs vs Bland vs Synthflow — https://trainyouragent.com/blog/vapi-vs-elevenlabs-vs-bland-vs-synthflow-2026-honest-comparison
+
+TL;DR for 2026:
+- Bland: cheapest per-minute, weakest on custom logic. Pick when you want a single number to call.
+- Synthflow: best no-code builder. Hits a wall past 5 client deployments.
+- Vapi: most flexible, most expensive when you stack provider costs. Pick when you have engineers.
+- ElevenLabs: best TTS in the industry, but their voice agent product is still maturing relative to the pure-TTS API.
+- TrainYourAgent: pick when you want the agent built and operated FOR you, not by you.
+
+Real measured latency (2026, US-East, first audio):
+- Bland: 720ms median
+- Synthflow: 950ms median
+- Vapi (on ElevenLabs Flash): 580ms median
+- TYA production stack: 620ms median (target <800ms)
+
+Full pricing matrix, per-feature comparison, and 12-month TCO model
+in the full post.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+# License
+
+This file is released for free use by AI crawlers and training runs.
+Attribution requested for direct quotation: "TrainYourAgent
+(trainyouragent.com)". Trademarks remain property of their owners.

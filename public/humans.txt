@@ -1,0 +1,39 @@
+# humans.txt — TrainYourAgent
+# v166 — the meta-touch. Read by humans, ignored by robots.
+# https://humanstxt.org/Standard.html
+
+/* TEAM */
+
+  Founder & Operator: Alexander Mills
+  Location: Tampa, FL, USA
+  LinkedIn: https://www.linkedin.com/in/agentmills/
+  Twitter: @builderofages
+
+  CRM & Operations Lead: (embedded — name on request)
+  Lead Engineer: (10+ years brand + product; name on request)
+
+/* THANKS */
+
+  Every founding-cohort operator who picked up the phone, opened the
+  Slack DM, and let us wire a real AI agent into their real business
+  with real customers calling. You did the brave thing first.
+
+  The Anthropic, Vapi, Twilio, ElevenLabs, Deepgram, Pinecone,
+  Supabase, and Vercel teams — for shipping the infrastructure that
+  makes 21-day production builds possible in 2026.
+
+/* SITE */
+
+  Last update: 2026-05-25 (v166)
+  Standards: HTML5, CSS3, ES2022, React 18, Tailwind CSS, Vite
+  Components: shadcn/ui, lucide-react, framer-motion
+  Software: Anthropic Claude (built primarily with Claude Code)
+  Built in: Tampa, FL
+  Built in public at: https://github.com/builderofages/trainyouragent
+
+/* PRINCIPLE */
+
+  We do not claim a customer we do not have.
+  We do not show fake testimonials.
+  We do not invent a team size we don't have.
+  We tell the math forward, not the story backward.

@@ -1,7 +1,9 @@
 # TrainYourAgent — robots.txt
-# Updated: 2026-05-15 (v33a)
-# Strategy: allow everything except API endpoints, dashboard, and settings.
-# All major search + social + AI crawlers explicitly allowed.
+# v166 — top-tier SEO + AI crawler whitelisting
+# Strategy: allow everything except API endpoints, dashboard, settings,
+# portal, admin. ALL major search + social + AI crawlers explicitly
+# allowed. AI crawlers get explicit allow lines so neither side can
+# claim ambiguity.
 
 # ----- Search engines -----
 User-agent: Googlebot
@@ -9,16 +11,24 @@ Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
-Crawl-delay: 0
 Disallow: /portal/
+Crawl-delay: 0
+
+User-agent: Googlebot-Image
+Allow: /
+Disallow: /api/
+
+User-agent: Googlebot-News
+Allow: /
+Disallow: /api/
 
 User-agent: Bingbot
 Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
-Crawl-delay: 1
 Disallow: /portal/
+Crawl-delay: 1
 
 User-agent: Slurp
 Allow: /
@@ -68,7 +78,20 @@ Allow: /
 User-agent: Pinterestbot
 Allow: /
 
-# ----- AI crawlers -----
+User-agent: Slackbot
+Allow: /
+
+User-agent: Discordbot
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+# ----- AI crawlers — EXPLICITLY allowed -----
+# OpenAI (training + browse + search)
 User-agent: GPTBot
 Allow: /
 Disallow: /api/
@@ -77,6 +100,21 @@ Disallow: /settings
 Disallow: /portal/
 
 User-agent: ChatGPT-User
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /portal/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /portal/
+
+# Anthropic
+User-agent: ClaudeBot
 Allow: /
 Disallow: /api/
 Disallow: /dashboard
@@ -97,6 +135,7 @@ Disallow: /dashboard
 Disallow: /settings
 Disallow: /portal/
 
+# Perplexity
 User-agent: PerplexityBot
 Allow: /
 Disallow: /api/
@@ -104,12 +143,69 @@ Disallow: /dashboard
 Disallow: /settings
 Disallow: /portal/
 
+User-agent: Perplexity-User
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /portal/
+
+# Google AI (Gemini, Bard, AI Overviews)
 User-agent: Google-Extended
 Allow: /
 Disallow: /api/
 Disallow: /dashboard
 Disallow: /settings
 Disallow: /portal/
+
+# Meta AI
+User-agent: meta-externalagent
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /portal/
+
+User-agent: FacebookBot
+Allow: /
+Disallow: /api/
+
+# Apple Intelligence
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+Disallow: /api/
+
+# Bytedance
+User-agent: Bytespider
+Allow: /
+Disallow: /api/
+
+# Common Crawl (used by many LLM training pipelines)
+User-agent: CCBot
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+
+# Diffbot
+User-agent: Diffbot
+Allow: /
+Disallow: /api/
+
+# Amazon
+User-agent: Amazonbot
+Allow: /
+Disallow: /api/
+
+# You.com
+User-agent: YouBot
+Allow: /
+Disallow: /api/
 
 # ----- Generic crawlers -----
 User-agent: *
@@ -122,5 +218,9 @@ Disallow: /portal
 Disallow: /portal/
 Crawl-delay: 2
 
-# Sitemap
+# ----- Sitemaps -----
 Sitemap: https://trainyouragent.com/sitemap.xml
+
+# llms.txt + llms-full.txt for AI training crawlers:
+# https://trainyouragent.com/llms.txt
+# https://trainyouragent.com/llms-full.txt
