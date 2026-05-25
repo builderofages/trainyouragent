@@ -185,6 +185,138 @@ export type ArticleLdInput = {
  authorName?: string;
 };
 
+// v161-verify: Product/Service JSON-LD for /pricing + /apply.
+// Google rich-result eligible; surfaces price + currency + availability in SERP.
+
+export type ProductLdInput = {
+ name: string;
+ description: string;
+ sku: string;
+ priceCents: number;
+ currency?: string;
+ url: string;
+ interval?: "month" | "year" | "one-time";
+};
+
+export function productLd(p: ProductLdInput): Json {
+ const isRecurring = p.interval === "month" || p.interval === "year";
+ return {
+ "@context": "https://schema.org",
+ "@type": "Product",
+ name: p.name,
+ description: p.description,
+ sku: p.sku,
+ brand: {
+ "@type": "Brand",
+ name: "TrainYourAgent",
+ },
+ offers: {
+ "@type": isRecurring ? "AggregateOffer" : "Offer",
+ url: p.url,
+ priceCurrency: p.currency || "USD",
+ price: (p.priceCents / 100).toFixed(2),
+ availability: "https://schema.org/InStock",
+ seller: {
+ "@type": "Organization",
+ name: "TrainYourAgent",
+ url: SITE_URL,
+ },
+ ...(isRecurring && {
+ priceSpecification: {
+ "@type": "UnitPriceSpecification",
+ price: (p.priceCents / 100).toFixed(2),
+ priceCurrency: p.currency || "USD",
+ referenceQuantity: {
+ "@type": "QuantitativeValue",
+ value: 1,
+ unitCode: p.interval === "year" ? "ANN" : "MON",
+ },
+ },
+ }),
+ },
+ };
+}
+
+export function allPricingProductsLd(): Json {
+ return [
+ productLd({
+ name: "TrainYourAgent — Agent Builder (Starter)",
+ description: "1 fully-trained AI agent, 5,000 conversations/mo, embed-anywhere widget, transcript logs, weekly tune-up. Cancel anytime.",
+ sku: "saas-agent-builder",
+ priceCents: 9900,
+ url: `${SITE_URL}/saas/agent-builder`,
+ interval: "month",
+ }),
+ productLd({
+ name: "TrainYourAgent — Agent in a Day (Done-WITH-You)",
+ description: "4-hour Zoom build session with founder. Walk away with deployed voice agent on your phone number. Full refund if we don't ship in the session.",
+ sku: "done-with-you-497",
+ priceCents: 49700,
+ url: `${SITE_URL}/pricing`,
+ interval: "one-time",
+ }),
+ productLd({
+ name: "TrainYourAgent — Operators",
+ description: "Done-for-you AI voice + SMS + email + chat agent. $4,950 one-time build + $1,997/mo runtime (5,000 minutes included). Live in 14 business days or build fee refunded.",
+ sku: "operators",
+ priceCents: 199700,
+ url: `${SITE_URL}/pricing`,
+ interval: "month",
+ }),
+ productLd({
+ name: "TrainYourAgent — Scale",
+ description: "Multi-location, multi-brand voice + chat agents. $9,950 one-time build + $4,997/mo (25,000 minutes included). Dedicated engineer, SLA 99.9%, BAA + DPA + SOC 2 evidence pack.",
+ sku: "scale",
+ priceCents: 499700,
+ url: `${SITE_URL}/pricing`,
+ interval: "month",
+ }),
+ ] as unknown as Json;
+}
+
+export type ServiceLdInput = {
+ name: string;
+ description: string;
+ url: string;
+ serviceType?: string;
+ areaServedName?: string;
+};
+
+export function serviceLd(s: ServiceLdInput): Json {
+ return {
+ "@context": "https://schema.org",
+ "@type": "Service",
+ name: s.name,
+ description: s.description,
+ url: s.url,
+ serviceType: s.serviceType || "AI Voice Agent Setup & Operation",
+ provider: {
+ "@type": "Organization",
+ name: "TrainYourAgent",
+ url: SITE_URL,
+ logo: `${SITE_URL}/og.png`,
+ },
+ areaServed: {
+ "@type": "AdministrativeArea",
+ name: s.areaServedName || "United States",
+ },
+ audience: {
+ "@type": "BusinessAudience",
+ audienceType: "Small and Mid-sized Businesses (SMBs) and Startups",
+ },
+ hasOfferCatalog: {
+ "@type": "OfferCatalog",
+ name: "TrainYourAgent service tiers",
+ itemListElement: [
+ { "@type": "Offer", name: "Agent Builder (Starter SaaS)", price: "99.00", priceCurrency: "USD" },
+ { "@type": "Offer", name: "Agent in a Day (Done-WITH-You)", price: "497.00", priceCurrency: "USD" },
+ { "@type": "Offer", name: "Operators (Done-For-You)", price: "1997.00", priceCurrency: "USD" },
+ { "@type": "Offer", name: "Scale (Multi-location)", price: "4997.00", priceCurrency: "USD" },
+ ],
+ },
+ };
+}
+
 export function articleLd(post: ArticleLdInput): Json {
  const url = `${SITE_URL}/blog/${post.slug}`;
  return {

@@ -15,6 +15,8 @@ import PoweredByBadges from "@/components/PoweredByBadges";
 // chart was sitting above the plan cards. Growth charts have no business
 // on a pricing page; spec asked for a clean tier comparison summary.
 import { ogUrl } from "@/lib/og";
+// v161-verify: Product + FAQPage JSON-LD for Google Rich Results
+import { injectJsonLdMany, allPricingProductsLd, faqPageLd } from "@/lib/jsonld";
 // v53: visitor context for niche-aware recommendations
 import { useVisitor, nicheDisplayName } from "@/lib/visitorContext";
 
@@ -258,7 +260,20 @@ const Pricing = () => {
       },
     });
     document.head.appendChild(s);
-    return () => { document.getElementById(id)?.remove(); };
+
+    // v161-verify: per-tier Product schema + FAQPage schema for Google Rich Results.
+    // Each tier becomes individually rich-result eligible — surfaces price + currency
+    // + availability in SERP. FAQ schema unlocks the expandable Q&A box.
+    injectJsonLdMany([
+      { id: "pricing-products", data: allPricingProductsLd() },
+      { id: "pricing-faq", data: faqPageLd(FAQ.map((f) => ({ question: f.q, answer: f.a }))) },
+    ]);
+
+    return () => {
+      document.getElementById(id)?.remove();
+      document.getElementById("tya-jsonld-pricing-products")?.remove();
+      document.getElementById("tya-jsonld-pricing-faq")?.remove();
+    };
   }, [recommendation]);
 
   useEffect(() => {

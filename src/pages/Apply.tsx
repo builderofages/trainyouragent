@@ -25,7 +25,7 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import { injectJsonLdMany, organizationLd, faqPageLd } from "@/lib/jsonld";
+import { injectJsonLdMany, organizationLd, faqPageLd, serviceLd } from "@/lib/jsonld";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 
@@ -66,6 +66,17 @@ export default function Apply() {
     injectJsonLdMany([
       { id: "apply-org", data: organizationLd() },
       { id: "apply-faq", data: faqPageLd(FAQS.map((f) => ({ question: f.q, answer: f.a }))) },
+      // v161-verify: Service schema — Google rich result for "AI voice agent setup"
+      {
+        id: "apply-service",
+        data: serviceLd({
+          name: "AI Voice Agent — Production Build + Operations",
+          description: "Custom AI voice agent built end-to-end. Wired into your phone number, CRM, and calendar. Multi-provider LLM fallback. 21-day production cutover. $4,950 build + $1,997/month operations. 30-day money-back, 90-day pay-for-itself guarantee.",
+          url: "https://trainyouragent.com/apply",
+          serviceType: "AI Voice Agent Setup, Training, and Operations",
+          areaServedName: "United States",
+        }),
+      },
     ]);
     return () => clearInterval(t);
   }, []);
