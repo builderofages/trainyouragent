@@ -129,20 +129,15 @@ const PLANS = [
   },
 ];
 
+// v160: Trimmed from 13 → 5. Audit found the long FAQ was answering objections
+// nobody had raised yet. Five highest-friction questions only. Rest moved to
+// docs/FAQ_FULL.md for the rare buyer who wants more.
 const FAQ = [
-  { q: "Will I get my money back if it doesn't work?", a: "Yes. 30-day money-back guarantee on the build fee: if your first agent doesn't ship to the spec we agreed on the kickoff call, we refund the full build fee, you keep the artifacts, and there's no clawback fight. After the build is accepted, monthly usage fees are pay-as-you-go and cancel any time. Per-minute and per-booking charges are non-refundable once incurred." },
+  { q: "Will I get my money back if it doesn't work?", a: "Yes. 30-day money-back guarantee on the build fee: if your first agent doesn't ship to the spec we agreed on the kickoff call, we refund the full build fee, you keep the artifacts, and there's no clawback fight. After the build is accepted, monthly usage fees are pay-as-you-go and cancel any time." },
   { q: "How fast will it actually be live?", a: "Founders lane: live in 7 business days. Operators lane: 10–14 business days end-to-end. If we slip past day 14 on Operators without an integration we flagged on the kickoff, the build fee is refunded — no quibbling." },
-  { q: "What if I don't like the voice or the script?", a: "We send 3 voice samples and the full opener/qualification script for your sign-off BEFORE cutover. Nothing goes live until you approve in writing. You can re-pick the voice and re-tune scripts in-flight without a fee, weekly, forever." },
-  { q: "Do you build for my industry?", a: "Today we ship for HVAC, roofing, legal, healthcare, real estate, accounting, automotive, solar, gym, spas, hotels, restaurants, logistics, and bars/nightclubs. If your industry isn't on the list, ask on the call — we've built outside our 14 standard verticals 6 times this year." },
   { q: "Do I own the agent? Or does TYA?", a: "You own the prompts, scripts, recordings, and the phone number. We host and operate the runtime. If you ever leave, we send you everything in a zip + a transcript export, and we pay for the porting of your number." },
-  { q: "Who hosts and maintains it?", a: "We host on US-region infrastructure (Vercel, Supabase, Twilio, ElevenLabs/Vapi). We maintain the model versions, prompt drift fixes, telephony failover, and the dashboard. You don't manage uptime — that's our job." },
-  { q: "Can you match my brand voice?", a: "Yes — that's most of the discovery call. You send us 3-10 recordings (sales calls, support calls, or just a voice memo) and we tune prosody, pacing, fillers, and vocabulary to match. Beats the 'generic AI bot' tell." },
   { q: "Will it work with my CRM?", a: "Native integrations with HubSpot, ServiceTitan, GoHighLevel, Stripe, Cal.com, Twilio. Custom integrations via webhook or Zapier for the long tail. We do the wiring in the build phase — you don't write code." },
   { q: "What happens if I cancel?", a: "Cancel any time from the dashboard or by email. You're billed for the month in progress (no proration, no early-termination fee). Number ports out within 5 business days. Data export available for 90 days post-cancel." },
-  { q: "Why no fake five-tier feature checklist?", a: "Because AI voice agents aren't a SaaS product where every tier unlocks one more dropdown. The work is: build it once, tune it weekly, charge for what runs through it. That's three honest lanes — Founders, Operators, Scale — not eleven boxes." },
-  { q: "What does the build fee actually cover?", a: "Discovery (we listen to your existing calls), agent training on YOUR docs/scripts/pricing/tone, voice tuning, telephony provisioning, integrations to your CRM and calendar, stress testing, cutover, and the first 30 days of tuning. Not 'a chatbot deployment.'" },
-  { q: "Free trial?", a: "Yes. Seven business days of live calls handled by your agent before the first invoice. If it doesn't perform, you walk and we keep nothing." },
-  { q: "Do you take equity?", a: "Sometimes, for the right startup. Defer cash, take a small piece, build the agent, ride the growth. Mention it on the call." },
 ];
 
 // v54: Hormozi-style "everything bundled in" stack with real value numbers.
@@ -359,9 +354,17 @@ const Pricing = () => {
           lanes. Skips Cal.com — clicks Subscribe and lands in Stripe checkout
           in 2 seconds. Fixes the monetization hole where /pricing had ZERO
           direct purchase paths (all 3 lanes routed to Cal.com only). */}
-      <section className="px-5 sm:px-8 pb-10">
+      <section className="px-5 sm:px-8 pb-6">
         <div className="max-w-7xl mx-auto">
           <SelfServeCallout />
+        </div>
+      </section>
+      {/* v160: Done-WITH-You $497 tier — Hormozi case-study factory. Bridges
+          the canyon between $99 SaaS and $4,950 Operators. 4-hour Zoom build
+          session, walk away with a deployed agent on your number. */}
+      <section className="px-5 sm:px-8 pb-10">
+        <div className="max-w-7xl mx-auto">
+          <DoneWithYouCallout />
         </div>
       </section>
 
@@ -404,9 +407,9 @@ const Pricing = () => {
                 ))}
               </ul>
 
-              <a href={CAL_URL} target="_blank" rel="noopener"
-                 className={`block w-full text-center px-5 py-3.5 rounded-full font-semibold text-[14px] transition ${p.accent ? "bg-white text-[#042C53] hover:bg-slate-100" : "bg-[#042C53] text-white hover:bg-[#0A3D6E]"}`}>
-                {p.cta} →
+              <LaneCheckoutButton plan={p.id} accent={p.accent} fallbackHref={CAL_URL} fallbackText={p.cta} />
+              <a href={CAL_URL} target="_blank" rel="noopener" className={`block w-full mt-2 text-center text-[11.5px] underline-offset-2 underline ${p.accent ? "text-white/80 hover:text-white" : "text-[#185FA5] hover:text-[#042C53]"}`}>
+                Or book a 30-min call first
               </a>
             </div>
           );
@@ -634,6 +637,170 @@ const Pricing = () => {
 };
 
 export default Pricing;
+
+// v160: Done-WITH-You $497 callout — 4-hour Zoom build session.
+// Bridges the $99↔$4,950 canyon and seeds case-study inventory.
+function DoneWithYouCallout() {
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  async function buy() {
+    setErr(null);
+    setLoading(true);
+    try {
+      const r = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ plan: "done-with-you-497" }),
+      });
+      const j = (await r.json().catch(() => ({}))) as { url?: string; error?: string };
+      if (j?.url) { window.location.href = j.url; return; }
+      if (j?.error === "stripe-not-configured" || j?.error === "plan-not-configured") {
+        setErr("Checkout being wired — email alexander@trainyouragent.com.");
+      } else {
+        setErr("Couldn't start checkout.");
+      }
+    } catch {
+      setErr("Network error. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+  return (
+    <div className="rounded-3xl overflow-hidden border border-[#185FA5] bg-gradient-to-br from-[#F6FAFE] via-white to-[#FFFBEA] shadow-[0_20px_50px_-20px_rgba(24,95,165,0.35)]">
+      <div className="grid md:grid-cols-[1.4fr_1fr] gap-0">
+        <div className="p-7 sm:p-9">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#185FA5] text-white text-[10.5px] uppercase tracking-[0.18em] font-semibold mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            Done-WITH-You · One-time
+          </div>
+          <h2 className="text-[26px] sm:text-[34px] leading-[1.1] tracking-tight font-semibold text-[#042C53]">
+            Agent in a Day.{" "}
+            <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
+              Built with the founder,
+            </span>{" "}
+            shipped today.
+          </h2>
+          <p className="mt-3 text-[15px] sm:text-[16px] text-slate-700 leading-relaxed max-w-xl">
+            4 hours on Zoom with Alexander. You bring your business, your phone number, your docs. You walk away with a deployed AI voice agent answering your phone today. No multi-week build cycle. No "we'll send you a recording."
+          </p>
+          <ul className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2 text-[13.5px] text-slate-700">
+            {[
+              "4 hours, live, Zoom screenshare",
+              "Founder builds WITH you, not for you",
+              "Deployed on your number that day",
+              "Trained on your docs / scripts / pricing",
+              "Walk away owning the prompts + recordings",
+              "Refund in full if we don't ship in the session",
+            ].map((p) => (
+              <li key={p} className="flex items-start gap-2">
+                <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[#22A36C] mt-2" />
+                <span>{p}</span>
+              </li>
+            ))}
+          </ul>
+          {err && (
+            <div className="mt-4 text-[13px] text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+              {err}
+            </div>
+          )}
+        </div>
+        <div className="p-7 sm:p-9 bg-[#185FA5] text-white flex flex-col justify-center">
+          <div className="text-[11px] uppercase tracking-[0.18em] text-[#FFD60A] font-semibold mb-1">Agent in a Day</div>
+          <div className="flex items-baseline gap-1.5">
+            <div className="text-[44px] sm:text-[56px] font-semibold tracking-tight leading-none">$497</div>
+            <div className="text-[15px] text-white/70">one-time</div>
+          </div>
+          <div className="text-[13px] text-white/70 mt-2 mb-6">USD · 4 hours · full refund if we don't ship</div>
+          <button
+            onClick={buy}
+            disabled={loading}
+            className="w-full px-5 py-3.5 rounded-full font-semibold text-[15px] transition bg-white text-[#042C53] hover:bg-[#FFD60A] disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {loading ? "Loading checkout…" : "Book my build day →"}
+          </button>
+          <div className="mt-5 text-[11px] text-white/60 leading-relaxed">
+            Stripe checkout. After payment we send a Calendly link to pick the 4-hour block within 7 days.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// v160: Per-lane direct Stripe checkout. Every tier now self-serves a real
+// Stripe Checkout session. Founders/Operators/Scale all wired through
+// /api/checkout with their plan ID. Cal.com remains as a "book a call first"
+// secondary link below each button (escape hatch for buyers who want to talk).
+function LaneCheckoutButton({
+  plan,
+  accent,
+  fallbackHref,
+  fallbackText,
+}: {
+  plan: string;
+  accent: boolean;
+  fallbackHref: string;
+  fallbackText: string;
+}) {
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  // v160: Founders lane is pay-as-you-go ($0.39/min) — no upfront Stripe
+  // checkout makes sense. Render it as a Cal.com booking button to start
+  // the build instead.
+  if (plan === "founders") {
+    return (
+      <a
+        href={fallbackHref}
+        target="_blank"
+        rel="noopener"
+        className={`block w-full text-center px-5 py-3.5 rounded-full font-semibold text-[14px] transition ${accent ? "bg-white text-[#042C53] hover:bg-slate-100" : "bg-[#042C53] text-white hover:bg-[#0A3D6E]"}`}
+      >
+        {fallbackText} →
+      </a>
+    );
+  }
+
+  async function subscribe() {
+    setErr(null);
+    setLoading(true);
+    try {
+      const r = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ plan }),
+      });
+      const j = (await r.json().catch(() => ({}))) as { url?: string; error?: string };
+      if (j?.url) { window.location.href = j.url; return; }
+      if (j?.error === "stripe-not-configured" || j?.error === "plan-not-configured") {
+        setErr("Checkout being wired — book a call instead.");
+      } else {
+        setErr("Couldn't start checkout. Use the Book a call link below.");
+      }
+    } catch {
+      setErr("Network error. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const label = plan === "operators" ? "Start the Operator build — pay & kickoff" : plan === "scale" ? "Start the Scale build — pay & kickoff" : "Subscribe →";
+
+  return (
+    <>
+      <button
+        onClick={subscribe}
+        disabled={loading}
+        className={`block w-full text-center px-5 py-3.5 rounded-full font-semibold text-[14px] transition disabled:opacity-60 disabled:cursor-not-allowed ${accent ? "bg-white text-[#042C53] hover:bg-slate-100" : "bg-[#042C53] text-white hover:bg-[#0A3D6E]"}`}
+      >
+        {loading ? "Loading checkout…" : `${label} →`}
+      </button>
+      {err && (
+        <div className={`mt-2 text-[12px] ${accent ? "text-yellow-200" : "text-red-600"}`}>{err}</div>
+      )}
+    </>
+  );
+}
 
 // v156: Self-Serve SaaS callout — direct Stripe checkout, no Cal.com hop.
 // Mounted above the 3 done-for-you lanes so a buyer ready to swipe their card

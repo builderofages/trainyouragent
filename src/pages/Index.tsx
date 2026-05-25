@@ -150,22 +150,20 @@ type HeroVariant = {
  headlineHtml: JSX.Element;
 };
 
+// v160: Killed the A/B test. With 2 leads in 30 days the test had zero signal —
+// it was just noise dressed as data. Locked in one Grand Slam offer headline
+// per Hormozi audit. "If it doesn't book one real appointment, you pay nothing"
+// is the risk-reversal mechanic that beats every generic "AI that runs your
+// business" headline tested in this category.
 const HERO_VARIANTS: HeroVariant[] = [
  {
  id: "A",
  headlineHtml: (
  <>
- AI that runs the part of your business{" "}
- <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>that used to run you.</span>
- </>
- ),
- },
- {
- id: "B",
- headlineHtml: (
- <>
- More appointments. Fewer missed calls.{" "}
- <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Live in 21 days.</span>
+ Your phone will be answered in 21 days.{" "}
+ <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
+ If it doesn&rsquo;t book one real appointment, you pay nothing.
+ </span>
  </>
  ),
  },
@@ -174,21 +172,9 @@ const HERO_VARIANTS: HeroVariant[] = [
 const HERO_AB_STORAGE_KEY = "tya_hero_variant";
 
 function pickHeroVariant(): HeroVariant {
- if (typeof window === "undefined") return HERO_VARIANTS[0];
- try {
- const existing = window.localStorage.getItem(HERO_AB_STORAGE_KEY);
- if (existing === "A" || existing === "B") {
- const found = HERO_VARIANTS.find((v) => v.id === existing);
- if (found) return found;
- }
- // 50/50 random — Math.random() < 0.5 → A, else B
- const v = HERO_VARIANTS[Math.random() < 0.5 ? 0 : 1];
- window.localStorage.setItem(HERO_AB_STORAGE_KEY, v.id);
- return v;
- } catch {
- // localStorage disabled / private mode — still bucket but don't persist
- return HERO_VARIANTS[Math.random() < 0.5 ? 0 : 1];
- }
+ // v160: A/B disabled — only one variant. The picker stays so call sites
+ // don't have to change, but always returns the locked Grand Slam variant.
+ return HERO_VARIANTS[0];
 }
 
 // v76-B: fire-and-forget telemetry for the hero A/B test. Spec called

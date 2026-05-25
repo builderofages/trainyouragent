@@ -51,6 +51,8 @@ const PLANS: Record<string, { priceEnv: string; mode: "subscription" | "payment"
   "saas-agent-builder": { priceEnv: "STRIPE_PRICE_SAAS_AGENT_BUILDER", mode: "subscription" },
   // v87: SaaS Pro tier — $299/mo recurring, 3 agents + 25k conversations
   "saas-agent-builder-pro": { priceEnv: "STRIPE_PRICE_SAAS_AGENT_BUILDER_PRO", mode: "subscription" },
+  // v160: Done-WITH-You — one-time $497 build session (Hormozi case-study factory)
+  "done-with-you-497": { priceEnv: "STRIPE_PRICE_DONE_WITH_YOU_497", mode: "payment" },
 };
 
 function resolvePriceId(plan: string): string {
@@ -93,6 +95,34 @@ const INLINE_PLAN_PRICING: Record<string, InlinePlanPricing> = {
     currency: "usd",
     productName: "TrainYourAgent — Agent Builder (Pro)",
     productDescription: "3 fully-trained AI agents · 25,000 conversations/mo · embed-anywhere widget · white-label branding · API access · priority Slack support. $299/mo, cancel anytime. $0.015 per conversation over the included pool.",
+    interval: "month",
+  },
+  // v160: Done-WITH-You tier — bridges the $99↔$4,950 canyon. 4-hour Zoom build
+  // session, founder + buyer ship a live agent on the buyer's number that day.
+  // Hormozi audit lever: turns the founder into a case-study factory.
+  "done-with-you-497": {
+    amountCents: 49700,
+    currency: "usd",
+    productName: "TrainYourAgent — Agent in a Day (Done-WITH-You)",
+    productDescription: "4-hour Zoom build session with the founder. You walk away with a deployed voice agent on your phone number, trained on your docs, integrated with your calendar. One-time fee, no monthly. If we don't ship a working agent in the session, full refund.",
+    interval: undefined, // one-time
+  },
+  // v160: Operators tier — done-for-you build + $1,997/mo runtime, self-serve
+  // checkout enabled so buyers don't need a Cal.com qualifying step. Buyer
+  // pays the build, founder gets a kickoff calendar invite via Stripe webhook.
+  operators: {
+    amountCents: 199700,
+    currency: "usd",
+    productName: "TrainYourAgent — Operators ($1,997/mo + $4,950 build)",
+    productDescription: "Done-for-you AI voice + SMS + email + chat agent. $4,950 one-time build (CRM/dispatch/calendar wiring) + $1,997/mo (5,000 minutes included, $25 per booked appt overage). Live in 14 business days or build fee refunded. Cancel any time.",
+    interval: "month",
+  },
+  // v160: Scale tier — multi-location, multi-brand, SLA-backed.
+  scale: {
+    amountCents: 499700,
+    currency: "usd",
+    productName: "TrainYourAgent — Scale ($4,997/mo + $9,950 build)",
+    productDescription: "Multi-location, multi-brand voice + chat agents. $9,950 one-time build + $4,997/mo (25,000 minutes included, $15 per booked appt overage). Dedicated engineer, SLA 99.9%, BAA + DPA + SOC 2 evidence pack. Cancel any time.",
     interval: "month",
   },
 };
