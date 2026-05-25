@@ -206,13 +206,13 @@ export const ROICalculatorPremium = () => {
 
             {/* ROI */}
             <div className="bg-gradient-to-r from-trust-blue to-tech-cyan rounded-2xl p-8 shadow-xl text-white">
-              <p className="text-white/80 text-sm font-semibold uppercase tracking-wide mb-2">
+              <p className="text-slate-700 text-sm font-semibold uppercase tracking-wide mb-2">
                 ROI With Us
               </p>
               <p className="text-4xl md:text-5xl font-black mb-2">
                 {animatedROI > 0 ? animatedROI : 0}%
               </p>
-              <p className="text-white/80">
+              <p className="text-slate-700">
                 Pay ${monthlyInvestment}/mo. Recover ${animatedMonthly.toLocaleString()}+/mo.
                 <br />
                 <span className="font-semibold text-white">That's not an expense. It's a money machine.</span>

@@ -86,7 +86,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
   };
 
   return (
-    <div className="min-h-screen bg-deep-space">
+    <div className="min-h-screen bg-white">
       <Helmet>
         <title>{config.seo.title}</title>
         <meta name="description" content={config.seo.description} />
@@ -136,7 +136,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
             className="mb-8"
           >
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-medium tracking-[0.2em] uppercase
-                           bg-white/5 border border-white/10 text-white/60 backdrop-blur-sm">
+                           bg-white/5 border border-[#042C53]/10 text-slate-700 backdrop-blur-sm">
               <config.icon className="w-3.5 h-3.5 text-tech-cyan" />
               AI for {config.name}
             </span>
@@ -174,7 +174,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
 
           {/* Subheadline */}
           <motion.p
-            className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed font-light"
+            className="text-lg md:text-xl text-slate-700 max-w-2xl mx-auto mb-10 leading-relaxed font-light"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1.2 }}
@@ -194,7 +194,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
                 <div className="text-3xl md:text-4xl font-bold text-white mb-1">
                   <AnimatedCounter end={stat.value} suffix={stat.suffix} />
                 </div>
-                <div className="text-sm text-white/50">{stat.label}</div>
+                <div className="text-sm text-slate-700">{stat.label}</div>
               </div>
             ))}
           </motion.div>
@@ -222,9 +222,9 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
               variant="outline"
               size="lg"
               onClick={() => window.open(siteConfig.bookingUrl, '_blank')}
-              className="border-white/20 text-white hover:bg-white/10 font-semibold px-8 py-6 text-lg
+              className="border-[#042C53]/20 text-white hover:bg-white/10 font-semibold px-8 py-6 text-lg
                          backdrop-blur-sm transition-all duration-300
-                         hover:border-white/40 hover:shadow-[0_0_30px_hsla(185,80%,50%,0.2)]"
+                         hover:border-[#042C53]/40 hover:shadow-[0_0_30px_hsla(185,80%,50%,0.2)]"
             >
               Book Strategy Session
             </Button>
@@ -232,7 +232,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
 
           {/* Trust indicators */}
           <motion.div
-            className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-white/50 text-sm"
+            className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-slate-700 text-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1.8 }}
@@ -266,7 +266,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
       <ProblemSection />
 
       {/* Solutions Grid */}
-      <section className="py-24 bg-deep-space/50">
+      <section className="py-24 bg-white/50">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -277,7 +277,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
               8 Ways AI Transforms Your {config.name} Business
             </h2>
-            <p className="text-xl text-white/60 max-w-2xl mx-auto">
+            <p className="text-xl text-slate-700 max-w-2xl mx-auto">
               Complete automation suite designed specifically for {config.name.toLowerCase()} operations.
             </p>
           </motion.div>
@@ -301,7 +301,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
 
       {/* Industry Benefits */}
       {solution && (
-        <section className="py-24 bg-deep-space">
+        <section className="py-24 bg-white">
           <div className="container mx-auto px-4">
             <Suspense fallback={<SectionLoader />}>
               <IndustryBenefits solution={solution} />
@@ -311,7 +311,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
       )}
 
       {/* Comparison Table */}
-      <section className="py-24 bg-deep-space/50">
+      <section className="py-24 bg-white/50">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -322,7 +322,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
               AI vs Traditional Solutions
             </h2>
-            <p className="text-xl text-white/60 max-w-2xl mx-auto">
+            <p className="text-xl text-slate-700 max-w-2xl mx-auto">
               See how AI voice agents compare to hiring staff or call centers.
             </p>
           </motion.div>
@@ -334,7 +334,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
       </section>
 
       {/* Voice Demo */}
-      <section id="demo" className="py-24 bg-deep-space">
+      <section id="demo" className="py-24 bg-white">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -345,7 +345,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Hear It In Action
             </h2>
-            <p className="text-xl text-white/60 max-w-2xl mx-auto">
+            <p className="text-xl text-slate-700 max-w-2xl mx-auto">
               Experience how our AI handles real {config.name.toLowerCase()} calls.
             </p>
           </motion.div>
@@ -357,7 +357,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
       </section>
 
       {/* ROI Calculator */}
-      <section className="py-24 bg-deep-space/50">
+      <section className="py-24 bg-white/50">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -368,7 +368,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Calculate Your ROI
             </h2>
-            <p className="text-xl text-white/60 max-w-2xl mx-auto">
+            <p className="text-xl text-slate-700 max-w-2xl mx-auto">
               See exactly how much revenue you're leaving on the table.
             </p>
           </motion.div>
@@ -386,7 +386,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
       <FAQPremium />
 
       {/* CTA Section with Lead Gate */}
-      <section className="py-24 bg-deep-space">
+      <section className="py-24 bg-white">
         <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -396,7 +396,7 @@ export const IndustryLandingTemplate = ({ config }: IndustryLandingTemplateProps
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Ready to Transform Your {config.name} Business?
             </h2>
-            <p className="text-xl text-white/60 max-w-2xl mx-auto mb-8">
+            <p className="text-xl text-slate-700 max-w-2xl mx-auto mb-8">
               Book a free strategy session to see how AI can work for your specific situation.
             </p>
             <Button

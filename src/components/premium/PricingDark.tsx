@@ -58,7 +58,7 @@ export const PricingDark = () => {
   const [hoveredPlan, setHoveredPlan] = useState<number | null>(null);
 
   return (
-    <section id="pricing-section" className="relative py-24 md:py-32 bg-deep-space overflow-hidden">
+    <section id="pricing-section" className="relative py-24 md:py-32 bg-white overflow-hidden">
       {/* Grain texture */}
       <div 
         className="absolute inset-0 opacity-[0.02]"
@@ -93,7 +93,7 @@ export const PricingDark = () => {
 
         {/* Subheadline */}
         <motion.p
-          className="text-lg text-white/60 text-center mb-16"
+          className="text-lg text-slate-700 text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -110,7 +110,7 @@ export const PricingDark = () => {
               className={`relative rounded-2xl p-8 transition-all duration-300
                         ${plan.popular 
                           ? "bg-white/10 border-2 border-tech-cyan/50 scale-105 z-10" 
-                          : "bg-white/5 border border-white/10"
+                          : "bg-white/5 border border-[#042C53]/10"
                         }
                         ${hoveredPlan === index ? "shadow-[0_0_60px_hsla(185,80%,50%,0.3)]" : ""}`}
               initial={{ opacity: 0, y: 30 }}
@@ -130,13 +130,13 @@ export const PricingDark = () => {
               {/* Plan name */}
               <div className="text-center mb-6">
                 <h3 className="text-xl font-bold text-white">{plan.name}</h3>
-                <p className="text-white/50 text-sm">{plan.subtitle}</p>
+                <p className="text-slate-700 text-sm">{plan.subtitle}</p>
               </div>
 
               {/* Price */}
               <div className="text-center mb-6">
                 <span className="text-5xl font-black text-white">${plan.price}</span>
-                <span className="text-white/50">/month</span>
+                <span className="text-slate-700">/month</span>
               </div>
 
               <div className="w-full h-px bg-white/10 mb-6" />
@@ -144,7 +144,7 @@ export const PricingDark = () => {
               {/* Features */}
               <ul className="space-y-3 mb-8">
                 {plan.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-center gap-3 text-white/80">
+                  <li key={idx} className="flex items-center gap-3 text-slate-700">
                     <Check className="w-4 h-4 text-tech-cyan shrink-0" />
                     <span className="text-sm">{feature}</span>
                   </li>
@@ -154,7 +154,7 @@ export const PricingDark = () => {
               <div className="w-full h-px bg-white/10 mb-6" />
 
               {/* Setup fee */}
-              <p className="text-center text-white/50 text-sm mb-6">
+              <p className="text-center text-slate-700 text-sm mb-6">
                 + ${plan.setup.toLocaleString()} setup
               </p>
 
@@ -181,7 +181,7 @@ export const PricingDark = () => {
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
         >
-          <p className="text-white/60 mb-4">
+          <p className="text-slate-700 mb-4">
             Need enterprise features? Multi-location management? Custom builds?
           </p>
           <button
@@ -200,7 +200,7 @@ export const PricingDark = () => {
           viewport={{ once: true }}
           transition={{ delay: 0.6 }}
         >
-          <p className="text-white/40 text-sm">
+          <p className="text-slate-700 text-sm">
             That's less than <span className="text-white">$17/day</span>. Your receptionist costs <span className="text-white">$150/day</span>.
           </p>
         </motion.div>

@@ -60,7 +60,7 @@ export const BeyondVoice = () => {
 
         {/* Subheadline */}
         <motion.p
-          className="text-lg text-white/60 text-center mb-16 max-w-2xl mx-auto"
+          className="text-lg text-slate-700 text-center mb-16 max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -74,8 +74,8 @@ export const BeyondVoice = () => {
           {services.map((service, index) => (
             <motion.div
               key={service.title}
-              className="group relative bg-white/5 border border-white/10 rounded-2xl p-6 
-                       hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer"
+              className="group relative bg-white/5 border border-[#042C53]/10 rounded-2xl p-6 
+                       hover:bg-white/10 hover:border-[#042C53]/20 transition-all duration-300 cursor-pointer"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -93,7 +93,7 @@ export const BeyondVoice = () => {
               <h3 className="text-lg font-bold text-white mb-2">{service.title}</h3>
 
               {/* Description */}
-              <p className="text-white/60 text-sm leading-relaxed mb-4">
+              <p className="text-slate-700 text-sm leading-relaxed mb-4">
                 {service.description}
               </p>
 
@@ -114,7 +114,7 @@ export const BeyondVoice = () => {
           viewport={{ once: true }}
           transition={{ delay: 0.6 }}
         >
-          <p className="text-white/60 mb-4">
+          <p className="text-slate-700 mb-4">
             Want to see how AI can transform your entire business?
           </p>
           <button

@@ -36,7 +36,7 @@ export const FooterPremium = () => {
             <Link to="/" className="inline-block mb-4">
               <span className="text-2xl font-bold text-white">{siteConfig.companyName}</span>
             </Link>
-            <p className="text-white/50 text-sm mb-6 leading-relaxed">
+            <p className="text-slate-700 text-sm mb-6 leading-relaxed">
               AI that answers. AI that closes.
               <br />
               AI that never sleeps.
@@ -52,7 +52,7 @@ export const FooterPremium = () => {
                          hover:bg-white/10 transition-colors duration-200"
                 aria-label="LinkedIn"
               >
-                <Linkedin className="w-5 h-5 text-white/60" />
+                <Linkedin className="w-5 h-5 text-slate-700" />
               </a>
               <a
                 href={siteConfig.socialMedia.twitter}
@@ -62,7 +62,7 @@ export const FooterPremium = () => {
                          hover:bg-white/10 transition-colors duration-200"
                 aria-label="Twitter"
               >
-                <Twitter className="w-5 h-5 text-white/60" />
+                <Twitter className="w-5 h-5 text-slate-700" />
               </a>
               <a
                 href={siteConfig.socialMedia.instagram}
@@ -72,7 +72,7 @@ export const FooterPremium = () => {
                          hover:bg-white/10 transition-colors duration-200"
                 aria-label="Instagram"
               >
-                <Instagram className="w-5 h-5 text-white/60" />
+                <Instagram className="w-5 h-5 text-slate-700" />
               </a>
             </div>
           </div>
@@ -85,7 +85,7 @@ export const FooterPremium = () => {
                 <li key={item.name}>
                   <Link
                     to={item.href}
-                    className="text-white/50 hover:text-white transition-colors duration-200 text-sm"
+                    className="text-slate-700 hover:text-white transition-colors duration-200 text-sm"
                   >
                     {item.name}
                   </Link>
@@ -102,7 +102,7 @@ export const FooterPremium = () => {
                 <li key={item.name}>
                   <Link
                     to={item.href}
-                    className="text-white/50 hover:text-white transition-colors duration-200 text-sm"
+                    className="text-slate-700 hover:text-white transition-colors duration-200 text-sm"
                   >
                     {item.name}
                   </Link>
@@ -119,7 +119,7 @@ export const FooterPremium = () => {
                 <li key={item.name}>
                   <Link
                     to={item.href}
-                    className="text-white/50 hover:text-white transition-colors duration-200 text-sm"
+                    className="text-slate-700 hover:text-white transition-colors duration-200 text-sm"
                   >
                     {item.name}
                   </Link>
@@ -130,15 +130,15 @@ export const FooterPremium = () => {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-white/40 text-sm">
+        <div className="pt-8 border-t border-[#042C53]/10 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-slate-700 text-sm">
             © {new Date().getFullYear()} {siteConfig.companyName}. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <Link to="/privacy" className="text-white/40 hover:text-white/60 text-sm transition-colors">
+            <Link to="/privacy" className="text-slate-700 hover:text-slate-700 text-sm transition-colors">
               Privacy Policy
             </Link>
-            <Link to="/terms" className="text-white/40 hover:text-white/60 text-sm transition-colors">
+            <Link to="/terms" className="text-slate-700 hover:text-slate-700 text-sm transition-colors">
               Terms of Service
             </Link>
           </div>

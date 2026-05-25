@@ -252,8 +252,8 @@ export default function Vs() {
  </span>
  {c.them}
  </div>
- <div className="text-[14px] leading-[1.55] text-[rgba(133,235,200,0.92)]">
- <span className="block text-[10.5px] uppercase tracking-[0.18em] text-[rgba(133,235,200,0.85)] mb-1.5 font-mono">
+ <div className="text-[14px] leading-[1.55] text-[#15724D]">
+ <span className="block text-[10.5px] uppercase tracking-[0.18em] text-[#15724D] mb-1.5 font-mono">
  TrainYourAgent
  </span>
  {c.us}
@@ -272,7 +272,7 @@ export default function Vs() {
  <h2 className="mt-5 text-[clamp(28px,4vw,48px)] leading-[1.05] tracking-[-0.02em] font-semibold text-[#042C53]">
  The specific tools we get compared to.
  </h2>
- <p className="mt-5 text-[16px] leading-[1.6] text-[rgba(230,241,251,0.7)] max-w-[760px]">
+ <p className="mt-5 text-[16px] leading-[1.6] text-[#42526E] max-w-[760px]">
  Buyers often shortlist us against Vapi, Bland.ai, Synthflow, Air
  AI, or an "AI agency on Instagram." Honest take on each:
  </p>
@@ -289,11 +289,11 @@ export default function Vs() {
  }}
  >
  <h3 className="text-[18px] font-semibold text-[#042C53] tracking-tight">{a.name}</h3>
- <p className="mt-3 text-[13.5px] leading-[1.55] text-[rgba(255,180,180,0.78)]">
+ <p className="mt-3 text-[13.5px] leading-[1.55] text-[#9B2C2C]">
  <span className="font-mono uppercase tracking-[0.15em] text-[10.5px] block mb-1.5">What they are</span>
  {a.them}
  </p>
- <p className="mt-4 text-[13.5px] leading-[1.55] text-[rgba(133,235,200,0.85)]">
+ <p className="mt-4 text-[13.5px] leading-[1.55] text-[#15724D]">
  <span className="font-mono uppercase tracking-[0.15em] text-[10.5px] block mb-1.5">What we are</span>
  {a.us}
  </p>
@@ -303,7 +303,7 @@ export default function Vs() {
  </div>
  </section>
 
- <section className="py-24 px-5 sm:px-8" style={{ background: "radial-gradient(1100px 700px at 50% 0%, rgba(4,44,83,0.7) 0%, rgba(2,12,24,1) 70%)" }}>
+ <section className="py-24 px-5 sm:px-8" style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FAF6EE 60%, #FFFFFF 100%)" }}>
  <div className="max-w-[820px] mx-auto">
  <div className="text-[11px] font-mono uppercase tracking-[0.24em] text-[#185FA5]">
  FAQ · THE QUESTIONS BUYERS ACTUALLY ASK
@@ -323,7 +323,7 @@ export default function Vs() {
  }}
  >
  <summary className="cursor-pointer text-[15.5px] sm:text-[17px] font-semibold text-[#042C53] tracking-tight list-none flex items-start gap-3">
- <span className="text-[#85B7EB] mt-1">→</span>
+ <span className="text-[#185FA5] mt-1">→</span>
  <span>{f.question}</span>
  </summary>
  <p className="mt-4 text-[14.5px] leading-[1.65] text-[#42526E] pl-7">
@@ -340,7 +340,7 @@ export default function Vs() {
  <h2 className="text-[clamp(28px,4vw,48px)] leading-[1.05] tracking-[-0.02em] font-semibold text-[#042C53]">
  The verdict.
  </h2>
- <p className="mt-6 text-[17px] leading-[1.6] text-[rgba(230,241,251,0.8)]">
+ <p className="mt-6 text-[17px] leading-[1.6] text-[#42526E]">
  You can rent a voice AI platform from a 22-year-old reseller and
  spend six months in onboarding. You can hire a developer team in
  Eastern Europe and spend nine months and $80K. Or you can pay

@@ -30,7 +30,7 @@ export const HeroSectionPremium = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-deep-space">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
       {/* Animated background gradient orbs */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
@@ -82,7 +82,7 @@ export const HeroSectionPremium = () => {
         >
           <motion.span
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-medium tracking-[0.2em] uppercase
-                       bg-white/5 border border-white/10 text-white/60 backdrop-blur-sm"
+                       bg-white/5 border border-[#042C53]/10 text-slate-700 backdrop-blur-sm"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-success-green animate-pulse" />
             Enterprise AI • Live in 5 Days
@@ -125,7 +125,7 @@ export const HeroSectionPremium = () => {
           <AnimatePresence mode="wait">
             <motion.p
               key={currentIndex}
-              className="text-lg md:text-xl text-white/70 font-light"
+              className="text-lg md:text-xl text-slate-700 font-light"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -158,16 +158,16 @@ export const HeroSectionPremium = () => {
             variant="outline"
             size="lg"
             onClick={() => scrollToSection("pricing-section")}
-            className="border-white/20 text-white hover:bg-white/10 font-semibold px-8 py-6 text-lg
+            className="border-[#042C53]/20 text-white hover:bg-white/10 font-semibold px-8 py-6 text-lg
                        backdrop-blur-sm transition-all duration-300
-                       hover:border-white/40 hover:shadow-[0_0_30px_hsla(185,80%,50%,0.2)]"
+                       hover:border-[#042C53]/40 hover:shadow-[0_0_30px_hsla(185,80%,50%,0.2)]"
           >
             See Pricing
           </Button>
         </div>
 
         {/* Single elegant social proof */}
-        <p className="text-white/50 text-sm tracking-wide">
+        <p className="text-slate-700 text-sm tracking-wide">
           Trusted by <span className="text-white font-semibold">200+</span> businesses to never miss a call
         </p>
       </div>

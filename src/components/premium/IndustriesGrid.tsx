@@ -139,11 +139,11 @@ export const IndustriesGrid = () => {
                   <industry.icon className="w-8 h-8 text-white opacity-80" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-1">{industry.title}</h3>
-                <p className="text-white/70 text-sm mb-2">{industry.tagline}</p>
+                <p className="text-slate-700 text-sm mb-2">{industry.tagline}</p>
                 
                 {/* Hidden description revealed on hover */}
                 <motion.p
-                  className="text-white/60 text-sm overflow-hidden"
+                  className="text-slate-700 text-sm overflow-hidden"
                   initial={{ height: 0, opacity: 0 }}
                   whileHover={{ height: "auto", opacity: 1 }}
                 >

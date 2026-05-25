@@ -24,14 +24,14 @@ export const FinalCTA = () => {
 
         {/* Subheadline */}
         <motion.div
-          className="text-lg md:text-xl text-white/70 mb-10 max-w-xl mx-auto"
+          className="text-lg md:text-xl text-slate-700 mb-10 max-w-xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
         >
           <p>You've got two choices:</p>
-          <p className="text-white/50">Keep losing leads to voicemail.</p>
+          <p className="text-slate-700">Keep losing leads to voicemail.</p>
           <p className="text-white font-semibold">Or fix it this week.</p>
         </motion.div>
 
@@ -58,8 +58,8 @@ export const FinalCTA = () => {
             variant="outline"
             size="lg"
             onClick={() => window.open(siteConfig.bookingUrl, "_blank")}
-            className="border-white/20 text-white hover:bg-white/10 font-semibold px-8 py-6 text-lg
-                       backdrop-blur-sm transition-all duration-300 hover:border-white/40"
+            className="border-[#042C53]/20 text-white hover:bg-white/10 font-semibold px-8 py-6 text-lg
+                       backdrop-blur-sm transition-all duration-300 hover:border-[#042C53]/40"
           >
 Talk to a live AI agent → 60 sec, no signup
           </Button>
@@ -67,7 +67,7 @@ Talk to a live AI agent → 60 sec, no signup
 
         {/* Trust bar */}
         <motion.div
-          className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-white/50 text-sm"
+          className="flex flex-wrap items-center justify-center gap-6 md:gap-8 text-slate-700 text-sm"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}

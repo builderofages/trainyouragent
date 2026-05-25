@@ -34,7 +34,7 @@ export const ProblemSection = () => {
   };
 
   return (
-    <section id="problem-section" className="relative py-24 md:py-32 bg-deep-space overflow-hidden">
+    <section id="problem-section" className="relative py-24 md:py-32 bg-white overflow-hidden">
       {/* Grain texture overlay */}
       <div 
         className="absolute inset-0 opacity-[0.03]"
@@ -89,12 +89,12 @@ export const ProblemSection = () => {
                   className="text-6xl md:text-7xl font-black text-white"
                 />
               </div>
-              <p className="text-white/60 text-lg mb-4">{stat.label}</p>
+              <p className="text-slate-700 text-lg mb-4">{stat.label}</p>
               <div className="w-12 h-px bg-white/20 mx-auto mb-4" />
-              <p className="text-white/80 whitespace-pre-line leading-relaxed">
+              <p className="text-slate-700 whitespace-pre-line leading-relaxed">
                 {stat.description}
               </p>
-              <p className="text-white/30 text-xs mt-4">Source: {stat.source}</p>
+              <p className="text-slate-700 text-xs mt-4">Source: {stat.source}</p>
             </motion.div>
           ))}
         </div>
@@ -107,7 +107,7 @@ export const ProblemSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.8 }}
         >
-          <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl text-slate-700 mb-8 max-w-2xl mx-auto">
             You can't grow a business on missed calls.
             <br />
             <span className="text-white font-semibold">So stop missing them.</span>
