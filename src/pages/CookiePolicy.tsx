@@ -52,7 +52,7 @@ const CookiePolicy = () => {
           <div className="hidden md:flex items-center gap-7 text-[14px] text-slate-700">
             <Link to="/solutions" className="hover:text-[#042C53]">Solutions</Link>
             <Link to="/security" className="hover:text-[#042C53]">Security</Link>
-            <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
+            <a href="/pricing" className="hover:text-[#042C53]">Pricing</a>
             <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E]">Book a call</a>
           </div>
           <button className="md:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu">

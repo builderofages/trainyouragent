@@ -666,12 +666,12 @@ const SolutionDetail = () => {
             <div className="text-[20px] font-semibold text-[#042C53] mb-3 leading-tight">
               {pillar.priceFrom}
             </div>
-            <Link
-              to="/pricing"
+            <a
+              href="/pricing"
               className="text-[13px] font-semibold text-[#185FA5] hover:text-[#042C53] inline-flex items-center gap-1"
             >
               See full pricing →
-            </Link>
+            </a>
           </div>
           <div className="rounded-3xl bg-white border border-slate-200 p-7">
             <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-2">

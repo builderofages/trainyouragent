@@ -357,12 +357,12 @@ export default function Vs() {
  >
  Talk to the operator →
  </Link>
- <Link
- to="/pricing"
+ <a
+ href="/pricing"
  className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl border border-white/20 text-white font-semibold text-[15.5px] hover:bg-white/5"
  >
  See pricing
- </Link>
+ </a>
  </div>
  </div>
  </section>

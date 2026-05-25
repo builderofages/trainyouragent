@@ -235,7 +235,7 @@ const Trial = () => {
           </div>
           <div className="flex items-center gap-x-6 gap-y-2 flex-wrap justify-center">
             <Link to="/about" className="hover:text-[#042C53]">About</Link>
-            <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
+            <a href="/pricing" className="hover:text-[#042C53]">Pricing</a>
             <Link to="/customers" className="hover:text-[#042C53]">Customers</Link>
             <Link to="/testimonials" className="hover:text-[#042C53]">Testimonials</Link>
             <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>

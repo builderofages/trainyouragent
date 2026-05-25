@@ -164,7 +164,7 @@ export default function ToolLayout({ eyebrow, title, italicTail, subtitle, child
           <span>© {new Date().getFullYear()} TrainYourAgent · Free tools</span>
           <div className="flex gap-4">
             <Link to="/about" className="hover:text-slate-700">About</Link>
-            <Link to="/pricing" className="hover:text-slate-700">Pricing</Link>
+            <a href="/pricing" className="hover:text-slate-700">Pricing</a>
             <Link to="/contact" className="hover:text-slate-700">Contact</Link>
           </div>
         </div>

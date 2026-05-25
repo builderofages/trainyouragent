@@ -579,7 +579,8 @@ const Index = () => {
  <span className="text-slate-300" aria-hidden="true">·</span>
  <Link to="/demos/seo-cluster" className="text-[#185FA5] font-medium hover:underline">SEO cluster generator →</Link>
  <span className="text-slate-300" aria-hidden="true">·</span>
- <Link to="/book" className="text-[#185FA5] font-medium hover:underline">Book a 30-min build call →</Link>
+ {/* v170: hard <a href> to bypass lazy-chunk stale-hash white screens */}
+ <a href="/book" className="text-[#185FA5] font-medium hover:underline">Book a 30-min build call →</a>
  </div>
  </section>
 
@@ -920,12 +921,13 @@ const Index = () => {
  <div className="text-[15px] sm:text-[16px] text-[#0B1B2B] leading-relaxed">
  <strong className="text-[#042C53]">Starts at $0 upfront on the Founder lane,</strong> $1,500/mo+ on Operators. Most operators land on $5K/mo for full coverage. Pricing on the discovery call — written scope same day.
  </div>
- <Link
- to="/book"
+ {/* v170: hard <a href> for the primary closing CTA — must never white-screen */}
+ <a
+ href="/book"
  className="inline-flex items-center justify-center px-6 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[14.5px] hover:bg-[#0A3D6E] shadow-lg whitespace-nowrap"
  >
  Book your build call → leave with a written plan
- </Link>
+ </a>
  </div>
  </div>
  </section>

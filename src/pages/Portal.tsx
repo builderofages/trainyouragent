@@ -151,7 +151,7 @@ export default function Portal() {
               {signinState === "error" && <div className="text-[13px] text-rose-600">Something went wrong — try again or email support@trainyouragent.com.</div>}
             </form>
             <div className="mt-8 text-[13px] text-slate-600">
-              Don't have an account yet? <Link to="/pricing" className="text-[#185FA5] underline">See pricing</Link> or <a href={CAL_URL} target="_blank" rel="noopener" className="text-[#185FA5] underline">book a call</a>.
+              Don't have an account yet? <a href="/pricing" className="text-[#185FA5] underline">See pricing</a> or <a href={CAL_URL} target="_blank" rel="noopener" className="text-[#185FA5] underline">book a call</a>.
             </div>
             <div className="mt-10 p-4 rounded-xl bg-amber-50 border border-amber-200 text-[13px] text-amber-900">
               <strong>Preview the portal:</strong>{" "}

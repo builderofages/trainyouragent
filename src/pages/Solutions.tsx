@@ -224,12 +224,13 @@ const Solutions = () => {
             >
               Book a 30-min build call →
             </a>
-            <Link
-              to="/pricing"
+            {/* v170: <a href> not <Link> — full-page nav, no lazy-chunk risk */}
+            <a
+              href="/pricing"
               className="px-6 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] border-2 border-[#042C53]/15 hover:border-[#042C53]"
             >
               See pricing
-            </Link>
+            </a>
           </div>
         </div>
       </section>
@@ -407,12 +408,13 @@ const Solutions = () => {
             >
               Book a 30-min build call →
             </a>
-            <Link
-              to="/pricing"
+            {/* v170: <a href> for full-page nav safety */}
+            <a
+              href="/pricing"
               className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15"
             >
               See pricing
-            </Link>
+            </a>
           </div>
         </div>
       </section>

@@ -265,7 +265,7 @@ const Learn = () => {
           </div>
           <div className="flex items-center gap-6 flex-wrap justify-center">
             <Link to="/about" className="hover:text-[#042C53]">About</Link>
-            <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
+            <a href="/pricing" className="hover:text-[#042C53]">Pricing</a>
             <Link to="/learn" className="hover:text-[#042C53]">Learn</Link>
             <Link to="/careers" className="hover:text-[#042C53]">Careers</Link>
             <Link to="/status" className="hover:text-[#042C53]">Status</Link>

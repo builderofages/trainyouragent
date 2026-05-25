@@ -328,12 +328,12 @@ export default function LocalPage() {
                 </span>
                 Hear a live agent → 60 sec
               </Link>
-              <Link
-                to="/pricing"
+              <a
+                href="/pricing"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-xl border border-[#0B1B2B]/15 text-[#042C53] font-semibold text-[15px] hover:bg-[#F5F8FB] min-h-[48px]"
               >
                 See pricing from {vertical.pricingAnchor}
-              </Link>
+              </a>
             </div>
           </div>
         </section>
@@ -404,12 +404,12 @@ export default function LocalPage() {
                 >
                   {ctaCopy}
                 </a>
-                <Link
-                  to="/pricing"
+                <a
+                  href="/pricing"
                   className="mt-2 inline-flex items-center justify-center w-full px-5 py-3 rounded-xl border border-[#042C53]/15 text-[#042C53] font-semibold text-[14.5px] hover:bg-[#F5F8FB] min-h-[44px]"
                 >
                   Full pricing page
-                </Link>
+                </a>
               </div>
             </div>
           </div>

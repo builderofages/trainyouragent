@@ -131,12 +131,12 @@ export default function VoiceDemo() {
                 and HIPAA-grade logging when you need it. Talk to a human about your use case.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link
-                  to="/book"
+                <a
+                  href="/book"
                   className="inline-flex items-center px-5 py-3 rounded-full bg-white text-[#042C53] font-semibold text-[14px] hover:bg-[#E6F1FB] transition"
                 >
                   Book a call →
-                </Link>
+                </a>
                 <a
                   href={CAL_URL}
                   target="_blank"

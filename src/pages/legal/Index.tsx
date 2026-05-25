@@ -89,7 +89,7 @@ export default function LegalIndex() {
           <div className="hidden md:flex items-center gap-7 text-[14px] text-slate-700">
             <Link to="/solutions" className="hover:text-[#042C53]">Solutions</Link>
             <Link to="/security" className="hover:text-[#042C53]">Security</Link>
-            <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
+            <a href="/pricing" className="hover:text-[#042C53]">Pricing</a>
             <a
               href={CAL_URL}
               target="_blank"

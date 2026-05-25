@@ -223,12 +223,14 @@ export default function SiteNav({ active }: SiteNavProps) {
               onClose={closeWithIntent}
               items={RESOURCES}
             />
-            <Link
-              to="/pricing"
+            {/* v170: hard <a href> instead of <Link to> so a stale lazy chunk
+                cannot white-screen the user mid-navigation to /pricing. */}
+            <a
+              href="/pricing"
               className={`hover:text-[#042C53] ${active === "pricing" ? "text-[#042C53] font-semibold" : ""}`}
             >
               Pricing
-            </Link>
+            </a>
             {/* v72: SaaS / Hire / Trial removed from top-level nav to fix Book-a-Call wrap. SaaS lives inside Solutions dropdown. Hire is reachable via /about + footer. Trial CTA lives on /pricing. */}
             <Link
               to="/about"
@@ -301,13 +303,14 @@ export default function SiteNav({ active }: SiteNavProps) {
                   New
                 </span>
               </Link>
-              <Link
-                to="/pricing"
+              {/* v170: hard <a href> — full-page nav avoids lazy-chunk stale-hash white screen */}
+              <a
+                href="/pricing"
                 onClick={() => setMobileOpen(false)}
                 className="px-3 py-3 rounded-lg text-[#042C53] font-medium hover:bg-[#F6FAFE]"
               >
                 Pricing
-              </Link>
+              </a>
               {/* v72: mobile SaaS / Hire / Trial removed from top-level. SaaS reachable via Solutions accordion; Hire via /about + footer; Trial via /pricing. */}
               <Link
                 to="/about"

@@ -228,9 +228,9 @@ export default function Customers() {
               Book a founding-cohort interview
               <span aria-hidden>→</span>
             </a>
-            <Link to="/pricing" className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl border border-white/30 text-white hover:bg-white/10">
+            <a href="/pricing" className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl border border-white/30 text-white hover:bg-white/10">
               See the public pricing first
-            </Link>
+            </a>
           </div>
         </div>
       </section>

@@ -100,12 +100,14 @@ export default function HellHeavenBlock() {
               </StaggerChildren>
               <div className="mt-7 pt-5 border-t border-white/15 flex flex-col sm:flex-row gap-3">
                 <HoverLift>
-                  <Link
-                    to="/book"
+                  {/* v170: <a href> not <Link> — full-page nav to /book so a
+                      stale lazy chunk never produces a white screen mid-CTA. */}
+                  <a
+                    href="/book"
                     className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white text-[#042C53] text-[13px] font-semibold hover:bg-slate-100"
                   >
                     Book the 30-min build call →
-                  </Link>
+                  </a>
                 </HoverLift>
                 <HoverLift>
                   <Link

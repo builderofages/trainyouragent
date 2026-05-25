@@ -103,7 +103,7 @@ const CaseStudies = () => {
             <Link to="/solutions" className="hover:text-[#042C53]">Solutions</Link>
             <Link to="/technology" className="hover:text-[#042C53]">Technology</Link>
             <Link to="/security" className="hover:text-[#042C53]">Security</Link>
-            <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
+            <a href="/pricing" className="hover:text-[#042C53]">Pricing</a>
             <a href={CAL_URL} target="_blank" rel="noopener" className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-medium hover:bg-[#0A3D6E] shadow-sm">Book a call</a>
           </div>
         </div>

@@ -154,7 +154,7 @@ const CaseStudyTemplate = () => {
           <div className="flex items-center gap-x-6 gap-y-2 flex-wrap justify-center">
             <Link to="/customers" className="hover:text-[#042C53]">Customers</Link>
             <Link to="/testimonials" className="hover:text-[#042C53]">Testimonials</Link>
-            <Link to="/pricing" className="hover:text-[#042C53]">Pricing</Link>
+            <a href="/pricing" className="hover:text-[#042C53]">Pricing</a>
             <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
           </div>
           <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent LLC</div>

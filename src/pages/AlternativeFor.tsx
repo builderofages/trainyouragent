@@ -685,7 +685,7 @@ const AlternativeFor = () => {
             <div className="mt-6 text-[12px] text-slate-500">
               <Link to="/comparisons" className="underline">All comparisons</Link>
               {" · "}
-              <Link to="/pricing" className="underline">Pricing</Link>
+              <a href="/pricing" className="underline">Pricing</a>
             </div>
           </div>
         </section>

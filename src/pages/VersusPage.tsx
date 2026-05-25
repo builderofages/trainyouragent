@@ -214,9 +214,9 @@ const VersusPage = () => {
             What it actually <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>costs.</span>
           </h2>
           <p className="text-[16px] text-slate-700 leading-relaxed mb-6">{vs.pricingNote}</p>
-          <Link to="/pricing" className="inline-flex items-center gap-1 text-[14px] font-semibold text-[#185FA5] hover:text-[#042C53]">
+          <a href="/pricing" className="inline-flex items-center gap-1 text-[14px] font-semibold text-[#185FA5] hover:text-[#042C53]">
             See our full pricing →
-          </Link>
+          </a>
         </div>
       </section>
 

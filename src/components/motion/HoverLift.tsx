@@ -4,7 +4,7 @@
 //
 // Usage:
 //   <HoverLift>
-//     <Link to="/book" className="btn">Book a call</Link>
+//     <a href="/book" className="btn">Book a call</a>
 //   </HoverLift>
 
 import type { ReactNode } from "react";

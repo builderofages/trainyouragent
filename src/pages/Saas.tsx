@@ -151,7 +151,8 @@ export default function Saas() {
           <RevealUp y={12} delay={0.1}>
             <div className="mt-7 inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-slate-200 text-[13.5px] text-slate-700">
               <span className="text-slate-500">Prefer we build it?</span>
-              <Link to="/pricing" className="font-semibold text-[#042C53] hover:text-[#185FA5] inline-flex items-center gap-1">See custom builds →</Link>
+              {/* v170: <a href> — full-page nav avoids lazy-chunk hiccups on the pricing pivot */}
+              <a href="/pricing" className="font-semibold text-[#042C53] hover:text-[#185FA5] inline-flex items-center gap-1">See custom builds →</a>
             </div>
           </RevealUp>
         </div>

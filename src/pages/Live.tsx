@@ -212,13 +212,13 @@ export default function Live() {
                   >
                     Run an AI audit on your site &rarr;
                   </Link>
-                  <Link
-                    to="/book"
+                  <a
+                    href="/book"
                     onClick={() => { void fireEvent("router_lane_chosen", { from: "/live", cta: "book-call" }, "live-empty-state"); }}
                     className="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 text-[13px] font-semibold hover:border-[#185FA5] min-h-[40px] inline-flex items-center"
                   >
                     Book a build call &rarr;
-                  </Link>
+                  </a>
                 </div>
                 <p className="mt-5 text-[11.5px] text-slate-500 max-w-md mx-auto">
                   Your event arrives anonymized (2-letter initial only) — same as everyone else's.
