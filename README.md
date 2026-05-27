@@ -191,4 +191,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). PRs welcome from anyone running an AI 
 
 ## Who built this
 
-Alexander Mills · Tampa Bay, FL · [LinkedIn](https://www.linkedin.com/in/agentmills/) · alexander@trainyouragent.com
+Alexander Mills · Tampa Bay, FL · [LinkedIn](https://www.linkedin.com/in/alexandermillsai/) · alexander@trainyouragent.com

@@ -18,7 +18,7 @@
 
 import { Link } from "react-router-dom";
 
-const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai/";
 // v161: founder Slack — replace with real invite link when the
 // trainyouragent-founders workspace launches.
 const SLACK_INVITE_URL = "https://join.slack.com/t/trainyouragent/shared_invite/placeholder";

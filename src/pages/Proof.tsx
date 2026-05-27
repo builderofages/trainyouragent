@@ -24,7 +24,7 @@ import PoweredByBadges from "@/components/PoweredByBadges";
 import VerifiableProofBlock from "@/components/proof/VerifiableProofBlock";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
-const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai/";
 
 const LIVE_PROOFS = [
   {

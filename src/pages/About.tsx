@@ -9,7 +9,7 @@ import ShipsCounter from "@/components/ShipsCounter";
 import { injectJsonLd, localBusinessLd, aggregateRatingLd } from "@/lib/jsonld";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
-const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai/";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
  return (
@@ -65,7 +65,7 @@ const About = () => {
  jobTitle: "Founder",
  url: "https://trainyouragent.com/about",
  sameAs: [
- "https://www.linkedin.com/in/agentmills/",
+ "https://www.linkedin.com/in/alexandermillsai/",
  ],
  worksFor: { "@id": "https://trainyouragent.com/#org" },
  address: {

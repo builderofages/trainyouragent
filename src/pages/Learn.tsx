@@ -8,7 +8,7 @@ import SiteNav from "@/components/SiteNav";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const COHORT_CHECKOUT = "/api/checkout?plan=cohort";
-const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
   return (

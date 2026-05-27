@@ -41,7 +41,7 @@ export const SHADOW = {
 
 export const URL = {
   cal:        "https://cal.com/trainyouragent/30min",
-  linkedin:   "https://www.linkedin.com/in/agentmills",
+  linkedin:   "https://www.linkedin.com/in/alexandermillsai",
   email:      "mailto:hello@trainyouragent.com",
   emailSec:   "mailto:security@trainyouragent.com",
   emailLegal: "mailto:legal@trainyouragent.com",

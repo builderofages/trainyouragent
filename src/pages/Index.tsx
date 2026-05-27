@@ -52,7 +52,7 @@ import LiveLeakTicker from "@/components/conversion/LiveLeakTicker";
 import FounderBlock from "@/components/FounderBlock"; // v161
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
-const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai/";
 
 function BrainLogo({ size = 40 }: { size?: number }) {
  return (

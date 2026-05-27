@@ -20,7 +20,7 @@ import IndustryShowcase from "@/components/IndustryShowcase";
 import TrustpilotWidget from "@/components/TrustpilotWidget";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
-const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills/";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai/";
 
 const FOUNDING_PERKS = [
   {

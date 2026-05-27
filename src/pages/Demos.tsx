@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import ElevenlabsWidget from "@/components/ElevenlabsWidget";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
-const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
 const HERO_PHONE_DISPLAY = "Book a 15-min Zoom";
 const HERO_PHONE_TEL = "https://cal.com/trainyouragent/30min";
 

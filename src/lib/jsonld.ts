@@ -7,7 +7,7 @@
 // videoObjectLd(), howToLd() for top-tier SEO + rich-result eligibility.
 
 const SITE_URL = "https://trainyouragent.com";
-const LINKEDIN_URL = "https://www.linkedin.com/in/agentmills";
+const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai";
 
 export type Json = Record<string, unknown> | Array<Record<string, unknown>>;
 
