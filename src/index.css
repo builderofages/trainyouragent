@@ -623,4 +623,167 @@ All colors MUST be HSL.
   .h1-balance {
     text-wrap: balance;
   }
+
+  /* ============================================================
+     $1T JARVIS PREMIUM SWEEP — glass/Trinity/cyan/holographic/mono
+     Added for zero-generic polish on remaining AdAccounts, Composer,
+     Research, Analytics, KBEditor, Schedule, Onboarding, modals.
+     Matches/extends WarRoom/Settings/Media/portal glass.
+     ============================================================ */
+
+  /* Glass Panel 2.0 — main containers for dashboard/portal cards */
+  .glass-panel {
+    background: rgba(250, 246, 238, 0.78);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(4, 44, 83, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px -8px rgba(4, 44, 83, 0.08), 0 1px 2px 0 rgba(4, 44, 83, 0.04);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s, border-color 0.2s;
+  }
+  .glass-panel:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 40px -6px rgba(4, 44, 83, 0.12);
+    border-color: rgba(34, 211, 238, 0.25);
+  }
+  .dark .glass-panel,
+  .glass-panel.dark {
+    background: rgba(3, 31, 58, 0.82);
+    border-color: rgba(103, 232, 249, 0.18);
+    box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Trinity Orbs — cyan holographic accent orbs for headers (Trinity branding) */
+  .trinity-orb {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 9999px;
+    background: #22d3ee;
+    box-shadow: 0 0 0 2px rgba(103, 232, 249, 0.25), 0 0 8px #67e8f9, 0 0 16px rgba(34, 211, 238, 0.4);
+    vertical-align: middle;
+    margin-right: 6px;
+    animation: trinity-pulse 2.2s ease-in-out infinite;
+  }
+  .trinity-orb.secondary {
+    background: #67e8f9;
+    width: 5px;
+    height: 5px;
+    box-shadow: 0 0 0 1.5px rgba(103, 232, 249, 0.2);
+    animation-delay: 0.6s;
+  }
+  .trinity-orb.accent {
+    background: #a5f3fc;
+    width: 4px;
+    height: 4px;
+    animation-delay: 1.1s;
+  }
+  @keyframes trinity-pulse {
+    0%, 100% { opacity: 0.9; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.15); }
+  }
+
+  /* Mono Titles — for premium section headers */
+  .title-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* Holographic / Cyan Glass accents */
+  .holo-cyan {
+    position: relative;
+  }
+  .holo-cyan::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(103,232,249,0.08) 0%, transparent 40%, rgba(34,211,238,0.06) 100%);
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  /* btn-glass / btn-primary for premium actions */
+  .btn-glass {
+    background: rgba(255,255,255,0.65);
+    border: 1px solid rgba(4, 44, 83, 0.18);
+    backdrop-filter: blur(12px);
+    color: #042C53;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-glass:hover {
+    background: rgba(255,255,255,0.92);
+    border-color: #22d3ee;
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.12);
+    transform: translateY(-0.5px);
+  }
+  .btn-glass:active {
+    transform: scale(0.985);
+  }
+  .btn-primary {
+    background: #042C53;
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 9px 18px;
+    border-radius: 9999px;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 1px 2px rgba(4,44,83,0.2);
+  }
+  .btn-primary:hover {
+    background: #0A3D6E;
+    box-shadow: 0 4px 12px -2px rgba(4, 44, 83, 0.35);
+  }
+  .btn-primary:active {
+    transform: scale(0.985);
+  }
+
+  /* Table polish for data views (Analytics, AdAccounts, KB etc) */
+  .premium-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  .premium-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(4,44,83,0.55);
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(4,44,83,0.1);
+  }
+  .premium-table td {
+    padding: 10px 12px;
+    font-size: 13.5px;
+    border-bottom: 1px solid rgba(4,44,83,0.06);
+    color: #042C53;
+  }
+  .premium-table tr:hover td {
+    background: rgba(4,44,83,0.025);
+  }
+
+  /* Health/branding note utility */
+  .brand-note {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(4,44,83,0.45);
+    font-family: ui-monospace, monospace;
+  }
 }

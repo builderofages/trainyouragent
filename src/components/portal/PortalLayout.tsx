@@ -155,10 +155,10 @@ export default function PortalLayout() {
 
   return (
     <div className="min-h-screen flex" style={{ background: CREAM, color: NAVY }}>
-      {/* Desktop sidebar */}
+      {/* Desktop sidebar — enhanced dark glass */}
       <aside
-        className="hidden md:flex w-64 flex-col fixed inset-y-0 left-0"
-        style={{ background: NAVY_DARK, borderRight: "1px solid rgba(255,255,255,0.06)" }}
+        className="hidden md:flex w-64 flex-col fixed inset-y-0 left-0 glass-panel"
+        style={{ background: NAVY_DARK, borderRight: "1px solid rgba(103,232,249,0.12)" }}
       >
         {sidebarBody}
       </aside>
@@ -172,7 +172,7 @@ export default function PortalLayout() {
             onClick={() => setMobileOpen(false)}
           />
           <aside
-            className="md:hidden fixed inset-y-0 left-0 z-50 w-72 flex flex-col"
+            className="md:hidden fixed inset-y-0 left-0 z-50 w-72 flex flex-col glass-panel"
             style={{ background: NAVY_DARK }}
           >
             {sidebarBody}
@@ -181,10 +181,10 @@ export default function PortalLayout() {
       )}
 
       <div className="flex-1 md:ml-64 flex flex-col min-w-0">
-        {/* Top bar */}
+        {/* Top bar — premium glass + Trinity orbs */}
         <header
-          className="sticky top-0 z-30 flex items-center justify-between px-4 md:px-8 py-3 border-b"
-          style={{ background: "rgba(250,246,238,0.92)", backdropFilter: "blur(8px)", borderColor: "rgba(4,44,83,0.08)" }}
+          className="sticky top-0 z-30 flex items-center justify-between px-4 md:px-8 py-3 border-b glass-panel"
+          style={{ background: "rgba(250,246,238,0.92)", backdropFilter: "blur(12px)", borderColor: "rgba(4,44,83,0.08)" }}
         >
           <div className="flex items-center gap-3 min-w-0">
             <button
@@ -196,19 +196,20 @@ export default function PortalLayout() {
               {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
             <div className="min-w-0">
-              <div className="text-[14px] font-medium leading-tight truncate" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>
+              <div className="text-[14px] font-medium leading-tight truncate flex items-center gap-1.5" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>
+                <span className="trinity-orb" aria-hidden style={{ background: NAVY, boxShadow: '0 0 4px #22d3ee' }} />
                 {businessName}
               </div>
-              <div className="text-[11.5px] leading-tight truncate" style={{ color: "rgba(4,44,83,0.55)" }}>
+              <div className="text-[11.5px] leading-tight truncate title-mono" style={{ color: "rgba(4,44,83,0.55)" }}>
                 {email}
               </div>
             </div>
           </div>
           <div
-            className="flex items-center gap-2 px-3 py-1.5 rounded-full"
-            style={{ background: NAVY, color: CREAM }}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full btn-glass"
+            style={{ background: NAVY, color: CREAM, borderColor: 'rgba(103,232,249,0.3)' }}
           >
-            <span className="text-[10.5px] uppercase tracking-[0.14em] opacity-70">Agent</span>
+            <span className="text-[10.5px] uppercase tracking-[0.14em] opacity-70 title-mono">Agent</span>
             <StatusPill status={customer?.agent_status} />
           </div>
         </header>
@@ -216,6 +217,11 @@ export default function PortalLayout() {
         <main className="flex-1 px-4 md:px-8 py-8 max-w-6xl w-full mx-auto">
           <Outlet context={{ customer, email }} />
         </main>
+
+        {/* Health/branding footer note in shell */}
+        <div className="px-4 md:px-8 pb-4 text-[10px] brand-note text-center md:text-left opacity-60">
+          100% REAL OPERATOR BUILDS • NO SYNTHETIC • HEALTH CHECKS 72H • TRINITY CYAN PROTOCOL
+        </div>
       </div>
     </div>
   );

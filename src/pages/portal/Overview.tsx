@@ -16,9 +16,9 @@ function StatCard({ label, value, sub, icon: Icon }: {
   label: string; value: string; sub?: string; icon: React.ComponentType<{ size?: number; strokeWidth?: number }>;
 }) {
   return (
-    <div className="rounded-xl border bg-white p-5" style={{ borderColor: "rgba(4,44,83,0.1)" }}>
+    <div className="glass-panel p-5">
       <div className="flex items-center justify-between">
-        <div className="text-[11.5px] uppercase tracking-[0.14em]" style={{ color: "rgba(4,44,83,0.55)" }}>
+        <div className="text-[11.5px] uppercase tracking-[0.14em] title-mono" style={{ color: "rgba(4,44,83,0.55)" }}>
           {label}
         </div>
         <Icon size={16} strokeWidth={1.6} />
@@ -48,9 +48,10 @@ export default function PortalOverview() {
     : "Your discovery call is the next step. We'll email you to book it.";
 
   return (
-    <div>
+    <div className="glass-panel p-6 sm:p-8 holo-cyan">
       <div className="mb-8">
-        <h1 className="text-[28px] leading-tight tracking-tight" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>
+        <h1 className="text-[28px] leading-tight tracking-tight flex items-center gap-2" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>
+          <span className="trinity-orb" aria-hidden="true" />
           Welcome, <em className="not-italic" style={{ fontFamily: '"Playfair Display", Georgia, serif', fontStyle: "italic" }}>{name}</em>
         </h1>
         <p className="mt-2 text-[14px]" style={{ color: "rgba(4,44,83,0.65)" }}>
@@ -58,6 +59,7 @@ export default function PortalOverview() {
             ? "Your agent is live. This is your operational console."
             : "Your agent ships in 14–21 days. Until then this dashboard is your operational console."}
         </p>
+        <div className="brand-note mt-1">100% REAL • NO SYNTHETIC • HEALTH 72H</div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
@@ -68,8 +70,8 @@ export default function PortalOverview() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 rounded-xl border bg-white p-6" style={{ borderColor: "rgba(4,44,83,0.1)" }}>
-          <div className="text-[11.5px] uppercase tracking-[0.14em] mb-3" style={{ color: "rgba(4,44,83,0.55)" }}>
+        <div className="lg:col-span-2 glass-panel p-6">
+          <div className="text-[11.5px] uppercase tracking-[0.14em] mb-3 title-mono" style={{ color: "rgba(4,44,83,0.55)" }}>
             Recent activity
           </div>
           {inProd ? (
@@ -94,14 +96,15 @@ export default function PortalOverview() {
           )}
         </div>
 
-        <div className="rounded-xl border p-6" style={{ background: NAVY, color: "#FAF6EE", borderColor: NAVY }}>
-          <div className="text-[11.5px] uppercase tracking-[0.14em] opacity-70 mb-3">
+        <div className="glass-panel p-6" style={{ background: NAVY, color: "#FAF6EE", borderColor: NAVY }}>
+          <div className="text-[11.5px] uppercase tracking-[0.14em] opacity-70 mb-3 title-mono">
             Next action
           </div>
           <p className="text-[14.5px] leading-relaxed">{nextAction}</p>
           <Link
             to="/portal/training"
-            className="inline-block mt-5 text-[12.5px] underline opacity-90 hover:opacity-100"
+            className="inline-block mt-5 text-[12.5px] underline opacity-90 hover:opacity-100 btn-glass"
+            style={{ color: '#FAF6EE', borderColor: 'rgba(255,255,255,0.3)' }}
           >
             View training progress →
           </Link>

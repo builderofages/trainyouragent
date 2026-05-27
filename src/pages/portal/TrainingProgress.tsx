@@ -50,7 +50,7 @@ export default function PortalTrainingProgress() {
           return (
             <li
               key={stage.key}
-              className="rounded-xl border bg-white p-5 flex gap-4"
+              className="glass-panel p-5 flex gap-4 holo-cyan"
               style={{ borderColor: s === "in-progress" ? NAVY : "rgba(4,44,83,0.1)" }}
             >
               <div

@@ -46,31 +46,34 @@ const Settings = () => {
 
       <section className="pt-32 pb-20 px-5 sm:px-8">
         <div className="max-w-3xl mx-auto">
-          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">Settings</div>
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4 title-mono flex items-center gap-2">
+            <span className="trinity-orb" aria-hidden="true" /> Settings
+          </div>
           <h1 className="text-[36px] sm:text-[48px] leading-[1.06] tracking-tight font-semibold text-[#042C53]">
             Your <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>preferences.</span>
           </h1>
           <p className="mt-5 text-[16px] text-slate-700 leading-relaxed">
             Customer account settings live behind sign-in (coming with v1 dashboard). Below is the lightweight stuff we store in your browser only.
           </p>
+          <div className="brand-note mt-2">100% REAL • BROWSER-ONLY PERSISTENCE • NO TRACKING PIXELS</div>
 
           <div className="mt-10 space-y-4">
-            <div className="rounded-2xl bg-white border border-slate-200 p-6">
-              <div className="text-[12px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2">Pathway personalization</div>
+            <div className="glass-panel p-6 holo-cyan">
+              <div className="text-[12px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2 title-mono">Pathway personalization</div>
               <div className="text-[15px] text-[#042C53] mb-2">{path ? `Current: ${path}` : "Not set — visit any vertical or use the configurator to choose a lane."}</div>
               <div className="text-[13px] text-slate-600 mb-4 leading-relaxed">We remember whether you're a startup, SMB, agency, or ops at scale so vertical pages adapt their hero and CTAs to you. Stored locally in your browser. Reset any time.</div>
               {path && (
-                <button onClick={reset} className="px-4 py-2 rounded-full bg-[#042C53] text-white text-[13px] font-semibold hover:bg-[#0A3D6E]">Reset pathway</button>
+                <button onClick={reset} className="btn-primary text-[13px]">Reset pathway</button>
               )}
             </div>
 
-            <div className="rounded-2xl bg-white border border-slate-200 p-6">
-              <div className="text-[12px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2">Cookies</div>
+            <div className="glass-panel p-6 holo-cyan">
+              <div className="text-[12px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2 title-mono">Cookies</div>
               <div className="text-[14px] text-slate-700 leading-relaxed mb-3">We keep cookies to a minimum: session, preference, billing (on Stripe pages only), and privacy-friendly analytics. Full breakdown on the <Link to="/cookie-policy" className="text-[#185FA5] underline">Cookie Policy</Link>.</div>
             </div>
 
-            <div className="rounded-2xl bg-[#F6FAFE] border border-slate-200 p-6">
-              <div className="text-[12px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2">Customer account?</div>
+            <div className="glass-panel p-6 holo-cyan" style={{ background: 'rgba(246,250,254,0.6)' }}>
+              <div className="text-[12px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2 title-mono">Customer account?</div>
               <div className="text-[14px] text-slate-700 leading-relaxed mb-4">If you're an active customer and need to update billing, integrations, or escalation rules — email <a className="text-[#185FA5] underline" href="mailto:hello@trainyouragent.com">hello@trainyouragent.com</a> and we'll route you to your engineer.</div>
             </div>
           </div>

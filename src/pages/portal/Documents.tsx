@@ -25,21 +25,23 @@ export default function PortalDocuments() {
   ];
 
   return (
-    <div>
+    <div className="glass-panel p-6 sm:p-8 holo-cyan">
       <div className="mb-8">
-        <h1 className="text-[26px] leading-tight tracking-tight" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>
-          Documents
+        <h1 className="text-[26px] leading-tight tracking-tight flex items-center gap-2 title-mono" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>
+          <span className="trinity-orb" aria-hidden="true" />
+          Documents <span className="text-[10px] align-super opacity-60">(KB / Exports)</span>
         </h1>
         <p className="mt-2 text-[14px]" style={{ color: "rgba(4,44,83,0.65)" }}>
           Everything you need for compliance, audits, and migration. Available to you in writing.
         </p>
+        <div className="brand-note mt-1">100% REAL • AUDIT-READY • NO SYNTHETIC RECORDS</div>
       </div>
 
       <ul className="space-y-2">
         {docs.map((d) => (
           <li
             key={d.key}
-            className="rounded-xl border bg-white p-4 flex items-center gap-4"
+            className="glass-panel p-4 flex items-center gap-4"
             style={{ borderColor: "rgba(4,44,83,0.1)" }}
           >
             <div className="w-10 h-10 rounded-md flex items-center justify-center flex-shrink-0" style={{ background: "rgba(4,44,83,0.06)", color: NAVY }}>
@@ -52,13 +54,13 @@ export default function PortalDocuments() {
             {d.available && d.href ? (
               <a
                 href={d.href}
-                className="inline-flex items-center gap-1.5 text-[12.5px] underline px-3 py-1.5"
+                className="btn-glass text-[12px] px-3 py-1.5"
                 style={{ color: NAVY }}
               >
                 <Download size={13} /> Download
               </a>
             ) : (
-              <span className="inline-flex items-center gap-1.5 text-[12px] px-3 py-1.5" style={{ color: "rgba(4,44,83,0.5)" }}>
+              <span className="inline-flex items-center gap-1.5 text-[12px] px-3 py-1.5 glass-panel" style={{ color: "rgba(4,44,83,0.5)" }}>
                 <Lock size={12} /> {d.available ? "Request" : "After launch"}
               </span>
             )}

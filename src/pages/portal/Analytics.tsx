@@ -35,20 +35,22 @@ export default function PortalAnalytics() {
   const series = emptySeries();
 
   return (
-    <div>
+    <div className="glass-panel p-6 sm:p-8 holo-cyan">
       <div className="mb-8">
-        <h1 className="text-[26px] leading-tight tracking-tight" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>
+        <h1 className="text-[26px] leading-tight tracking-tight flex items-center gap-2 title-mono" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>
+          <span className="trinity-orb" aria-hidden="true" />
           Analytics
         </h1>
         <p className="mt-2 text-[14px]" style={{ color: "rgba(4,44,83,0.65)" }}>
           Last 30 days. {isLive ? "Live data from your agent." : "Charts populate once your agent ships."}
         </p>
+        <div className="brand-note mt-1">100% REAL • NO SYNTHETIC DATA • HEALTH SNAPSHOTS EVERY 24H</div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {CHARTS.map((c) => (
-          <div key={c.key} className="rounded-xl border bg-white p-5 relative" style={{ borderColor: "rgba(4,44,83,0.1)" }}>
-            <div className="text-[11.5px] uppercase tracking-[0.14em] mb-2" style={{ color: "rgba(4,44,83,0.55)" }}>
+          <div key={c.key} className="glass-panel p-5 relative" style={{ borderColor: "rgba(4,44,83,0.1)" }}>
+            <div className="text-[11.5px] uppercase tracking-[0.14em] mb-2 title-mono" style={{ color: "rgba(4,44,83,0.55)" }}>
               {c.title}
             </div>
             <div className="text-[24px] tracking-tight" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>
@@ -67,7 +69,7 @@ export default function PortalAnalytics() {
             </div>
             {!isLive && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="px-3 py-1.5 rounded-md text-[12px]" style={{ background: "rgba(4,44,83,0.06)", color: "rgba(4,44,83,0.7)" }}>
+                <div className="px-3 py-1.5 rounded-md text-[12px] glass-panel" style={{ background: "rgba(4,44,83,0.06)", color: "rgba(4,44,83,0.7)" }}>
                   No data yet
                 </div>
               </div>

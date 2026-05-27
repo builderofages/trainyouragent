@@ -139,9 +139,9 @@ const ResearchPartners = () => {
       <SiteNav />
 
       <section className="pt-32 pb-12 px-5 sm:px-8">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4">
-            Research & Labs
+        <div className="max-w-5xl mx-auto glass-panel p-8 sm:p-10 holo-cyan">
+          <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-4 title-mono flex items-center gap-2">
+            <span className="trinity-orb" aria-hidden="true" /> Research & Labs
           </div>
           <h1 className="text-[42px] sm:text-[68px] leading-[1.04] tracking-tight font-semibold text-[#042C53]">
             The operator partner to{" "}
@@ -155,6 +155,7 @@ const ResearchPartners = () => {
             signal — what worked, what broke, where latency lives — back to
             the labs that built them.
           </p>
+          <div className="brand-note mt-3">100% PRODUCTION SIGNAL • NO LAB THEATER • TRINITY PROTOCOL</div>
         </div>
       </section>
 
@@ -172,16 +173,13 @@ const ResearchPartners = () => {
           </h2>
           <div className="grid md:grid-cols-2 gap-4">
             {LABS.map((l) => (
-              <div
-                key={l.name}
-                className="rounded-2xl bg-white border border-slate-200 p-6 hover:border-[#185FA5] hover:shadow-[0_8px_40px_-15px_rgba(4,44,83,0.18)] transition"
-              >
+              <div key={l.name} className="glass-panel p-6 holo-cyan">
                 <div className="flex items-start justify-between gap-4 mb-2">
                   <div>
-                    <div className="text-[20px] font-semibold text-[#042C53]">
-                      {l.name}
+                    <div className="text-[20px] font-semibold text-[#042C53] flex items-center gap-2">
+                      <span className="trinity-orb" aria-hidden="true" />{l.name}
                     </div>
-                    <div className="text-[12px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold">
+                    <div className="text-[12px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold title-mono">
                       {l.role}
                     </div>
                   </div>

@@ -115,34 +115,38 @@ const Onboarding = () => {
   const mark = (id: StepId, v: boolean) => setComplete((c) => ({ ...c, [id]: v }));
 
   return (
-    <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
+    <div className="min-h-screen bg-[#F8F9FA] text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
       <SiteNav />
       <main className="pt-28">
-        {/* Header */}
+        {/* Header — premium glass + Trinity orbs + mono */}
         <section className="px-5 sm:px-8 pt-10 pb-8">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-4xl mx-auto glass-panel p-8 sm:p-10 holo-cyan">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E5F4EC] text-[#1F7E55] text-[12px] font-semibold tracking-[0.12em] uppercase mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#22A36C]" /> Purchase confirmed
             </div>
-            <h1 className="text-[clamp(34px,5vw,64px)] leading-[1.05] tracking-tight font-semibold text-[#042C53] mb-4">
+            <h1 className="text-[clamp(34px,5vw,64px)] leading-[1.05] tracking-tight font-semibold text-[#042C53] mb-4 flex items-center gap-3">
+              <span className="trinity-orb" aria-hidden="true" />
+              <span className="trinity-orb secondary" aria-hidden="true" />
+              <span className="trinity-orb accent" aria-hidden="true" />
               Welcome. Let's get you live.
             </h1>
             <p className="text-[17px] text-slate-700 max-w-2xl leading-relaxed">
               Five steps. Most builds finish step 5 in seven business days. Mark each one complete as you go — your progress saves automatically.
             </p>
+            <div className="mt-3 brand-note">100% REAL • ZERO SYNTHETIC TRAFFIC • 7-DAY GO-LIVE GUARANTEE</div>
             {sessionId && (
               <div className="mt-4 text-[12px] text-slate-400 font-mono">
                 Stripe session: {sessionId.slice(0, 32)}…
               </div>
             )}
 
-            {/* Progress bar */}
+            {/* Progress bar — glass */}
             <div className="mt-8">
               <div className="flex items-center justify-between text-[12px] uppercase tracking-[0.14em] text-slate-500 font-semibold mb-2">
                 <span>Progress</span>
                 <span>{totalDone}/{STEPS.length} · {pct}%</span>
               </div>
-              <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+              <div className="h-2 rounded-full bg-white/60 border border-slate-200/60 overflow-hidden">
                 <div
                   className="h-full bg-[#185FA5] transition-all duration-500"
                   style={{ width: `${pct}%` }}
@@ -153,7 +157,7 @@ const Onboarding = () => {
           </div>
         </section>
 
-        {/* Steps */}
+        {/* Steps — premium glass panels */}
         <section className="px-5 sm:px-8 pb-16">
           <div className="max-w-4xl mx-auto space-y-6">
             {/* Step 1 — Welcome video */}
@@ -270,19 +274,21 @@ const Onboarding = () => {
           </div>
         </section>
 
-        {/* Done CTA */}
+        {/* Done CTA — premium */}
         {pct === 100 && (
           <section className="px-5 sm:px-8 py-16 bg-[#042C53] text-white">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-[32px] sm:text-[44px] leading-tight font-semibold">
+            <div className="max-w-3xl mx-auto text-center glass-panel p-10 bg-white/5 border-white/10">
+              <h2 className="text-[32px] sm:text-[44px] leading-tight font-semibold flex items-center justify-center gap-3">
+                <span className="trinity-orb" style={{ background: '#fff', boxShadow: '0 0 8px #fff' }} aria-hidden /> 
                 You're <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>fully onboarded.</span>
               </h2>
               <p className="mt-5 text-[16px] text-white/85 leading-relaxed">
                 We've got it from here. Watch your inbox for the day-1, day-3, and day-7 emails.
               </p>
-              <Link to="/dashboard" className="mt-7 inline-flex px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 shadow-lg">
+              <Link to="/dashboard" className="mt-7 inline-flex px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 shadow-lg btn-primary">
                 Open the dashboard →
               </Link>
+              <div className="mt-4 brand-note text-white/50">100% REAL BUILDS • NO SYNTHETIC • HEALTH CHECKS EVERY 72H</div>
             </div>
           </section>
         )}
@@ -300,7 +306,7 @@ const Onboarding = () => {
             <Link to="/contact" className="hover:text-[#042C53]">Contact</Link>
             <Link to="/status" className="hover:text-[#042C53]">Status</Link>
           </div>
-          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent LLC</div>
+          <div className="text-slate-400 text-[12px]">© 2026 TrainYourAgent LLC • 100% real operator builds</div>
         </div>
       </footer>
     </div>
@@ -316,21 +322,20 @@ function StepCard({
   children: React.ReactNode;
 }) {
   return (
-    <article className={`rounded-3xl border bg-white p-6 sm:p-8 transition ${done ? "border-[#22A36C]/60 bg-[#F4FBF7]" : "border-slate-200"}`}>
+    <article className={`glass-panel p-6 sm:p-8 transition holo-cyan ${done ? "border-[#22A36C]/60" : ""}`}>
       <div className="flex items-start justify-between gap-4 mb-5">
         <div>
-          <div className="text-[11px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-1">{step.eyebrow}</div>
-          <h3 className="text-[22px] sm:text-[26px] font-semibold text-[#042C53] leading-tight">{step.title}</h3>
+          <div className="text-[11px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-1 title-mono">{step.eyebrow}</div>
+          <h3 className="text-[22px] sm:text-[26px] font-semibold text-[#042C53] leading-tight flex items-center gap-2">
+            <span className="trinity-orb" aria-hidden="true" />
+            {step.title}
+          </h3>
         </div>
         <button
           type="button"
           onClick={() => onToggle(!done)}
           aria-pressed={done}
-          className={`flex-shrink-0 inline-flex items-center gap-2 px-3 py-2 rounded-full text-[12px] font-semibold transition ${
-            done
-              ? "bg-[#22A36C] text-white hover:bg-[#1F7E55]"
-              : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-          }`}
+          className={`flex-shrink-0 btn-glass text-[12px] ${done ? "bg-[#22A36C] text-white border-[#22A36C]" : ""}`}
         >
           {done ? <><Check /> Done</> : <>Mark complete</>}
         </button>

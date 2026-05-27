@@ -47,15 +47,28 @@ export function TiltCard({ children, className = "", max = 8 }: { children: Reac
   );
 }
 
-/* PageFade: cross-fade route transitions. Wrap <Routes> with <PageFade>. */
+/* PageFade — v178: NEUTRALIZED. This component was THE white-screen-of-death.
+ *
+ * The old implementation gated the ENTIRE routed page behind:
+ *   const [show, setShow] = useState(false);
+ *   useEffect(() => { setShow(false); setTimeout(() => setShow(true), 10); return clearTimeout }, [children]);
+ *   <div style={{ opacity: show ? 1 : 0 }}>
+ *
+ * Bug: the effect depends on [children], and `children` is a fresh element
+ * reference on every App re-render. The homepage's LiveLeakTicker re-renders
+ * every second; lazy-chunk resolution and context updates re-render too. Each
+ * re-render fired the cleanup, which cleared the pending 10ms setShow(true)
+ * timer BEFORE it could run — so `show` stayed false forever and the page
+ * rendered at opacity:0 = blank white. It bit every client-side navigation
+ * (direct page loads escaped only because nothing was re-rendering during the
+ * 10ms window). This is what made "every link goes to a white page."
+ *
+ * A page-level cross-fade is not worth a site-wide blank-screen risk, and the
+ * site already has per-section RevealUp entrance animations. So PageFade is now
+ * a pass-through: it renders its children at full opacity, always, with no JS
+ * gating that can ever get stuck. */
 export function PageFade({ children }: { children: ReactNode }) {
-  const [show, setShow] = useState(false);
-  useEffect(() => { setShow(false); const t = setTimeout(() => setShow(true), 10); return () => clearTimeout(t); }, [children]);
-  return (
-    <div style={{ opacity: show ? 1 : 0, transition: "opacity 280ms ease-out" }}>
-      {children}
-    </div>
-  );
+  return <>{children}</>;
 }
 
 /* GradientMesh: subtle animated mesh background. Drop into hero. */

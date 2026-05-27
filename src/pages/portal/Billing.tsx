@@ -38,35 +38,36 @@ export default function PortalBilling() {
   const status = customer?.subscription_status || "trial";
 
   return (
-    <div>
+    <div className="glass-panel p-6 sm:p-8 holo-cyan">
       <div className="mb-8">
-        <h1 className="text-[26px] leading-tight tracking-tight" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>
-          Billing
+        <h1 className="text-[26px] leading-tight tracking-tight flex items-center gap-2 title-mono" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>
+          <span className="trinity-orb" aria-hidden="true" /> Billing
         </h1>
         <p className="mt-2 text-[14px]" style={{ color: "rgba(4,44,83,0.65)" }}>
           Plan, payment method, and invoice history.
         </p>
+        <div className="brand-note mt-1">100% REAL • STRIPE MANAGED • NO SYNTHETIC INVOICES</div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-        <div className="rounded-xl border bg-white p-5" style={{ borderColor: "rgba(4,44,83,0.1)" }}>
-          <div className="text-[11.5px] uppercase tracking-[0.14em]" style={{ color: "rgba(4,44,83,0.55)" }}>Current plan</div>
+        <div className="glass-panel p-5">
+          <div className="text-[11.5px] uppercase tracking-[0.14em] title-mono" style={{ color: "rgba(4,44,83,0.55)" }}>Current plan</div>
           <div className="mt-2 text-[18px] tracking-tight" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>{tier}</div>
           <div className="mt-1 text-[12px]" style={{ color: "rgba(4,44,83,0.6)" }}>Status: {status}</div>
         </div>
-        <div className="rounded-xl border bg-white p-5" style={{ borderColor: "rgba(4,44,83,0.1)" }}>
-          <div className="text-[11.5px] uppercase tracking-[0.14em]" style={{ color: "rgba(4,44,83,0.55)" }}>Next invoice</div>
+        <div className="glass-panel p-5">
+          <div className="text-[11.5px] uppercase tracking-[0.14em] title-mono" style={{ color: "rgba(4,44,83,0.55)" }}>Next invoice</div>
           <div className="mt-2 text-[18px] tracking-tight" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>—</div>
           <div className="mt-1 text-[12px]" style={{ color: "rgba(4,44,83,0.6)" }}>Managed by Stripe</div>
         </div>
-        <div className="rounded-xl border bg-white p-5" style={{ borderColor: "rgba(4,44,83,0.1)" }}>
-          <div className="text-[11.5px] uppercase tracking-[0.14em]" style={{ color: "rgba(4,44,83,0.55)" }}>Payment method</div>
+        <div className="glass-panel p-5">
+          <div className="text-[11.5px] uppercase tracking-[0.14em] title-mono" style={{ color: "rgba(4,44,83,0.55)" }}>Payment method</div>
           <div className="mt-2 text-[18px] tracking-tight" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>•••• ••••</div>
           <div className="mt-1 text-[12px]" style={{ color: "rgba(4,44,83,0.6)" }}>Update in Stripe portal</div>
         </div>
       </div>
 
-      <div className="rounded-xl border bg-white p-5 mb-6" style={{ borderColor: "rgba(4,44,83,0.1)" }}>
+      <div className="glass-panel p-5 mb-6">
         <div className="text-[15px] font-medium tracking-tight mb-2" style={{ fontFamily: "Inter Tight, system-ui, sans-serif" }}>Billing history</div>
         <div className="text-[13px]" style={{ color: "rgba(4,44,83,0.6)" }}>
           No invoices yet. Full history (PDFs, line items) is available in the Stripe billing portal.
@@ -76,8 +77,7 @@ export default function PortalBilling() {
       <button
         onClick={openStripePortal}
         disabled={loading}
-        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md text-[13.5px] font-medium disabled:opacity-60"
-        style={{ background: NAVY, color: CREAM, fontFamily: "Inter Tight, system-ui, sans-serif" }}
+        className="btn-primary inline-flex items-center gap-2 px-4 py-2.5 text-[13.5px]"
       >
         <ExternalLink size={14} strokeWidth={1.75} />
         {loading ? "Opening…" : "Manage billing in Stripe Customer Portal"}
