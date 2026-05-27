@@ -33,6 +33,8 @@ import LegalRedirect from "@/components/legal/LegalRedirect";
 
 // v41: everything else is lazy-loaded to keep main entry chunk small.
 const Dashboard           = lazyWithReload(() => import("./pages/Dashboard"));
+const NicheSiteTemplate   = lazyWithReload(() => import("./pages/NicheSiteTemplate"));
+const TemplateGallery     = lazyWithReload(() => import("./pages/admin/TemplateGallery"));
 const NicheLanding        = lazyWithReload(() => import("./pages/NicheLanding"));
 const Vertical            = lazyWithReload(() => import("./pages/VerticalPage"));
 const LocationPage        = lazyWithReload(() => import("./pages/LocationPage"));
@@ -371,6 +373,9 @@ const App = () => {
             <Route path="/start" element={<Start />} />
             <Route path="/settings" element={<Settings />} />
             {/* All vertical landing pages route through the unified VerticalPage template */}
+            {/* v180: niche "free website" template engine + admin gallery */}
+            <Route path="/template/:niche" element={<NicheSiteTemplate />} />
+            <Route path="/admin/templates" element={<TemplateGallery />} />
             <Route path="/accounting" element={<Vertical />} />
             <Route path="/roofing" element={<Vertical />} />
             {/* v76-D: /legal is now the legal-document index. The legal-services
