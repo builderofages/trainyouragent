@@ -185,7 +185,7 @@ export default function NicheSiteTemplate() {
               </div>
               <div style={{ background: "#FAFBFC", border: "1px solid rgba(4,44,83,0.06)", borderRadius: 14, padding: "14px 16px", marginBottom: 14 }}>
                 <div style={{ fontSize: 10.5, fontWeight: 700, color: "#94A3B8", marginBottom: 6, ...MONO }}>ON PICKUP</div>
-                <p style={{ fontSize: 14.5, lineHeight: 1.5, color: "#0B1B2B", margin: 0, fontStyle: "italic" }}>“{site.voiceGreeting}”</p>
+                <p style={{ fontSize: 14.5, lineHeight: 1.5, color: "#0B1B2B", margin: 0, fontStyle: "italic" }}>“{site.voiceGreeting.replace(/\{co\}/g, company)}”</p>
               </div>
               <div style={{ fontSize: 11, fontWeight: 700, color: "#94A3B8", marginBottom: 8, ...MONO }}>TRY SAYING</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>

@@ -58,7 +58,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "1 in 3",
     painLabel: "cleaning leads call a competitor when you don't answer",
-    voiceGreeting: "Thanks for calling SparkleHouse Cleaning — this is your assistant. Are you looking for a recurring clean, a one-time deep clean, or a move-out?",
+    voiceGreeting: "Thanks for calling {co} — this is your assistant. Are you looking for a recurring clean, a one-time deep clean, or a move-out?",
     voiceTryLines: ["“I need a 3-bedroom cleaned before Friday.”", "“How much for biweekly?”", "“Do you do move-out cleans?”"],
     chat: [
       { from: "customer", text: "Do you have anything this weekend?" },
@@ -87,7 +87,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "62%",
     painLabel: "of pickup requests come outside staffed hours",
-    voiceGreeting: "Thanks for calling FreshFold — want to schedule a wash-and-fold pickup, or check on an order?",
+    voiceGreeting: "Thanks for calling {co} — want to schedule a wash-and-fold pickup, or check on an order?",
     voiceTryLines: ["“Can you pick up tomorrow morning?”", "“How much per pound?”", "“Are you open right now?”"],
     chat: [
       { from: "customer", text: "Do you pick up in Seminole Heights?" },
@@ -116,7 +116,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "$180K",
     painLabel: "average annual revenue lost to missed HVAC calls",
-    voiceGreeting: "Thanks for calling Bay Area Air & Heat — is this an emergency, or are you scheduling routine service?",
+    voiceGreeting: "Thanks for calling {co} — is this an emergency, or are you scheduling routine service?",
     voiceTryLines: ["“My AC died and it's 95 degrees.”", "“What's your dispatch fee?”", "“Can someone come tomorrow?”"],
     chat: [
       { from: "customer", text: "AC stopped working, house is getting hot" },
@@ -145,7 +145,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "35%",
     painLabel: "of new-patient calls go to voicemail and never call back",
-    voiceGreeting: "Thank you for calling Bayshore Family Dental — are you a new patient, or scheduling a follow-up?",
+    voiceGreeting: "Thank you for calling {co} — are you a new patient, or scheduling a follow-up?",
     voiceTryLines: ["“I need a cleaning, I'm a new patient.”", "“Do you take Delta Dental?”", "“Can I move my appointment?”"],
     chat: [
       { from: "customer", text: "Are you taking new patients?" },
@@ -174,7 +174,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "1 in 4",
     painLabel: "booking calls come in while every chair is busy",
-    voiceGreeting: "Thanks for calling Lume Salon & Spa — what service can I book for you today?",
+    voiceGreeting: "Thanks for calling {co} — what service can I book for you today?",
     voiceTryLines: ["“I want a balayage next week.”", "“How much for a cut and color?”", "“Do you have anything Saturday?”"],
     chat: [
       { from: "customer", text: "Do you have color availability this week?" },
@@ -203,7 +203,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "48%",
     painLabel: "of repair calls hit voicemail during busy bay hours",
-    voiceGreeting: "Thanks for calling Gulf Coast Auto — are you booking service, or checking on a vehicle that's with us?",
+    voiceGreeting: "Thanks for calling {co} — are you booking service, or checking on a vehicle that's with us?",
     voiceTryLines: ["“My check-engine light is on.”", "“How much for front brakes?”", "“Can I drop off tomorrow?”"],
     chat: [
       { from: "customer", text: "Need a brake job, how much?" },
@@ -232,7 +232,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "$140K",
     painLabel: "average revenue lost yearly to unanswered estimate calls",
-    voiceGreeting: "Thanks for calling EverGreen Outdoor — are you looking for recurring lawn care, or a one-time project?",
+    voiceGreeting: "Thanks for calling {co} — are you looking for recurring lawn care, or a one-time project?",
     voiceTryLines: ["“I need weekly mowing.”", "“Can you quote sod install?”", "“How soon can someone look at my yard?”"],
     chat: [
       { from: "customer", text: "Do you do weekly mowing in Carrollwood?" },
@@ -261,7 +261,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "67%",
     painLabel: "of plumbing emergencies happen outside business hours",
-    voiceGreeting: "Thanks for calling TrueFlow Plumbing — is this an active leak or emergency, or are you scheduling a repair?",
+    voiceGreeting: "Thanks for calling {co} — is this an active leak or emergency, or are you scheduling a repair?",
     voiceTryLines: ["“My water heater is leaking everywhere.”", "“What's your trip charge?”", "“Can you come tonight?”"],
     chat: [
       { from: "customer", text: "Water heater is leaking, kind of bad" },
@@ -290,7 +290,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "30%",
     painLabel: "of dinner-rush calls go unanswered",
-    voiceGreeting: "Thanks for calling Casa Verde Kitchen — would you like a reservation, takeout, or catering?",
+    voiceGreeting: "Thanks for calling {co} — would you like a reservation, takeout, or catering?",
     voiceTryLines: ["“Table for 4 at 7?”", "“Do you cater for 40 people?”", "“What are your hours?”"],
     chat: [
       { from: "customer", text: "Can I get a table for 4 tonight at 7:30?" },
@@ -319,7 +319,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "1 in 3",
     painLabel: "membership inquiries never get a callback",
-    voiceGreeting: "Thanks for calling Iron Bay Fitness — are you interested in a tour, a free trial, or class info?",
+    voiceGreeting: "Thanks for calling {co} — are you interested in a tour, a free trial, or class info?",
     voiceTryLines: ["“Can I come check out the gym?”", "“Do you have a free trial?”", "“What time is the 6am class?”"],
     chat: [
       { from: "customer", text: "Do you offer a trial?" },
@@ -348,7 +348,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "48%",
     painLabel: "of real-estate leads go to the first agent who responds",
-    voiceGreeting: "Thanks for calling Bayfront Realty — are you looking to buy, sell, or see a specific listing?",
+    voiceGreeting: "Thanks for calling {co} — are you looking to buy, sell, or see a specific listing?",
     voiceTryLines: ["“I saw your sign on Bayshore.”", "“What's my home worth?”", "“Can I tour it this weekend?”"],
     chat: [
       { from: "customer", text: "Is the listing on Maple still available?" },
@@ -377,7 +377,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "42%",
     painLabel: "of legal intake calls are never returned in time to sign the client",
-    voiceGreeting: "Thank you for calling Harbor Legal — can you tell me briefly what kind of matter you're calling about?",
+    voiceGreeting: "Thank you for calling {co} — can you tell me briefly what kind of matter you're calling about?",
     voiceTryLines: ["“I was in a car accident.”", "“I need help with a contract.”", "“Do you do free consults?”"],
     chat: [
       { from: "customer", text: "I was rear-ended last week, do I have a case?" },
@@ -406,7 +406,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "$210K",
     painLabel: "average storm-season revenue lost to roofers who can't answer the surge",
-    voiceGreeting: "Thanks for calling Summit Roofing — are you dealing with a leak, storm damage, or planning a replacement?",
+    voiceGreeting: "Thanks for calling {co} — are you dealing with a leak, storm damage, or planning a replacement?",
     voiceTryLines: ["“I've got a leak after the storm.”", "“Do you do free inspections?”", "“Will you work with my insurance?”"],
     chat: [
       { from: "customer", text: "Roof started leaking after the hurricane" },
@@ -435,7 +435,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "1 in 3",
     painLabel: "med-spa booking calls come in while every provider is with a client",
-    voiceGreeting: "Thanks for calling Glow Aesthetics — are you booking a treatment, or would you like a consultation?",
+    voiceGreeting: "Thanks for calling {co} — are you booking a treatment, or would you like a consultation?",
     voiceTryLines: ["“How much is Botox?”", "“Do you do lip filler?”", "“I want a consult for laser.”"],
     chat: [
       { from: "customer", text: "How much for Botox?" },
@@ -464,7 +464,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "38%",
     painLabel: "of new-patient chiro calls hit voicemail and book elsewhere",
-    voiceGreeting: "Thanks for calling Align Spine & Wellness — are you a new patient, or scheduling a follow-up adjustment?",
+    voiceGreeting: "Thanks for calling {co} — are you a new patient, or scheduling a follow-up adjustment?",
     voiceTryLines: ["“My back's been killing me.”", "“Do you take my insurance?”", "“Can I get in today?”"],
     chat: [
       { from: "customer", text: "Lower back pain for a week, are you new-patient friendly?" },
@@ -493,7 +493,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "1 in 2",
     painLabel: "pest calls go to whoever answers — panic doesn't wait",
-    voiceGreeting: "Thanks for calling ShieldGuard Pest — what are you seeing, and is it inside or outside the home?",
+    voiceGreeting: "Thanks for calling {co} — what are you seeing, and is it inside or outside the home?",
     voiceTryLines: ["“I have a wasp nest by the door.”", "“How much for monthly service?”", "“I saw a rat in the kitchen.”"],
     chat: [
       { from: "customer", text: "There's a big wasp nest by my front door" },
@@ -522,7 +522,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "55%",
     painLabel: "of electrical service calls hit voicemail during the workday",
-    voiceGreeting: "Thanks for calling Volt Pro Electric — is this an emergency with no power, or are you scheduling work?",
+    voiceGreeting: "Thanks for calling {co} — is this an emergency with no power, or are you scheduling work?",
     voiceTryLines: ["“Half my house lost power.”", "“How much for an EV charger?”", "“Can someone come today?”"],
     chat: [
       { from: "customer", text: "Half the outlets in my house just died" },
@@ -551,7 +551,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "60%",
     painLabel: "of movers booked are simply the first to call back with a quote",
-    voiceGreeting: "Thanks for calling Sunshine Movers — are you moving locally or long-distance, and what's the size of the move?",
+    voiceGreeting: "Thanks for calling {co} — are you moving locally or long-distance, and what's the size of the move?",
     voiceTryLines: ["“2-bedroom apartment, local.”", "“How much to move to Orlando?”", "“Can you do next Saturday?”"],
     chat: [
       { from: "customer", text: "Need to move a 2-bedroom across town next weekend" },
@@ -580,7 +580,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "34%",
     painLabel: "of vet calls hit hold-then-voicemail during busy clinic hours",
-    voiceGreeting: "Thanks for calling Bayside Animal Hospital — is your pet having an emergency, or are you booking a visit?",
+    voiceGreeting: "Thanks for calling {co} — is your pet having an emergency, or are you booking a visit?",
     voiceTryLines: ["“My dog's been vomiting.”", "“Need to book a vaccine.”", "“Can I refill my cat's meds?”"],
     chat: [
       { from: "customer", text: "My dog ate something and keeps throwing up" },
@@ -609,7 +609,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "50%",
     painLabel: "of insurance quote calls go to the first agent who picks up",
-    voiceGreeting: "Thanks for calling Gulfshore Insurance — are you looking for auto, home, life, or business coverage?",
+    voiceGreeting: "Thanks for calling {co} — are you looking for auto, home, life, or business coverage?",
     voiceTryLines: ["“I need a car insurance quote.”", "“Can you bundle home and auto?”", "“My renewal went up.”"],
     chat: [
       { from: "customer", text: "Looking for a cheaper auto quote" },
@@ -638,7 +638,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "53%",
     painLabel: "of mortgage leads close with the first lender to respond",
-    voiceGreeting: "Thanks for calling Keystone Mortgage — are you buying a home, or looking to refinance?",
+    voiceGreeting: "Thanks for calling {co} — are you buying a home, or looking to refinance?",
     voiceTryLines: ["“What are your rates today?”", "“I want to get pre-approved.”", "“Can I lower my payment?”"],
     chat: [
       { from: "customer", text: "Thinking about refinancing, what are rates?" },
@@ -667,7 +667,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "40%",
     painLabel: "of tax-season inquiry calls never get a callback in time",
-    voiceGreeting: "Thanks for calling Ledger & Co. — are you calling about personal taxes, business accounting, or something else?",
+    voiceGreeting: "Thanks for calling {co} — are you calling about personal taxes, business accounting, or something else?",
     voiceTryLines: ["“I need my taxes done.”", "“Do you do bookkeeping for an LLC?”", "“Are you taking new clients?”"],
     chat: [
       { from: "customer", text: "Need help with my small business taxes" },
@@ -696,7 +696,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "1 in 3",
     painLabel: "catering inquiries book whoever answers and quotes first",
-    voiceGreeting: "Thanks for calling Tableside Catering — what kind of event are you planning, and roughly how many guests?",
+    voiceGreeting: "Thanks for calling {co} — what kind of event are you planning, and roughly how many guests?",
     voiceTryLines: ["“Wedding for 120 in June.”", "“Office lunch for 30 Friday.”", "“Do you do tastings?”"],
     chat: [
       { from: "customer", text: "Planning a wedding for about 120 people" },
@@ -725,7 +725,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "1 in 4",
     painLabel: "booking calls come in while every chair is full",
-    voiceGreeting: "Thanks for calling Kingsman Barber Co. — booking a cut, and do you have a barber you usually see?",
+    voiceGreeting: "Thanks for calling {co} — booking a cut, and do you have a barber you usually see?",
     voiceTryLines: ["“Cut and beard trim with Marcus.”", "“Any walk-in time today?”", "“How much for a fade?”"],
     chat: [
       { from: "customer", text: "Can I get in with Marcus today?" },
@@ -754,7 +754,7 @@ export const NICHE_SITES: NicheSite[] = [
     ],
     painStat: "36%",
     painLabel: "of PT referrals never convert because the call goes unanswered",
-    voiceGreeting: "Thanks for calling Motion First PT — do you have a referral from your doctor, and what area are we treating?",
+    voiceGreeting: "Thanks for calling {co} — do you have a referral from your doctor, and what area are we treating?",
     voiceTryLines: ["“My doctor referred me for my knee.”", "“Do you take Medicare?”", "“How soon can I start?”"],
     chat: [
       { from: "customer", text: "Got a referral for my shoulder, want to start PT" },
