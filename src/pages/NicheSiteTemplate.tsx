@@ -69,6 +69,7 @@ export default function NicheSiteTemplate() {
 
   // ── live voice playback (TAP TO TALK) ──────────────────────────────────
   const [voiceState, setVoiceState] = useState<"idle" | "loading" | "playing" | "error">("idle");
+  const [voiceProgress, setVoiceProgress] = useState(0); // 0..1
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioUrlRef = useRef<string | null>(null);
   const personalizedGreeting = (site?.voiceGreeting || "").replace(/\{co\}/g, company);
@@ -78,6 +79,7 @@ export default function NicheSiteTemplate() {
     if (audioUrlRef.current) { URL.revokeObjectURL(audioUrlRef.current); audioUrlRef.current = null; }
     audioRef.current = null;
     setVoiceState("idle");
+    setVoiceProgress(0);
   }
   async function playGreeting() {
     if (!personalizedGreeting) return;
@@ -97,8 +99,14 @@ export default function NicheSiteTemplate() {
       audioUrlRef.current = url;
       const audio = new Audio(url);
       audioRef.current = audio;
-      audio.onended = () => { setVoiceState("idle"); if (audioUrlRef.current === url) { URL.revokeObjectURL(url); audioUrlRef.current = null; } audioRef.current = null; };
-      audio.onerror = () => { setVoiceState("error"); if (audioUrlRef.current === url) { URL.revokeObjectURL(url); audioUrlRef.current = null; } audioRef.current = null; };
+      audio.ontimeupdate = () => {
+        if (audio.duration && isFinite(audio.duration) && audio.duration > 0) {
+          setVoiceProgress(Math.min(1, audio.currentTime / audio.duration));
+        }
+      };
+      audio.onended = () => { setVoiceState("idle"); setVoiceProgress(0); if (audioUrlRef.current === url) { URL.revokeObjectURL(url); audioUrlRef.current = null; } audioRef.current = null; };
+      audio.onerror = () => { setVoiceState("error"); setVoiceProgress(0); if (audioUrlRef.current === url) { URL.revokeObjectURL(url); audioUrlRef.current = null; } audioRef.current = null; };
+      setVoiceProgress(0);
       setVoiceState("playing");
       await audio.play();
     } catch {
@@ -500,8 +508,13 @@ export default function NicheSiteTemplate() {
                   )}
                 </button>
                 <div style={{ fontSize: 12, fontWeight: 700, color: voiceState === "error" ? "#9B2C2C" : A, marginTop: 12, ...MONO }}>
-                  {voiceState === "loading" ? "CONNECTING…" : voiceState === "playing" ? "SPEAKING" : voiceState === "error" ? "TRY AGAIN" : "TAP TO HEAR IT"}
+                  {voiceState === "loading" ? "CONNECTING…" : voiceState === "playing" ? "SPEAKING · TAP TO STOP" : voiceState === "error" ? "TRY AGAIN" : "TAP TO HEAR IT"}
                 </div>
+                {voiceState === "playing" && (
+                  <div style={{ marginTop: 8, width: 96, height: 3, borderRadius: 3, background: hexA(A, 0.18), overflow: "hidden" }}>
+                    <div style={{ width: `${Math.round(voiceProgress * 100)}%`, height: "100%", background: A, transition: "width 200ms linear" }} />
+                  </div>
+                )}
               </div>
               <div style={{ background: "#FAFBFC", border: "1px solid rgba(4,44,83,0.06)", borderRadius: 14, padding: "14px 16px", marginBottom: 14 }}>
                 <div style={{ fontSize: 10.5, fontWeight: 700, color: "#94A3B8", marginBottom: 6, ...MONO }}>ON PICKUP</div>

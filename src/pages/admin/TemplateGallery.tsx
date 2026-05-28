@@ -344,28 +344,61 @@ export default function TemplateGallery() {
   const [bulkOpen, setBulkOpen] = useState(false);
   const [bulkNiche, setBulkNiche] = useState<string>(ACTIVE_NICHE_SITES[0]?.id || "cleaning");
   const [bulkNames, setBulkNames] = useState("");
-  const bulkRows = useMemo(() => {
-    const lines = bulkNames.split("\n").map((s) => s.trim()).filter(Boolean);
+  // Parse paste as CSV — accepts `name`, `name,email`, `name,email,phone`,
+  // `name,email,phone,city`. Tabs treated as commas (Excel/Sheets paste).
+  // Quoted fields supported.
+  function parseCsvLine(line: string): string[] {
+    const out: string[] = [];
+    let cur = "";
+    let inQuote = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (inQuote) {
+        if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+        else if (c === '"') { inQuote = false; }
+        else { cur += c; }
+      } else {
+        if (c === '"') inQuote = true;
+        else if (c === "," || c === "\t") { out.push(cur); cur = ""; }
+        else cur += c;
+      }
+    }
+    out.push(cur);
+    return out.map((s) => s.trim());
+  }
+  type BulkRow = { co: string; em: string; ph: string; cy: string; url: string; dm: string };
+  const bulkRows = useMemo<BulkRow[]>(() => {
+    const lines = bulkNames.split("\n").map((s) => s.replace(/\r$/, "").trim()).filter(Boolean);
+    // Skip a header row if it looks like one
+    const startIdx = lines[0] && /\b(name|company|email|phone)\b/i.test(lines[0]) ? 1 : 0;
     const n = NICHE_SITES.find((x) => x.id === bulkNiche);
-    if (!n) return [] as Array<{ co: string; url: string; dm: string }>;
-    return lines.map((co) => {
+    if (!n) return [];
+    const fallbackCity = city.trim();
+    return lines.slice(startIdx).map((raw) => {
+      const cols = parseCsvLine(raw);
+      const co = (cols[0] || "").trim();
+      const em = (cols[1] || "").trim();
+      const ph = (cols[2] || "").trim();
+      const cy = (cols[3] || "").trim() || fallbackCity;
       const params = new URLSearchParams();
-      params.set("company", co);
-      if (city.trim()) params.set("city", city.trim());
+      if (co) params.set("company", co);
+      if (cy) params.set("city", cy);
       const url = `${origin}/template/${n.id}?${params.toString()}`;
       const dm = [
-        `${co} — built you a free preview of what a 2026 ${n.niche.toLowerCase()} site looks like, with an AI phone line that answers 24/7 and books ${n.chips[0].toLowerCase()} automatically. Stops the after-hours bleed${city.trim() ? ` in ${city.trim()}` : ""}.`,
+        `${co} — built you a free preview of what a 2026 ${n.niche.toLowerCase()} site looks like, with an AI phone line that answers 24/7 and books ${n.chips[0].toLowerCase()} automatically. Stops the after-hours bleed${cy ? ` in ${cy}` : ""}.`,
         "",
         `60-sec look: ${url}`,
       ].join("\n");
-      return { co, url, dm };
-    });
+      return { co, em, ph, cy, url, dm };
+    }).filter((r) => r.co);
   }, [bulkNames, bulkNiche, city, origin]);
+  const bulkWithContact = useMemo(() => bulkRows.filter((r) => r.em || r.ph).length, [bulkRows]);
   function copyBulk(kind: "links" | "csv" | "dms") {
     if (bulkRows.length === 0) return;
+    const q = (s: string) => `"${s.replace(/"/g, '""')}"`;
     let text = "";
     if (kind === "links") text = bulkRows.map((r) => r.url).join("\n");
-    else if (kind === "csv") text = "company,url\n" + bulkRows.map((r) => `"${r.co.replace(/"/g, '""')}",${r.url}`).join("\n");
+    else if (kind === "csv") text = "company,email,phone,city,url\n" + bulkRows.map((r) => `${q(r.co)},${q(r.em)},${q(r.ph)},${q(r.cy)},${r.url}`).join("\n");
     else text = bulkRows.map((r) => `--- ${r.co} ---\n${r.dm}`).join("\n\n");
     navigator.clipboard.writeText(text).then(() => blink("bulk", kind)).catch(() => {});
   }
@@ -388,12 +421,12 @@ export default function TemplateGallery() {
           headers: { "content-type": "application/json" },
           body: JSON.stringify({
             prospect_company: r.co,
-            prospect_city: city.trim(),
-            prospect_email: "",   // bulk paste is name-only by design
-            prospect_phone: "",
-            niche: niche.id,
-            niche_label: niche.niche,
-            channel: "bulk-queue",
+            prospect_city:    r.cy,
+            prospect_email:   r.em,    // pulled from CSV column 2 if present
+            prospect_phone:   r.ph,    // pulled from CSV column 3 if present
+            niche:            niche.id,
+            niche_label:      niche.niche,
+            channel:          "bulk-queue",
           }),
           keepalive: true,
         });
@@ -732,14 +765,21 @@ export default function TemplateGallery() {
                 <textarea
                   value={bulkNames}
                   onChange={(e) => setBulkNames(e.target.value)}
-                  placeholder={"One prospect per line:\nSparkleHouse Cleaning\nFreshFold Laundry\nAcme Roofing"}
+                  placeholder={"One prospect per line. CSV columns optional:\n\ncompany,email,phone,city\n\nSparkleHouse Cleaning,owner@sparklehouse.com,+18135550142,Tampa\nFreshFold Laundry,info@freshfold.com,,St. Pete\nAcme Roofing\n\n(Excel/Sheets paste works — tabs treated as commas. Header row is optional.)"}
                   rows={10}
                   style={{ width: "100%", padding: "12px 14px", borderRadius: 12, border: "1px solid rgba(4,44,83,0.16)", fontSize: 14, color: "#042C53", outline: "none", boxSizing: "border-box", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", resize: "vertical" }}
                 />
               </div>
               <div>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: "#6B7B92", ...MONO }}>OUTPUT · {bulkRows.length} ROW{bulkRows.length === 1 ? "" : "S"}</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: "#6B7B92", ...MONO }}>
+                    OUTPUT · {bulkRows.length} ROW{bulkRows.length === 1 ? "" : "S"}
+                    {bulkRows.length > 0 && (
+                      <span style={{ marginLeft: 8, color: bulkWithContact > 0 ? "#15724D" : "#94A3B8" }}>
+                        · {bulkWithContact} W/ CONTACT
+                      </span>
+                    )}
+                  </span>
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                     <BulkBtn onClick={() => copyBulk("links")} disabled={!bulkRows.length}>{flash === "bulk|links" ? "Copied ✓" : "Copy links"}</BulkBtn>
                     <BulkBtn onClick={() => copyBulk("csv")} disabled={!bulkRows.length}>{flash === "bulk|csv" ? "Copied ✓" : "Copy CSV"}</BulkBtn>
@@ -764,11 +804,21 @@ export default function TemplateGallery() {
                   </div>
                 </div>
                 <div style={{ background: "#fff", border: "1px solid rgba(4,44,83,0.12)", borderRadius: 12, padding: 12, height: 254, overflowY: "auto", fontSize: 12.5, color: "#42526E", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}>
-                  {bulkRows.length === 0 && <div style={{ color: "#94A3B8", fontFamily: "'Inter Tight', system-ui, sans-serif" }}>Paste names on the left to see personalized links here.</div>}
-                  {bulkRows.map((r) => (
-                    <div key={r.co} style={{ marginBottom: 8, wordBreak: "break-all" }}>
-                      <div style={{ color: "#042C53", fontWeight: 600 }}>{r.co}</div>
-                      <a href={r.url} target="_blank" rel="noopener" style={{ color: "#185FA5", textDecoration: "underline" }}>{r.url}</a>
+                  {bulkRows.length === 0 && <div style={{ color: "#94A3B8", fontFamily: "'Inter Tight', system-ui, sans-serif" }}>Paste names (or CSV) on the left to see personalized links here. Rows with an email column will get auto Day-3 + Day-7 nurture follow-ups via Resend.</div>}
+                  {bulkRows.map((r, i) => (
+                    <div key={`${r.co}_${i}`} style={{ marginBottom: 10, wordBreak: "break-all" }}>
+                      <div style={{ color: "#042C53", fontWeight: 600 }}>
+                        {r.co}
+                        {r.cy && <span style={{ color: "#94A3B8", fontWeight: 400 }}> · {r.cy}</span>}
+                      </div>
+                      {(r.em || r.ph) && (
+                        <div style={{ fontSize: 11, color: "#15724D", marginTop: 1 }}>
+                          {r.em && <span>✉ {r.em}</span>}
+                          {r.em && r.ph && <span style={{ color: "#94A3B8" }}> · </span>}
+                          {r.ph && <span>☎ {r.ph}</span>}
+                        </div>
+                      )}
+                      <a href={r.url} target="_blank" rel="noopener" style={{ color: "#185FA5", textDecoration: "underline", fontSize: 11.5 }}>{r.url}</a>
                     </div>
                   ))}
                 </div>
