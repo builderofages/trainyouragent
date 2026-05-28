@@ -23,14 +23,26 @@ export default function TemplateGallery() {
   const [company, setCompany] = useState("");
   const [city, setCity] = useState("");
   const [copied, setCopied] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+
+  const q = query.trim().toLowerCase();
+  const visible = q
+    ? NICHE_SITES.filter(
+        (n) =>
+          n.niche.toLowerCase().includes(q) ||
+          n.id.toLowerCase().includes(q) ||
+          n.chips.some((c) => c.toLowerCase().includes(q)) ||
+          n.subhead.toLowerCase().includes(q)
+      )
+    : NICHE_SITES;
 
   const origin = typeof window !== "undefined" ? window.location.origin : "https://www.trainyouragent.com";
 
   function buildUrl(id: string): string {
-    const q = new URLSearchParams();
-    if (company.trim()) q.set("company", company.trim());
-    if (city.trim()) q.set("city", city.trim());
-    const qs = q.toString();
+    const params = new URLSearchParams();
+    if (company.trim()) params.set("company", company.trim());
+    if (city.trim()) params.set("city", city.trim());
+    const qs = params.toString();
     return `${origin}/template/${id}${qs ? `?${qs}` : ""}`;
   }
 
@@ -96,8 +108,18 @@ export default function TemplateGallery() {
                 style={{ width: 160, maxWidth: "60vw", padding: "12px 14px", borderRadius: 12, border: "1px solid rgba(4,44,83,0.16)", fontSize: 15, color: "#042C53", outline: "none" }}
               />
             </label>
+            <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#6B7B92", ...MONO }}>FIND A NICHE</span>
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="cleaning, law, roof…"
+                style={{ width: 200, maxWidth: "60vw", padding: "12px 14px", borderRadius: 12, border: "1px solid rgba(4,44,83,0.16)", fontSize: 15, color: "#042C53", outline: "none" }}
+              />
+            </label>
             <span style={{ fontSize: 13, color: "#94A3B8", paddingBottom: 12 }}>
-              {company.trim() ? `Links now personalized to “${company.trim()}”.` : "Leave blank to preview with sample names."}
+              {company.trim() ? `Links personalized to “${company.trim()}”. ` : "Leave blank to preview with sample names. "}
+              {q ? `${visible.length} of ${NICHE_SITES.length} niches.` : `${NICHE_SITES.length} niches available.`}
             </span>
           </div>
         </div>
@@ -106,7 +128,13 @@ export default function TemplateGallery() {
       {/* gallery grid */}
       <section style={{ padding: "8px 24px 80px" }}>
         <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 18 }}>
-          {NICHE_SITES.map((n) => (
+          {visible.length === 0 && (
+            <div style={{ gridColumn: "1 / -1", padding: "60px 20px", textAlign: "center", color: "#5C6B7F", border: "1px dashed rgba(4,44,83,0.16)", borderRadius: 20, background: "#FAFBFC" }}>
+              <div style={{ fontSize: 15, fontWeight: 600, color: "#042C53", marginBottom: 6 }}>No niche matches “{query}”.</div>
+              <div style={{ fontSize: 13 }}>Try a broader term, or <button onClick={() => setQuery("")} style={{ background: "none", border: "none", color: "#185FA5", cursor: "pointer", padding: 0, font: "inherit", textDecoration: "underline" }}>clear the search</button>.</div>
+            </div>
+          )}
+          {visible.map((n) => (
             <article key={n.id} style={{ background: "#fff", border: "1px solid rgba(4,44,83,0.1)", borderRadius: 20, overflow: "hidden", boxShadow: "0 6px 28px -16px rgba(4,44,83,0.16)", display: "flex", flexDirection: "column" }}>
               {/* mini hero preview */}
               <div style={{ padding: "22px 22px 20px", background: `linear-gradient(155deg, ${hexA(n.accent, 0.1)}, #FAF6EE)` }}>
