@@ -21,6 +21,7 @@
 
 import { rateLimit, ipFromRequest } from "./_lib/rate-limit.js";
 import { recordEvent } from "./_lib/lead-store.js";
+import { getSupabase, supabaseConfigured } from "./_lib/supabase.js";
 
 export const config = { runtime: "edge" };
 
@@ -147,6 +148,54 @@ export default async function handler(req: Request) {
         custom_data: customBlock,
       }),
     }));
+  }
+
+  // v192 — niche-template attribution. If the booking's notes field carries
+  // "Niche: X · City: Y" (the Cal URL builder on /template/[niche] sets this),
+  // mark the matching template_sends row as booked. Closes the operator
+  // attribution loop: DM → open → booking, visible in /admin/templates.
+  if (triggerEvent === "BOOKING_CREATED" && supabaseConfigured()) {
+    const sb = getSupabase();
+    if (sb) {
+      const nicheMatch = /niche\s*:\s*([a-z0-9 &\-]+?)(?:\s*[·•|]|\s*$|\n)/i.exec(summary.notes);
+      const guessedNiche = nicheMatch ? nicheMatch[1].trim().toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9\-]/g, "") : "";
+      const attendeeEmail = (summary.email || "").toLowerCase();
+      const attendeeFirstWord = (summary.name || summary.company || "").toLowerCase().split(/\s+/)[0] || "";
+      let matchedId: string | null = null;
+      try {
+        if (attendeeEmail) {
+          const r1 = await sb
+            .from("template_sends")
+            .select("id")
+            .eq("prospect_email", attendeeEmail)
+            .is("booked_at", null)
+            .order("sent_at", { ascending: false })
+            .limit(1);
+          if (r1.data && r1.data[0]) matchedId = r1.data[0].id;
+        }
+        if (!matchedId && guessedNiche) {
+          const r2 = await sb
+            .from("template_sends")
+            .select("id, prospect_company")
+            .eq("niche", guessedNiche)
+            .is("booked_at", null)
+            .order("sent_at", { ascending: false })
+            .limit(5);
+          if (r2.data && r2.data.length > 0) {
+            const hit = attendeeFirstWord ? r2.data.find((r) => r.prospect_company.toLowerCase().includes(attendeeFirstWord)) : null;
+            matchedId = (hit || r2.data[0]).id;
+          }
+        }
+        if (matchedId) {
+          await sb.from("template_sends").update({
+            booked_at: new Date().toISOString(),
+            nurture_stopped_reason: "booked",
+            cal_booking_uid: p.uid || (p.bookingId ? String(p.bookingId) : null),
+            cal_attendee_email: attendeeEmail || null,
+          }).eq("id", matchedId);
+        }
+      } catch { /* never block webhook on attribution failure */ }
+    }
   }
 
   await Promise.allSettled(tasks);

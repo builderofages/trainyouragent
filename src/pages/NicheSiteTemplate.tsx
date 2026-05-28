@@ -206,12 +206,22 @@ export default function NicheSiteTemplate() {
     }
   }
 
-  // ── analytics ─────────────────────────────────────────────────────────
+  // ── analytics + server-side prospect-open tracking ───────────────────
   useEffect(() => {
     if (!site) return;
     void fireEvent("template_view", { niche: site.id, company, city });
+    // If a prospect-specific URL (?company=) was opened, mark the matching
+    // template_sends row as opened. Fire-and-forget — failure is harmless.
+    if (hasCompanyParam && company && site.id) {
+      void fetch("/api/template-opened", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ prospect_company: company, niche: site.id }),
+        keepalive: true,
+      }).catch(() => { /* swallow */ });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [site?.id]);
+  }, [site?.id, hasCompanyParam]);
 
   // ── pre-fill Cal.com booking with prospect info ───────────────────────
   const calUrl = useMemo(() => {
@@ -242,9 +252,13 @@ export default function NicheSiteTemplate() {
       style={{ minHeight: "100vh", background: "#FFFFFF", color: "#0B1B2B", fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif", overflowX: "hidden" }}
     >
       <Helmet>
-        <title>{company} — {site.niche}</title>
-        <meta name="robots" content="noindex, nofollow" />
-        <meta name="description" content={`${company}: ${site.subhead}`} />
+        <title>{hasCompanyParam ? `${company} — ${site.niche}` : `${site.niche} site preview with AI receptionist · TrainYourAgent`}</title>
+        {/* When a prospect-personalized URL (?company=...) is loaded, keep it
+            out of Google so it doesn't compete with the operator's outbound.
+            When NO company is set, this is a public SEO surface — index it. */}
+        <meta name="robots" content={hasCompanyParam ? "noindex, nofollow" : "index, follow"} />
+        {!hasCompanyParam && <link rel="canonical" href={`${origin}/template/${site.id}`} />}
+        <meta name="description" content={hasCompanyParam ? `${company}: ${site.subhead}` : `${site.subhead} Try it personalized to your ${site.niche.toLowerCase()} business in 5 seconds.`} />
         <meta property="og:title" content={`${company} — ${site.niche}`} />
         <meta property="og:description" content={site.subhead} />
         <meta property="og:type" content="website" />

@@ -41,6 +41,7 @@ const LS_KEYS = {
   phone: "tya.admin.tg.phone",
   recent: "tya.admin.tg.recent.v1",
   stats: "tya.admin.tg.stats.v1",
+  adminToken: "tya.admin.tg.admin_token",
 };
 
 type StatEvent = { kind: string; niche: string; ts: number };
@@ -128,6 +129,80 @@ export default function TemplateGallery() {
     setCanShare(typeof navigator !== "undefined" && typeof (navigator as { share?: unknown }).share === "function");
   }, []);
 
+  // ─── server-side prospect tracking (ADMIN_TOKEN required) ────────────
+  const [adminToken, setAdminToken] = useState<string>(() => lsGet(LS_KEYS.adminToken));
+  useEffect(() => { lsSet(LS_KEYS.adminToken, adminToken); }, [adminToken]);
+
+  type ActivityRow = {
+    id: string;
+    prospect_company: string;
+    prospect_city: string | null;
+    prospect_email: string | null;
+    niche: string;
+    niche_label: string | null;
+    channel: string;
+    sent_at: string;
+    opened_at: string | null;
+    booked_at: string | null;
+    last_nurture_template: string | null;
+    nurture_stopped_reason: string | null;
+  };
+  type ActivitySummary = {
+    window_days: number;
+    total: number;
+    opened: number;
+    booked: number;
+    pending_nurture: number;
+  };
+  const [activity, setActivity] = useState<{ rows: ActivityRow[]; summary: ActivitySummary | null }>({ rows: [], summary: null });
+  const [activityLoading, setActivityLoading] = useState(false);
+  const [activityError, setActivityError] = useState<string | null>(null);
+  async function refreshActivity() {
+    if (!adminToken.trim()) return;
+    setActivityLoading(true);
+    setActivityError(null);
+    try {
+      const r = await fetch(`/api/admin/template-activity?token=${encodeURIComponent(adminToken.trim())}&limit=60&days=30`);
+      const json = await r.json();
+      if (!r.ok || !json.ok) { setActivityError(json.error || `http-${r.status}`); return; }
+      setActivity({ rows: json.rows || [], summary: json.summary || null });
+    } catch (e) {
+      setActivityError((e as Error).message);
+    } finally {
+      setActivityLoading(false);
+    }
+  }
+  // Auto-pull on first load (if token present) + every 60s while tab visible.
+  useEffect(() => {
+    if (!adminToken.trim()) return;
+    refreshActivity();
+    const t = setInterval(() => { if (document.visibilityState === "visible") refreshActivity(); }, 60_000);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [adminToken]);
+
+  // Server-side log-send helper. Fire-and-forget. Silent if not configured.
+  async function serverLogSend(n: NicheSite, channel: string) {
+    if (!adminToken.trim()) return;
+    const co = company.trim() || n.defaultCompany;
+    try {
+      await fetch(`/api/template-send?token=${encodeURIComponent(adminToken.trim())}`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          prospect_company: co,
+          prospect_city:    city.trim(),
+          prospect_email:   email.trim(),
+          prospect_phone:   phone.trim(),
+          niche:            n.id,
+          niche_label:      n.niche,
+          channel,
+        }),
+        keepalive: true,
+      });
+    } catch { /* never block the operator UI on logging */ }
+  }
+
   // ─── operator weekly stats (local, last 7 days) ──────────────────────
   const [stats, setStats] = useState<StatEvent[]>(() => loadStats());
   const weekStats = useMemo(() => {
@@ -213,18 +288,30 @@ export default function TemplateGallery() {
     setStats((prev) => [{ kind, niche, ts: Date.now() }, ...prev].slice(0, STAT_CAP));
   }
   async function copyText(id: string, kind: string, text: string) {
-    try { await navigator.clipboard.writeText(text); blink(id, kind); pushRecent(); trackAction(kind === "dm" ? "dm" : kind === "link" ? "link" : kind, id); void fireEvent("tg_copy", { kind, niche: id, company: company.trim() }); } catch { /* clipboard blocked */ }
+    try {
+      await navigator.clipboard.writeText(text);
+      blink(id, kind);
+      pushRecent();
+      const tracked = kind === "dm" ? "dm" : kind === "link" ? "link" : kind;
+      trackAction(tracked, id);
+      void fireEvent("tg_copy", { kind, niche: id, company: company.trim() });
+      const niche = NICHE_SITES.find((n) => n.id === id);
+      if (niche) void serverLogSend(niche, tracked);
+    } catch { /* clipboard blocked */ }
   }
   function openSite(id: string) {
     pushRecent();
     trackAction("open", id);
     void fireEvent("tg_open_site", { niche: id, company: company.trim() });
+    const niche = NICHE_SITES.find((n) => n.id === id);
+    if (niche) void serverLogSend(niche, "open");
     window.open(buildUrl(id), "_blank", "noopener");
   }
   function openEmail(n: NicheSite) {
     pushRecent();
     trackAction("email", n.id);
     void fireEvent("tg_send_email", { niche: n.id, company: company.trim() });
+    void serverLogSend(n, "email");
     const to = email.trim();
     const url = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(buildEmailSubject(n))}&body=${encodeURIComponent(buildEmailBody(n))}`;
     window.location.href = url;
@@ -233,9 +320,8 @@ export default function TemplateGallery() {
     pushRecent();
     trackAction("sms", n.id);
     void fireEvent("tg_send_sms", { niche: n.id, company: company.trim() });
+    void serverLogSend(n, "sms");
     const num = phone.trim().replace(/[^\d+]/g, "");
-    // iOS uses `sms:NUMBER&body=`; Android uses `sms:NUMBER?body=`. The ? form
-    // works on both modern iOS and Android; the & form breaks on Android.
     const url = `sms:${num}?body=${encodeURIComponent(buildDm(n))}`;
     window.location.href = url;
   }
@@ -243,6 +329,7 @@ export default function TemplateGallery() {
     pushRecent();
     trackAction("share", n.id);
     void fireEvent("tg_share_native", { niche: n.id, company: company.trim() });
+    void serverLogSend(n, "share");
     const co = company.trim() || n.defaultCompany;
     try {
       await navigator.share({
@@ -378,6 +465,78 @@ export default function TemplateGallery() {
               <button onClick={clearStats} title="Reset weekly stats" style={{ marginLeft: "auto", fontSize: 11, color: "#94A3B8", background: "none", border: "none", cursor: "pointer", textDecoration: "underline", alignSelf: "center" }}>reset</button>
             </div>
           )}
+
+          {/* admin token + server-side recent activity */}
+          <div style={{ marginTop: 22, padding: 16, borderRadius: 14, background: "#fff", border: "1px solid rgba(4,44,83,0.1)" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10, marginBottom: 12 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#185FA5", ...MONO }}>SERVER ACTIVITY</span>
+              <span style={{ fontSize: 12.5, color: "#5C6B7F" }}>
+                {activity.summary
+                  ? `Last ${activity.summary.window_days}d: ${activity.summary.total} sent · ${activity.summary.opened} opened · ${activity.summary.booked} booked · ${activity.summary.pending_nurture} pending nurture`
+                  : adminToken.trim()
+                    ? (activityLoading ? "Loading…" : (activityError ? `Error: ${activityError}` : "No data yet."))
+                    : "Paste ADMIN_TOKEN to see server-side prospect tracking (who opened, who booked)."}
+              </span>
+              <input
+                type="password"
+                value={adminToken}
+                onChange={(e) => setAdminToken(e.target.value)}
+                placeholder="ADMIN_TOKEN"
+                style={{ marginLeft: "auto", padding: "7px 11px", borderRadius: 9, border: "1px solid rgba(4,44,83,0.16)", fontSize: 12, color: "#042C53", outline: "none", width: 180, fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}
+              />
+              <button
+                onClick={refreshActivity}
+                disabled={!adminToken.trim() || activityLoading}
+                style={{ padding: "7px 11px", borderRadius: 9, background: "#042C53", color: "#fff", fontSize: 12, fontWeight: 600, border: "none", cursor: adminToken.trim() && !activityLoading ? "pointer" : "not-allowed", opacity: adminToken.trim() && !activityLoading ? 1 : 0.5 }}
+              >
+                {activityLoading ? "…" : "Refresh"}
+              </button>
+            </div>
+            {activity.rows.length > 0 && (
+              <div style={{ maxHeight: 220, overflowY: "auto", border: "1px solid rgba(4,44,83,0.06)", borderRadius: 10, background: "#FAFBFC" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5 }}>
+                  <thead>
+                    <tr style={{ background: "#F1F5F9", textAlign: "left", color: "#6B7B92", fontWeight: 700 }}>
+                      <th style={{ padding: "8px 10px" }}>Company</th>
+                      <th style={{ padding: "8px 10px" }}>Niche</th>
+                      <th style={{ padding: "8px 10px" }}>Via</th>
+                      <th style={{ padding: "8px 10px" }}>Sent</th>
+                      <th style={{ padding: "8px 10px" }}>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {activity.rows.map((r) => {
+                      const ago = (iso: string | null) => {
+                        if (!iso) return "";
+                        const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+                        if (s < 60) return "just now";
+                        if (s < 3600) return `${Math.round(s / 60)}m ago`;
+                        if (s < 86400) return `${Math.round(s / 3600)}h ago`;
+                        return `${Math.round(s / 86400)}d ago`;
+                      };
+                      const status = r.booked_at
+                        ? <span style={{ color: "#15724D", fontWeight: 600 }}>BOOKED · {ago(r.booked_at)}</span>
+                        : r.opened_at
+                          ? <span style={{ color: "#1E3A5F", fontWeight: 600 }}>OPENED · {ago(r.opened_at)}{r.last_nurture_template ? ` · ${r.last_nurture_template} sent` : ""}</span>
+                          : <span style={{ color: "#94A3B8" }}>SENT{r.last_nurture_template ? ` · ${r.last_nurture_template} sent` : ""}</span>;
+                      return (
+                        <tr key={r.id} style={{ borderTop: "1px solid rgba(4,44,83,0.06)" }}>
+                          <td style={{ padding: "8px 10px", color: "#042C53", fontWeight: 500 }}>
+                            {r.prospect_company}
+                            {r.prospect_city && <span style={{ color: "#94A3B8", fontWeight: 400 }}> · {r.prospect_city}</span>}
+                          </td>
+                          <td style={{ padding: "8px 10px", color: "#5C6B7F" }}>{r.niche_label || r.niche}</td>
+                          <td style={{ padding: "8px 10px", color: "#5C6B7F", textTransform: "uppercase", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", fontSize: 10.5, letterSpacing: "0.1em" }}>{r.channel}</td>
+                          <td style={{ padding: "8px 10px", color: "#5C6B7F" }}>{ago(r.sent_at)}</td>
+                          <td style={{ padding: "8px 10px" }}>{status}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
 
           {/* recent prospects */}
           {recent.length > 0 && (
