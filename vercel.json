@@ -180,6 +180,10 @@
     {
       "path": "/api/cron/sourced-purge",
       "schedule": "0 4 * * 1"
+    },
+    {
+      "path": "/api/cron/daily-digest",
+      "schedule": "0 12 * * *"
     }
   ]
 }
