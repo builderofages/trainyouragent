@@ -37,12 +37,27 @@ type SendRow = {
   booked_at: string | null;
   last_nurture_template: string | null;
   first_touch_sent_at: string | null;
+  meta: { email_source?: string } | null;
 };
 
 type Template = "day0" | "day3" | "day7";
 
+// v199 — CAN-SPAM § 5(a)(5): every commercial email MUST include a valid
+// physical postal address of the sender. Read from env so it can be moved
+// without redeploying every email template change.
+const SENDER_NAME    = process.env.SENDER_LEGAL_NAME    || "TrainYourAgent LLC";
+const SENDER_ADDRESS = process.env.SENDER_POSTAL_ADDRESS || "Tampa Bay, FL · USA";
+
 function renderEmail(co: string, template: Template, niche_label: string, link: string, opened: boolean, unsubLink: string): { subject: string; html: string } {
-  const unsubFoot = `<p style="margin-top:28px;font-size:12px;color:#94A3B8;line-height:1.5">Not interested? <a href="${unsubLink}" style="color:#94A3B8;text-decoration:underline">One-click unsubscribe</a> — or reply STOP and I'll remove you manually.</p>`;
+  // CAN-SPAM compliant footer — physical address + clear opt-out + sender ID
+  const unsubFoot = `
+<p style="margin-top:28px;font-size:12px;color:#94A3B8;line-height:1.5">
+Not interested? <a href="${unsubLink}" style="color:#94A3B8;text-decoration:underline">One-click unsubscribe</a> — or reply STOP and I'll remove you manually.
+</p>
+<p style="margin-top:10px;font-size:11px;color:#B5C0D0;line-height:1.5;border-top:1px solid #E5E9EE;padding-top:10px">
+${SENDER_NAME} · ${SENDER_ADDRESS}<br/>
+You're receiving this because we identified ${co} as a ${niche_label.toLowerCase()} business that may benefit from a free AI-receptionist preview. We sourced your public business listing; no personal data was used. <a href="${unsubLink}" style="color:#B5C0D0;text-decoration:underline">Stop these emails forever</a>.
+</p>`;
   if (template === "day0") {
     return {
       subject: `${co} — built you a free ${niche_label.toLowerCase()} site preview`,
@@ -123,7 +138,7 @@ export default async function handler(req: Request): Promise<Response> {
 
   const day0Q = sb
     .from("template_sends")
-    .select("id, prospect_company, prospect_email, prospect_name, prospect_city, niche, niche_label, channel, sent_at, opened_at, booked_at, last_nurture_template, first_touch_sent_at")
+    .select("id, prospect_company, prospect_email, prospect_name, prospect_city, niche, niche_label, channel, sent_at, opened_at, booked_at, last_nurture_template, first_touch_sent_at, meta")
     .eq("channel", "autosourced")
     .is("first_touch_sent_at", null)
     .is("booked_at", null)
@@ -133,7 +148,7 @@ export default async function handler(req: Request): Promise<Response> {
 
   const followUpQ = sb
     .from("template_sends")
-    .select("id, prospect_company, prospect_email, prospect_name, prospect_city, niche, niche_label, channel, sent_at, opened_at, booked_at, last_nurture_template, first_touch_sent_at")
+    .select("id, prospect_company, prospect_email, prospect_name, prospect_city, niche, niche_label, channel, sent_at, opened_at, booked_at, last_nurture_template, first_touch_sent_at, meta")
     .is("booked_at", null)
     .is("nurture_stopped_reason", null)
     .gte("sent_at", nineDaysAgo)
@@ -157,15 +172,38 @@ export default async function handler(req: Request): Promise<Response> {
   const out: Array<{ id: string; template: Template; result: "sent" | "skipped" | "error"; reason?: string }> = [];
   let sentCount = 0;
 
+  // v199 — Resend domain-reputation guard. Pattern-guessed emails
+  // (info@domain — we never verified) bounce 2-5x more than discovered
+  // addresses. Sending Day-0 to them at scale tanks sender reputation,
+  // which then nukes deliverability for REAL prospects.
+  // Default: gate them. Operator can opt in per env (acknowledging the
+  // reputation cost) once their domain has volume + a good baseline.
+  const ALLOW_GUESS = process.env.SEND_TO_PATTERN_GUESSES === "1";
+  // Global per-day send cap — even with a good reputation, bursting hundreds
+  // in one day to brand-new addresses triggers Gmail/MS spam filters. Tune
+  // up over time as the domain ages.
+  const MAX_SENDS_PER_RUN = parseInt(process.env.NURTURE_MAX_PER_RUN || "40", 10) || 40;
+  let sendsThisRun = 0;
+
   for (const r of rows) {
     if (!r.prospect_email) { out.push({ id: r.id, template: "day3", result: "skipped", reason: "no-email" }); continue; }
+    if (sendsThisRun >= MAX_SENDS_PER_RUN) { out.push({ id: r.id, template: "day3", result: "skipped", reason: "global-cap-hit" }); continue; }
     const ageDays = (Date.now() - new Date(r.sent_at).getTime()) / 86400_000;
+    const isGuess = (r.meta?.email_source || "") === "pattern-guess";
     let template: Template | null = null;
     // Day-0 fires once, for autosourced rows that haven't had a first touch.
     if (r.channel === "autosourced" && !r.first_touch_sent_at) template = "day0";
     else if (ageDays >= 7 && r.last_nurture_template !== "day7") template = "day7";
     else if (ageDays >= 3 && ageDays < 7 && r.last_nurture_template !== "day3" && r.last_nurture_template !== "day7") template = "day3";
     if (!template) { out.push({ id: r.id, template: "day3", result: "skipped", reason: "no-template-due" }); continue; }
+    // Pattern-guess gate: don't send unless explicit opt-in OR the prospect
+    // has actually opened our link (proof the address is real).
+    if (isGuess && !ALLOW_GUESS && !r.opened_at) {
+      // Mark as stopped so we never reconsider this row.
+      await sb.from("template_sends").update({ nurture_stopped_reason: "skipped-guess" }).eq("id", r.id);
+      out.push({ id: r.id, template, result: "skipped", reason: "pattern-guess-no-opt-in" });
+      continue;
+    }
 
     const link  = buildLink(r.prospect_company, r.prospect_city, r.niche);
     const co    = r.prospect_company;
@@ -202,6 +240,7 @@ export default async function handler(req: Request): Promise<Response> {
       if (template === "day0") patch.first_touch_sent_at = new Date().toISOString();
       await sb.from("template_sends").update(patch).eq("id", r.id);
       sentCount++;
+      sendsThisRun++;
       out.push({ id: r.id, template, result: "sent" });
     } catch (e) {
       out.push({ id: r.id, template, result: "error", reason: (e as Error).message });

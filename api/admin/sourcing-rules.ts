@@ -64,8 +64,12 @@ export default async function handler(req: Request): Promise<Response> {
       country:       s(body.country, 4) || "US",
       radius_meters: n(body.radius_meters, 25000, 2000, 50000),
       query_string:  s(body.query_string, 200) || null,
-      cadence_hours: n(body.cadence_hours, 24, 0, 720),
-      max_per_run:   n(body.max_per_run, 10, 1, 50),
+      // v199 — min cadence 1h prevents runaway loops; min would-be-0 means
+      // operator wants the rule paused — they should set enabled=false
+      // explicitly. max 720h = 30 days is plenty.
+      cadence_hours: n(body.cadence_hours, 24, 1, 720),
+      // max_per_run 20 cap protects OSM/Google rate budgets per tick.
+      max_per_run:   n(body.max_per_run, 10, 1, 20),
       enabled:       body.enabled !== false,
       notes:         s(body.notes, 240) || null,
     };
@@ -84,8 +88,8 @@ export default async function handler(req: Request): Promise<Response> {
     if (body.state !== undefined)        patch.state         = s(body.state, 8) || null;
     if (body.radius_meters !== undefined) patch.radius_meters = n(body.radius_meters, 25000, 2000, 50000);
     if (body.query_string !== undefined)  patch.query_string  = s(body.query_string, 200) || null;
-    if (body.cadence_hours !== undefined) patch.cadence_hours = n(body.cadence_hours, 24, 0, 720);
-    if (body.max_per_run !== undefined)   patch.max_per_run   = n(body.max_per_run, 10, 1, 50);
+    if (body.cadence_hours !== undefined) patch.cadence_hours = n(body.cadence_hours, 24, 1, 720);
+    if (body.max_per_run !== undefined)   patch.max_per_run   = n(body.max_per_run, 10, 1, 20);
     if (body.notes !== undefined)         patch.notes         = s(body.notes, 240) || null;
     if (Object.keys(patch).length === 0) return j({ ok: false, error: "no-fields" }, 400, cors.headers);
     const { data, error } = await sb.from("sourcing_rules").update(patch).eq("id", id).select("*").maybeSingle();

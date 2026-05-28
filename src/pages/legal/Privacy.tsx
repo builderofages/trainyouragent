@@ -108,6 +108,24 @@ export default function Privacy() {
         <strong>We do not use Customer Data to train our base models or any model offered to other customers without your explicit opt-in.</strong> See Section 12 and the <a href="/legal/ai-use">AI Use Policy</a>.
       </p>
 
+      <h2 id="outbound-sources">4.5 Outbound prospect data sources (v199)</h2>
+      <p>
+        We operate a B2B outbound prospecting engine that identifies small-business prospects from <strong>publicly available</strong> sources, contacts them by email about our service, and stops contacting them on first request. We process this data under <strong>GDPR Art. 6(1)(f) legitimate interests</strong> and <strong>CCPA's B2B exemption</strong>, and we apply the following safeguards:
+      </p>
+      <ul>
+        <li><strong>Sources we use:</strong> OpenStreetMap (Overpass API, ODbL license &mdash; attribution at <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">openstreetmap.org/copyright</a>), Google Places API (per Google's Places API Terms of Service), and public business directories. We never scrape behind logins, never bypass paywalls, and never collect personal social-media data.</li>
+        <li><strong>What we collect about a prospect business:</strong> business name, address, phone, website, and a single business email when listed publicly &mdash; or a pattern-guessed business address (<code>info@domain</code>) flagged as unverified, gated by reputation safeguards (Section 4.6).</li>
+        <li><strong>Retention:</strong> raw discovery results are purged after 30 days to comply with Google Places ToS &sect; 5.1(b). Outreach records (whether we sent, when, whether they opened or booked) are retained for legitimate business records and tax compliance.</li>
+        <li><strong>Opt-out:</strong> every outbound email carries an HMAC-signed one-click unsubscribe link AND a Gmail-native <code>List-Unsubscribe</code> header (RFC 8058). Honored immediately and forever &mdash; one click stops every future email from us to that address.</li>
+        <li><strong>Right to be forgotten (GDPR Art. 17 / CCPA &sect; 1798.105):</strong> email <a href="mailto:privacy@trainyouragent.com">privacy@trainyouragent.com</a> to have your prospect record hard-deleted within 30 days.</li>
+        <li><strong>Bounces &amp; complaints:</strong> hard-bounced addresses and ESP-reported complaints automatically stop the sequence; we never re-engage.</li>
+      </ul>
+
+      <h2 id="email-safeguards">4.6 Email reputation safeguards</h2>
+      <p>
+        Pattern-guessed email addresses (e.g. <code>info@domain.com</code> derived from a public website) are gated by default &mdash; we do not send to them until either (a) the operator explicitly opts in via <code>SEND_TO_PATTERN_GUESSES=1</code> after their sending domain has aged with verified-only volume, or (b) the prospect has actually opened a previous link from us (proving the address exists). This protects deliverability for verified prospects and reduces the risk of mistaken contact.
+      </p>
+
       <h2 id="legal-bases">5. Legal bases (GDPR / UK GDPR)</h2>
       <p>For EU and UK data subjects, we rely on the following GDPR Article 6 bases:</p>
       <ul>

@@ -60,12 +60,25 @@ export function queryForNiche(niche: string, override?: string): string {
 
 // ── Geocode a city string → lat/lon. Uses OSM Nominatim (free, no key). ──
 type Geo = { lat: number; lon: number; state?: string };
+// v199 — every external HTTP call gets an AbortController timeout. Without
+// these, a hanging upstream stalls the whole nurture/autosource cron and
+// blows Vercel's 60s edge function ceiling.
+const HTTP_TIMEOUT_MS = 10_000;
+function withTimeout(ms: number): { signal: AbortSignal; cancel: () => void } {
+  const c = new AbortController();
+  const t = setTimeout(() => c.abort(), ms);
+  return { signal: c.signal, cancel: () => clearTimeout(t) };
+}
+const UA = "TrainYourAgent-Autopilot/1.0 (alexander@trainyouragent.com)";
+
 export async function geocodeCity(city: string, country = "US"): Promise<Geo | null> {
   if (!city.trim()) return null;
   const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&format=json&limit=1`;
+  const t = withTimeout(HTTP_TIMEOUT_MS);
   try {
     const r = await fetch(url, {
-      headers: { "user-agent": "TrainYourAgent-Autopilot/1.0 (alexander@trainyouragent.com)" },
+      headers: { "user-agent": UA },
+      signal: t.signal,
     });
     if (!r.ok) return null;
     const j = (await r.json()) as Array<{ lat: string; lon: string; display_name?: string }>;
@@ -79,6 +92,8 @@ export async function geocodeCity(city: string, country = "US"): Promise<Geo | n
     return { lat, lon, state };
   } catch {
     return null;
+  } finally {
+    t.cancel();
   }
 }
 
@@ -88,6 +103,7 @@ async function fetchGooglePlaces(query: string, geo: Geo, radiusM: number, max: 
   if (!key) return [];
   // Text Search supports "query in location" semantics. v1 endpoint.
   const url = `https://places.googleapis.com/v1/places:searchText`;
+  const t = withTimeout(HTTP_TIMEOUT_MS);
   try {
     const r = await fetch(url, {
       method: "POST",
@@ -95,12 +111,14 @@ async function fetchGooglePlaces(query: string, geo: Geo, radiusM: number, max: 
         "content-type": "application/json",
         "X-Goog-Api-Key": key,
         "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.internationalPhoneNumber,places.websiteUri,places.location",
+        "user-agent": UA,
       },
       body: JSON.stringify({
         textQuery: query,
         locationBias: { circle: { center: { latitude: geo.lat, longitude: geo.lon }, radius: radiusM } },
         pageSize: Math.min(20, max),
       }),
+      signal: t.signal,
     });
     if (!r.ok) return [];
     const j = (await r.json()) as { places?: Array<{ id?: string; displayName?: { text?: string }; formattedAddress?: string; internationalPhoneNumber?: string; websiteUri?: string }> };
@@ -121,6 +139,8 @@ async function fetchGooglePlaces(query: string, geo: Geo, radiusM: number, max: 
     return out;
   } catch {
     return [];
+  } finally {
+    t.cancel();
   }
 }
 
@@ -136,11 +156,18 @@ async function fetchOsmOverpass(query: string, geo: Geo, radiusM: number, max: n
   way["name"~"${query.replace(/[\\"]/g, "")}",i](around:${radiusM},${geo.lat},${geo.lon});
 );
 out tags ${Math.min(50, max)};`;
+  const t = withTimeout(HTTP_TIMEOUT_MS + 15_000); // Overpass is slower
   try {
     const r = await fetch("https://overpass-api.de/api/interpreter", {
       method: "POST",
-      headers: { "content-type": "application/x-www-form-urlencoded" },
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+        // OSM Foundation Acceptable Use Policy: identify yourself with a
+        // User-Agent that includes a way to contact you.
+        "user-agent": UA,
+      },
       body: "data=" + encodeURIComponent(q),
+      signal: t.signal,
     });
     if (!r.ok) return [];
     const j = (await r.json()) as { elements?: Array<{ id?: number; type?: string; tags?: Record<string, string> }> };
@@ -164,6 +191,8 @@ out tags ${Math.min(50, max)};`;
     return out;
   } catch {
     return [];
+  } finally {
+    t.cancel();
   }
 }
 

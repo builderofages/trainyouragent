@@ -176,6 +176,10 @@
     {
       "path": "/api/cron/autosource",
       "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/sourced-purge",
+      "schedule": "0 4 * * 1"
     }
   ]
 }
