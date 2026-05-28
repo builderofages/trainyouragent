@@ -31,10 +31,30 @@ export default function NicheSiteTemplate() {
   const site = getNicheSite(niche);
   const hasCompanyParam = !!sp.get("company")?.trim();
 
-  // Live "$ lost" ticker for the pain block
-  const [secs, setSecs] = useState(0);
+  // Live "$ lost" ticker for the pain block.
+  // Persists the FIRST-SEEN timestamp per prospect (keyed by niche+company) so
+  // return visits show accumulated damage, not a reset counter. Caps at 7 days
+  // worth — past that and the stat stops being useful (returns get absurd).
+  const company = sp.get("company") || site?.defaultCompany || "Your Business";
+  const city = sp.get("city") || site?.city || "your area";
+  const tickerKey = useMemo(
+    () => `tya.tpl.firstSeen.${site?.id || "x"}.${company.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+    [site?.id, company],
+  );
+  const [secs, setSecs] = useState<number>(0);
   useEffect(() => {
-    const t = setInterval(() => setSecs((s) => s + 1), 1000);
+    if (typeof window === "undefined") return;
+    let firstSeenMs = 0;
+    try {
+      const stored = parseInt(localStorage.getItem(tickerKey) || "0", 10);
+      if (stored && Date.now() - stored < 7 * 86400_000) firstSeenMs = stored;
+      if (!firstSeenMs) {
+        firstSeenMs = Date.now();
+        localStorage.setItem(tickerKey, String(firstSeenMs));
+      }
+    } catch { firstSeenMs = Date.now(); }
+    setSecs(Math.floor((Date.now() - firstSeenMs) / 1000));
+    const t = setInterval(() => setSecs(Math.floor((Date.now() - firstSeenMs) / 1000)), 1000);
     if (typeof document !== "undefined" && !document.getElementById("tya-fonts")) {
       const l = document.createElement("link");
       l.id = "tya-fonts";
@@ -44,10 +64,7 @@ export default function NicheSiteTemplate() {
       document.head.appendChild(l);
     }
     return () => clearInterval(t);
-  }, []);
-
-  const company = sp.get("company") || site?.defaultCompany || "Your Business";
-  const city = sp.get("city") || site?.city || "your area";
+  }, [tickerKey]);
   const dollarsLost = useMemo(() => ((secs / 60) * 4.62).toFixed(2), [secs]);
 
   // ── live voice playback (TAP TO TALK) ──────────────────────────────────
@@ -115,13 +132,39 @@ export default function NicheSiteTemplate() {
       })),
     [site],
   );
-  const [liveLog, setLiveLog] = useState<ChatMsg[]>([]);
+  const chatKey = useMemo(
+    () => `tya.tpl.chat.${site?.id || "x"}.${company.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+    [site?.id, company],
+  );
+  const [liveLog, setLiveLog] = useState<ChatMsg[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = localStorage.getItem(`tya.tpl.chat.${site?.id || "x"}.${(sp.get("company") || site?.defaultCompany || "x").toLowerCase().replace(/[^a-z0-9]+/g, "-")}`);
+      if (raw) return JSON.parse(raw) as ChatMsg[];
+    } catch { /* corrupt — drop */ }
+    return [];
+  });
   const displayLog = useMemo(() => [...seedMessages, ...liveLog], [seedMessages, liveLog]);
   const seedLen = seedMessages.length;
   const [chatInput, setChatInput] = useState("");
   const [chatBusy, setChatBusy] = useState(false);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
-  useEffect(() => { setLiveLog([]); }, [seedMessages]); // reset when niche changes
+  // Reload-persisted: write the live log whenever it changes.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      if (liveLog.length === 0) localStorage.removeItem(chatKey);
+      else localStorage.setItem(chatKey, JSON.stringify(liveLog.slice(-40)));
+    } catch { /* quota or privacy */ }
+  }, [chatKey, liveLog]);
+  // When niche or company changes, swap to that conversation (don't blast it).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = localStorage.getItem(chatKey);
+      setLiveLog(raw ? (JSON.parse(raw) as ChatMsg[]) : []);
+    } catch { setLiveLog([]); }
+  }, [chatKey]);
   useEffect(() => {
     if (chatScrollRef.current) chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
   }, [liveLog, chatBusy]);
@@ -275,13 +318,17 @@ export default function NicheSiteTemplate() {
       {/* Top rail */}
       <div style={{ borderBottom: "1px solid rgba(4,44,83,0.06)", padding: "0 20px" }}>
         <div style={{ maxWidth: 1080, margin: "0 auto", padding: "18px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            aria-label={`${company} — back to top`}
+            style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: 0 }}
+          >
             <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true">
               <path d="M16 2 L30 16 L16 30 L2 16 Z" fill="none" stroke={A} strokeWidth="2.5" />
               <path d="M16 8 L24 16 L16 24 L8 16 Z" fill={A} />
             </svg>
             <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.01em", color: "#042C53" }}>{company}</span>
-          </div>
+          </button>
           <button
             onClick={() => { document.getElementById("demo")?.scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => void playGreeting(), 400); void fireEvent("template_topnav_call", { niche: site.id }); }}
             style={{ fontSize: 13, fontWeight: 600, color: A, textDecoration: "none", background: "none", border: "none", cursor: "pointer", padding: 0 }}
@@ -474,7 +521,11 @@ export default function NicheSiteTemplate() {
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 11, fontWeight: 700, color: A, padding: "5px 11px", borderRadius: 999, background: hexA(A, 0.1), ...MONO }}>
                   <span style={{ width: 6, height: 6, borderRadius: 999, background: A, display: "inline-block" }} /> CHAT · LIVE
                 </span>
-                <span style={{ fontSize: 11, color: "#94A3B8", ...MONO }}>WEB + SMS</span>
+                {liveLog.length > 0 ? (
+                  <button onClick={() => setLiveLog([])} style={{ fontSize: 11, color: "#94A3B8", background: "none", border: "none", cursor: "pointer", textDecoration: "underline", padding: 0, ...MONO }}>CLEAR</button>
+                ) : (
+                  <span style={{ fontSize: 11, color: "#94A3B8", ...MONO }}>WEB + SMS</span>
+                )}
               </div>
               <div ref={chatScrollRef} style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1, maxHeight: 360, overflowY: "auto", paddingRight: 4 }}>
                 {displayLog.map((m, i) => {

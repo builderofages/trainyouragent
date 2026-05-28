@@ -17,6 +17,9 @@ export type SendEmailInput = {
   from?: string;
   replyTo?: string;
   tag?: string;
+  /** Custom RFC 5322 headers. Use for List-Unsubscribe so Gmail/Outlook
+   *  surface the native one-click "Unsubscribe" button. */
+  headers?: Record<string, string>;
 };
 
 export type SendEmailResult = {
@@ -49,6 +52,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
         text: input.text || stripHtml(input.html),
         reply_to: input.replyTo || REPLY_TO,
         tags: input.tag ? [{ name: "category", value: input.tag }] : undefined,
+        headers: input.headers,
       }),
     });
     if (!res.ok) {

@@ -17,6 +17,7 @@
 import { getSupabase, supabaseConfigured } from "../_lib/supabase.js";
 import { sendEmail } from "../_lib/resend.js";
 import { checkAdmin } from "../_lib/admin-auth.js";
+import { signTag } from "../_lib/sign.js";
 
 export const config = { runtime: "edge" };
 
@@ -39,7 +40,8 @@ type SendRow = {
 
 type Template = "day3" | "day7";
 
-function renderEmail(co: string, template: Template, niche_label: string, link: string, opened: boolean): { subject: string; html: string } {
+function renderEmail(co: string, template: Template, niche_label: string, link: string, opened: boolean, unsubLink: string): { subject: string; html: string } {
+  const unsubFoot = `<p style="margin-top:28px;font-size:12px;color:#94A3B8;line-height:1.5">Not interested? <a href="${unsubLink}" style="color:#94A3B8;text-decoration:underline">One-click unsubscribe</a> — or reply STOP and I'll remove you manually.</p>`;
   if (template === "day3") {
     return {
       subject: `${co} — quick follow-up on your ${niche_label.toLowerCase()} site`,
@@ -48,8 +50,8 @@ function renderEmail(co: string, template: Template, niche_label: string, link: 
 <p>${opened ? `Saw you opened the preview I built for ${co}` : `Sent over a free preview site for ${co} a few days ago`} — wanted to make sure you didn't miss it.</p>
 <p>The short version: it's a real ${niche_label.toLowerCase()} site with an AI phone line that answers 24/7 and books work automatically. Most operators in your space lose 30-50% of their inbound to voicemail — this is the line that catches it.</p>
 <p><a href="${link}" style="display:inline-block;padding:11px 22px;border-radius:10px;background:#042C53;color:#fff;text-decoration:none;font-weight:600;">Take another look →</a></p>
-<p>If it's not for you, no worries — reply STOP and I'll remove you.</p>
 <p>— Alexander<br/>TrainYourAgent</p>
+${unsubFoot}
 </div>`,
     };
   }
@@ -62,6 +64,7 @@ function renderEmail(co: string, template: Template, niche_label: string, link: 
 <p><a href="${link}" style="display:inline-block;padding:11px 22px;border-radius:10px;background:#042C53;color:#fff;text-decoration:none;font-weight:600;">${co}'s preview →</a></p>
 <p>${opened ? `(You opened it on day 0 — figured I'd resurface in case it got buried.)` : `(Quick 60-second look. No deck, no spam.)`}</p>
 <p>— Alexander<br/>TrainYourAgent</p>
+${unsubFoot}
 </div>`,
   };
 }
@@ -128,7 +131,9 @@ export default async function handler(req: Request): Promise<Response> {
     const link  = buildLink(r.prospect_company, r.prospect_city, r.niche);
     const co    = r.prospect_company;
     const label = r.niche_label || r.niche;
-    const { subject, html } = renderEmail(co, template, label, link, !!r.opened_at);
+    const sig   = await signTag(r.id, process.env.ADMIN_TOKEN || "");
+    const unsub = `${SITE_ORIGIN}/api/template-optout?id=${encodeURIComponent(r.id)}&sig=${sig}`;
+    const { subject, html } = renderEmail(co, template, label, link, !!r.opened_at, unsub);
 
     try {
       const res = await sendEmail({
@@ -137,6 +142,15 @@ export default async function handler(req: Request): Promise<Response> {
         subject,
         html,
         replyTo: "trainyouragent@gmail.com",
+        tag: `template-nurture-${template}`,
+        // RFC 8058: one-click unsubscribe — Gmail/Outlook surface a native
+        // "Unsubscribe" button next to the sender name. POST handler at
+        // /api/template-optout accepts both GET (in-body click) and POST
+        // (the List-Unsubscribe-Post one-click flow).
+        headers: {
+          "List-Unsubscribe": `<${unsub}>, <mailto:trainyouragent@gmail.com?subject=unsubscribe>`,
+          "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+        },
       });
       if (!res.ok) {
         out.push({ id: r.id, template, result: "error", reason: res.error || "resend-failed" });

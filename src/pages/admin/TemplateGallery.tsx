@@ -369,6 +369,43 @@ export default function TemplateGallery() {
     else text = bulkRows.map((r) => `--- ${r.co} ---\n${r.dm}`).join("\n\n");
     navigator.clipboard.writeText(text).then(() => blink("bulk", kind)).catch(() => {});
   }
+  const [bulkQueueState, setBulkQueueState] = useState<"idle" | "firing" | "done" | "noToken">("idle");
+  const [bulkQueueProgress, setBulkQueueProgress] = useState<{ sent: number; failed: number }>({ sent: 0, failed: 0 });
+  async function queueAllToServer() {
+    if (bulkRows.length === 0) return;
+    if (!adminToken.trim()) { setBulkQueueState("noToken"); setTimeout(() => setBulkQueueState("idle"), 2400); return; }
+    const niche = NICHE_SITES.find((x) => x.id === bulkNiche);
+    if (!niche) return;
+    setBulkQueueState("firing");
+    setBulkQueueProgress({ sent: 0, failed: 0 });
+    let sent = 0, failed = 0;
+    // Sequential to avoid hammering the Supabase service-role; tiny stagger
+    // between inserts.
+    for (const r of bulkRows) {
+      try {
+        const res = await fetch(`/api/template-send?token=${encodeURIComponent(adminToken.trim())}`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            prospect_company: r.co,
+            prospect_city: city.trim(),
+            prospect_email: "",   // bulk paste is name-only by design
+            prospect_phone: "",
+            niche: niche.id,
+            niche_label: niche.niche,
+            channel: "bulk-queue",
+          }),
+          keepalive: true,
+        });
+        if (res.ok) sent++; else failed++;
+      } catch { failed++; }
+      setBulkQueueProgress({ sent, failed });
+    }
+    void fireEvent("tg_bulk_queue", { count: bulkRows.length, niche: niche.id });
+    setBulkQueueState("done");
+    refreshActivity();
+    setTimeout(() => setBulkQueueState("idle"), 4000);
+  }
 
   // ─── unlock screen ────────────────────────────────────────────────────
   if (!unlocked) {
@@ -703,10 +740,27 @@ export default function TemplateGallery() {
               <div>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
                   <span style={{ fontSize: 11, fontWeight: 700, color: "#6B7B92", ...MONO }}>OUTPUT · {bulkRows.length} ROW{bulkRows.length === 1 ? "" : "S"}</span>
-                  <div style={{ display: "flex", gap: 6 }}>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                     <BulkBtn onClick={() => copyBulk("links")} disabled={!bulkRows.length}>{flash === "bulk|links" ? "Copied ✓" : "Copy links"}</BulkBtn>
                     <BulkBtn onClick={() => copyBulk("csv")} disabled={!bulkRows.length}>{flash === "bulk|csv" ? "Copied ✓" : "Copy CSV"}</BulkBtn>
                     <BulkBtn onClick={() => copyBulk("dms")} disabled={!bulkRows.length}>{flash === "bulk|dms" ? "Copied ✓" : "Copy DMs"}</BulkBtn>
+                    <button
+                      onClick={queueAllToServer}
+                      disabled={!bulkRows.length || bulkQueueState === "firing"}
+                      title={adminToken.trim() ? "Log every prospect to the server so the nurture cron picks them up. You still send the DM yourself — this just primes the follow-up sequence." : "Paste ADMIN_TOKEN above first"}
+                      style={{
+                        padding: "7px 11px", borderRadius: 10,
+                        background: !bulkRows.length || bulkQueueState === "firing" ? "#F1F5F9" : "#15724D",
+                        color: !bulkRows.length || bulkQueueState === "firing" ? "#94A3B8" : "#fff",
+                        fontSize: 12, fontWeight: 600, border: "none",
+                        cursor: !bulkRows.length || bulkQueueState === "firing" ? "not-allowed" : "pointer",
+                      }}
+                    >
+                      {bulkQueueState === "firing" ? `Logging ${bulkQueueProgress.sent}/${bulkRows.length}…`
+                        : bulkQueueState === "done" ? `Queued ${bulkQueueProgress.sent}${bulkQueueProgress.failed ? ` (${bulkQueueProgress.failed} failed)` : ""} ✓`
+                        : bulkQueueState === "noToken" ? "Need ADMIN_TOKEN"
+                        : "Queue all to server"}
+                    </button>
                   </div>
                 </div>
                 <div style={{ background: "#fff", border: "1px solid rgba(4,44,83,0.12)", borderRadius: 12, padding: 12, height: 254, overflowY: "auto", fontSize: 12.5, color: "#42526E", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}>
