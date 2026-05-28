@@ -192,7 +192,13 @@ export default function FooterV44() {
           )}
         </div>
 
-        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between text-[12.5px] text-white/65">
+        {/* v197 — sister-site nod. Tiny line, no logo, no chest-thumping.
+             TYA is the focus; CNNCT just gets a quiet acknowledgement. */}
+        <div className="mt-10 pt-5 border-t border-white/10 text-[12px] text-white/45">
+          Sister community — <Link to="/cnnct" className="hover:text-white/80 underline decoration-white/20 underline-offset-2">CNNCT.ai</Link>
+        </div>
+
+        <div className="mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between text-[12.5px] text-white/65">
           <div>© {new Date().getFullYear()} TrainYourAgent LLC · Tampa Bay, FL · Built by humans</div>
           <div className="flex flex-wrap gap-4">
             <Link to="/legal/privacy" className="hover:text-white min-h-[24px] inline-block">Privacy</Link>

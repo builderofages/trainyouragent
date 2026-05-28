@@ -35,6 +35,7 @@ import LegalRedirect from "@/components/legal/LegalRedirect";
 const Dashboard           = lazyWithReload(() => import("./pages/Dashboard"));
 const NicheSiteTemplate   = lazyWithReload(() => import("./pages/NicheSiteTemplate"));
 const TemplateGallery     = lazyWithReload(() => import("./pages/admin/TemplateGallery"));
+const Cnnct               = lazyWithReload(() => import("./pages/Cnnct"));
 const HQ                  = lazyWithReload(() => import("./pages/HQ"));
 const NicheLanding        = lazyWithReload(() => import("./pages/NicheLanding"));
 const Vertical            = lazyWithReload(() => import("./pages/VerticalPage"));
@@ -377,6 +378,8 @@ const App = () => {
             {/* v180: niche "free website" template engine + admin gallery */}
             <Route path="/template/:niche" element={<NicheSiteTemplate />} />
             <Route path="/admin/templates" element={<TemplateGallery />} />
+            {/* v197: discrete sister-site nod — intentionally NOT in main nav */}
+            <Route path="/cnnct" element={<Cnnct />} />
             {/* v181: unified TYA-HQ ops dashboard (overview/leads/sites/outreach/ventures) */}
             <Route path="/hq" element={<HQ />} />
             <Route path="/accounting" element={<Vertical />} />
