@@ -175,6 +175,17 @@ export default function NicheSiteTemplate() {
         <title>{company} — {site.niche}</title>
         <meta name="robots" content="noindex, nofollow" />
         <meta name="description" content={`${company}: ${site.subhead}`} />
+        <meta property="og:title" content={`${company} — ${site.niche}`} />
+        <meta property="og:description" content={site.subhead} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={shareUrl} />
+        <meta property="og:image" content={`/api/og?title=${encodeURIComponent(company + ' — ' + site.niche)}&subtitle=${encodeURIComponent(city !== 'your area' ? city : site.heroLead + ' ' + site.heroItalic)}&badge=${encodeURIComponent(site.niche.toUpperCase())}&type=page`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${company} — ${site.niche}`} />
+        <meta name="twitter:description" content={site.subhead} />
+        <meta name="twitter:image" content={`/api/og?title=${encodeURIComponent(company + ' — ' + site.niche)}&subtitle=${encodeURIComponent(city !== 'your area' ? city : site.heroLead + ' ' + site.heroItalic)}&badge=${encodeURIComponent(site.niche.toUpperCase())}&type=page`} />
       </Helmet>
 
       {/* Top rail */}
