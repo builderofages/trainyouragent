@@ -7,7 +7,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { NICHE_SITES } from "@/lib/nicheSiteTemplates";
+import { NICHE_SITES, type NicheSite } from "@/lib/nicheSiteTemplates";
 
 const ITALIC: React.CSSProperties = {
   fontFamily: "'Playfair Display', Georgia, serif",
@@ -22,7 +22,7 @@ const MONO: React.CSSProperties = {
 export default function TemplateGallery() {
   const [company, setCompany] = useState("");
   const [city, setCity] = useState("");
-  const [copied, setCopied] = useState<string | null>(null);
+  const [copied, setCopied] = useState<string | null>(null); // id+"|"+kind
   const [query, setQuery] = useState("");
 
   const q = query.trim().toLowerCase();
@@ -46,10 +46,20 @@ export default function TemplateGallery() {
     return `${origin}/template/${id}${qs ? `?${qs}` : ""}`;
   }
 
-  async function copy(id: string) {
+  function buildDm(n: NicheSite): string {
+    const co = company.trim() || n.defaultCompany;
+    const cityPart = city.trim() ? ` in ${city.trim()}` : "";
+    return [
+      `${co} — built you a free preview of what a 2026 ${n.niche.toLowerCase()} site looks like, with an AI phone line that answers 24/7 and books ${n.chips[0].toLowerCase()} automatically. Stops the after-hours bleed${cityPart}.`,
+      "",
+      `60-sec look: ${buildUrl(n.id)}`,
+    ].join("\n");
+  }
+
+  async function copyText(id: string, kind: "link" | "dm", text: string) {
     try {
-      await navigator.clipboard.writeText(buildUrl(id));
-      setCopied(id);
+      await navigator.clipboard.writeText(text);
+      setCopied(`${id}|${kind}`);
       setTimeout(() => setCopied(null), 1600);
     } catch {
       /* clipboard blocked — link is still visible via Open */
@@ -154,20 +164,29 @@ export default function TemplateGallery() {
                     <span key={c} style={{ fontSize: 11, fontWeight: 600, color: "#042C53", padding: "4px 9px", borderRadius: 999, background: "#F1F5F9" }}>{c}</span>
                   ))}
                 </div>
-                <div style={{ marginTop: "auto", display: "flex", gap: 8, paddingTop: 6 }}>
-                  <a
-                    href={buildUrl(n.id)}
-                    target="_blank"
-                    rel="noopener"
-                    style={{ flex: 1, textAlign: "center", padding: "11px 14px", borderRadius: 12, background: "#042C53", color: "#fff", fontSize: 13.5, fontWeight: 600, textDecoration: "none" }}
-                  >
-                    Open site →
-                  </a>
+                <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 6, paddingTop: 6 }}>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <a
+                      href={buildUrl(n.id)}
+                      target="_blank"
+                      rel="noopener"
+                      style={{ flex: 1, textAlign: "center", padding: "11px 14px", borderRadius: 12, background: "#042C53", color: "#fff", fontSize: 13.5, fontWeight: 600, textDecoration: "none" }}
+                    >
+                      Open site →
+                    </a>
+                    <button
+                      onClick={() => copyText(n.id, "dm", buildDm(n))}
+                      title="Copy a ready-to-send LinkedIn/SMS message with this link"
+                      style={{ padding: "11px 14px", borderRadius: 12, background: n.accent, color: "#fff", fontSize: 13.5, fontWeight: 600, border: "none", cursor: "pointer", minWidth: 96 }}
+                    >
+                      {copied === `${n.id}|dm` ? "Copied ✓" : "Copy DM"}
+                    </button>
+                  </div>
                   <button
-                    onClick={() => copy(n.id)}
-                    style={{ padding: "11px 14px", borderRadius: 12, background: "#fff", color: "#042C53", fontSize: 13.5, fontWeight: 600, border: "1px solid rgba(4,44,83,0.16)", cursor: "pointer", minWidth: 92 }}
+                    onClick={() => copyText(n.id, "link", buildUrl(n.id))}
+                    style={{ padding: "2px 0", background: "none", color: "#6B7B92", fontSize: 11.5, fontWeight: 500, border: "none", cursor: "pointer", textAlign: "right", textDecoration: "underline" }}
                   >
-                    {copied === n.id ? "Copied ✓" : "Copy link"}
+                    {copied === `${n.id}|link` ? "Link copied ✓" : "or copy link only"}
                   </button>
                 </div>
               </div>
