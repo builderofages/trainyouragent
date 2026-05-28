@@ -9,10 +9,11 @@
 // VOICE AGENT demo card · CHATBOT demo card · pricing CTA · footer.
 // No SiteNav (this is a standalone client-facing asset, not part of the marketing site).
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { getNicheSite, NICHE_SITES } from "@/lib/nicheSiteTemplates";
+import { fireEvent } from "@/lib/event";
 
 const ITALIC: React.CSSProperties = {
   fontFamily: "'Playfair Display', Georgia, serif",
@@ -55,6 +56,7 @@ export default function NicheSiteTemplate() {
     if (!personalizedGreeting) return;
     if (voiceState === "loading" || voiceState === "playing") return;
     setVoiceState("loading");
+    void fireEvent("template_voice_played", { niche: site?.id || "", company });
     try {
       const r = await fetch("/api/tts", {
         method: "POST",
@@ -80,6 +82,76 @@ export default function NicheSiteTemplate() {
   const qrUrl = shareUrl
     ? `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&data=${encodeURIComponent(shareUrl)}`
     : "";
+
+  // ── live chat (real /api/chat back-end, in-character as the prospect's biz) ──
+  type ChatMsg = { role: "user" | "assistant"; content: string };
+  const seedMessages = useMemo<ChatMsg[]>(
+    () =>
+      (site?.chat || []).map((m) => ({
+        role: m.from === "customer" ? "user" : "assistant",
+        content: m.text,
+      })),
+    [site],
+  );
+  const [chatLog, setChatLog] = useState<ChatMsg[]>(seedMessages);
+  const [chatInput, setChatInput] = useState("");
+  const [chatBusy, setChatBusy] = useState(false);
+  const chatScrollRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    // reset transcript when niche changes
+    setChatLog(seedMessages);
+  }, [seedMessages]);
+  useEffect(() => {
+    if (chatScrollRef.current) chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+  }, [chatLog, chatBusy]);
+  async function sendChat(e?: React.FormEvent) {
+    if (e) e.preventDefault();
+    const text = chatInput.trim();
+    if (!text || chatBusy) return;
+    const nextLog: ChatMsg[] = [...chatLog, { role: "user", content: text }];
+    setChatLog(nextLog);
+    setChatInput("");
+    setChatBusy(true);
+    void fireEvent("template_chat_sent", { niche: site?.id || "", company });
+    try {
+      const chipsCtx = site ? `Services: ${site.chips.join(", ")}. Greeting style: ${site.voiceGreeting.replace(/\{co\}/g, company)}` : "";
+      const r = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          messages: nextLog.slice(-12),
+          custom_system: {
+            business_name: company,
+            industry: site?.id || "",
+            context: chipsCtx.slice(0, 600),
+          },
+        }),
+      });
+      const reply = (await r.text()) || "Sorry — just had a hiccup. Try again?";
+      setChatLog((prev) => [...prev, { role: "assistant", content: reply }]);
+    } catch {
+      setChatLog((prev) => [...prev, { role: "assistant", content: "Connection blip. Try again in a moment." }]);
+    } finally {
+      setChatBusy(false);
+    }
+  }
+
+  // ── analytics ─────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!site) return;
+    void fireEvent("template_view", { niche: site.id, company, city });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [site?.id]);
+
+  // ── pre-fill Cal.com booking with prospect info ───────────────────────
+  const calUrl = useMemo(() => {
+    const base = "https://cal.com/trainyouragent/30min";
+    if (!site) return base;
+    const p = new URLSearchParams();
+    if (company && company !== "Your Business") p.set("name", company);
+    p.set("notes", `Niche: ${site.niche}${city && city !== "your area" ? " · " + city : ""}`);
+    return `${base}?${p.toString()}`;
+  }, [site, company, city]);
 
   if (!site) {
     return (
@@ -266,32 +338,55 @@ export default function NicheSiteTemplate() {
                 </span>
                 <span style={{ fontSize: 11, color: "#94A3B8", ...MONO }}>WEB + SMS</span>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
-                {site.chat.map((m, i) => (
-                  <div key={i} style={{ alignSelf: m.from === "customer" ? "flex-end" : "flex-start", maxWidth: "82%" }}>
+              <div ref={chatScrollRef} style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1, maxHeight: 360, overflowY: "auto", paddingRight: 4 }}>
+                {chatLog.map((m, i) => (
+                  <div key={i} style={{ alignSelf: m.role === "user" ? "flex-end" : "flex-start", maxWidth: "82%" }}>
                     <div
                       style={{
                         fontSize: 14, lineHeight: 1.45, padding: "10px 14px", borderRadius: 16,
-                        background: m.from === "customer" ? "#042C53" : "#F1F5F9",
-                        color: m.from === "customer" ? "#fff" : "#0B1B2B",
-                        borderBottomRightRadius: m.from === "customer" ? 4 : 16,
-                        borderBottomLeftRadius: m.from === "agent" ? 4 : 16,
+                        background: m.role === "user" ? "#042C53" : "#F1F5F9",
+                        color: m.role === "user" ? "#fff" : "#0B1B2B",
+                        borderBottomRightRadius: m.role === "user" ? 4 : 16,
+                        borderBottomLeftRadius: m.role === "assistant" ? 4 : 16,
+                        whiteSpace: "pre-wrap",
                       }}
                     >
-                      {m.text}
+                      {m.content}
                     </div>
-                    <div style={{ fontSize: 10, color: "#94A3B8", marginTop: 3, textAlign: m.from === "customer" ? "right" : "left", ...MONO }}>
-                      {m.from === "customer" ? "CUSTOMER" : company.toUpperCase()}
+                    <div style={{ fontSize: 10, color: "#94A3B8", marginTop: 3, textAlign: m.role === "user" ? "right" : "left", ...MONO }}>
+                      {m.role === "user" ? "CUSTOMER" : company.toUpperCase()}
                     </div>
                   </div>
                 ))}
+                {chatBusy && (
+                  <div style={{ alignSelf: "flex-start", maxWidth: "82%" }}>
+                    <div style={{ fontSize: 14, padding: "10px 14px", borderRadius: 16, background: "#F1F5F9", color: "#94A3B8", borderBottomLeftRadius: 4 }}>
+                      <span style={{ display: "inline-block", animation: "tyaDot 1.2s infinite" }}>•</span>
+                      <span style={{ display: "inline-block", animation: "tyaDot 1.2s infinite 0.2s" }}>•</span>
+                      <span style={{ display: "inline-block", animation: "tyaDot 1.2s infinite 0.4s" }}>•</span>
+                    </div>
+                    <div style={{ fontSize: 10, color: "#94A3B8", marginTop: 3, ...MONO }}>{company.toUpperCase()}</div>
+                  </div>
+                )}
               </div>
-              <div style={{ marginTop: 16, display: "flex", gap: 8, alignItems: "center", border: "1px solid rgba(4,44,83,0.1)", borderRadius: 12, padding: "10px 14px", background: "#FAFBFC" }}>
-                <span style={{ fontSize: 13.5, color: "#94A3B8", flex: 1 }}>Type a message…</span>
-                <span style={{ width: 28, height: 28, borderRadius: 8, background: A, display: "grid", placeItems: "center" }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z" /></svg>
-                </span>
-              </div>
+              <style>{`@keyframes tyaDot{0%,80%,100%{opacity:.2}40%{opacity:1}}`}</style>
+              <form onSubmit={sendChat} style={{ marginTop: 16, display: "flex", gap: 8, alignItems: "center", border: "1px solid rgba(4,44,83,0.1)", borderRadius: 12, padding: "8px 10px 8px 14px", background: "#FAFBFC" }}>
+                <input
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  placeholder="Type a message…"
+                  disabled={chatBusy}
+                  style={{ flex: 1, border: "none", outline: "none", background: "transparent", fontSize: 14, color: "#0B1B2B", padding: "6px 0" }}
+                />
+                <button
+                  type="submit"
+                  disabled={!chatInput.trim() || chatBusy}
+                  aria-label="Send"
+                  style={{ width: 34, height: 34, borderRadius: 9, background: A, border: "none", cursor: chatBusy || !chatInput.trim() ? "not-allowed" : "pointer", display: "grid", placeItems: "center", opacity: !chatInput.trim() || chatBusy ? 0.5 : 1 }}
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2z" /></svg>
+                </button>
+              </form>
             </div>
           </div>
         </div>
@@ -305,7 +400,13 @@ export default function NicheSiteTemplate() {
             <span style={{ ...ITALIC, color: A, display: "block", marginTop: 6 }}>Put {company.split(" ")[0]} on autopilot.</span>
           </h2>
           <p style={{ fontSize: 16, lineHeight: 1.6, color: "#42526E", marginBottom: 28 }}>{site.priceLine}</p>
-          <a href="https://cal.com/trainyouragent/30min" target="_blank" rel="noopener" style={{ display: "inline-flex", padding: "18px 36px", borderRadius: 16, background: "#042C53", color: "#fff", fontSize: 17, fontWeight: 600, textDecoration: "none", boxShadow: "0 30px 64px -26px rgba(4,44,83,0.55)" }}>
+          <a
+            href={calUrl}
+            target="_blank"
+            rel="noopener"
+            onClick={() => void fireEvent("template_cta_click", { niche: site.id, company })}
+            style={{ display: "inline-flex", padding: "18px 36px", borderRadius: 16, background: "#042C53", color: "#fff", fontSize: 17, fontWeight: 600, textDecoration: "none", boxShadow: "0 30px 64px -26px rgba(4,44,83,0.55)" }}
+          >
             Book your 15-min build call →
           </a>
           {qrUrl && (

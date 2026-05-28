@@ -18,6 +18,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { NICHE_SITES, type NicheSite } from "@/lib/nicheSiteTemplates";
+import { fireEvent } from "@/lib/event";
 
 const ITALIC: React.CSSProperties = {
   fontFamily: "'Playfair Display', Georgia, serif",
@@ -167,20 +168,23 @@ export default function TemplateGallery() {
     setTimeout(() => setFlash(null), 1600);
   }
   async function copyText(id: string, kind: string, text: string) {
-    try { await navigator.clipboard.writeText(text); blink(id, kind); pushRecent(); } catch { /* clipboard blocked */ }
+    try { await navigator.clipboard.writeText(text); blink(id, kind); pushRecent(); void fireEvent("tg_copy", { kind, niche: id, company: company.trim() }); } catch { /* clipboard blocked */ }
   }
   function openSite(id: string) {
     pushRecent();
+    void fireEvent("tg_open_site", { niche: id, company: company.trim() });
     window.open(buildUrl(id), "_blank", "noopener");
   }
   function openEmail(n: NicheSite) {
     pushRecent();
+    void fireEvent("tg_send_email", { niche: n.id, company: company.trim() });
     const to = email.trim();
     const url = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(buildEmailSubject(n))}&body=${encodeURIComponent(buildEmailBody(n))}`;
     window.location.href = url;
   }
   function openSms(n: NicheSite) {
     pushRecent();
+    void fireEvent("tg_send_sms", { niche: n.id, company: company.trim() });
     const num = phone.trim().replace(/[^\d+]/g, "");
     // iOS uses `sms:NUMBER&body=`; Android uses `sms:NUMBER?body=`. The ? form
     // works on both modern iOS and Android; the & form breaks on Android.
