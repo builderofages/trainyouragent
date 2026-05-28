@@ -198,6 +198,8 @@ const ALLOWED_SOURCES = new Set([
   "founding-cohort",
   "vertical-cta",
   "alternative-cta",
+  // v190: niche-template close tool — prospect can request callback w/o booking Cal
+  "template-callback",
   "test",
 ]);
 

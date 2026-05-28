@@ -27,8 +27,9 @@ const MONO: React.CSSProperties = {
 
 export default function NicheSiteTemplate() {
   const { niche } = useParams<{ niche: string }>();
-  const [sp] = useSearchParams();
+  const [sp, setSp] = useSearchParams();
   const site = getNicheSite(niche);
+  const hasCompanyParam = !!sp.get("company")?.trim();
 
   // Live "$ lost" ticker for the pain block
   const [secs, setSecs] = useState(0);
@@ -51,10 +52,20 @@ export default function NicheSiteTemplate() {
 
   // ── live voice playback (TAP TO TALK) ──────────────────────────────────
   const [voiceState, setVoiceState] = useState<"idle" | "loading" | "playing" | "error">("idle");
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioUrlRef = useRef<string | null>(null);
   const personalizedGreeting = (site?.voiceGreeting || "").replace(/\{co\}/g, company);
+  function stopVoice() {
+    const a = audioRef.current;
+    if (a) { try { a.pause(); a.currentTime = 0; } catch { /* noop */ } }
+    if (audioUrlRef.current) { URL.revokeObjectURL(audioUrlRef.current); audioUrlRef.current = null; }
+    audioRef.current = null;
+    setVoiceState("idle");
+  }
   async function playGreeting() {
     if (!personalizedGreeting) return;
-    if (voiceState === "loading" || voiceState === "playing") return;
+    if (voiceState === "playing") { stopVoice(); return; }
+    if (voiceState === "loading") return;
     setVoiceState("loading");
     void fireEvent("template_voice_played", { niche: site?.id || "", company });
     try {
@@ -66,9 +77,11 @@ export default function NicheSiteTemplate() {
       if (!r.ok) throw new Error("tts-" + r.status);
       const blob = await r.blob();
       const url = URL.createObjectURL(blob);
+      audioUrlRef.current = url;
       const audio = new Audio(url);
-      audio.onended = () => { setVoiceState("idle"); URL.revokeObjectURL(url); };
-      audio.onerror = () => { setVoiceState("error"); URL.revokeObjectURL(url); };
+      audioRef.current = audio;
+      audio.onended = () => { setVoiceState("idle"); if (audioUrlRef.current === url) { URL.revokeObjectURL(url); audioUrlRef.current = null; } audioRef.current = null; };
+      audio.onerror = () => { setVoiceState("error"); if (audioUrlRef.current === url) { URL.revokeObjectURL(url); audioUrlRef.current = null; } audioRef.current = null; };
       setVoiceState("playing");
       await audio.play();
     } catch {
@@ -76,14 +89,23 @@ export default function NicheSiteTemplate() {
       setTimeout(() => setVoiceState("idle"), 2400);
     }
   }
+  useEffect(() => () => stopVoice(), []); // cleanup on unmount
 
-  // ── QR code for in-person handouts ────────────────────────────────────
+  // ── QR code + absolute share URL (for OG image crawlers) ─────────────
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://www.trainyouragent.com";
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
   const qrUrl = shareUrl
     ? `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&data=${encodeURIComponent(shareUrl)}`
     : "";
+  const ogImage = site
+    ? `${origin}/api/og?title=${encodeURIComponent(company + ' — ' + site.niche)}&subtitle=${encodeURIComponent(city !== 'your area' ? city : site.heroLead + ' ' + site.heroItalic)}&badge=${encodeURIComponent(site.niche.toUpperCase())}&type=page`
+    : `${origin}/og-default.png`;
 
   // ── live chat (real /api/chat back-end, in-character as the prospect's biz) ──
+  // Bug fix: seed transcript is DISPLAY ONLY. The API only sees real new
+  // messages, otherwise the LLM thinks the example conversation actually
+  // happened and may answer the seed customer's question instead of the
+  // visitor's. Display = seed + actual. API = actual only.
   type ChatMsg = { role: "user" | "assistant"; content: string };
   const seedMessages = useMemo<ChatMsg[]>(
     () =>
@@ -93,33 +115,32 @@ export default function NicheSiteTemplate() {
       })),
     [site],
   );
-  const [chatLog, setChatLog] = useState<ChatMsg[]>(seedMessages);
+  const [liveLog, setLiveLog] = useState<ChatMsg[]>([]);
+  const displayLog = useMemo(() => [...seedMessages, ...liveLog], [seedMessages, liveLog]);
+  const seedLen = seedMessages.length;
   const [chatInput, setChatInput] = useState("");
   const [chatBusy, setChatBusy] = useState(false);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    // reset transcript when niche changes
-    setChatLog(seedMessages);
-  }, [seedMessages]);
+  useEffect(() => { setLiveLog([]); }, [seedMessages]); // reset when niche changes
   useEffect(() => {
     if (chatScrollRef.current) chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
-  }, [chatLog, chatBusy]);
+  }, [liveLog, chatBusy]);
   async function sendChat(e?: React.FormEvent) {
     if (e) e.preventDefault();
     const text = chatInput.trim();
     if (!text || chatBusy) return;
-    const nextLog: ChatMsg[] = [...chatLog, { role: "user", content: text }];
-    setChatLog(nextLog);
+    const nextLive: ChatMsg[] = [...liveLog, { role: "user", content: text }];
+    setLiveLog(nextLive);
     setChatInput("");
     setChatBusy(true);
     void fireEvent("template_chat_sent", { niche: site?.id || "", company });
     try {
-      const chipsCtx = site ? `Services: ${site.chips.join(", ")}. Greeting style: ${site.voiceGreeting.replace(/\{co\}/g, company)}` : "";
+      const chipsCtx = site ? `Services: ${site.chips.join(", ")}. ${site.subhead}` : "";
       const r = await fetch("/api/chat", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          messages: nextLog.slice(-12),
+          messages: nextLive.slice(-12),
           custom_system: {
             business_name: company,
             industry: site?.id || "",
@@ -128,11 +149,60 @@ export default function NicheSiteTemplate() {
         }),
       });
       const reply = (await r.text()) || "Sorry — just had a hiccup. Try again?";
-      setChatLog((prev) => [...prev, { role: "assistant", content: reply }]);
+      setLiveLog((prev) => [...prev, { role: "assistant", content: reply }]);
     } catch {
-      setChatLog((prev) => [...prev, { role: "assistant", content: "Connection blip. Try again in a moment." }]);
+      setLiveLog((prev) => [...prev, { role: "assistant", content: "Connection blip. Try again in a moment." }]);
     } finally {
       setChatBusy(false);
+    }
+  }
+
+  // ── self-service personalize (shown only when ?company= missing) ─────
+  const [personalizeInput, setPersonalizeInput] = useState("");
+  const [personalizeCity, setPersonalizeCity] = useState("");
+  function applyPersonalize(e: React.FormEvent) {
+    e.preventDefault();
+    const co = personalizeInput.trim();
+    if (!co) return;
+    const next = new URLSearchParams(sp);
+    next.set("company", co);
+    if (personalizeCity.trim()) next.set("city", personalizeCity.trim());
+    setSp(next, { replace: true });
+    void fireEvent("template_personalized", { niche: site?.id || "", company: co });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // ── lead capture (backup when prospect won't book Cal) ───────────────
+  const [leadEmail, setLeadEmail] = useState("");
+  const [leadPhone, setLeadPhone] = useState("");
+  const [leadName, setLeadName] = useState("");
+  const [leadState, setLeadState] = useState<"idle" | "sending" | "ok" | "err">("idle");
+  async function submitLead(e: React.FormEvent) {
+    e.preventDefault();
+    if (leadState === "sending" || leadState === "ok") return;
+    const em = leadEmail.trim();
+    const ph = leadPhone.trim();
+    if (!em && !ph) return;
+    setLeadState("sending");
+    void fireEvent("template_lead_submit", { niche: site?.id || "", company });
+    try {
+      const r = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          source: "template-callback",
+          email: em || `noemail+${Date.now()}@template-callback.local`,
+          name: leadName.trim() || company,
+          company,
+          phone: ph,
+          payload: { niche: site?.id, niche_label: site?.niche, city, prospect_company: company },
+        }),
+      });
+      if (!r.ok) throw new Error("lead-" + r.status);
+      setLeadState("ok");
+    } catch {
+      setLeadState("err");
+      setTimeout(() => setLeadState("idle"), 3000);
     }
   }
 
@@ -179,13 +249,13 @@ export default function NicheSiteTemplate() {
         <meta property="og:description" content={site.subhead} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={shareUrl} />
-        <meta property="og:image" content={`/api/og?title=${encodeURIComponent(company + ' — ' + site.niche)}&subtitle=${encodeURIComponent(city !== 'your area' ? city : site.heroLead + ' ' + site.heroItalic)}&badge=${encodeURIComponent(site.niche.toUpperCase())}&type=page`} />
+        <meta property="og:image" content={ogImage} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`${company} — ${site.niche}`} />
         <meta name="twitter:description" content={site.subhead} />
-        <meta name="twitter:image" content={`/api/og?title=${encodeURIComponent(company + ' — ' + site.niche)}&subtitle=${encodeURIComponent(city !== 'your area' ? city : site.heroLead + ' ' + site.heroItalic)}&badge=${encodeURIComponent(site.niche.toUpperCase())}&type=page`} />
+        <meta name="twitter:image" content={ogImage} />
       </Helmet>
 
       {/* Top rail */}
@@ -203,6 +273,39 @@ export default function NicheSiteTemplate() {
           </a>
         </div>
       </div>
+
+      {/* Self-service personalize — only shown when no ?company= param */}
+      {!hasCompanyParam && (
+        <div style={{ background: `linear-gradient(90deg, ${hexA(A, 0.08)}, #FFF8EE)`, borderBottom: `1px solid ${hexA(A, 0.18)}`, padding: "12px 20px" }}>
+          <form
+            onSubmit={applyPersonalize}
+            style={{ maxWidth: 1080, margin: "0 auto", display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10, justifyContent: "center" }}
+          >
+            <span style={{ fontSize: 13.5, fontWeight: 600, color: "#042C53" }}>
+              This is a demo for <em style={{ ...ITALIC }}>{site.defaultCompany}</em>. See it with your business name →
+            </span>
+            <input
+              value={personalizeInput}
+              onChange={(e) => setPersonalizeInput(e.target.value)}
+              placeholder="Your business name"
+              style={{ padding: "8px 12px", borderRadius: 10, border: "1px solid rgba(4,44,83,0.18)", fontSize: 13.5, color: "#042C53", outline: "none", minWidth: 180, background: "#fff" }}
+            />
+            <input
+              value={personalizeCity}
+              onChange={(e) => setPersonalizeCity(e.target.value)}
+              placeholder="City (optional)"
+              style={{ padding: "8px 12px", borderRadius: 10, border: "1px solid rgba(4,44,83,0.18)", fontSize: 13.5, color: "#042C53", outline: "none", minWidth: 130, background: "#fff" }}
+            />
+            <button
+              type="submit"
+              disabled={!personalizeInput.trim()}
+              style={{ padding: "8px 16px", borderRadius: 10, background: A, color: "#fff", fontSize: 13.5, fontWeight: 600, border: "none", cursor: personalizeInput.trim() ? "pointer" : "not-allowed", opacity: personalizeInput.trim() ? 1 : 0.5 }}
+            >
+              Personalize
+            </button>
+          </form>
+        </div>
+      )}
 
       {/* HERO */}
       <header style={{ padding: "72px 20px 64px", background: `linear-gradient(180deg, ${hexA(A, 0.06)} 0%, #FAF6EE 55%, #FFFFFF 100%)` }}>
@@ -350,25 +453,28 @@ export default function NicheSiteTemplate() {
                 <span style={{ fontSize: 11, color: "#94A3B8", ...MONO }}>WEB + SMS</span>
               </div>
               <div ref={chatScrollRef} style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1, maxHeight: 360, overflowY: "auto", paddingRight: 4 }}>
-                {chatLog.map((m, i) => (
-                  <div key={i} style={{ alignSelf: m.role === "user" ? "flex-end" : "flex-start", maxWidth: "82%" }}>
-                    <div
-                      style={{
-                        fontSize: 14, lineHeight: 1.45, padding: "10px 14px", borderRadius: 16,
-                        background: m.role === "user" ? "#042C53" : "#F1F5F9",
-                        color: m.role === "user" ? "#fff" : "#0B1B2B",
-                        borderBottomRightRadius: m.role === "user" ? 4 : 16,
-                        borderBottomLeftRadius: m.role === "assistant" ? 4 : 16,
-                        whiteSpace: "pre-wrap",
-                      }}
-                    >
-                      {m.content}
+                {displayLog.map((m, i) => {
+                  const isSeed = i < seedLen;
+                  return (
+                    <div key={i} style={{ alignSelf: m.role === "user" ? "flex-end" : "flex-start", maxWidth: "82%", opacity: isSeed && liveLog.length > 0 ? 0.55 : 1 }}>
+                      <div
+                        style={{
+                          fontSize: 14, lineHeight: 1.45, padding: "10px 14px", borderRadius: 16,
+                          background: m.role === "user" ? "#042C53" : "#F1F5F9",
+                          color: m.role === "user" ? "#fff" : "#0B1B2B",
+                          borderBottomRightRadius: m.role === "user" ? 4 : 16,
+                          borderBottomLeftRadius: m.role === "assistant" ? 4 : 16,
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        {m.content}
+                      </div>
+                      <div style={{ fontSize: 10, color: "#94A3B8", marginTop: 3, textAlign: m.role === "user" ? "right" : "left", ...MONO }}>
+                        {isSeed ? "EXAMPLE · " : ""}{m.role === "user" ? "CUSTOMER" : company.toUpperCase()}
+                      </div>
                     </div>
-                    <div style={{ fontSize: 10, color: "#94A3B8", marginTop: 3, textAlign: m.role === "user" ? "right" : "left", ...MONO }}>
-                      {m.role === "user" ? "CUSTOMER" : company.toUpperCase()}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
                 {chatBusy && (
                   <div style={{ alignSelf: "flex-start", maxWidth: "82%" }}>
                     <div style={{ fontSize: 14, padding: "10px 14px", borderRadius: 16, background: "#F1F5F9", color: "#94A3B8", borderBottomLeftRadius: 4 }}>
@@ -426,6 +532,49 @@ export default function NicheSiteTemplate() {
               <div style={{ fontSize: 10.5, fontWeight: 700, color: "#6B7B92", ...MONO }}>SCAN TO SHARE</div>
             </div>
           )}
+
+          {/* Backup lead capture — for prospects who won't book a Cal but want a callback */}
+          <div style={{ marginTop: 56, padding: "28px 24px", borderRadius: 20, background: "#fff", border: "1px solid rgba(4,44,83,0.1)", boxShadow: "0 14px 40px -22px rgba(4,44,83,0.18)", textAlign: "left", maxWidth: 540, marginLeft: "auto", marginRight: "auto" }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 8, ...MONO }}>OR — JUST CALL ME BACK</div>
+            <div style={{ fontSize: 17, fontWeight: 600, color: "#042C53", lineHeight: 1.3, marginBottom: 14 }}>
+              Not ready for a calendar booking? Drop your number — I'll text you within the hour.
+            </div>
+            {leadState === "ok" ? (
+              <div style={{ padding: "14px 16px", borderRadius: 12, background: "rgba(34,163,108,0.1)", border: "1px solid rgba(34,163,108,0.3)", color: "#15724D", fontSize: 14, fontWeight: 600 }}>
+                Got it. You'll hear from Alexander shortly.
+              </div>
+            ) : (
+              <form onSubmit={submitLead} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <input
+                  value={leadName}
+                  onChange={(e) => setLeadName(e.target.value)}
+                  placeholder="Your name"
+                  style={{ padding: "12px 14px", borderRadius: 11, border: "1px solid rgba(4,44,83,0.18)", fontSize: 14.5, color: "#042C53", outline: "none", background: "#FAFBFC" }}
+                />
+                <input
+                  value={leadEmail}
+                  onChange={(e) => setLeadEmail(e.target.value)}
+                  placeholder="Email"
+                  type="email"
+                  style={{ padding: "12px 14px", borderRadius: 11, border: "1px solid rgba(4,44,83,0.18)", fontSize: 14.5, color: "#042C53", outline: "none", background: "#FAFBFC" }}
+                />
+                <input
+                  value={leadPhone}
+                  onChange={(e) => setLeadPhone(e.target.value)}
+                  placeholder="Phone (optional — fastest reply)"
+                  type="tel"
+                  style={{ padding: "12px 14px", borderRadius: 11, border: "1px solid rgba(4,44,83,0.18)", fontSize: 14.5, color: "#042C53", outline: "none", background: "#FAFBFC" }}
+                />
+                <button
+                  type="submit"
+                  disabled={leadState === "sending" || (!leadEmail.trim() && !leadPhone.trim())}
+                  style={{ padding: "13px 18px", borderRadius: 12, background: A, color: "#fff", fontSize: 14.5, fontWeight: 600, border: "none", cursor: leadState === "sending" ? "wait" : "pointer", opacity: (!leadEmail.trim() && !leadPhone.trim()) ? 0.5 : 1 }}
+                >
+                  {leadState === "sending" ? "Sending…" : leadState === "err" ? "Try again" : "Call me back →"}
+                </button>
+              </form>
+            )}
+          </div>
         </div>
       </section>
 

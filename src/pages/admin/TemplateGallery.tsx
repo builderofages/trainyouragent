@@ -40,7 +40,22 @@ const LS_KEYS = {
   email: "tya.admin.tg.email",
   phone: "tya.admin.tg.phone",
   recent: "tya.admin.tg.recent.v1",
+  stats: "tya.admin.tg.stats.v1",
 };
+
+type StatEvent = { kind: string; niche: string; ts: number };
+const STAT_CAP = 500;
+function loadStats(): StatEvent[] {
+  if (typeof window === "undefined") return [];
+  try { return JSON.parse(localStorage.getItem(LS_KEYS.stats) || "[]") as StatEvent[]; } catch { return []; }
+}
+function appendStat(kind: string, niche: string) {
+  if (typeof window === "undefined") return;
+  try {
+    const next = [{ kind, niche, ts: Date.now() }, ...loadStats()].slice(0, STAT_CAP);
+    localStorage.setItem(LS_KEYS.stats, JSON.stringify(next));
+  } catch { /* quota / privacy mode */ }
+}
 
 type RecentProspect = { co: string; city?: string; email?: string; phone?: string; ts: number };
 
@@ -113,6 +128,26 @@ export default function TemplateGallery() {
     setCanShare(typeof navigator !== "undefined" && typeof (navigator as { share?: unknown }).share === "function");
   }, []);
 
+  // ─── operator weekly stats (local, last 7 days) ──────────────────────
+  const [stats, setStats] = useState<StatEvent[]>(() => loadStats());
+  const weekStats = useMemo(() => {
+    const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    const recent = stats.filter((s) => s.ts >= cutoff);
+    const total = recent.length;
+    const byKind: Record<string, number> = {};
+    const byNiche: Record<string, number> = {};
+    recent.forEach((s) => {
+      byKind[s.kind] = (byKind[s.kind] || 0) + 1;
+      byNiche[s.niche] = (byNiche[s.niche] || 0) + 1;
+    });
+    const topNiche = Object.entries(byNiche).sort((a, b) => b[1] - a[1])[0];
+    return { total, byKind, topNiche };
+  }, [stats]);
+  function clearStats() {
+    setStats([]);
+    try { localStorage.removeItem(LS_KEYS.stats); } catch { /* noop */ }
+  }
+
   // ─── search ───────────────────────────────────────────────────────────
   const [query, setQuery] = useState("");
   const q = query.trim().toLowerCase();
@@ -173,16 +208,22 @@ export default function TemplateGallery() {
     setFlash(`${id}|${kind}`);
     setTimeout(() => setFlash(null), 1600);
   }
+  function trackAction(kind: string, niche: string) {
+    appendStat(kind, niche);
+    setStats((prev) => [{ kind, niche, ts: Date.now() }, ...prev].slice(0, STAT_CAP));
+  }
   async function copyText(id: string, kind: string, text: string) {
-    try { await navigator.clipboard.writeText(text); blink(id, kind); pushRecent(); void fireEvent("tg_copy", { kind, niche: id, company: company.trim() }); } catch { /* clipboard blocked */ }
+    try { await navigator.clipboard.writeText(text); blink(id, kind); pushRecent(); trackAction(kind === "dm" ? "dm" : kind === "link" ? "link" : kind, id); void fireEvent("tg_copy", { kind, niche: id, company: company.trim() }); } catch { /* clipboard blocked */ }
   }
   function openSite(id: string) {
     pushRecent();
+    trackAction("open", id);
     void fireEvent("tg_open_site", { niche: id, company: company.trim() });
     window.open(buildUrl(id), "_blank", "noopener");
   }
   function openEmail(n: NicheSite) {
     pushRecent();
+    trackAction("email", n.id);
     void fireEvent("tg_send_email", { niche: n.id, company: company.trim() });
     const to = email.trim();
     const url = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(buildEmailSubject(n))}&body=${encodeURIComponent(buildEmailBody(n))}`;
@@ -190,6 +231,7 @@ export default function TemplateGallery() {
   }
   function openSms(n: NicheSite) {
     pushRecent();
+    trackAction("sms", n.id);
     void fireEvent("tg_send_sms", { niche: n.id, company: company.trim() });
     const num = phone.trim().replace(/[^\d+]/g, "");
     // iOS uses `sms:NUMBER&body=`; Android uses `sms:NUMBER?body=`. The ? form
@@ -199,6 +241,7 @@ export default function TemplateGallery() {
   }
   async function shareNative(n: NicheSite) {
     pushRecent();
+    trackAction("share", n.id);
     void fireEvent("tg_share_native", { niche: n.id, company: company.trim() });
     const co = company.trim() || n.defaultCompany;
     try {
@@ -319,6 +362,22 @@ export default function TemplateGallery() {
               </button>
             )}
           </div>
+
+          {/* weekly stats */}
+          {weekStats.total > 0 && (
+            <div style={{ marginTop: 22, display: "flex", flexWrap: "wrap", gap: 10, alignItems: "stretch" }}>
+              <StatPill label="THIS WEEK" value={weekStats.total} sub="actions" />
+              <StatPill label="DMS" value={weekStats.byKind.dm || 0} />
+              <StatPill label="EMAIL" value={weekStats.byKind.email || 0} />
+              <StatPill label="SMS" value={weekStats.byKind.sms || 0} />
+              <StatPill label="SHARES" value={weekStats.byKind.share || 0} />
+              <StatPill label="OPENS" value={weekStats.byKind.open || 0} />
+              {weekStats.topNiche && (
+                <StatPill label="TOP NICHE" valueText={NICHE_SITES.find(n => n.id === weekStats.topNiche![0])?.niche || weekStats.topNiche[0]} sub={`${weekStats.topNiche[1]}×`} />
+              )}
+              <button onClick={clearStats} title="Reset weekly stats" style={{ marginLeft: "auto", fontSize: 11, color: "#94A3B8", background: "none", border: "none", cursor: "pointer", textDecoration: "underline", alignSelf: "center" }}>reset</button>
+            </div>
+          )}
 
           {/* recent prospects */}
           {recent.length > 0 && (
@@ -544,6 +603,18 @@ function ChannelBtn(props: { onClick: () => void; disabled: boolean; title: stri
       <span style={{ opacity: 0.8 }}>{props.icon}</span>
       {props.label}
     </button>
+  );
+}
+
+function StatPill(props: { label: string; value?: number; valueText?: string; sub?: string }) {
+  return (
+    <div style={{ background: "#fff", border: "1px solid rgba(4,44,83,0.1)", borderRadius: 12, padding: "8px 12px", display: "flex", flexDirection: "column", gap: 2, minWidth: 80 }}>
+      <span style={{ fontSize: 9.5, fontWeight: 700, color: "#6B7B92", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", letterSpacing: "0.2em" }}>{props.label}</span>
+      <span style={{ fontSize: 18, fontWeight: 600, color: "#042C53", letterSpacing: "-0.01em", lineHeight: 1.1 }}>
+        {props.valueText ?? props.value}
+        {props.sub && <span style={{ fontSize: 11, fontWeight: 500, color: "#94A3B8", marginLeft: 6 }}>{props.sub}</span>}
+      </span>
+    </div>
   );
 }
 
