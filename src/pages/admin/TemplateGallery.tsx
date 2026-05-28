@@ -134,6 +134,25 @@ export default function TemplateGallery() {
   const [adminToken, setAdminToken] = useState<string>(() => lsGet(LS_KEYS.adminToken));
   useEffect(() => { lsSet(LS_KEYS.adminToken, adminToken); }, [adminToken]);
 
+  // v201 — system health badge. Lightweight ping of /api/admin/health every
+  // 5 min while operator is on the page. Surfaces missing env / dead crons.
+  type Health = { ok: boolean; overall: "ok" | "warn" | "fail"; fails: number; warns: number; checks: { name: string; status: string; note?: string }[] };
+  const [health, setHealth] = useState<Health | null>(null);
+  async function refreshHealth() {
+    if (!adminToken.trim()) return;
+    try {
+      const r = await fetch(`/api/admin/health?token=${encodeURIComponent(adminToken.trim())}`);
+      if (r.ok) setHealth(await r.json());
+    } catch { /* swallow */ }
+  }
+  useEffect(() => {
+    if (!adminToken.trim()) return;
+    refreshHealth();
+    const t = setInterval(() => { if (document.visibilityState === "visible") refreshHealth(); }, 5 * 60_000);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [adminToken]);
+
   type ActivityRow = {
     id: string;
     prospect_company: string;
@@ -541,6 +560,18 @@ export default function TemplateGallery() {
           <div style={{ marginTop: 22, padding: 16, borderRadius: 14, background: "#fff", border: "1px solid rgba(4,44,83,0.1)" }}>
             <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10, marginBottom: 12 }}>
               <span style={{ fontSize: 11, fontWeight: 700, color: "#185FA5", ...MONO }}>SERVER ACTIVITY</span>
+              {health && (
+                <span
+                  title={health.checks.filter((c) => c.status === "fail" || c.status === "warn").map((c) => `${c.status.toUpperCase()} · ${c.name}${c.note ? ": " + c.note : ""}`).join("\n") || "All systems green."}
+                  style={{
+                    fontSize: 10.5, fontWeight: 700, padding: "3px 9px", borderRadius: 999, ...MONO,
+                    background: health.overall === "ok" ? "rgba(34,163,108,0.12)" : health.overall === "warn" ? "rgba(245,158,11,0.14)" : "rgba(155,44,44,0.12)",
+                    color: health.overall === "ok" ? "#15724D" : health.overall === "warn" ? "#92400E" : "#9B2C2C",
+                  }}
+                >
+                  HEALTH · {health.overall.toUpperCase()}{health.fails ? ` · ${health.fails} fail` : ""}{health.warns ? ` · ${health.warns} warn` : ""}
+                </span>
+              )}
               <span style={{ fontSize: 12.5, color: "#5C6B7F" }}>
                 {activity.summary
                   ? `Last ${activity.summary.window_days}d: ${activity.summary.total} sent · ${activity.summary.opened} opened · ${activity.summary.booked} booked · ${activity.summary.pending_nurture} pending nurture`

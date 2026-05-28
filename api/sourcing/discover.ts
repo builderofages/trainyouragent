@@ -13,6 +13,7 @@
 
 import { getSupabase, supabaseConfigured } from "../_lib/supabase.js";
 import { checkAdmin } from "../_lib/admin-auth.js";
+import { rateLimit, ipFromRequest } from "../_lib/rate-limit.js";
 import { discoverProspects, geocodeCity, queryForNiche, guessEmail, type RawProspect } from "../_lib/lead-sourcing.js";
 
 export const config = { runtime: "edge" };
@@ -40,6 +41,10 @@ type Rule = {
 export default async function handler(req: Request): Promise<Response> {
   if (req.method !== "POST") return j({ ok: false, error: "method" }, 405);
   if (!checkAdmin(req)) return j({ ok: false, error: "unauthorized" }, 401);
+  // v201: defense-in-depth rate limit even though admin-gated — if ADMIN_TOKEN
+  // ever leaks, this caps the blast radius on Google Places spend.
+  const rl = rateLimit(`discover:${ipFromRequest(req)}`, { limit: 30, windowMs: 60 * 60 * 1000 });
+  if (!rl.ok) return j({ ok: false, error: "rate-limited", hint: "30/h cap" }, 429);
   if (!supabaseConfigured()) return j({ ok: false, error: "supabase-not-configured" }, 500);
   const sb = getSupabase();
   if (!sb) return j({ ok: false, error: "supabase-init-failed" }, 500);
