@@ -12,7 +12,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { getNicheSite, NICHE_SITES } from "@/lib/nicheSiteTemplates";
+import { getNicheSite } from "@/lib/nicheSiteTemplates";
 import { fireEvent } from "@/lib/event";
 
 const ITALIC: React.CSSProperties = {

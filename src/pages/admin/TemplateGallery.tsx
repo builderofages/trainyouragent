@@ -107,6 +107,12 @@ export default function TemplateGallery() {
     lsSet(LS_KEYS.recent, "[]");
   }
 
+  // ─── native Web Share availability (mobile-first) ─────────────────────
+  const [canShare, setCanShare] = useState(false);
+  useEffect(() => {
+    setCanShare(typeof navigator !== "undefined" && typeof (navigator as { share?: unknown }).share === "function");
+  }, []);
+
   // ─── search ───────────────────────────────────────────────────────────
   const [query, setQuery] = useState("");
   const q = query.trim().toLowerCase();
@@ -190,6 +196,18 @@ export default function TemplateGallery() {
     // works on both modern iOS and Android; the & form breaks on Android.
     const url = `sms:${num}?body=${encodeURIComponent(buildDm(n))}`;
     window.location.href = url;
+  }
+  async function shareNative(n: NicheSite) {
+    pushRecent();
+    void fireEvent("tg_share_native", { niche: n.id, company: company.trim() });
+    const co = company.trim() || n.defaultCompany;
+    try {
+      await navigator.share({
+        title: `${co} — ${n.niche}`,
+        text: `Built you a free preview of what a 2026 ${n.niche.toLowerCase()} site looks like, with an AI phone line that answers 24/7.`,
+        url: buildUrl(n.id),
+      });
+    } catch { /* user cancelled the share sheet — no-op */ }
   }
 
   // ─── bulk export ──────────────────────────────────────────────────────
@@ -366,14 +384,35 @@ export default function TemplateGallery() {
                     >
                       Open site →
                     </button>
-                    <button
-                      onClick={() => copyText(n.id, "dm", buildDm(n))}
-                      title="Copy a ready-to-send LinkedIn/SMS message with the link"
-                      style={{ width: "100%", padding: "11px 14px", borderRadius: 12, background: n.accent, color: "#fff", fontSize: 13.5, fontWeight: 600, border: "none", cursor: "pointer" }}
-                    >
-                      {dmFlash ? "DM copied ✓" : "Copy DM"}
-                    </button>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
+                    {canShare ? (
+                      <button
+                        onClick={() => shareNative(n)}
+                        title="Open your phone's share sheet — Messages, Mail, WhatsApp, AirDrop, LinkedIn…"
+                        style={{ width: "100%", padding: "11px 14px", borderRadius: 12, background: n.accent, color: "#fff", fontSize: 13.5, fontWeight: 600, border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7 }}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2v13M12 2l-4 4M12 2l4 4M5 12v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        Share via…
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => copyText(n.id, "dm", buildDm(n))}
+                        title="Copy a ready-to-send LinkedIn/SMS message with the link"
+                        style={{ width: "100%", padding: "11px 14px", borderRadius: 12, background: n.accent, color: "#fff", fontSize: 13.5, fontWeight: 600, border: "none", cursor: "pointer" }}
+                      >
+                        {dmFlash ? "DM copied ✓" : "Copy DM"}
+                      </button>
+                    )}
+                    <div style={{ display: "grid", gridTemplateColumns: canShare ? "repeat(4, 1fr)" : "repeat(3, 1fr)", gap: 6 }}>
+                      {canShare && (
+                        <ChannelBtn
+                          onClick={() => copyText(n.id, "dm", buildDm(n))}
+                          disabled={false}
+                          title="Copy the DM text"
+                          flashOk={dmFlash}
+                          label={dmFlash ? "✓" : "DM"}
+                          icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                        />
+                      )}
                       <ChannelBtn
                         onClick={() => openEmail(n)}
                         disabled={!email.trim()}
@@ -395,7 +434,7 @@ export default function TemplateGallery() {
                         disabled={false}
                         title="Copy the link only (no message)"
                         flashOk={linkFlash}
-                        label={linkFlash ? "Copied ✓" : "Link"}
+                        label={linkFlash ? "✓" : "Link"}
                         icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 1 0-7.07-7.07l-1.41 1.41M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 1 0 7.07 7.07l1.41-1.41" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
                       />
                     </div>
