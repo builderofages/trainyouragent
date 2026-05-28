@@ -36,12 +36,28 @@ type SendRow = {
   opened_at: string | null;
   booked_at: string | null;
   last_nurture_template: string | null;
+  first_touch_sent_at: string | null;
 };
 
-type Template = "day3" | "day7";
+type Template = "day0" | "day3" | "day7";
 
 function renderEmail(co: string, template: Template, niche_label: string, link: string, opened: boolean, unsubLink: string): { subject: string; html: string } {
   const unsubFoot = `<p style="margin-top:28px;font-size:12px;color:#94A3B8;line-height:1.5">Not interested? <a href="${unsubLink}" style="color:#94A3B8;text-decoration:underline">One-click unsubscribe</a> — or reply STOP and I'll remove you manually.</p>`;
+  if (template === "day0") {
+    return {
+      subject: `${co} — built you a free ${niche_label.toLowerCase()} site preview`,
+      html: `<div style="font-family: -apple-system, system-ui, sans-serif; font-size: 15px; line-height: 1.55; color: #0B1B2B; max-width: 540px;">
+<p>Hi — Alexander here, founder of TrainYourAgent.</p>
+<p>Built you a free, fully-branded preview of what a 2026 ${niche_label.toLowerCase()} site could look like for ${co} — with an AI phone line that answers 24/7 and books work automatically. Most operators in your space lose 30-50% of their inbound to voicemail; this is the line that catches it.</p>
+<p>It's already live and personalized — no signup, no form:</p>
+<p><a href="${link}" style="display:inline-block;padding:12px 24px;border-radius:10px;background:#042C53;color:#fff;text-decoration:none;font-weight:600;">See ${co}'s preview →</a></p>
+<p>Tap the mic on the page and the AI receptionist will greet you by name. The chat below it actually responds in character.</p>
+<p>If it lands, hit reply and I'll spec out what it'd take to get a real one on your phone line in 10 days. If not, no follow-up needed — but I'll send one short note in a few days in case it got buried.</p>
+<p>— Alexander<br/>TrainYourAgent</p>
+${unsubFoot}
+</div>`,
+    };
+  }
   if (template === "day3") {
     return {
       subject: `${co} — quick follow-up on your ${niche_label.toLowerCase()} site`,
@@ -96,19 +112,40 @@ export default async function handler(req: Request): Promise<Response> {
     });
   }
 
-  // Window: pull all unbooked, non-stopped sends from 2-9 days ago that
-  // have an email address. We then bucket per-template in-memory.
+  // Two pulls:
+  //   1. autosourced rows that have NEVER had a first touch — these get
+  //      the Day-0 introduction email immediately (or within the next cron
+  //      tick, max ~24h after sourcing).
+  //   2. All unbooked, non-stopped sends from 2-9 days ago that have an
+  //      email — for Day-3 / Day-7 follow-ups (manual + autosourced both).
   const nineDaysAgo  = new Date(Date.now() - 9 * 86400_000).toISOString();
   const twoDaysAgo   = new Date(Date.now() - 2 * 86400_000).toISOString();
 
-  const { data, error } = await sb
+  const day0Q = sb
     .from("template_sends")
-    .select("id, prospect_company, prospect_email, prospect_name, prospect_city, niche, niche_label, channel, sent_at, opened_at, booked_at, last_nurture_template")
+    .select("id, prospect_company, prospect_email, prospect_name, prospect_city, niche, niche_label, channel, sent_at, opened_at, booked_at, last_nurture_template, first_touch_sent_at")
+    .eq("channel", "autosourced")
+    .is("first_touch_sent_at", null)
+    .is("booked_at", null)
+    .is("nurture_stopped_reason", null)
+    .not("prospect_email", "is", null)
+    .limit(50);
+
+  const followUpQ = sb
+    .from("template_sends")
+    .select("id, prospect_company, prospect_email, prospect_name, prospect_city, niche, niche_label, channel, sent_at, opened_at, booked_at, last_nurture_template, first_touch_sent_at")
     .is("booked_at", null)
     .is("nurture_stopped_reason", null)
     .gte("sent_at", nineDaysAgo)
     .lte("sent_at", twoDaysAgo)
     .not("prospect_email", "is", null);
+
+  const [day0R, followUpR] = await Promise.all([day0Q, followUpQ]);
+
+  const data = [...((day0R.data || []) as SendRow[]), ...((followUpR.data || []) as SendRow[])];
+  const seen = new Set<string>();
+  const dedup = data.filter((r) => seen.has(r.id) ? false : (seen.add(r.id), true));
+  const error = day0R.error || followUpR.error;
 
   if (error) {
     return new Response(JSON.stringify({ ok: false, error: "select-failed", detail: error.message }), {
@@ -116,7 +153,7 @@ export default async function handler(req: Request): Promise<Response> {
     });
   }
 
-  const rows = (data || []) as SendRow[];
+  const rows = dedup;
   const out: Array<{ id: string; template: Template; result: "sent" | "skipped" | "error"; reason?: string }> = [];
   let sentCount = 0;
 
@@ -124,7 +161,9 @@ export default async function handler(req: Request): Promise<Response> {
     if (!r.prospect_email) { out.push({ id: r.id, template: "day3", result: "skipped", reason: "no-email" }); continue; }
     const ageDays = (Date.now() - new Date(r.sent_at).getTime()) / 86400_000;
     let template: Template | null = null;
-    if (ageDays >= 7 && r.last_nurture_template !== "day7") template = "day7";
+    // Day-0 fires once, for autosourced rows that haven't had a first touch.
+    if (r.channel === "autosourced" && !r.first_touch_sent_at) template = "day0";
+    else if (ageDays >= 7 && r.last_nurture_template !== "day7") template = "day7";
     else if (ageDays >= 3 && ageDays < 7 && r.last_nurture_template !== "day3" && r.last_nurture_template !== "day7") template = "day3";
     if (!template) { out.push({ id: r.id, template: "day3", result: "skipped", reason: "no-template-due" }); continue; }
 
@@ -156,10 +195,12 @@ export default async function handler(req: Request): Promise<Response> {
         out.push({ id: r.id, template, result: "error", reason: res.error || "resend-failed" });
         continue;
       }
-      await sb.from("template_sends").update({
+      const patch: Record<string, unknown> = {
         last_nurture_template: template,
         last_nurture_at: new Date().toISOString(),
-      }).eq("id", r.id);
+      };
+      if (template === "day0") patch.first_touch_sent_at = new Date().toISOString();
+      await sb.from("template_sends").update(patch).eq("id", r.id);
       sentCount++;
       out.push({ id: r.id, template, result: "sent" });
     } catch (e) {
