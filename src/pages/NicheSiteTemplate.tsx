@@ -268,9 +268,12 @@ export default function NicheSiteTemplate() {
             </svg>
             <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: "-0.01em", color: "#042C53" }}>{company}</span>
           </div>
-          <a href="tel:+1" onClick={(e) => e.preventDefault()} style={{ fontSize: 13, fontWeight: 600, color: A, textDecoration: "none" }}>
+          <button
+            onClick={() => { document.getElementById("demo")?.scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => void playGreeting(), 400); void fireEvent("template_topnav_call", { niche: site.id }); }}
+            style={{ fontSize: 13, fontWeight: 600, color: A, textDecoration: "none", background: "none", border: "none", cursor: "pointer", padding: 0 }}
+          >
             Call now →
-          </a>
+          </button>
         </div>
       </div>
 
@@ -322,10 +325,17 @@ export default function NicheSiteTemplate() {
             {site.subhead}
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center" }}>
-            <button style={{ padding: "16px 30px", borderRadius: 16, background: "#042C53", color: "#fff", fontSize: 16, fontWeight: 600, border: "none", cursor: "pointer", boxShadow: "0 24px 50px -22px rgba(4,44,83,0.5)" }}>
+            <a
+              href="#cta"
+              onClick={(e) => { e.preventDefault(); document.getElementById("cta")?.scrollIntoView({ behavior: "smooth", block: "start" }); void fireEvent("template_hero_book", { niche: site.id }); }}
+              style={{ padding: "16px 30px", borderRadius: 16, background: "#042C53", color: "#fff", fontSize: 16, fontWeight: 600, border: "none", cursor: "pointer", boxShadow: "0 24px 50px -22px rgba(4,44,83,0.5)", textDecoration: "none", display: "inline-flex", alignItems: "center" }}
+            >
               Book {company.split(" ")[0]} →
-            </button>
-            <button style={{ padding: "16px 30px", borderRadius: 16, background: "#fff", color: "#042C53", fontSize: 16, fontWeight: 600, border: "2px solid rgba(4,44,83,0.14)", cursor: "pointer" }}>
+            </a>
+            <button
+              onClick={() => { document.getElementById("demo")?.scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => void playGreeting(), 600); void fireEvent("template_hero_talk", { niche: site.id }); }}
+              style={{ padding: "16px 30px", borderRadius: 16, background: "#fff", color: "#042C53", fontSize: 16, fontWeight: 600, border: "2px solid rgba(4,44,83,0.14)", cursor: "pointer" }}
+            >
               Talk to our AI line
             </button>
           </div>
@@ -375,7 +385,7 @@ export default function NicheSiteTemplate() {
       </section>
 
       {/* VOICE + CHAT DEMO */}
-      <section style={{ padding: "20px 20px 80px", background: "#FAFBFC", borderTop: "1px solid rgba(4,44,83,0.06)" }}>
+      <section id="demo" style={{ padding: "20px 20px 80px", background: "#FAFBFC", borderTop: "1px solid rgba(4,44,83,0.06)", scrollMarginTop: 80 }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", paddingTop: 56 }}>
           <div style={{ textAlign: "center", marginBottom: 38 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 12, ...MONO }}>YOUR AGENTS · LIVE PREVIEW</div>
@@ -510,7 +520,7 @@ export default function NicheSiteTemplate() {
       </section>
 
       {/* CTA */}
-      <section style={{ padding: "80px 20px", textAlign: "center", background: `linear-gradient(180deg, #FFFFFF 0%, #FAF6EE 60%, ${hexA(A, 0.06)} 100%)` }}>
+      <section id="cta" style={{ padding: "80px 20px", textAlign: "center", background: `linear-gradient(180deg, #FFFFFF 0%, #FAF6EE 60%, ${hexA(A, 0.06)} 100%)`, scrollMarginTop: 80 }}>
         <div style={{ maxWidth: 620, margin: "0 auto" }}>
           <h2 style={{ fontSize: "clamp(30px, 5.5vw, 52px)", lineHeight: 1.05, letterSpacing: "-0.02em", fontWeight: 600, color: "#042C53", margin: "0 0 18px" }}>
             Stop losing calls.{" "}
