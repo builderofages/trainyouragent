@@ -58,8 +58,11 @@ export default async function handler(req: Request): Promise<Response> {
   if (!rl.ok) return json({ ok: false, error: "rate-limited" }, 429);
 
   const url = new URL(req.url);
+  // v194: accept Vercel-cron header so this works without leaking ADMIN_TOKEN
+  // in vercel.json. Manual invocation still works via ?token=.
+  const fromVercelCron = req.headers.get("x-vercel-cron") === "1";
   const token = url.searchParams.get("token") || req.headers.get("x-admin-token") || "";
-  if (!ADMIN_TOKEN || token !== ADMIN_TOKEN) {
+  if (!fromVercelCron && (!ADMIN_TOKEN || token !== ADMIN_TOKEN)) {
     return json({ ok: false, error: "unauthorized" }, 401);
   }
 

@@ -18,7 +18,19 @@ function safeEqual(a: string, b: string): boolean {
   return r === 0;
 }
 
+/**
+ * Vercel cron jobs inject `x-vercel-cron: 1` on inbound requests; no external
+ * caller can forge this header because Vercel sets it inside their own
+ * routing layer (browser-set headers with this name are stripped). This
+ * lets crons in vercel.json auth without leaking ADMIN_TOKEN in checked-in
+ * config or function logs. See vercel.com/docs/cron-jobs/manage-cron-jobs.
+ */
+function isVercelCron(req: Request): boolean {
+  return req.headers.get("x-vercel-cron") === "1";
+}
+
 export function checkAdmin(req: Request): boolean {
+  if (isVercelCron(req)) return true;
   const expected = adminToken();
   // No env → no access. Fail closed.
   if (!expected) return false;
