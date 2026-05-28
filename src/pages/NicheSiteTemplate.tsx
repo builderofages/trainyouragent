@@ -48,6 +48,39 @@ export default function NicheSiteTemplate() {
   const city = sp.get("city") || site?.city || "your area";
   const dollarsLost = useMemo(() => ((secs / 60) * 4.62).toFixed(2), [secs]);
 
+  // ── live voice playback (TAP TO TALK) ──────────────────────────────────
+  const [voiceState, setVoiceState] = useState<"idle" | "loading" | "playing" | "error">("idle");
+  const personalizedGreeting = (site?.voiceGreeting || "").replace(/\{co\}/g, company);
+  async function playGreeting() {
+    if (!personalizedGreeting) return;
+    if (voiceState === "loading" || voiceState === "playing") return;
+    setVoiceState("loading");
+    try {
+      const r = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ text: personalizedGreeting }),
+      });
+      if (!r.ok) throw new Error("tts-" + r.status);
+      const blob = await r.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audio.onended = () => { setVoiceState("idle"); URL.revokeObjectURL(url); };
+      audio.onerror = () => { setVoiceState("error"); URL.revokeObjectURL(url); };
+      setVoiceState("playing");
+      await audio.play();
+    } catch {
+      setVoiceState("error");
+      setTimeout(() => setVoiceState("idle"), 2400);
+    }
+  }
+
+  // ── QR code for in-person handouts ────────────────────────────────────
+  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
+  const qrUrl = shareUrl
+    ? `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&data=${encodeURIComponent(shareUrl)}`
+    : "";
+
   if (!site) {
     return (
       <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", fontFamily: "'Inter Tight', system-ui, sans-serif", background: "#FFFFFF", color: "#042C53", padding: 24 }}>
@@ -175,17 +208,47 @@ export default function NicheSiteTemplate() {
                 <span style={{ fontSize: 11, color: "#94A3B8", ...MONO }}>RECEPTIONIST</span>
               </div>
               <div style={{ display: "grid", placeItems: "center", padding: "10px 0 18px" }}>
-                <div style={{ width: 86, height: 86, borderRadius: 999, background: `linear-gradient(160deg, ${A}, ${shade(A)})`, display: "grid", placeItems: "center", boxShadow: `0 14px 34px -12px ${hexA(A, 0.6)}` }}>
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
-                    <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v5a3 3 0 0 0 3 3z" />
-                    <path d="M19 11a7 7 0 0 1-14 0H3a9 9 0 0 0 8 8.94V23h2v-3.06A9 9 0 0 0 21 11h-2z" />
-                  </svg>
+                <button
+                  onClick={playGreeting}
+                  aria-label="Play the receptionist greeting"
+                  disabled={voiceState === "loading"}
+                  style={{
+                    width: 86, height: 86, borderRadius: 999,
+                    background: `linear-gradient(160deg, ${A}, ${shade(A)})`,
+                    display: "grid", placeItems: "center",
+                    boxShadow: voiceState === "playing"
+                      ? `0 0 0 8px ${hexA(A, 0.18)}, 0 14px 34px -12px ${hexA(A, 0.6)}`
+                      : `0 14px 34px -12px ${hexA(A, 0.6)}`,
+                    border: "none", cursor: voiceState === "loading" ? "wait" : "pointer",
+                    transition: "box-shadow 200ms ease, transform 200ms ease",
+                    transform: voiceState === "playing" ? "scale(1.04)" : "scale(1)",
+                  }}
+                >
+                  {voiceState === "loading" ? (
+                    <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true">
+                      <circle cx="12" cy="12" r="9" fill="none" stroke="#fff" strokeWidth="2.5" strokeDasharray="14 28" strokeLinecap="round">
+                        <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.9s" repeatCount="indefinite" />
+                      </circle>
+                    </svg>
+                  ) : voiceState === "playing" ? (
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
+                      <rect x="6" y="5" width="4" height="14" rx="1.5" />
+                      <rect x="14" y="5" width="4" height="14" rx="1.5" />
+                    </svg>
+                  ) : (
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
+                      <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v5a3 3 0 0 0 3 3z" />
+                      <path d="M19 11a7 7 0 0 1-14 0H3a9 9 0 0 0 8 8.94V23h2v-3.06A9 9 0 0 0 21 11h-2z" />
+                    </svg>
+                  )}
+                </button>
+                <div style={{ fontSize: 12, fontWeight: 700, color: voiceState === "error" ? "#9B2C2C" : A, marginTop: 12, ...MONO }}>
+                  {voiceState === "loading" ? "CONNECTING…" : voiceState === "playing" ? "SPEAKING" : voiceState === "error" ? "TRY AGAIN" : "TAP TO HEAR IT"}
                 </div>
-                <div style={{ fontSize: 12, fontWeight: 700, color: A, marginTop: 12, ...MONO }}>TAP TO TALK</div>
               </div>
               <div style={{ background: "#FAFBFC", border: "1px solid rgba(4,44,83,0.06)", borderRadius: 14, padding: "14px 16px", marginBottom: 14 }}>
                 <div style={{ fontSize: 10.5, fontWeight: 700, color: "#94A3B8", marginBottom: 6, ...MONO }}>ON PICKUP</div>
-                <p style={{ fontSize: 14.5, lineHeight: 1.5, color: "#0B1B2B", margin: 0, fontStyle: "italic" }}>“{site.voiceGreeting.replace(/\{co\}/g, company)}”</p>
+                <p style={{ fontSize: 14.5, lineHeight: 1.5, color: "#0B1B2B", margin: 0, fontStyle: "italic" }}>“{personalizedGreeting}”</p>
               </div>
               <div style={{ fontSize: 11, fontWeight: 700, color: "#94A3B8", marginBottom: 8, ...MONO }}>TRY SAYING</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -245,6 +308,12 @@ export default function NicheSiteTemplate() {
           <a href="https://cal.com/trainyouragent/30min" target="_blank" rel="noopener" style={{ display: "inline-flex", padding: "18px 36px", borderRadius: 16, background: "#042C53", color: "#fff", fontSize: 17, fontWeight: 600, textDecoration: "none", boxShadow: "0 30px 64px -26px rgba(4,44,83,0.55)" }}>
             Book your 15-min build call →
           </a>
+          {qrUrl && (
+            <div style={{ marginTop: 44, display: "inline-flex", flexDirection: "column", alignItems: "center", gap: 10, padding: "20px 22px", borderRadius: 18, background: "#fff", border: "1px solid rgba(4,44,83,0.08)", boxShadow: "0 14px 40px -22px rgba(4,44,83,0.25)" }}>
+              <img src={qrUrl} alt={`QR code linking to this site for ${company}`} width={140} height={140} style={{ display: "block", borderRadius: 8 }} loading="lazy" />
+              <div style={{ fontSize: 10.5, fontWeight: 700, color: "#6B7B92", ...MONO }}>SCAN TO SHARE</div>
+            </div>
+          )}
         </div>
       </section>
 

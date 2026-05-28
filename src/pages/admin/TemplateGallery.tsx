@@ -1,10 +1,20 @@
-// src/pages/admin/TemplateGallery.tsx — v180
+// src/pages/admin/TemplateGallery.tsx — v186
 //
-// Internal gallery of the niche "free website" templates. Browse every niche,
-// type a prospect's company name, and open/copy their personalized site link.
-// This is the first module of the unified TYA admin dashboard.
+// Operator-grade gallery for the niche "free website" close tool.
+//
+// Features (v186):
+//   • Soft unlock gate (passphrase, stored in localStorage — keeps the URL
+//     uncrawlable for casual visitors; not real auth — this admin tool only
+//     ever runs in the founder's hands)
+//   • Persistence: company / city / email / phone / unlock all survive reload
+//   • Recent prospects strip (last 20, one-tap to restore)
+//   • Search filter over 25 niches (name / id / chips / subhead)
+//   • 4 send channels per card: DM · Email · SMS · Link, each one-click
+//   • Bulk export: paste many prospect names, get back a CSV of personalized
+//     links + DMs, ready to drop into outbound tools
+//   • Fully mobile-responsive
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { NICHE_SITES, type NicheSite } from "@/lib/nicheSiteTemplates";
@@ -19,25 +29,100 @@ const MONO: React.CSSProperties = {
   letterSpacing: "0.2em",
 };
 
-export default function TemplateGallery() {
-  const [company, setCompany] = useState("");
-  const [city, setCity] = useState("");
-  const [copied, setCopied] = useState<string | null>(null); // id+"|"+kind
-  const [query, setQuery] = useState("");
+// Soft unlock — bundled passphrase, intentional speed bump. Override with
+// VITE_TYA_ADMIN_PIN at build time if desired.
+const UNLOCK_PHRASE = (import.meta.env.VITE_TYA_ADMIN_PIN as string | undefined) || "tya";
+const LS_KEYS = {
+  unlock: "tya.admin.unlock.v1",
+  company: "tya.admin.tg.company",
+  city: "tya.admin.tg.city",
+  email: "tya.admin.tg.email",
+  phone: "tya.admin.tg.phone",
+  recent: "tya.admin.tg.recent.v1",
+};
 
+type RecentProspect = { co: string; city?: string; email?: string; phone?: string; ts: number };
+
+function lsGet(k: string, fallback = ""): string {
+  if (typeof window === "undefined") return fallback;
+  try { return localStorage.getItem(k) ?? fallback; } catch { return fallback; }
+}
+function lsSet(k: string, v: string) {
+  if (typeof window === "undefined") return;
+  try { localStorage.setItem(k, v); } catch { /* quota / privacy mode */ }
+}
+
+export default function TemplateGallery() {
+  // ─── unlock gate ───────────────────────────────────────────────────────
+  const [unlocked, setUnlocked] = useState<boolean>(() => lsGet(LS_KEYS.unlock) === "1");
+  const [pinInput, setPinInput] = useState("");
+  const [pinError, setPinError] = useState(false);
+  function tryUnlock(e: React.FormEvent) {
+    e.preventDefault();
+    if (pinInput.trim().toLowerCase() === UNLOCK_PHRASE.toLowerCase()) {
+      lsSet(LS_KEYS.unlock, "1");
+      setUnlocked(true);
+      setPinError(false);
+    } else {
+      setPinError(true);
+      setTimeout(() => setPinError(false), 1800);
+    }
+  }
+
+  // ─── persisted inputs ──────────────────────────────────────────────────
+  const [company, setCompany] = useState<string>(() => lsGet(LS_KEYS.company));
+  const [city, setCity] = useState<string>(() => lsGet(LS_KEYS.city));
+  const [email, setEmail] = useState<string>(() => lsGet(LS_KEYS.email));
+  const [phone, setPhone] = useState<string>(() => lsGet(LS_KEYS.phone));
+  useEffect(() => { lsSet(LS_KEYS.company, company); }, [company]);
+  useEffect(() => { lsSet(LS_KEYS.city, city); }, [city]);
+  useEffect(() => { lsSet(LS_KEYS.email, email); }, [email]);
+  useEffect(() => { lsSet(LS_KEYS.phone, phone); }, [phone]);
+
+  // ─── recent prospects ─────────────────────────────────────────────────
+  const [recent, setRecent] = useState<RecentProspect[]>(() => {
+    try { return JSON.parse(lsGet(LS_KEYS.recent, "[]")) as RecentProspect[]; } catch { return []; }
+  });
+  function pushRecent() {
+    const co = company.trim();
+    if (!co) return;
+    setRecent((prev) => {
+      const next = [
+        { co, city: city.trim() || undefined, email: email.trim() || undefined, phone: phone.trim() || undefined, ts: Date.now() },
+        ...prev.filter((r) => r.co.toLowerCase() !== co.toLowerCase()),
+      ].slice(0, 20);
+      lsSet(LS_KEYS.recent, JSON.stringify(next));
+      return next;
+    });
+  }
+  function restoreRecent(r: RecentProspect) {
+    setCompany(r.co);
+    setCity(r.city || "");
+    setEmail(r.email || "");
+    setPhone(r.phone || "");
+  }
+  function clearRecent() {
+    setRecent([]);
+    lsSet(LS_KEYS.recent, "[]");
+  }
+
+  // ─── search ───────────────────────────────────────────────────────────
+  const [query, setQuery] = useState("");
   const q = query.trim().toLowerCase();
-  const visible = q
-    ? NICHE_SITES.filter(
-        (n) =>
-          n.niche.toLowerCase().includes(q) ||
-          n.id.toLowerCase().includes(q) ||
-          n.chips.some((c) => c.toLowerCase().includes(q)) ||
-          n.subhead.toLowerCase().includes(q)
-      )
-    : NICHE_SITES;
+  const visible = useMemo(() => {
+    if (!q) return NICHE_SITES;
+    return NICHE_SITES.filter(
+      (n) =>
+        n.niche.toLowerCase().includes(q) ||
+        n.id.toLowerCase().includes(q) ||
+        n.chips.some((c) => c.toLowerCase().includes(q)) ||
+        n.subhead.toLowerCase().includes(q)
+    );
+  }, [q]);
 
   const origin = typeof window !== "undefined" ? window.location.origin : "https://www.trainyouragent.com";
 
+  // ─── builders ─────────────────────────────────────────────────────────
   function buildUrl(id: string): string {
     const params = new URLSearchParams();
     if (company.trim()) params.set("company", company.trim());
@@ -45,7 +130,6 @@ export default function TemplateGallery() {
     const qs = params.toString();
     return `${origin}/template/${id}${qs ? `?${qs}` : ""}`;
   }
-
   function buildDm(n: NicheSite): string {
     const co = company.trim() || n.defaultCompany;
     const cityPart = city.trim() ? ` in ${city.trim()}` : "";
@@ -55,17 +139,114 @@ export default function TemplateGallery() {
       `60-sec look: ${buildUrl(n.id)}`,
     ].join("\n");
   }
-
-  async function copyText(id: string, kind: "link" | "dm", text: string) {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(`${id}|${kind}`);
-      setTimeout(() => setCopied(null), 1600);
-    } catch {
-      /* clipboard blocked — link is still visible via Open */
-    }
+  function buildEmailSubject(n: NicheSite): string {
+    const co = company.trim() || n.defaultCompany;
+    return `Free preview site for ${co}`;
+  }
+  function buildEmailBody(n: NicheSite): string {
+    const co = company.trim() || n.defaultCompany;
+    const cityPart = city.trim() ? ` ${city.trim()}` : "";
+    return [
+      `Hi —`,
+      ``,
+      `Built a free preview of what a modern ${n.niche.toLowerCase()} site could look like for ${co}, with an AI phone line that answers 24/7 and books ${n.chips[0].toLowerCase()} automatically. ${n.painLabel.charAt(0).toUpperCase()}${n.painLabel.slice(1)} — this stops that.`,
+      ``,
+      `Take a look (60 sec): ${buildUrl(n.id)}`,
+      ``,
+      `If it's useful, happy to walk you through how we'd ship it live on your${cityPart} number in 10 days.`,
+      ``,
+      `— Alexander`,
+      `TrainYourAgent`,
+    ].join("\n");
   }
 
+  // ─── clipboard / channel actions ──────────────────────────────────────
+  const [flash, setFlash] = useState<string | null>(null); // id+"|"+kind
+  function blink(id: string, kind: string) {
+    setFlash(`${id}|${kind}`);
+    setTimeout(() => setFlash(null), 1600);
+  }
+  async function copyText(id: string, kind: string, text: string) {
+    try { await navigator.clipboard.writeText(text); blink(id, kind); pushRecent(); } catch { /* clipboard blocked */ }
+  }
+  function openSite(id: string) {
+    pushRecent();
+    window.open(buildUrl(id), "_blank", "noopener");
+  }
+  function openEmail(n: NicheSite) {
+    pushRecent();
+    const to = email.trim();
+    const url = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(buildEmailSubject(n))}&body=${encodeURIComponent(buildEmailBody(n))}`;
+    window.location.href = url;
+  }
+  function openSms(n: NicheSite) {
+    pushRecent();
+    const num = phone.trim().replace(/[^\d+]/g, "");
+    // iOS uses `sms:NUMBER&body=`; Android uses `sms:NUMBER?body=`. The ? form
+    // works on both modern iOS and Android; the & form breaks on Android.
+    const url = `sms:${num}?body=${encodeURIComponent(buildDm(n))}`;
+    window.location.href = url;
+  }
+
+  // ─── bulk export ──────────────────────────────────────────────────────
+  const [bulkOpen, setBulkOpen] = useState(false);
+  const [bulkNiche, setBulkNiche] = useState<string>(NICHE_SITES[0]?.id || "cleaning");
+  const [bulkNames, setBulkNames] = useState("");
+  const bulkRows = useMemo(() => {
+    const lines = bulkNames.split("\n").map((s) => s.trim()).filter(Boolean);
+    const n = NICHE_SITES.find((x) => x.id === bulkNiche);
+    if (!n) return [] as Array<{ co: string; url: string; dm: string }>;
+    return lines.map((co) => {
+      const params = new URLSearchParams();
+      params.set("company", co);
+      if (city.trim()) params.set("city", city.trim());
+      const url = `${origin}/template/${n.id}?${params.toString()}`;
+      const dm = [
+        `${co} — built you a free preview of what a 2026 ${n.niche.toLowerCase()} site looks like, with an AI phone line that answers 24/7 and books ${n.chips[0].toLowerCase()} automatically. Stops the after-hours bleed${city.trim() ? ` in ${city.trim()}` : ""}.`,
+        "",
+        `60-sec look: ${url}`,
+      ].join("\n");
+      return { co, url, dm };
+    });
+  }, [bulkNames, bulkNiche, city, origin]);
+  function copyBulk(kind: "links" | "csv" | "dms") {
+    if (bulkRows.length === 0) return;
+    let text = "";
+    if (kind === "links") text = bulkRows.map((r) => r.url).join("\n");
+    else if (kind === "csv") text = "company,url\n" + bulkRows.map((r) => `"${r.co.replace(/"/g, '""')}",${r.url}`).join("\n");
+    else text = bulkRows.map((r) => `--- ${r.co} ---\n${r.dm}`).join("\n\n");
+    navigator.clipboard.writeText(text).then(() => blink("bulk", kind)).catch(() => {});
+  }
+
+  // ─── unlock screen ────────────────────────────────────────────────────
+  if (!unlocked) {
+    return (
+      <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: "linear-gradient(180deg, #FFF8EE, #FAF6EE)", fontFamily: "'Inter Tight', system-ui, sans-serif", padding: 24 }}>
+        <Helmet><title>TYA Admin</title><meta name="robots" content="noindex, nofollow" /></Helmet>
+        <form onSubmit={tryUnlock} style={{ maxWidth: 360, width: "100%", background: "#fff", border: "1px solid rgba(4,44,83,0.08)", borderRadius: 20, padding: 30, boxShadow: "0 20px 60px -28px rgba(4,44,83,0.25)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+            <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 L30 16 L16 30 L2 16 Z" fill="none" stroke="#042C53" strokeWidth="2.5" /><path d="M16 8 L24 16 L16 24 L8 16 Z" fill="#042C53" /></svg>
+            <span style={{ fontSize: 15, fontWeight: 700, color: "#042C53" }}>TrainYourAgent</span>
+          </div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#185FA5", marginBottom: 8, ...MONO }}>ADMIN · PRIVATE</div>
+          <h1 style={{ fontSize: 22, fontWeight: 600, color: "#042C53", margin: "0 0 8px", letterSpacing: "-0.01em" }}>This area is private.</h1>
+          <p style={{ fontSize: 14, lineHeight: 1.5, color: "#5C6B7F", margin: "0 0 18px" }}>Enter the passphrase to continue.</p>
+          <input
+            value={pinInput}
+            onChange={(e) => setPinInput(e.target.value)}
+            type="password"
+            autoFocus
+            placeholder="Passphrase"
+            style={{ width: "100%", padding: "12px 14px", borderRadius: 12, border: `1px solid ${pinError ? "#9B2C2C" : "rgba(4,44,83,0.16)"}`, fontSize: 15, color: "#042C53", outline: "none", boxSizing: "border-box", marginBottom: 12 }}
+          />
+          <button type="submit" style={{ width: "100%", padding: "12px 14px", borderRadius: 12, background: "#042C53", color: "#fff", fontSize: 14, fontWeight: 600, border: "none", cursor: "pointer" }}>Unlock</button>
+          {pinError && <div style={{ marginTop: 10, fontSize: 12.5, color: "#9B2C2C", textAlign: "center" }}>That's not it. Try again.</div>}
+        </form>
+      </div>
+    );
+  }
+
+  // ─── main UI ──────────────────────────────────────────────────────────
   return (
     <div style={{ minHeight: "100vh", background: "#FFFFFF", color: "#0B1B2B", fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
       <Helmet>
@@ -75,12 +256,9 @@ export default function TemplateGallery() {
 
       {/* rail */}
       <div style={{ borderBottom: "1px solid rgba(4,44,83,0.06)", padding: "0 24px" }}>
-        <div style={{ maxWidth: 1180, margin: "0 auto", padding: "18px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ maxWidth: 1180, margin: "0 auto", padding: "18px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, color: "#042C53", textDecoration: "none" }}>
-            <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true">
-              <path d="M16 2 L30 16 L16 30 L2 16 Z" fill="none" stroke="#042C53" strokeWidth="2.5" />
-              <path d="M16 8 L24 16 L16 24 L8 16 Z" fill="#042C53" />
-            </svg>
+            <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 L30 16 L16 30 L2 16 Z" fill="none" stroke="#042C53" strokeWidth="2.5" /><path d="M16 8 L24 16 L16 24 L8 16 Z" fill="#042C53" /></svg>
             <span style={{ fontSize: 15, fontWeight: 700 }}>TrainYourAgent</span>
           </Link>
           <span style={{ fontSize: 11, fontWeight: 700, color: "#185FA5", ...MONO }}>ADMIN · NICHE TEMPLATES</span>
@@ -96,47 +274,56 @@ export default function TemplateGallery() {
             <span style={{ ...ITALIC }}>their site, with their name on it.</span>
           </h1>
           <p style={{ fontSize: 16.5, lineHeight: 1.55, color: "#42526E", maxWidth: 680, marginTop: 18 }}>
-            Type the prospect's business name, pick their niche, and send the link. They see a premium site with a working voice agent + chatbot demo — branded to them. Closes the &ldquo;what would mine look like?&rdquo; objection in one tap.
+            Type the prospect's business name, pick their niche, and send the link by DM, email, or SMS. They see a premium site with a working voice agent + chatbot demo — branded to them. Closes the &ldquo;what would mine look like?&rdquo; objection in one tap.
           </p>
 
-          <div style={{ marginTop: 28, display: "flex", flexWrap: "wrap", gap: 12, alignItems: "flex-end" }}>
-            <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#6B7B92", ...MONO }}>COMPANY NAME</span>
-              <input
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-                placeholder="e.g. SparkleHouse Cleaning"
-                style={{ width: 280, maxWidth: "70vw", padding: "12px 14px", borderRadius: 12, border: "1px solid rgba(4,44,83,0.16)", fontSize: 15, color: "#042C53", outline: "none" }}
-              />
-            </label>
-            <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#6B7B92", ...MONO }}>CITY</span>
-              <input
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                placeholder="Tampa"
-                style={{ width: 160, maxWidth: "60vw", padding: "12px 14px", borderRadius: 12, border: "1px solid rgba(4,44,83,0.16)", fontSize: 15, color: "#042C53", outline: "none" }}
-              />
-            </label>
-            <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#6B7B92", ...MONO }}>FIND A NICHE</span>
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="cleaning, law, roof…"
-                style={{ width: 200, maxWidth: "60vw", padding: "12px 14px", borderRadius: 12, border: "1px solid rgba(4,44,83,0.16)", fontSize: 15, color: "#042C53", outline: "none" }}
-              />
-            </label>
-            <span style={{ fontSize: 13, color: "#94A3B8", paddingBottom: 12 }}>
-              {company.trim() ? `Links personalized to “${company.trim()}”. ` : "Leave blank to preview with sample names. "}
-              {q ? `${visible.length} of ${NICHE_SITES.length} niches.` : `${NICHE_SITES.length} niches available.`}
-            </span>
+          {/* prospect inputs */}
+          <div style={{ marginTop: 28, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, maxWidth: 980 }}>
+            <Field label="Company name" value={company} setValue={setCompany} placeholder="e.g. SparkleHouse Cleaning" />
+            <Field label="City" value={city} setValue={setCity} placeholder="Tampa" />
+            <Field label="Email (for ✉)" value={email} setValue={setEmail} placeholder="prospect@email.com" type="email" />
+            <Field label="Phone (for 💬)" value={phone} setValue={setPhone} placeholder="+1 813 555 0142" type="tel" />
+            <Field label="Find a niche" value={query} setValue={setQuery} placeholder="cleaning, law, roof…" />
           </div>
+          <div style={{ marginTop: 14, fontSize: 13, color: "#94A3B8" }}>
+            {company.trim() ? `Links personalized to “${company.trim()}”. ` : "Leave blank to preview with sample names. "}
+            {q ? `${visible.length} of ${NICHE_SITES.length} niches.` : `${NICHE_SITES.length} niches available.`}
+            {(company || city || email || phone) && (
+              <button
+                onClick={() => { setCompany(""); setCity(""); setEmail(""); setPhone(""); }}
+                style={{ marginLeft: 10, background: "none", border: "none", color: "#185FA5", cursor: "pointer", padding: 0, font: "inherit", textDecoration: "underline" }}
+              >
+                clear fields
+              </button>
+            )}
+          </div>
+
+          {/* recent prospects */}
+          {recent.length > 0 && (
+            <div style={{ marginTop: 22 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: "#6B7B92", ...MONO }}>RECENT PROSPECTS</span>
+                <button onClick={clearRecent} style={{ fontSize: 11, color: "#94A3B8", background: "none", border: "none", cursor: "pointer", textDecoration: "underline", padding: 0 }}>clear all</button>
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {recent.map((r) => (
+                  <button
+                    key={r.co + "_" + r.ts}
+                    onClick={() => restoreRecent(r)}
+                    title={`Restore ${r.co}${r.city ? " · " + r.city : ""}`}
+                    style={{ fontSize: 12.5, fontWeight: 500, color: "#042C53", padding: "6px 11px", borderRadius: 999, background: "#fff", border: "1px solid rgba(4,44,83,0.14)", cursor: "pointer", whiteSpace: "nowrap" }}
+                  >
+                    {r.co}{r.city ? <span style={{ color: "#94A3B8", marginLeft: 6 }}>· {r.city}</span> : null}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
       {/* gallery grid */}
-      <section style={{ padding: "8px 24px 80px" }}>
+      <section style={{ padding: "8px 24px 40px" }}>
         <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 18 }}>
           {visible.length === 0 && (
             <div style={{ gridColumn: "1 / -1", padding: "60px 20px", textAlign: "center", color: "#5C6B7F", border: "1px dashed rgba(4,44,83,0.16)", borderRadius: 20, background: "#FAFBFC" }}>
@@ -144,57 +331,188 @@ export default function TemplateGallery() {
               <div style={{ fontSize: 13 }}>Try a broader term, or <button onClick={() => setQuery("")} style={{ background: "none", border: "none", color: "#185FA5", cursor: "pointer", padding: 0, font: "inherit", textDecoration: "underline" }}>clear the search</button>.</div>
             </div>
           )}
-          {visible.map((n) => (
-            <article key={n.id} style={{ background: "#fff", border: "1px solid rgba(4,44,83,0.1)", borderRadius: 20, overflow: "hidden", boxShadow: "0 6px 28px -16px rgba(4,44,83,0.16)", display: "flex", flexDirection: "column" }}>
-              {/* mini hero preview */}
-              <div style={{ padding: "22px 22px 20px", background: `linear-gradient(155deg, ${hexA(n.accent, 0.1)}, #FAF6EE)` }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-                  <span style={{ fontSize: 22 }} aria-hidden="true">{n.emoji}</span>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: n.accent, padding: "4px 9px", borderRadius: 999, background: hexA(n.accent, 0.12), ...MONO }}>{n.niche.toUpperCase()}</span>
+          {visible.map((n) => {
+            const dmFlash = flash === `${n.id}|dm`;
+            const linkFlash = flash === `${n.id}|link`;
+            return (
+              <article key={n.id} style={{ background: "#fff", border: "1px solid rgba(4,44,83,0.1)", borderRadius: 20, overflow: "hidden", boxShadow: "0 6px 28px -16px rgba(4,44,83,0.16)", display: "flex", flexDirection: "column" }}>
+                {/* mini hero preview */}
+                <div style={{ padding: "22px 22px 20px", background: `linear-gradient(155deg, ${hexA(n.accent, 0.1)}, #FAF6EE)` }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+                    <span style={{ fontSize: 22 }} aria-hidden="true">{n.emoji}</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: n.accent, padding: "4px 9px", borderRadius: 999, background: hexA(n.accent, 0.12), ...MONO }}>{n.niche.toUpperCase()}</span>
+                  </div>
+                  <div style={{ fontSize: 19, lineHeight: 1.15, fontWeight: 600, color: "#042C53", letterSpacing: "-0.01em" }}>
+                    {n.heroLead} <span style={{ ...ITALIC, color: n.accent }}>{n.heroItalic}</span>
+                  </div>
                 </div>
-                <div style={{ fontSize: 19, lineHeight: 1.15, fontWeight: 600, color: "#042C53", letterSpacing: "-0.01em" }}>
-                  {n.heroLead} <span style={{ ...ITALIC, color: n.accent }}>{n.heroItalic}</span>
-                </div>
-              </div>
-              {/* body */}
-              <div style={{ padding: "18px 22px 22px", display: "flex", flexDirection: "column", gap: 14, flex: 1 }}>
-                <p style={{ fontSize: 13.5, lineHeight: 1.5, color: "#5C6B7F", margin: 0 }}>{n.subhead}</p>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                  {n.chips.slice(0, 3).map((c) => (
-                    <span key={c} style={{ fontSize: 11, fontWeight: 600, color: "#042C53", padding: "4px 9px", borderRadius: 999, background: "#F1F5F9" }}>{c}</span>
-                  ))}
-                </div>
-                <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 6, paddingTop: 6 }}>
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <a
-                      href={buildUrl(n.id)}
-                      target="_blank"
-                      rel="noopener"
-                      style={{ flex: 1, textAlign: "center", padding: "11px 14px", borderRadius: 12, background: "#042C53", color: "#fff", fontSize: 13.5, fontWeight: 600, textDecoration: "none" }}
+                {/* body */}
+                <div style={{ padding: "18px 22px 20px", display: "flex", flexDirection: "column", gap: 14, flex: 1 }}>
+                  <p style={{ fontSize: 13.5, lineHeight: 1.5, color: "#5C6B7F", margin: 0 }}>{n.subhead}</p>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                    {n.chips.slice(0, 3).map((c) => (
+                      <span key={c} style={{ fontSize: 11, fontWeight: 600, color: "#042C53", padding: "4px 9px", borderRadius: 999, background: "#F1F5F9" }}>{c}</span>
+                    ))}
+                  </div>
+                  {/* actions */}
+                  <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 8, paddingTop: 6 }}>
+                    <button
+                      onClick={() => openSite(n.id)}
+                      style={{ width: "100%", padding: "11px 14px", borderRadius: 12, background: "#042C53", color: "#fff", fontSize: 13.5, fontWeight: 600, border: "none", cursor: "pointer" }}
                     >
                       Open site →
-                    </a>
+                    </button>
                     <button
                       onClick={() => copyText(n.id, "dm", buildDm(n))}
-                      title="Copy a ready-to-send LinkedIn/SMS message with this link"
-                      style={{ padding: "11px 14px", borderRadius: 12, background: n.accent, color: "#fff", fontSize: 13.5, fontWeight: 600, border: "none", cursor: "pointer", minWidth: 96 }}
+                      title="Copy a ready-to-send LinkedIn/SMS message with the link"
+                      style={{ width: "100%", padding: "11px 14px", borderRadius: 12, background: n.accent, color: "#fff", fontSize: 13.5, fontWeight: 600, border: "none", cursor: "pointer" }}
                     >
-                      {copied === `${n.id}|dm` ? "Copied ✓" : "Copy DM"}
+                      {dmFlash ? "DM copied ✓" : "Copy DM"}
                     </button>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
+                      <ChannelBtn
+                        onClick={() => openEmail(n)}
+                        disabled={!email.trim()}
+                        title={email.trim() ? `Email to ${email.trim()}` : "Add the prospect's email above to enable"}
+                        flashOk={false}
+                        label="Email"
+                        icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm0 4v10h16V8l-8 5-8-5zm0-2 8 5 8-5H4z" /></svg>}
+                      />
+                      <ChannelBtn
+                        onClick={() => openSms(n)}
+                        disabled={false}
+                        title={phone.trim() ? `SMS to ${phone.trim()}` : "Open SMS (pick recipient from your contacts)"}
+                        flashOk={false}
+                        label="SMS"
+                        icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2 4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7l-5 4V4z" /></svg>}
+                      />
+                      <ChannelBtn
+                        onClick={() => copyText(n.id, "link", buildUrl(n.id))}
+                        disabled={false}
+                        title="Copy the link only (no message)"
+                        flashOk={linkFlash}
+                        label={linkFlash ? "Copied ✓" : "Link"}
+                        icon={<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 1 0-7.07-7.07l-1.41 1.41M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 1 0 7.07 7.07l1.41-1.41" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                      />
+                    </div>
                   </div>
-                  <button
-                    onClick={() => copyText(n.id, "link", buildUrl(n.id))}
-                    style={{ padding: "2px 0", background: "none", color: "#6B7B92", fontSize: 11.5, fontWeight: 500, border: "none", cursor: "pointer", textAlign: "right", textDecoration: "underline" }}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* bulk export */}
+      <section style={{ padding: "0 24px 80px" }}>
+        <div style={{ maxWidth: 1180, margin: "0 auto", border: "1px solid rgba(4,44,83,0.1)", borderRadius: 20, background: "#FAFBFC", overflow: "hidden" }}>
+          <button
+            onClick={() => setBulkOpen((v) => !v)}
+            style={{ width: "100%", padding: "18px 22px", textAlign: "left", background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+          >
+            <span>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#185FA5", ...MONO }}>BULK</span>
+              <span style={{ display: "block", fontSize: 16, fontWeight: 600, color: "#042C53", marginTop: 4 }}>
+                Paste many prospect names — get back personalized links + DMs in one shot.
+              </span>
+            </span>
+            <span style={{ fontSize: 22, color: "#94A3B8", transform: bulkOpen ? "rotate(45deg)" : "rotate(0deg)", transition: "transform 200ms ease" }}>+</span>
+          </button>
+          {bulkOpen && (
+            <div style={{ padding: "0 22px 22px", display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 18 }}>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: "#6B7B92", ...MONO }}>NICHE</span>
+                  <select
+                    value={bulkNiche}
+                    onChange={(e) => setBulkNiche(e.target.value)}
+                    style={{ padding: "8px 10px", borderRadius: 10, border: "1px solid rgba(4,44,83,0.16)", fontSize: 13.5, color: "#042C53", background: "#fff" }}
                   >
-                    {copied === `${n.id}|link` ? "Link copied ✓" : "or copy link only"}
-                  </button>
+                    {NICHE_SITES.map((n) => (<option key={n.id} value={n.id}>{n.niche}</option>))}
+                  </select>
+                </div>
+                <textarea
+                  value={bulkNames}
+                  onChange={(e) => setBulkNames(e.target.value)}
+                  placeholder={"One prospect per line:\nSparkleHouse Cleaning\nFreshFold Laundry\nAcme Roofing"}
+                  rows={10}
+                  style={{ width: "100%", padding: "12px 14px", borderRadius: 12, border: "1px solid rgba(4,44,83,0.16)", fontSize: 14, color: "#042C53", outline: "none", boxSizing: "border-box", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", resize: "vertical" }}
+                />
+              </div>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: "#6B7B92", ...MONO }}>OUTPUT · {bulkRows.length} ROW{bulkRows.length === 1 ? "" : "S"}</span>
+                  <div style={{ display: "flex", gap: 6 }}>
+                    <BulkBtn onClick={() => copyBulk("links")} disabled={!bulkRows.length}>{flash === "bulk|links" ? "Copied ✓" : "Copy links"}</BulkBtn>
+                    <BulkBtn onClick={() => copyBulk("csv")} disabled={!bulkRows.length}>{flash === "bulk|csv" ? "Copied ✓" : "Copy CSV"}</BulkBtn>
+                    <BulkBtn onClick={() => copyBulk("dms")} disabled={!bulkRows.length}>{flash === "bulk|dms" ? "Copied ✓" : "Copy DMs"}</BulkBtn>
+                  </div>
+                </div>
+                <div style={{ background: "#fff", border: "1px solid rgba(4,44,83,0.12)", borderRadius: 12, padding: 12, height: 254, overflowY: "auto", fontSize: 12.5, color: "#42526E", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}>
+                  {bulkRows.length === 0 && <div style={{ color: "#94A3B8", fontFamily: "'Inter Tight', system-ui, sans-serif" }}>Paste names on the left to see personalized links here.</div>}
+                  {bulkRows.map((r) => (
+                    <div key={r.co} style={{ marginBottom: 8, wordBreak: "break-all" }}>
+                      <div style={{ color: "#042C53", fontWeight: 600 }}>{r.co}</div>
+                      <a href={r.url} target="_blank" rel="noopener" style={{ color: "#185FA5", textDecoration: "underline" }}>{r.url}</a>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </article>
-          ))}
+            </div>
+          )}
         </div>
       </section>
     </div>
+  );
+}
+
+// ─── tiny presentational helpers ────────────────────────────────────────
+function Field(props: { label: string; value: string; setValue: (v: string) => void; placeholder?: string; type?: string }) {
+  return (
+    <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      <span style={{ fontSize: 11, fontWeight: 700, color: "#6B7B92", ...MONO }}>{props.label.toUpperCase()}</span>
+      <input
+        value={props.value}
+        onChange={(e) => props.setValue(e.target.value)}
+        placeholder={props.placeholder}
+        type={props.type || "text"}
+        style={{ width: "100%", padding: "12px 14px", borderRadius: 12, border: "1px solid rgba(4,44,83,0.16)", fontSize: 15, color: "#042C53", outline: "none", boxSizing: "border-box", background: "#fff" }}
+      />
+    </label>
+  );
+}
+
+function ChannelBtn(props: { onClick: () => void; disabled: boolean; title: string; flashOk: boolean; label: string; icon: React.ReactNode }) {
+  return (
+    <button
+      onClick={props.onClick}
+      disabled={props.disabled}
+      title={props.title}
+      style={{
+        padding: "9px 6px", borderRadius: 10,
+        background: props.flashOk ? "#15724D" : "#fff",
+        color: props.flashOk ? "#fff" : (props.disabled ? "#C5CDD8" : "#042C53"),
+        fontSize: 12, fontWeight: 600,
+        border: `1px solid ${props.flashOk ? "#15724D" : "rgba(4,44,83,0.14)"}`,
+        cursor: props.disabled ? "not-allowed" : "pointer",
+        display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 5,
+      }}
+    >
+      <span style={{ opacity: 0.8 }}>{props.icon}</span>
+      {props.label}
+    </button>
+  );
+}
+
+function BulkBtn(props: { onClick: () => void; disabled: boolean; children: React.ReactNode }) {
+  return (
+    <button
+      onClick={props.onClick}
+      disabled={props.disabled}
+      style={{ padding: "7px 11px", borderRadius: 10, background: props.disabled ? "#F1F5F9" : "#042C53", color: props.disabled ? "#94A3B8" : "#fff", fontSize: 12, fontWeight: 600, border: "none", cursor: props.disabled ? "not-allowed" : "pointer" }}
+    >
+      {props.children}
+    </button>
   );
 }
 
