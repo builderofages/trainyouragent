@@ -17,7 +17,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { NICHE_SITES, type NicheSite } from "@/lib/nicheSiteTemplates";
+import { NICHE_SITES, ACTIVE_NICHE_SITES, type NicheSite } from "@/lib/nicheSiteTemplates";
 import { fireEvent } from "@/lib/event";
 
 const ITALIC: React.CSSProperties = {
@@ -227,8 +227,8 @@ export default function TemplateGallery() {
   const [query, setQuery] = useState("");
   const q = query.trim().toLowerCase();
   const visible = useMemo(() => {
-    if (!q) return NICHE_SITES;
-    return NICHE_SITES.filter(
+    if (!q) return ACTIVE_NICHE_SITES;
+    return ACTIVE_NICHE_SITES.filter(
       (n) =>
         n.niche.toLowerCase().includes(q) ||
         n.id.toLowerCase().includes(q) ||
@@ -342,7 +342,7 @@ export default function TemplateGallery() {
 
   // ─── bulk export ──────────────────────────────────────────────────────
   const [bulkOpen, setBulkOpen] = useState(false);
-  const [bulkNiche, setBulkNiche] = useState<string>(NICHE_SITES[0]?.id || "cleaning");
+  const [bulkNiche, setBulkNiche] = useState<string>(ACTIVE_NICHE_SITES[0]?.id || "cleaning");
   const [bulkNames, setBulkNames] = useState("");
   const bulkRows = useMemo(() => {
     const lines = bulkNames.split("\n").map((s) => s.trim()).filter(Boolean);
@@ -476,7 +476,7 @@ export default function TemplateGallery() {
           </div>
           <div style={{ marginTop: 14, fontSize: 13, color: "#94A3B8" }}>
             {company.trim() ? `Links personalized to “${company.trim()}”. ` : "Leave blank to preview with sample names. "}
-            {q ? `${visible.length} of ${NICHE_SITES.length} niches.` : `${NICHE_SITES.length} niches available.`}
+            {q ? `${visible.length} of ${ACTIVE_NICHE_SITES.length} niches.` : `${ACTIVE_NICHE_SITES.length} niches available.`}
             {(company || city || email || phone) && (
               <button
                 onClick={() => { setCompany(""); setCity(""); setEmail(""); setPhone(""); }}
@@ -726,7 +726,7 @@ export default function TemplateGallery() {
                     onChange={(e) => setBulkNiche(e.target.value)}
                     style={{ padding: "8px 10px", borderRadius: 10, border: "1px solid rgba(4,44,83,0.16)", fontSize: 13.5, color: "#042C53", background: "#fff" }}
                   >
-                    {NICHE_SITES.map((n) => (<option key={n.id} value={n.id}>{n.niche}</option>))}
+                    {ACTIVE_NICHE_SITES.map((n) => (<option key={n.id} value={n.id}>{n.niche}</option>))}
                   </select>
                 </div>
                 <textarea

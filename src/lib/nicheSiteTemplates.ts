@@ -36,6 +36,10 @@ export type NicheSite = {
   chat: NicheChatExchange[];
   // pricing line
   priceLine: string;
+  // v193: pull a niche out of circulation without deleting the data — gallery
+  // hides it, the public /template/[id] route 404s with a "template-not-found"
+  // message. Useful when a vertical has temporary compliance / legal issues.
+  disabled?: boolean;
 };
 
 export const NICHE_SITES: NicheSite[] = [
@@ -768,5 +772,11 @@ export const NICHE_SITES: NicheSite[] = [
 
 export function getNicheSite(id: string | undefined): NicheSite | undefined {
   if (!id) return undefined;
-  return NICHE_SITES.find((n) => n.id === id.toLowerCase());
+  const n = NICHE_SITES.find((x) => x.id === id.toLowerCase());
+  // Treat `disabled` niches as not-found for the public template route.
+  if (!n || n.disabled) return undefined;
+  return n;
 }
+
+/** Active (non-disabled) niches — for galleries, search, bulk export. */
+export const ACTIVE_NICHE_SITES: NicheSite[] = NICHE_SITES.filter((n) => !n.disabled);
