@@ -10,14 +10,29 @@ After running, verify in Table Editor that `template_sends` exists with the expe
 
 ## 2. Verify required env vars in Vercel
 
-These should already be set from prior work. Confirm in Vercel → Project Settings → Environment Variables:
+Confirm in Vercel → Project Settings → Environment Variables:
 
+**Core (close tool)**
 - `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` — required for everything Supabase-backed
-- `ADMIN_TOKEN` — gates `/api/template-send`, `/api/admin/template-activity`, the nurture cron, AND signs the unsubscribe HMAC. Critical.
-- `RESEND_API_KEY`, `LEAD_NOTIFY_FROM` — for the nurture emails. `LEAD_NOTIFY_FROM` should be `Alexander <alexander@trainyouragent.com>` once the Resend domain is verified; if not yet, the cron falls back to `onboarding@resend.dev`.
-- `CAL_WEBHOOK_SECRET` — already required by the existing `/api/cal-webhook`; the new template-attribution path reuses this.
-- `ELEVENLABS_API_KEY`, `OPENAI_API_KEY` — for the voice playback (already wired).
-- `ANTHROPIC_API_KEY` (or Groq / Gemini fallback keys) — for the live chat (already wired).
+- `ADMIN_TOKEN` — gates `/api/template-send`, `/api/admin/*`, all crons, signs the unsubscribe HMAC. Critical.
+- `RESEND_API_KEY`, `LEAD_NOTIFY_FROM` — `LEAD_NOTIFY_FROM` = `Alexander <alexander@trainyouragent.com>` once the Resend domain is verified
+- `CAL_WEBHOOK_SECRET` — already required by `/api/cal-webhook`; template-attribution reuses
+- `ELEVENLABS_API_KEY`, `OPENAI_API_KEY` — voice playback
+- `ANTHROPIC_API_KEY` (or Groq / Gemini fallback keys) — live chat
+
+**CAN-SPAM compliance (online-only business)**
+- `SENDER_LEGAL_NAME` — `TrainYourAgent LLC` (or whatever your filing reads)
+- `SENDER_POSTAL_ADDRESS` — **required by federal law in every commercial email**. Online-only businesses can use:
+  - **USPS PO Box** (~$20–200/year, real and FTC-accepted)
+  - **Virtual mailbox / CMRA** — iPostal1, Anytime Mailbox, Earth Class Mail (~$10–30/month, gives you a real street address with suite number, often forwards/scans mail)
+  - **LLC registered agent address** — whatever's on your Articles of Organization filing in Florida is already a real, legal address you can use
+  - Format: `TrainYourAgent LLC, 1234 Real St Suite 200, Tampa FL 33602` — that whole string goes in the env var
+- `RESEND_WEBHOOK_SECRET` — paste the signing secret from Resend → Webhooks. Without it the bounce endpoint is unauthenticated.
+
+**Autopilot lead sourcing (v198-v200)**
+- `GOOGLE_PLACES_API_KEY` *(optional)* — set for richer SMB discovery (~$17/1000 lookups). Without it, OSM Overpass runs free as fallback.
+- `SEND_TO_PATTERN_GUESSES` *(optional, leave unset initially)* — set to `1` only after your sending domain has aged with verified-only volume and good baseline deliverability. Until then, the system gates pattern-guessed emails (`info@domain`) to protect sender reputation.
+- `NURTURE_MAX_PER_RUN` *(optional, default 40)* — global per-tick cap. Tune up gradually as the domain warms (industry standard: start 10/day, double weekly).
 
 Redeploy after any env change.
 

@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { NICHE_SITES, ACTIVE_NICHE_SITES, type NicheSite } from "@/lib/nicheSiteTemplates";
 import { fireEvent } from "@/lib/event";
+import AutopilotPanel from "./AutopilotPanel";
 
 const ITALIC: React.CSSProperties = {
   fontFamily: "'Playfair Display', Georgia, serif",
@@ -607,6 +608,9 @@ export default function TemplateGallery() {
               </div>
             )}
           </div>
+
+          {/* v200 — autopilot lead-sourcing panel */}
+          <AutopilotPanel adminToken={adminToken} />
 
           {/* recent prospects */}
           {recent.length > 0 && (
