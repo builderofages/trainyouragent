@@ -528,8 +528,8 @@ export default function NicheSiteTemplate() {
             src={src}
             alt=""
             aria-hidden="true"
-            loading={i === 0 ? "eager" : "lazy"}
-            fetchPriority={i === 0 ? "high" : "auto"}
+            loading="lazy"
+            fetchPriority="low"
             decoding="async"
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: i === heroIdx ? 1 : 0, transition: "opacity 1.6s ease", filter: "saturate(1.05)" }}
             onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
