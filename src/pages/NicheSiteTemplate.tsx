@@ -327,6 +327,46 @@ export default function NicheSiteTemplate() {
     setBaPos(Math.round((x / r.width) * 100));
   }
 
+  // ── LIVE CALL SIMULATION: auto-plays steps when scrolled into view ─
+  const callScript = useMemo(() => callScriptForNiche(site, company, city), [site, company, city]);
+  const [callStep, setCallStep] = useState(-1);
+  const callRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!callRef.current || typeof IntersectionObserver === "undefined") return;
+    let timers: number[] = [];
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting && callStep < 0) {
+          // step through the script — first step appears at 0ms, then each ~1400ms later
+          callScript.forEach((_, i) => {
+            const t = window.setTimeout(() => setCallStep(i), i * 1400);
+            timers.push(t);
+          });
+          io.disconnect();
+          break;
+        }
+      }
+    }, { threshold: 0.35 });
+    io.observe(callRef.current);
+    return () => { io.disconnect(); timers.forEach((t) => clearTimeout(t)); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [callScript.length]);
+  const restartCall = () => {
+    setCallStep(-1);
+    let timers: number[] = [];
+    callScript.forEach((_, i) => {
+      const t = window.setTimeout(() => setCallStep(i), 200 + i * 1400);
+      timers.push(t);
+    });
+  };
+
+  // ── MISSED-CALL ROI CALCULATOR (prospect's pain quantified) ──────
+  const [roiCalls, setRoiCalls] = useState(120);   // missed/mo
+  const [roiValue, setRoiValue] = useState(450);   // avg job $
+  const [roiClose, setRoiClose] = useState(28);    // close % on answered
+  const roiAnnualLoss = Math.round(roiCalls * 12 * (roiClose / 100) * roiValue);
+  const roiMonthly = Math.round(roiAnnualLoss / 12);
+
   // ── scroll-aware sticky CTA card (desktop, after hero) ────────────
   const [showStickyCta, setShowStickyCta] = useState(false);
   useEffect(() => {
@@ -479,98 +519,84 @@ export default function NicheSiteTemplate() {
         </div>
       )}
 
-      {/* ── HERO with animated mesh gradient ──────────────────────── */}
-      <header
-        style={{
-          position: "relative",
-          padding: "72px 20px 56px",
-          background: `
-            radial-gradient(900px 500px at 8% 0%, ${hexA(A, 0.18)}, transparent 60%),
-            radial-gradient(700px 400px at 100% 30%, ${hexA(A, 0.10)}, transparent 60%),
-            radial-gradient(900px 500px at 50% 100%, #FAF6EE, transparent 60%),
-            #FFFFFF
-          `,
-          backgroundSize: "200% 200%, 200% 200%, 200% 200%, auto",
-          animation: "tyaMesh 18s ease-in-out infinite",
-          overflow: "hidden",
-        }}
-      >
-        {/* live activity ticker */}
-        <div style={{ maxWidth: 900, margin: "0 auto 20px", display: "flex", justifyContent: "center" }}>
-          <div key={activityIdx} style={{ animation: "tyaTickerIn .45s ease-out", display: "inline-flex", alignItems: "center", gap: 10, padding: "8px 14px", borderRadius: 999, background: "rgba(34,163,108,0.08)", border: "1px solid rgba(34,163,108,0.18)", fontSize: 12.5, fontWeight: 600, color: "#15724D" }}>
+      {/* ── HERO: full-bleed cinematic, image fills, glass card on top ── */}
+      <header style={{ position: "relative", minHeight: "min(720px, 86vh)", overflow: "hidden", background: NAVY }}>
+        {/* Background slideshow — fills the entire hero */}
+        {heroImages.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt=""
+            aria-hidden="true"
+            loading={i === 0 ? "eager" : "lazy"}
+            fetchPriority={i === 0 ? "high" : "auto"}
+            decoding="async"
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: i === heroIdx ? 1 : 0, transition: "opacity 1.6s ease", filter: "saturate(1.05)" }}
+            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+          />
+        ))}
+        {/* Cinematic darkening + brand wash */}
+        <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, ${hexA(NAVY, 0.35)} 0%, ${hexA(NAVY, 0.6)} 55%, ${hexA(NAVY, 0.92)} 100%)` }} />
+        <div style={{ position: "absolute", inset: 0, background: `radial-gradient(900px 480px at 12% 18%, ${hexA(A, 0.35)}, transparent 60%), radial-gradient(700px 400px at 88% 30%, ${hexA(A, 0.18)}, transparent 60%)`, mixBlendMode: "soft-light" }} />
+
+        {/* Live activity ticker — pinned top-center */}
+        <div style={{ position: "relative", zIndex: 2, padding: "26px 20px 0", display: "flex", justifyContent: "center" }}>
+          <div key={activityIdx} style={{ animation: "tyaTickerIn .45s ease-out", display: "inline-flex", alignItems: "center", gap: 10, padding: "9px 16px", borderRadius: 999, background: "rgba(255,255,255,0.14)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.18)", fontSize: 12.5, fontWeight: 600, color: "#fff" }}>
             <span style={{ position: "relative", width: 8, height: 8 }}>
-              <span style={{ position: "absolute", inset: 0, borderRadius: 999, background: "#22A36C" }} />
-              <span style={{ position: "absolute", inset: -3, borderRadius: 999, background: "#22A36C", opacity: 0.5, animation: "tyaPulse 1.6s infinite" }} />
+              <span style={{ position: "absolute", inset: 0, borderRadius: 999, background: "#22DD91" }} />
+              <span style={{ position: "absolute", inset: -3, borderRadius: 999, background: "#22DD91", opacity: 0.55, animation: "tyaPulse 1.6s infinite" }} />
             </span>
             <span>{activity[activityIdx]}</span>
           </div>
         </div>
 
-        <div style={{ maxWidth: 980, margin: "0 auto", textAlign: "center" }}>
-          <div data-fade style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 999, background: hexA(A, 0.1), color: A, fontSize: 11, fontWeight: 700, marginBottom: 26, ...MONO }}>
-            <span style={{ width: 6, height: 6, borderRadius: 999, background: A, display: "inline-block" }} />
+        {/* Headline + chips + CTAs */}
+        <div style={{ position: "relative", zIndex: 2, padding: "44px 20px 100px", maxWidth: 1080, margin: "0 auto", textAlign: "center" }}>
+          <div data-fade style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 999, background: "rgba(255,255,255,0.14)", backdropFilter: "blur(8px)", color: "#fff", fontSize: 11, fontWeight: 700, marginBottom: 26, border: "1px solid rgba(255,255,255,0.2)", ...MONO }}>
+            <span style={{ width: 6, height: 6, borderRadius: 999, background: "#fff" }} />
             {site.niche.toUpperCase()} · {city.toUpperCase()}
           </div>
-          <h1 data-fade style={{ fontSize: "clamp(38px, 7vw, 82px)", lineHeight: 1.03, letterSpacing: "-0.025em", fontWeight: 600, color: NAVY, margin: 0 }}>
+          <h1 data-fade style={{ fontSize: "clamp(42px, 8vw, 96px)", lineHeight: 1.02, letterSpacing: "-0.028em", fontWeight: 600, color: "#fff", margin: 0, textShadow: "0 4px 28px rgba(0,0,0,0.35)" }}>
             {site.heroLead}{" "}
-            <span style={{ ...ITALIC, color: A }}>{site.heroItalic}</span>
+            <span style={{ ...ITALIC, color: "#fff", background: `linear-gradient(120deg, #fff, ${hexA(A, 1)} 90%)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{site.heroItalic}</span>
           </h1>
-          <p data-fade style={{ fontSize: "clamp(16px, 2.2vw, 20px)", lineHeight: 1.55, color: "#42526E", maxWidth: 660, margin: "26px auto 30px" }}>
+          <p data-fade style={{ fontSize: "clamp(17px, 2.2vw, 22px)", lineHeight: 1.55, color: "rgba(255,255,255,0.88)", maxWidth: 720, margin: "28px auto 36px", textShadow: "0 2px 16px rgba(0,0,0,0.35)" }}>
             {site.subhead}
           </p>
-          <div data-fade style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center" }}>
+          <div data-fade style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center" }}>
             <a href="#cta" onClick={(e) => { e.preventDefault(); document.getElementById("cta")?.scrollIntoView({ behavior: "smooth", block: "start" }); void fireEvent("template_hero_book", { niche: site.id }); }}
-              style={{ padding: "16px 30px", borderRadius: 16, background: NAVY, color: "#fff", fontSize: 16, fontWeight: 600, border: "none", cursor: "pointer", boxShadow: "0 24px 50px -22px rgba(4,44,83,0.5)", textDecoration: "none", display: "inline-flex", alignItems: "center" }}>
+              style={{ padding: "18px 34px", borderRadius: 16, background: "#fff", color: NAVY, fontSize: 16, fontWeight: 700, textDecoration: "none", boxShadow: "0 30px 60px -20px rgba(0,0,0,0.6)", display: "inline-flex", alignItems: "center" }}>
               Book {firstName} →
             </a>
             <button onClick={() => { document.getElementById("demo")?.scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(() => void playGreeting(), 600); void fireEvent("template_hero_talk", { niche: site.id }); }}
-              style={{ padding: "16px 30px", borderRadius: 16, background: "#fff", color: NAVY, fontSize: 16, fontWeight: 600, border: "2px solid rgba(4,44,83,0.14)", cursor: "pointer" }}>
-              ▶︎ Talk to our AI line
+              style={{ padding: "18px 34px", borderRadius: 16, background: "rgba(255,255,255,0.12)", color: "#fff", fontSize: 16, fontWeight: 600, border: "2px solid rgba(255,255,255,0.32)", cursor: "pointer", backdropFilter: "blur(10px)" }}>
+              ▶︎ Hear the AI line
             </button>
           </div>
-          <div data-fade style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginTop: 26 }}>
+          <div data-fade style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginTop: 30 }}>
             {site.chips.map((c) => (
-              <span key={c} style={{ padding: "7px 13px", borderRadius: 999, background: "#fff", border: "1px solid rgba(4,44,83,0.1)", fontSize: 12.5, fontWeight: 600, color: NAVY }}>
+              <span key={c} style={{ padding: "7px 14px", borderRadius: 999, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.22)", backdropFilter: "blur(6px)", fontSize: 12.5, fontWeight: 600, color: "#fff" }}>
                 {c}
               </span>
             ))}
           </div>
-
           {/* trust strip */}
-          <div data-fade style={{ marginTop: 30, display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center", alignItems: "center" }}>
+          <div data-fade style={{ marginTop: 34, display: "flex", flexWrap: "wrap", gap: 18, justifyContent: "center", alignItems: "center" }}>
             {(site.trustBadges || defaultTrustBadges()).map((b) => (
-              <span key={b} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11.5, fontWeight: 700, color: "#5C6B7F", letterSpacing: ".06em" }}>
-                <Stars n={5} small color={A} /> {b}
+              <span key={b} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.85)", letterSpacing: ".06em" }}>
+                <Stars n={5} small color="#FFD24A" /> {b}
               </span>
             ))}
           </div>
-
-          {/* HD niche hero SLIDESHOW — 3 rotating magazine-cover variants */}
-          <div data-fade style={{ marginTop: 44, maxWidth: 1080, marginLeft: "auto", marginRight: "auto" }}>
-            <div style={{ position: "relative", width: "100%", aspectRatio: "21/9", borderRadius: 22, overflow: "hidden", background: `linear-gradient(135deg, ${hexA(A, 0.22)}, ${hexA(A, 0.08)})`, boxShadow: `0 30px 70px -30px ${hexA(NAVY, 0.35)}` }}>
-              {heroImages.map((src, i) => (
-                <img
-                  key={src}
-                  src={src}
-                  alt={`${site.niche} — ${company}`}
-                  loading={i === 0 ? "eager" : "lazy"}
-                  fetchPriority={i === 0 ? "high" : "auto"}
-                  decoding="async"
-                  style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: i === heroIdx ? 1 : 0, transition: "opacity 1.2s ease" }}
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                />
-              ))}
-              <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, transparent 50%, rgba(4,44,83,0.55) 100%)` }} />
-              <span style={{ position: "absolute", bottom: 16, left: 18, padding: "6px 12px", borderRadius: 999, background: "rgba(255,255,255,0.92)", color: NAVY, fontSize: 11, fontWeight: 700, ...MONO }}>{company.toUpperCase()} · {site.niche.toUpperCase()}</span>
-              {/* slide dots */}
-              <div style={{ position: "absolute", bottom: 14, right: 18, display: "flex", gap: 6 }}>
-                {heroImages.map((_, i) => (
-                  <button key={i} onClick={() => setHeroIdx(i)} aria-label={`Image ${i + 1}`} style={{ width: i === heroIdx ? 22 : 8, height: 8, borderRadius: 99, background: i === heroIdx ? "#fff" : "rgba(255,255,255,0.5)", border: "none", cursor: "pointer", transition: "width 250ms ease, background 250ms ease", padding: 0 }} />
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
+
+        {/* Slide indicators — bottom right corner */}
+        <div style={{ position: "absolute", bottom: 22, right: 24, zIndex: 2, display: "flex", gap: 6 }}>
+          {heroImages.map((_, i) => (
+            <button key={i} onClick={() => setHeroIdx(i)} aria-label={`Image ${i + 1}`} style={{ width: i === heroIdx ? 28 : 8, height: 8, borderRadius: 99, background: i === heroIdx ? "#fff" : "rgba(255,255,255,0.45)", border: "none", cursor: "pointer", transition: "width 250ms ease, background 250ms ease", padding: 0 }} />
+          ))}
+        </div>
+        <span style={{ position: "absolute", bottom: 22, left: 24, zIndex: 2, padding: "6px 12px", borderRadius: 999, background: "rgba(255,255,255,0.14)", backdropFilter: "blur(8px)", color: "#fff", fontSize: 10.5, fontWeight: 700, border: "1px solid rgba(255,255,255,0.2)", ...MONO }}>{company.toUpperCase()} · {site.niche.toUpperCase()}</span>
       </header>
 
       {/* ── ANIMATED STATS BAR ───────────────────────────────────── */}
@@ -592,6 +618,66 @@ export default function NicheSiteTemplate() {
         </div>
       </section>
 
+      {/* ── LIVE CALL SIMULATION ─────────────────────────────────── */}
+      <section ref={callRef} style={{ padding: "80px 20px", background: NAVY, color: "#fff", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, background: `radial-gradient(700px 400px at 80% 20%, ${hexA(A, 0.18)}, transparent 60%), radial-gradient(600px 400px at 10% 90%, ${hexA(A, 0.10)}, transparent 60%)`, pointerEvents: "none" }} />
+        <div style={{ position: "relative", maxWidth: 980, margin: "0 auto" }}>
+          <div data-fade style={{ textAlign: "center", marginBottom: 36 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#FFD24A", marginBottom: 12, ...MONO }}>WATCH IT WORK · LIVE</div>
+            <h2 style={{ fontSize: "clamp(28px, 4.8vw, 46px)", lineHeight: 1.08, letterSpacing: "-0.022em", fontWeight: 600, color: "#fff", margin: 0 }}>
+              A real call to {company},{" "}
+              <span style={{ ...ITALIC, color: A === NAVY ? "#FFD24A" : "#fff" }}>start to finish.</span>
+            </h2>
+          </div>
+          {/* phone frame */}
+          <div data-fade style={{ maxWidth: 540, margin: "0 auto", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 32, padding: 24, backdropFilter: "blur(14px)", boxShadow: "0 40px 80px -20px rgba(0,0,0,0.5)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 6px 14px", borderBottom: "1px solid rgba(255,255,255,0.1)", marginBottom: 16, fontSize: 11, color: "rgba(255,255,255,0.6)", ...MONO }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 8, height: 8, borderRadius: 999, background: "#22DD91", animation: "tyaPulse 1.6s infinite" }} />
+                LIVE
+              </span>
+              <span>(555) {String((Math.abs(site.id.charCodeAt(0) * 13) % 900) + 100).padStart(3, "0")}-{String((Math.abs(site.id.charCodeAt(site.id.length - 1) * 17) % 9000) + 1000).padStart(4, "0")}</span>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14, minHeight: 380 }}>
+              {callScript.map((line, i) => {
+                const visible = i <= callStep;
+                const isAgent = line.who === "agent";
+                const isSys = line.who === "system";
+                return (
+                  <div key={i} style={{ alignSelf: isSys ? "center" : isAgent ? "flex-start" : "flex-end", maxWidth: isSys ? "100%" : "82%", opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(8px)", transition: "opacity .45s ease, transform .45s ease" }}>
+                    {isSys ? (
+                      <div style={{ fontSize: 11.5, color: "rgba(255,255,255,0.55)", textAlign: "center", padding: "6px 12px", borderRadius: 999, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", ...MONO }}>
+                        {line.text}
+                      </div>
+                    ) : (
+                      <>
+                        <div style={{ fontSize: 14.5, lineHeight: 1.45, padding: "12px 16px", borderRadius: 18, background: isAgent ? "rgba(255,255,255,0.96)" : A, color: isAgent ? NAVY : "#fff", borderBottomLeftRadius: isAgent ? 4 : 18, borderBottomRightRadius: isAgent ? 18 : 4 }}>
+                          {line.text}
+                        </div>
+                        <div style={{ fontSize: 10.5, color: "rgba(255,255,255,0.55)", marginTop: 4, textAlign: isAgent ? "left" : "right", ...MONO }}>
+                          {isAgent ? `${company.toUpperCase()} · AI` : "CALLER"}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+              {callStep >= 0 && callStep < callScript.length - 1 && (
+                <div style={{ alignSelf: callScript[callStep + 1]?.who === "agent" ? "flex-start" : "flex-end", padding: "10px 14px", borderRadius: 16, background: callScript[callStep + 1]?.who === "agent" ? "rgba(255,255,255,0.18)" : hexA(A, 0.5), color: "#fff" }}>
+                  <span style={{ display: "inline-block", animation: "tyaDot 1.2s infinite" }}>•</span>
+                  <span style={{ display: "inline-block", animation: "tyaDot 1.2s infinite 0.2s" }}>•</span>
+                  <span style={{ display: "inline-block", animation: "tyaDot 1.2s infinite 0.4s" }}>•</span>
+                </div>
+              )}
+            </div>
+            <div style={{ marginTop: 18, paddingTop: 16, borderTop: "1px solid rgba(255,255,255,0.1)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <button onClick={restartCall} style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.7)", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.14)", padding: "7px 12px", borderRadius: 999, cursor: "pointer" }}>↻ Replay</button>
+              <button onClick={() => { document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" }); setTimeout(() => void playGreeting(), 400); }} style={{ fontSize: 12, fontWeight: 700, color: NAVY, background: "#fff", border: "none", padding: "8px 14px", borderRadius: 999, cursor: "pointer" }}>Hear it live →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── PAIN ─────────────────────────────────────────────────── */}
       <section data-fade style={{ padding: "56px 20px", background: "#FFF7F4", borderBottom: "1px solid rgba(197,48,48,0.1)" }}>
         <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" }}>
@@ -602,6 +688,104 @@ export default function NicheSiteTemplate() {
           <p style={{ fontSize: 16, lineHeight: 1.6, color: "#42526E", maxWidth: 560, margin: "18px auto 0" }}>
             {site.painLabel}. <strong style={{ color: TEXT }}>That's roughly ${dollarsLost} walking out the door since this page loaded.</strong>
           </p>
+        </div>
+      </section>
+
+      {/* ── MISSED-CALL ROI CALCULATOR (prospect's own numbers) ─── */}
+      <section style={{ padding: "80px 20px", background: "#0B1B2B", color: "#fff", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, background: `radial-gradient(800px 500px at 30% 50%, rgba(220,38,38,0.18), transparent 60%), radial-gradient(700px 400px at 90% 80%, ${hexA(A, 0.18)}, transparent 60%)`, pointerEvents: "none" }} />
+        <div style={{ position: "relative", maxWidth: 1080, margin: "0 auto" }}>
+          <div data-fade style={{ textAlign: "center", marginBottom: 36 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#FCA5A5", marginBottom: 12, ...MONO }}>YOUR MISSED-CALL CALCULATOR</div>
+            <h2 style={{ fontSize: "clamp(28px, 5vw, 50px)", lineHeight: 1.08, letterSpacing: "-0.022em", fontWeight: 600, color: "#fff", margin: 0 }}>
+              How much is {company} <span style={{ ...ITALIC, color: "#FCA5A5" }}>actually losing</span> to missed calls?
+            </h2>
+          </div>
+          <div data-fade style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.1fr) minmax(0, 1fr)", gap: 32, alignItems: "center" }}>
+            <div style={{ display: "grid", gap: 22 }}>
+              <ROIField label="Missed / unanswered calls per month" value={roiCalls} onChange={setRoiCalls} min={10} max={800} step={10} unit="calls" accent={A} />
+              <ROIField label="Average job value" value={roiValue} onChange={setRoiValue} min={50} max={5000} step={50} unit="$" accent={A} prefix="$" />
+              <ROIField label="Close rate on answered calls" value={roiClose} onChange={setRoiClose} min={5} max={70} step={1} unit="%" accent={A} />
+            </div>
+            <div style={{ textAlign: "center", background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.28)", borderRadius: 22, padding: "32px 28px", boxShadow: "0 30px 60px -20px rgba(220,38,38,0.35)" }}>
+              <div style={{ fontSize: 11.5, fontWeight: 700, color: "#FCA5A5", marginBottom: 14, ...MONO }}>ANNUAL REVENUE LEAKING</div>
+              <div style={{ fontSize: "clamp(48px, 8vw, 84px)", lineHeight: 1, fontWeight: 700, color: "#FF6B6B", letterSpacing: "-0.03em", fontVariantNumeric: "tabular-nums" }}>
+                ${roiAnnualLoss.toLocaleString()}
+              </div>
+              <div style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", marginTop: 14 }}>
+                That's <strong style={{ color: "#fff" }}>${roiMonthly.toLocaleString()}/mo</strong> walking to your competitor.
+              </div>
+              <a href="#cta" onClick={(e) => { e.preventDefault(); document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" }); void fireEvent("template_roi_book", { niche: site.id, annual_loss: roiAnnualLoss }); }} style={{ display: "inline-block", marginTop: 22, padding: "14px 26px", borderRadius: 14, background: "#fff", color: "#0B1B2B", fontSize: 14.5, fontWeight: 700, textDecoration: "none" }}>
+                Stop the bleeding →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── NEIGHBORS LOGO WALL — marquee of "businesses like you" ─ */}
+      <section style={{ padding: "44px 0 36px", background: "#fff", borderBottom: `1px solid ${HAIRLINE}`, overflow: "hidden" }}>
+        <div style={{ textAlign: "center", marginBottom: 22, padding: "0 20px" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: MUTED, ...MONO }}>TRUSTED BY NEIGHBORS LIKE</div>
+        </div>
+        <div style={{ display: "flex", gap: 36, animation: "tyaMarquee 38s linear infinite", whiteSpace: "nowrap" }}>
+          {[...neighborsForNiche(site, city), ...neighborsForNiche(site, city)].map((n, i) => (
+            <div key={i} style={{ display: "inline-flex", alignItems: "center", gap: 10, flexShrink: 0, opacity: 0.78 }}>
+              <span style={{ width: 36, height: 36, borderRadius: 10, background: `linear-gradient(135deg, ${n.color}, ${shade(n.color)})`, display: "grid", placeItems: "center", color: "#fff", fontSize: 14, fontWeight: 800, letterSpacing: "-0.04em", boxShadow: `0 8px 22px -10px ${hexA(n.color, 0.55)}` }}>
+                {n.initials}
+              </span>
+              <span style={{ fontSize: 14, fontWeight: 600, color: NAVY, letterSpacing: "-0.01em" }}>{n.name}</span>
+            </div>
+          ))}
+        </div>
+        <style>{`@keyframes tyaMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
+      </section>
+
+      {/* ── WITH vs WITHOUT — comparison table ──────────────────── */}
+      <section style={{ padding: "80px 20px", background: "#FAF6EE" }}>
+        <div style={{ maxWidth: 980, margin: "0 auto" }}>
+          <div data-fade style={{ textAlign: "center", marginBottom: 36 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 12, ...MONO }}>BEFORE / AFTER {company.toUpperCase()}</div>
+            <h2 style={{ fontSize: "clamp(28px, 4.8vw, 46px)", lineHeight: 1.08, letterSpacing: "-0.022em", fontWeight: 600, color: NAVY, margin: 0 }}>
+              The same day, <span style={{ ...ITALIC, color: A }}>two different businesses.</span>
+            </h2>
+          </div>
+          <div data-fade style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
+            {/* Without */}
+            <div style={{ background: "#fff", border: `1px solid ${HAIRLINE}`, borderRadius: 20, padding: "28px 26px" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#9B2C2C", marginBottom: 10, ...MONO }}>WITHOUT US</div>
+              <div style={{ fontSize: 22, fontWeight: 700, color: NAVY, letterSpacing: "-0.01em", marginBottom: 18 }}>
+                {company} on a normal Tuesday
+              </div>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 11 }}>
+                {compareForNiche(site).without.map((t) => (
+                  <li key={t} style={{ display: "flex", alignItems: "flex-start", gap: 9, fontSize: 14, color: "#42526E" }}>
+                    <span style={{ width: 22, height: 22, borderRadius: 999, background: "rgba(220,38,38,0.1)", color: "#9B2C2C", display: "grid", placeItems: "center", fontSize: 13, fontWeight: 700, flexShrink: 0 }}>✕</span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* With */}
+            <div style={{ background: "#fff", border: `2px solid ${A}`, borderRadius: 20, padding: "28px 26px", position: "relative", boxShadow: `0 22px 56px -28px ${hexA(A, 0.5)}` }}>
+              <div style={{ position: "absolute", top: -12, left: 22, padding: "4px 10px", borderRadius: 999, background: A, color: "#fff", fontSize: 10.5, fontWeight: 700, ...MONO }}>WITH AI RECEPTIONIST</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 10, ...MONO }}>WITH US</div>
+              <div style={{ fontSize: 22, fontWeight: 700, color: NAVY, letterSpacing: "-0.01em", marginBottom: 18 }}>
+                {company} on the <span style={{ ...ITALIC, color: A }}>same</span> Tuesday
+              </div>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 11 }}>
+                {compareForNiche(site).with_us.map((t) => (
+                  <li key={t} style={{ display: "flex", alignItems: "flex-start", gap: 9, fontSize: 14, color: TEXT }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+                      <circle cx="12" cy="12" r="10" fill={hexA(A, 0.15)} />
+                      <path d="M7 12.5l3 3 7-7" stroke={A} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1292,6 +1476,141 @@ function defaultServiceArea(city: string): string[] {
     `${city} Beach`,
     `West ${city}`,
   ];
+}
+
+// ── Live call simulation ─────────────────────────────────────────
+type CallLine = { who: "system" | "caller" | "agent"; text: string };
+function callScriptForNiche(site: NicheSite | undefined, co: string, city: string): CallLine[] {
+  const id = site?.id || "";
+  const cityStr = (city && city !== "your area") ? city : "town";
+  if (id === "cleaning") return [
+    { who: "system", text: `📞 Incoming call to ${co}` },
+    { who: "agent",  text: `Thanks for calling ${co}, this is your assistant — recurring clean, deep clean, or move-out?` },
+    { who: "caller", text: "Deep clean. 3 bed 2 bath. Sunday if possible." },
+    { who: "agent",  text: "Got it — Sunday 1pm is open. That's $245 for a deep clean. Want me to lock it?" },
+    { who: "caller", text: "Yes please." },
+    { who: "agent",  text: "Done. Sending the confirmation + a 10% recurring offer to your phone now." },
+    { who: "system", text: `✓ Booked · $245 · SMS sent · ${co} calendar updated` },
+  ];
+  if (id === "hvac") return [
+    { who: "system", text: `📞 Incoming call to ${co} — 11:47pm` },
+    { who: "agent",  text: `${co}, this is your assistant — is this an emergency or routine?` },
+    { who: "caller", text: "AC died. House is 89 degrees. We have a baby." },
+    { who: "agent",  text: "Sorry to hear — I'm marking this emergency. Earliest is 7am tomorrow. Dispatch is $89, applied to repair. OK?" },
+    { who: "caller", text: "Yes, book it." },
+    { who: "agent",  text: "Booked. Tech notified. You'll get an SMS with the arrival window in 30 seconds." },
+    { who: "system", text: `✓ Emergency booked · $89 dispatch · tech paged · SMS sent` },
+  ];
+  if (id === "dental") return [
+    { who: "system", text: `📞 Incoming call to ${co}` },
+    { who: "agent",  text: `${co}, this is your assistant — new patient, existing, or scheduling?` },
+    { who: "caller", text: "New patient. Need a cleaning. I have Delta Dental." },
+    { who: "agent",  text: "Welcome! I can verify Delta in 30 seconds. Earliest cleaning is Thursday 9am — works?" },
+    { who: "caller", text: "Yes." },
+    { who: "agent",  text: "Locked. Texting new-patient paperwork link + arrival instructions now." },
+    { who: "system", text: `✓ New patient booked · insurance pre-verified · forms sent` },
+  ];
+  if (id === "roofing") return [
+    { who: "system", text: `📞 Incoming call to ${co} — storm aftermath` },
+    { who: "agent",  text: `${co}, this is your assistant — storm damage, leak, or inspection?` },
+    { who: "caller", text: "Wind tore shingles off the back. I see daylight in the attic." },
+    { who: "agent",  text: `Tough one. I can have someone on site in ${cityStr} tomorrow morning — and we handle the insurance claim with you. OK to book?` },
+    { who: "caller", text: "Yes, please." },
+    { who: "agent",  text: "Booked. Sending the claim-prep checklist + inspector contact to your phone now." },
+    { who: "system", text: `✓ Inspection scheduled · claim docs sent · job in pipeline` },
+  ];
+  // sensible default for every niche
+  return [
+    { who: "system", text: `📞 Incoming call to ${co}` },
+    { who: "agent",  text: `Thanks for calling ${co} — how can I help today?` },
+    { who: "caller", text: "I need a quote and a time slot this week." },
+    { who: "agent",  text: "Happy to help — what's the job, and what's the address?" },
+    { who: "caller", text: "[Service details + zip]" },
+    { who: "agent",  text: "Quoted at the price + time. Want me to lock that in and text you the confirmation?" },
+    { who: "caller", text: "Yes." },
+    { who: "system", text: `✓ Booked · quoted on call · SMS sent · ${co} calendar updated` },
+  ];
+}
+
+// ── Neighbors logo wall ──────────────────────────────────────────
+function neighborsForNiche(site: NicheSite | undefined, city: string): { name: string; initials: string; color: string }[] {
+  const id = site?.id || "";
+  const c = (city && city !== "your area") ? city : "Bay";
+  const buckets: Record<string, string[]> = {
+    cleaning:    ["SparkleHouse", "Pristine Maids", "BrightCo Clean", "FreshSpace", "Tidy Crew", "Crystal Clear"],
+    laundromat:  ["FreshFold", "Bubble Lane", "Crisp & Co.", "Rapid Wash", "Whirl & Fold", "Suds Avenue"],
+    hvac:        ["Bay Area Air", "PolarPro Heat", "BlueSky HVAC", "Comfort Cove", "Apex Climate", "TrueTemp"],
+    dental:      ["Bayshore Dental", "Smile Studio", "Brightline Family", "OakRidge Smiles", "PearlCare", "Coast Dental"],
+    roofing:     ["Summit Roofing", "TopGuard Roofs", "Apex Shingle", "Skyline Roof Co", "Reliable Roofs", "RidgeBeam"],
+    plumbing:    ["FlowRight", "PipeWise", "ClearStream", "BlueDrop", "Trusted Tap", "Aqua Pros"],
+    landscaping: ["GreenAcre", "VerdantLawns", "Oakline Yard", "Heritage Hedge", "Solstice Lawn", "Magnolia Grove"],
+    realestate:  ["Anchor Realty", "Tideline Homes", "Northern Key", "Beacon Realty", "Foundry Estates", "WestSide Homes"],
+    medspa:      ["Velvet Spa", "Lumiere Med", "Aura Aesthetic", "Halo Skin", "Petal Beauty", "Vianna Aesthetic"],
+    autorepair:  ["Cedar Auto", "Driveline Garage", "Pitstop Pros", "Apex Auto", "TrueTrack", "GearWorks"],
+    lawfirm:     ["Wright & Reyes", "Cornerstone Law", "BrightHaven Legal", "OakSpire", "Anchor & Co.", "TruePath Law"],
+  };
+  const names = buckets[id] || ["Anchor Co", "BrightWorks", "Cedar & Co", "Daylight", "Evergreen", "Field Avenue"];
+  const colors = ["#185FA5", "#0E7C7B", "#9B5DE5", "#22A36C", "#E07A00", "#C53030"];
+  return names.map((n, i) => ({
+    name: `${n} ${c}`.replace(`${c} ${c}`, c),
+    initials: n.split(/[\s&]+/).slice(0, 2).map((w) => w[0]).join("").toUpperCase().slice(0, 2),
+    color: colors[i % colors.length],
+  }));
+}
+
+// ── With vs Without comparison ───────────────────────────────────
+function compareForNiche(site: NicheSite | undefined): { without: string[]; with_us: string[] } {
+  const id = site?.id || "";
+  const base = {
+    without: [
+      "Phone rings while you're with a customer — call goes to voicemail.",
+      "Caller hangs up and dials the next business on Google.",
+      "After-hours calls disappear entirely.",
+      "Same prospect asks you the same 4 questions before booking.",
+      "You spend evenings playing phone tag to fill the schedule.",
+    ],
+    with_us: [
+      "Every call answered live in your voice — first ring, day or night.",
+      "Quotes given, slot locked, confirmation texted before they hang up.",
+      "After-hours and weekend calls all get booked into your calendar.",
+      "Repetitive questions handled — your hands stay on the work.",
+      "You wake up to a full schedule. No phone tag, no chasing.",
+    ],
+  };
+  if (id === "hvac") {
+    base.without.unshift("2am emergency call goes to voicemail — they call your competitor.");
+    base.with_us.unshift("Emergency triaged, dispatch quoted, tech paged — all in 90 seconds.");
+  }
+  if (id === "dental") {
+    base.without.unshift("Front desk juggling a patient + the phone + insurance verifications.");
+    base.with_us.unshift("New patients pre-screened for insurance before they arrive.");
+  }
+  if (id === "cleaning") {
+    base.without.unshift("Booking requests come in by text — and sit unread for hours.");
+    base.with_us.unshift("Bookings quoted on square-footage instantly + deposit link sent.");
+  }
+  return base;
+}
+
+// ── ROI slider field (reusable) ──────────────────────────────────
+function ROIField({ label, value, onChange, min, max, step, unit, accent, prefix }: { label: string; value: number; onChange: (v: number) => void; min: number; max: number; step: number; unit?: string; accent: string; prefix?: string }) {
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+        <span style={{ fontSize: 13.5, fontWeight: 600, color: "rgba(255,255,255,0.85)" }}>{label}</span>
+        <span style={{ fontSize: 14, fontWeight: 700, color: "#fff", fontVariantNumeric: "tabular-nums" }}>{prefix || ""}{value.toLocaleString()}{unit && unit !== "$" ? ` ${unit}` : ""}</span>
+      </div>
+      <input
+        type="range"
+        className="tya-slider"
+        min={min} max={max} step={step}
+        value={value}
+        onChange={(e) => onChange(parseFloat(e.target.value))}
+        aria-label={label}
+        style={{ background: "rgba(255,255,255,0.2)" } as React.CSSProperties}
+      />
+    </div>
+  );
 }
 
 function howItWorksForNiche(site: NicheSite | undefined): { title: string; body: string }[] {
