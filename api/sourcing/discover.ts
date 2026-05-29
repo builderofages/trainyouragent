@@ -77,12 +77,58 @@ export default async function handler(req: Request): Promise<Response> {
     };
   }
 
+  const dryRun = body.dry_run === true;
+
   // ── Discover ────────────────────────────────────────────────────────
   const geo = await geocodeCity(rule.city);
   if (!geo) return j({ ok: false, error: "geocode-failed", city: rule.city }, 502);
 
   const query = queryForNiche(rule.niche, rule.query_string || undefined);
   const raw = await discoverProspects({ query, geo, radius_meters: rule.radius_meters, max: rule.max_per_run });
+
+  // ── Dry-run: just report what we'd find without writing anything ───
+  if (dryRun) {
+    // Quick stats: total, with-email, with-phone, with-website. Plus dedupe
+    // counts against the live template_sends table.
+    const withEmail   = raw.filter((p) => p.email).length;
+    const withPhone   = raw.filter((p) => p.phone).length;
+    const withWebsite = raw.filter((p) => p.website).length;
+    // Pattern-guess potential: rows without an email but WITH a website (we'd
+    // synthesize info@domain). Surfacing this so operator knows what to expect.
+    const wouldGuess  = raw.filter((p) => !p.email && p.website).length;
+
+    // Per-prospect dedupe check
+    let alreadyContacted = 0;
+    const newProspects: Array<{ company: string; phone?: string; email?: string; website?: string; emailSource?: "discovered" | "pattern-guess" | "none" }> = [];
+    for (const p of raw) {
+      const r = await sb.from("template_sends").select("id").eq("prospect_company_norm", p.prospect_company.toLowerCase()).eq("niche", rule.niche).limit(1);
+      if (r.data && r.data.length > 0) alreadyContacted++;
+      else newProspects.push({
+        company: p.prospect_company,
+        phone: p.phone,
+        email: p.email,
+        website: p.website,
+        emailSource: p.email ? "discovered" : (p.website ? "pattern-guess" : "none"),
+      });
+    }
+
+    return j({
+      ok: true,
+      dry_run: true,
+      rule_id: rule.id,
+      niche: rule.niche,
+      city: rule.city,
+      data_source: raw.length > 0 ? raw[0].source : (process.env.GOOGLE_PLACES_API_KEY ? "google-places (or osm fallback)" : "osm"),
+      discovered: raw.length,
+      with_verified_email: withEmail,
+      with_pattern_guess_email_possible: wouldGuess,
+      with_phone: withPhone,
+      with_website: withWebsite,
+      already_contacted_skip: alreadyContacted,
+      would_promote_new: newProspects.length,
+      preview: newProspects.slice(0, 10),
+    });
+  }
 
   // ── Dedupe + insert into sourced_prospects ─────────────────────────
   const inserted: Array<{ p: RawProspect; sourced_id: string | null }> = [];

@@ -79,6 +79,38 @@ export default function AutopilotPanel({ adminToken }: { adminToken: string }) {
   const [cadenceH, setCadH]   = useState(24);
   const [maxRun, setMaxRun]   = useState(10);
   const [creating, setCreating] = useState(false);
+  // v204 — dry-run preview before committing a rule
+  type Preview = {
+    discovered: number;
+    with_verified_email: number;
+    with_pattern_guess_email_possible: number;
+    with_phone: number;
+    already_contacted_skip: number;
+    would_promote_new: number;
+    data_source: string;
+    preview: Array<{ company: string; phone?: string; email?: string; website?: string; emailSource?: string }>;
+  };
+  const [preview, setPreview]   = useState<Preview | null>(null);
+  const [previewing, setPrev]   = useState(false);
+  async function previewRule() {
+    if (!tokenOk || !niche || !city.trim()) return;
+    setPrev(true); setPreview(null); setErr(null);
+    try {
+      const n = NICHE_SITES.find((x) => x.id === niche);
+      const r = await fetch(`/api/sourcing/discover?token=${encodeURIComponent(adminToken.trim())}`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          niche, niche_label: n?.niche || niche, city: city.trim(),
+          max: maxRun, dry_run: true,
+        }),
+      });
+      const j = await r.json();
+      if (!r.ok || !j.ok) { setErr(j.error || `preview-http-${r.status}`); return; }
+      setPreview(j as Preview);
+    } catch (e) { setErr((e as Error).message); }
+    finally     { setPrev(false); }
+  }
   async function createRule() {
     if (!tokenOk || !niche || !city.trim()) return;
     setCreating(true);
@@ -185,10 +217,41 @@ export default function AutopilotPanel({ adminToken }: { adminToken: string }) {
         <Field label="Per run (max 20)">
           <input type="number" min={1} max={20} value={maxRun} onChange={(e) => setMaxRun(Math.min(20, parseInt(e.target.value, 10) || 10))} style={inp()} />
         </Field>
+        <button onClick={previewRule} disabled={!city.trim() || previewing} style={btn(false, !city.trim() || previewing)} title="See what this rule would find without saving it">
+          {previewing ? "…" : "Preview"}
+        </button>
         <button onClick={createRule} disabled={!city.trim() || creating} style={btn(true, !city.trim() || creating)}>
           {creating ? "Adding…" : "Add rule"}
         </button>
       </div>
+
+      {/* PREVIEW RESULT */}
+      {preview && (
+        <div style={{ marginBottom: 14, padding: 14, background: "#FAFBFC", borderRadius: 10, border: "1px solid rgba(4,44,83,0.1)" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 10 }}>
+            <span style={{ fontSize: 10.5, fontWeight: 700, color: "#185FA5", ...MONO }}>PREVIEW · {preview.data_source.toUpperCase()}</span>
+            <span style={{ fontSize: 12.5, color: "#5C6B7F" }}>
+              <strong style={{ color: "#042C53" }}>{preview.discovered}</strong> found · <strong style={{ color: "#15724D" }}>{preview.with_verified_email}</strong> w/ verified email · <strong style={{ color: "#92400E" }}>{preview.with_pattern_guess_email_possible}</strong> guessable · <strong style={{ color: "#94A3B8" }}>{preview.already_contacted_skip}</strong> dup-skip · <strong style={{ color: "#042C53" }}>{preview.would_promote_new}</strong> would queue
+            </span>
+            <button onClick={() => setPreview(null)} style={{ marginLeft: "auto", fontSize: 11, color: "#94A3B8", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>clear</button>
+          </div>
+          {preview.preview.length > 0 ? (
+            <div style={{ maxHeight: 200, overflowY: "auto", fontSize: 12, fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}>
+              {preview.preview.map((p, i) => (
+                <div key={i} style={{ padding: "4px 0", borderTop: i === 0 ? "none" : "1px solid rgba(4,44,83,0.04)" }}>
+                  <span style={{ color: "#042C53", fontWeight: 600 }}>{p.company}</span>
+                  <span style={{ color: p.emailSource === "discovered" ? "#15724D" : p.emailSource === "pattern-guess" ? "#92400E" : "#94A3B8", marginLeft: 8 }}>
+                    {p.email ? `✉ ${p.email}` : p.website ? `↪ ${p.website}` : "no contact"}
+                  </span>
+                  {p.phone && <span style={{ color: "#6B7B92", marginLeft: 8 }}>☎ {p.phone}</span>}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{ fontSize: 13, color: "#94A3B8" }}>No new prospects matched (all {preview.discovered} already contacted, or none found). Try a different city or broader query.</div>
+          )}
+        </div>
+      )}
 
       {/* RULES TABLE */}
       {rules.length === 0 ? (
