@@ -128,12 +128,15 @@ function Overview({ token }: { token: string }) {
   const [m, setM] = useState<any>(null);
   const [gh, setGh] = useState<any>(null);
   const [health, setHealth] = useState<string>("checking…");
+  // v206 — autopilot tile data
+  const [ap, setAp] = useState<{ rows: any[]; summary: any } | null>(null);
 
   useEffect(() => {
     fetch(`/api/admin/metrics?token=${encodeURIComponent(token)}`, { headers: { "x-admin-token": token }, cache: "no-store" })
       .then((r) => r.json()).then((d) => setM(d?.data || null)).catch(() => {});
     fetch("/api/github-velocity").then((r) => r.json()).then(setGh).catch(() => {});
     fetch("/api/health", { cache: "no-store" }).then((r) => setHealth(r.ok ? "operational" : "degraded")).catch(() => setHealth("unreachable"));
+    fetch(`/api/admin/template-activity?token=${encodeURIComponent(token)}&days=7&limit=20`).then((r) => r.json()).then((d) => setAp(d?.ok ? d : null)).catch(() => {});
   }, [token]);
 
   const cards = [
@@ -143,6 +146,8 @@ function Overview({ token }: { token: string }) {
     { label: "Purchases · 30d", value: m?.purchases30d ?? m?.purchases ?? "—" },
     { label: "Public commits", value: gh?.totalCommits ?? gh?.total ?? "—" },
     { label: "Site health", value: health },
+    { label: "Autopilot · 7d sent", value: ap?.summary?.total ?? "—" },
+    { label: "Autopilot · 7d booked", value: ap?.summary?.booked ?? "—" },
   ];
 
   return (

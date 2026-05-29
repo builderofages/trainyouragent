@@ -16,6 +16,7 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import { ACTIVE_NICHE_SITES, NICHE_SITES } from "@/lib/nicheSiteTemplates";
 
 const NAVY = "#042C53";
 const ACCENT = "#185FA5";
@@ -280,20 +281,12 @@ export default function Setup() {
             )}
           </Step>
 
-          {/* Done CTA */}
-          <div style={{ marginTop: 12, padding: "26px 28px", background: allDone ? "linear-gradient(155deg, rgba(34,163,108,0.08), #FAF6EE)" : "linear-gradient(155deg, #FFF8EE, #FAF6EE)", border: `1px solid ${allDone ? "rgba(34,163,108,0.18)" : "rgba(4,44,83,0.1)"}`, borderRadius: 18, textAlign: "center" }}>
+          {/* Done CTA — when all 5 green, also offers to launch the first rule from here */}
+          <div style={{ marginTop: 12, padding: "26px 28px", background: allDone ? "linear-gradient(155deg, rgba(34,163,108,0.08), #FAF6EE)" : "linear-gradient(155deg, #FFF8EE, #FAF6EE)", border: `1px solid ${allDone ? "rgba(34,163,108,0.18)" : "rgba(4,44,83,0.1)"}`, borderRadius: 18 }}>
             {allDone ? (
-              <>
-                <div style={{ fontSize: 11, fontWeight: 700, color: "#15724D", marginBottom: 8, ...MONO }}>SETUP COMPLETE</div>
-                <h2 style={{ fontSize: 26, fontWeight: 600, color: NAVY, margin: "0 0 14px", letterSpacing: "-0.01em" }}>
-                  Autopilot is live. <span style={ITALIC}>Add your first sourcing rule.</span>
-                </h2>
-                <Link to="/admin/templates" style={{ display: "inline-flex", padding: "13px 26px", borderRadius: 12, background: NAVY, color: "#fff", fontSize: 15, fontWeight: 600, textDecoration: "none" }}>
-                  Open /admin/templates → Autopilot panel →
-                </Link>
-              </>
+              <ActivateFirstRule adminToken={token} onDone={() => mark("rule", true)} />
             ) : (
-              <>
+              <div style={{ textAlign: "center" }}>
                 <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, marginBottom: 8, ...MONO }}>WHEN ALL 5 ARE GREEN</div>
                 <h2 style={{ fontSize: 22, fontWeight: 600, color: NAVY, margin: 0, letterSpacing: "-0.01em" }}>
                   The autopilot runs itself — source, send, follow up, attribute, opt out.
@@ -301,7 +294,7 @@ export default function Setup() {
                 <p style={{ fontSize: 14, color: "#5C6B7F", marginTop: 12, marginBottom: 0 }}>
                   Stuck? Email <a href="mailto:trainyouragent@gmail.com" style={a()}>trainyouragent@gmail.com</a> with the health-check JSON pasted in.
                 </p>
-              </>
+              </div>
             )}
           </div>
         </div>
@@ -376,6 +369,111 @@ function pill(status: "ok" | "warn" | "fail"): React.CSSProperties {
   const [bg, fg] = map[status];
   return { fontSize: 10.5, fontWeight: 700, padding: "3px 11px", borderRadius: 999, background: bg, color: fg, ...MONO };
 }
+// v206 — first-rule activation widget. Renders when all 5 setup steps are
+// green. Lets operator preview + commit their first sourcing rule from
+// inside the setup wizard so they never have to think about "what now."
+function ActivateFirstRule({ adminToken, onDone }: { adminToken: string; onDone: () => void }) {
+  const [niche, setNiche] = useState(ACTIVE_NICHE_SITES.find((n) => n.id === "roofing")?.id || ACTIVE_NICHE_SITES[0]?.id || "cleaning");
+  const [city, setCity]   = useState("Tampa, FL");
+  const [cadH, setCadH]   = useState(24);
+  const [maxR, setMaxR]   = useState(10);
+  type Preview = { discovered: number; with_verified_email: number; with_pattern_guess_email_possible: number; already_contacted_skip: number; would_promote_new: number; data_source: string };
+  const [preview, setPreview] = useState<Preview | null>(null);
+  const [loading, setLoading] = useState<"idle" | "preview" | "create" | "done">("idle");
+  const [err, setErr] = useState<string | null>(null);
+  const [createdId, setCreatedId] = useState<string | null>(null);
+
+  async function doPreview() {
+    if (!adminToken.trim() || !city.trim()) return;
+    setLoading("preview"); setErr(null);
+    try {
+      const n = NICHE_SITES.find((x) => x.id === niche);
+      const r = await fetch(`/api/sourcing/discover?token=${encodeURIComponent(adminToken.trim())}`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ niche, niche_label: n?.niche || niche, city: city.trim(), max: maxR, dry_run: true }),
+      });
+      const j = await r.json();
+      if (!r.ok || !j.ok) { setErr(j.error || `http-${r.status}`); return; }
+      setPreview(j as Preview);
+    } catch (e) { setErr((e as Error).message); }
+    finally     { setLoading("idle"); }
+  }
+  async function commit() {
+    if (!adminToken.trim() || !city.trim()) return;
+    setLoading("create"); setErr(null);
+    try {
+      const n = NICHE_SITES.find((x) => x.id === niche);
+      const r = await fetch(`/api/admin/sourcing-rules?token=${encodeURIComponent(adminToken.trim())}`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ niche, niche_label: n?.niche || niche, city: city.trim(), cadence_hours: cadH, max_per_run: maxR }),
+      });
+      const j = await r.json();
+      if (!r.ok || !j.ok) { setErr(j.error || `http-${r.status}`); return; }
+      setCreatedId(j.rule?.id ?? "ok");
+      setLoading("done");
+      onDone();
+    } catch (e) { setErr((e as Error).message); }
+  }
+
+  if (loading === "done" || createdId) {
+    return (
+      <div style={{ textAlign: "center" }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: "#15724D", marginBottom: 8, fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", letterSpacing: ".2em" }}>FIRST RULE LIVE · AUTOPILOT IS RUNNING</div>
+        <h2 style={{ fontSize: 24, fontWeight: 600, color: NAVY, margin: "0 0 14px", letterSpacing: "-0.01em" }}>
+          You're done. <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 500 }}>Morning digest tomorrow.</span>
+        </h2>
+        <p style={{ fontSize: 14, color: "#5C6B7F", marginTop: 0, marginBottom: 18 }}>
+          The autosource cron will run within the next 6 hours. Day-0 emails fire on the following nurture tick. Daily ops digest hits your inbox at 8am ET.
+        </p>
+        <Link to="/admin/templates" style={{ display: "inline-flex", padding: "13px 26px", borderRadius: 12, background: NAVY, color: "#fff", fontSize: 15, fontWeight: 600, textDecoration: "none" }}>
+          Open the dashboard →
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div style={{ fontSize: 11, fontWeight: 700, color: "#15724D", marginBottom: 8, fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", letterSpacing: ".2em" }}>SETUP COMPLETE · LAUNCH YOUR FIRST RULE</div>
+      <h2 style={{ fontSize: 24, fontWeight: 600, color: NAVY, margin: "0 0 14px", letterSpacing: "-0.01em" }}>
+        Tell autopilot who to find — <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 500 }}>and it runs forever.</span>
+      </h2>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 10, marginBottom: 14 }}>
+        <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, color: "#6B7B92", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", letterSpacing: ".2em" }}>NICHE</span>
+          <select value={niche} onChange={(e) => setNiche(e.target.value)} style={{ padding: "9px 11px", borderRadius: 10, border: "1px solid rgba(4,44,83,0.16)", fontSize: 13.5, color: NAVY, background: "#fff" }}>
+            {ACTIVE_NICHE_SITES.map((n) => (<option key={n.id} value={n.id}>{n.niche}</option>))}
+          </select>
+        </label>
+        <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, color: "#6B7B92", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", letterSpacing: ".2em" }}>CITY</span>
+          <input value={city} onChange={(e) => setCity(e.target.value)} placeholder="Tampa, FL" style={{ padding: "9px 11px", borderRadius: 10, border: "1px solid rgba(4,44,83,0.16)", fontSize: 13.5, color: NAVY, background: "#fff" }} />
+        </label>
+        <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, color: "#6B7B92", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", letterSpacing: ".2em" }}>RUN EVERY (H)</span>
+          <input type="number" min={1} max={720} value={cadH} onChange={(e) => setCadH(parseInt(e.target.value, 10) || 24)} style={{ padding: "9px 11px", borderRadius: 10, border: "1px solid rgba(4,44,83,0.16)", fontSize: 13.5, color: NAVY, background: "#fff" }} />
+        </label>
+        <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, color: "#6B7B92", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", letterSpacing: ".2em" }}>MAX PER RUN</span>
+          <input type="number" min={1} max={20} value={maxR} onChange={(e) => setMaxR(Math.min(20, parseInt(e.target.value, 10) || 10))} style={{ padding: "9px 11px", borderRadius: 10, border: "1px solid rgba(4,44,83,0.16)", fontSize: 13.5, color: NAVY, background: "#fff" }} />
+        </label>
+      </div>
+      <div style={{ display: "flex", gap: 8 }}>
+        <button onClick={doPreview} disabled={loading === "preview" || !city.trim()} style={btn(false, loading === "preview" || !city.trim())}>{loading === "preview" ? "Previewing…" : "Preview"}</button>
+        <button onClick={commit}    disabled={loading === "create"  || !city.trim()} style={btn(true,  loading === "create"  || !city.trim())}>{loading === "create" ? "Activating…" : "Activate rule"}</button>
+        {err && <span style={{ alignSelf: "center", color: "#9B2C2C", fontSize: 13 }}>{err}</span>}
+      </div>
+      {preview && (
+        <div style={{ marginTop: 14, padding: 12, background: "#fff", border: "1px solid rgba(4,44,83,0.1)", borderRadius: 10, fontSize: 13, color: "#42526E" }}>
+          <strong style={{ color: NAVY }}>{preview.discovered}</strong> businesses found via <em>{preview.data_source}</em>. <strong style={{ color: "#15724D" }}>{preview.with_verified_email}</strong> have verified emails. <strong style={{ color: "#92400E" }}>{preview.with_pattern_guess_email_possible}</strong> are pattern-guess candidates (gated by default). <strong style={{ color: NAVY }}>{preview.would_promote_new}</strong> would queue on first run. Looks good? Hit Activate.
+        </div>
+      )}
+    </div>
+  );
+}
+
 function dot(status: string): React.CSSProperties {
   const map: Record<string, [string, string]> = { ok: ["rgba(34,163,108,0.12)", "#15724D"], warn: ["rgba(245,158,11,0.14)", "#92400E"], fail: ["rgba(155,44,44,0.12)", "#9B2C2C"], skip: ["rgba(148,163,184,0.18)", "#64748B"] };
   const [bg, fg] = map[status] || map.skip;
