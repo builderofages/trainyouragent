@@ -617,7 +617,7 @@ export default function NicheSiteTemplate() {
                 ✓ Got it. Alexander will text you within the hour.
               </div>
             ) : (
-              <form onSubmit={submitLead} style={{ display: "inline-flex", alignItems: "stretch", padding: 4, borderRadius: 999, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.28)", backdropFilter: "blur(10px)", gap: 4 }}>
+              <form onSubmit={submitLead} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "stretch", padding: 4, borderRadius: 999, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.28)", backdropFilter: "blur(10px)", gap: 4, maxWidth: 380, width: "100%" }}>
                 <input
                   value={leadPhone}
                   onChange={(e) => setLeadPhone(e.target.value)}
@@ -625,12 +625,12 @@ export default function NicheSiteTemplate() {
                   type="tel"
                   inputMode="tel"
                   autoComplete="tel"
-                  style={{ padding: "10px 16px", borderRadius: 999, border: "none", fontSize: 14, color: "#fff", outline: "none", background: "transparent", minWidth: 170, fontWeight: 600 }}
+                  style={{ padding: "10px 16px", borderRadius: 999, border: "none", fontSize: 14, color: "#fff", outline: "none", background: "transparent", minWidth: 140, fontWeight: 600, flex: "1 1 160px" }}
                 />
                 <button
                   type="submit"
                   disabled={leadState === "sending" || !leadPhone.trim()}
-                  style={{ padding: "10px 18px", borderRadius: 999, background: leadPhone.trim() ? "#22DD91" : "rgba(255,255,255,0.2)", color: leadPhone.trim() ? "#0B1B2B" : "rgba(255,255,255,0.6)", fontSize: 13.5, fontWeight: 800, border: "none", cursor: leadPhone.trim() ? "pointer" : "not-allowed", whiteSpace: "nowrap" }}
+                  style={{ padding: "10px 18px", borderRadius: 999, background: leadPhone.trim() ? "#22DD91" : "rgba(255,255,255,0.2)", color: leadPhone.trim() ? "#0B1B2B" : "rgba(255,255,255,0.6)", fontSize: 13.5, fontWeight: 800, border: "none", cursor: leadPhone.trim() ? "pointer" : "not-allowed", whiteSpace: "nowrap", flex: "0 0 auto" }}
                 >
                   {leadState === "sending" ? "Sending…" : leadState === "err" ? "Retry" : "Text me a demo →"}
                 </button>
