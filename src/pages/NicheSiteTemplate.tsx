@@ -1453,6 +1453,22 @@ export default function NicheSiteTemplate() {
               Book your 15-min build call →
             </a>
           </div>
+
+          {/* v226: INLINE Cal.com — book without leaving */}
+          <div data-fade style={{ marginTop: 36, padding: 0, borderRadius: 20, overflow: "hidden", background: "#fff", border: `1px solid ${HAIRLINE}`, boxShadow: "0 18px 48px -22px rgba(4,44,83,0.22)", textAlign: "left" }}>
+            <div style={{ padding: "14px 20px", borderBottom: `1px solid ${HAIRLINE}`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: A, ...MONO }}>PICK A TIME — BOOK RIGHT HERE</div>
+              <div style={{ fontSize: 11, color: "#6B7B92", fontWeight: 600 }}>15 min · Zoom · free</div>
+            </div>
+            <iframe
+              src={calUrl + (calUrl.includes("?") ? "&" : "?") + "embed=true&theme=light&hideEventTypeDetails=false&layout=month_view"}
+              style={{ width: "100%", height: 640, border: 0, display: "block", background: "#fff" }}
+              title={`Book a 15-min build call with TrainYourAgent for ${company}`}
+              loading="lazy"
+              allow="payment; clipboard-write"
+              onLoad={() => void fireEvent("template_cal_embed_loaded", { niche: site.id, company })}
+            />
+          </div>
           {qrUrl && (
             <div data-fade style={{ marginTop: 44, display: "inline-flex", flexDirection: "column", alignItems: "center", gap: 10, padding: "20px 22px", borderRadius: 18, background: "#fff", border: `1px solid ${HAIRLINE}`, boxShadow: "0 14px 40px -22px rgba(4,44,83,0.25)" }}>
               <img src={qrUrl} alt={`QR code linking to this site for ${company}`} width={140} height={140} style={{ display: "block", borderRadius: 8 }} loading="lazy" />
