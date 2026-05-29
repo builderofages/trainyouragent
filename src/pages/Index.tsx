@@ -26,6 +26,7 @@ import FooterV44 from "@/components/FooterV44";
 // vibe-coding on no-code. Credibility lever.
 import PoweredByBadges from "@/components/PoweredByBadges";
 import WhyWeAreDifferent from "@/components/WhyWeAreDifferent";
+import HomepageIndustryPicker from "@/components/HomepageIndustryPicker";
 import SectionDivider from "@/components/SectionDivider";
 import { useCountUp } from "@/hooks/useCountUp";
 import NetworkIllo from "@/components/illustrations/NetworkIllo";
@@ -436,6 +437,11 @@ const Index = () => {
  Establishes credibility — these are real infra primitives, same
  stack as Cursor / Linear / Anthropic prod. */}
  <PoweredByBadges variant="grid" />
+
+ {/* v227: 25-niche industry picker — surfaces the close-tool money pages
+ from the homepage. Biggest single leverage gap: organic traffic landed
+ and never knew /template/* existed. */}
+ <HomepageIndustryPicker />
 
  {/* v108: Why we win — Hormozi/Cuban/Cardone-grade competitor callout
  + founder credentials. The conversion section the homepage was
