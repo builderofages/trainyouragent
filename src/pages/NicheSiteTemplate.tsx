@@ -15,7 +15,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { useParams, useSearchParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { getNicheSite, type NicheSite } from "@/lib/nicheSiteTemplates";
-import { nicheImageUrl } from "@/lib/nicheImages";
+import { nicheImageUrl, nicheImageVariant, nicheBeforeAfter } from "@/lib/nicheImages";
 import { fireEvent } from "@/lib/event";
 
 // ── style tokens ───────────────────────────────────────────────────────
@@ -306,6 +306,42 @@ export default function NicheSiteTemplate() {
   // ── quick replies for chat ─────────────────────────────────────────
   const quickReplies = useMemo(() => site?.quickReplies || defaultQuickReplies(site), [site]);
 
+  // ── hero image slideshow (3 rotating variants per niche) ──────────
+  const heroImages = useMemo(() => site ? [0, 1, 2].map((v) => nicheImageVariant(site.id, v, 1280, 540)) : [], [site]);
+  const [heroIdx, setHeroIdx] = useState(0);
+  useEffect(() => {
+    if (heroImages.length < 2) return;
+    const t = setInterval(() => setHeroIdx((i) => (i + 1) % heroImages.length), 5500);
+    return () => clearInterval(t);
+  }, [heroImages.length]);
+
+  // ── before/after slider (drag to reveal) ──────────────────────────
+  const ba = useMemo(() => site ? nicheBeforeAfter(site.id, 900, 600) : { before: "", after: "" }, [site]);
+  const [baPos, setBaPos] = useState(50); // % of "after" visible from left
+  const baRef = useRef<HTMLDivElement | null>(null);
+  function handleBaMove(clientX: number) {
+    const el = baRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = Math.max(0, Math.min(r.width, clientX - r.left));
+    setBaPos(Math.round((x / r.width) * 100));
+  }
+
+  // ── scroll-aware sticky CTA card (desktop, after hero) ────────────
+  const [showStickyCta, setShowStickyCta] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onScroll = () => {
+      const past = window.scrollY > window.innerHeight * 0.9;
+      const ctaEl = document.getElementById("cta");
+      const notAtCta = !ctaEl || ctaEl.getBoundingClientRect().top > window.innerHeight * 0.8;
+      setShowStickyCta(past && notAtCta);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   // ── scroll fade-in (CSS via IntersectionObserver) ──────────────────
   useEffect(() => {
     if (typeof IntersectionObserver === "undefined") return;
@@ -349,6 +385,34 @@ export default function NicheSiteTemplate() {
         <meta name="twitter:title" content={`${company} — ${site.niche}`} />
         <meta name="twitter:description" content={site.subhead} />
         <meta name="twitter:image" content={ogImage} />
+        {/* v210: LocalBusiness + AggregateRating schema for Google rich results */}
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "name": company,
+          "description": site.subhead,
+          "url": shareUrl,
+          "image": ogImage,
+          "areaServed": city,
+          "priceRange": "$$",
+          "telephone": "+1-000-000-0000",
+          "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127" },
+          "review": (reviews || []).slice(0, 3).map((r) => ({
+            "@type": "Review",
+            "reviewRating": { "@type": "Rating", "ratingValue": r.stars, "bestRating": 5 },
+            "author": { "@type": "Person", "name": r.name },
+            "reviewBody": r.text,
+          })),
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": (faqs || []).map((f) => ({
+            "@type": "Question",
+            "name": f.q,
+            "acceptedAnswer": { "@type": "Answer", "text": f.a },
+          })),
+        })}</script>
       </Helmet>
 
       {/* Global page styles (animations + reveal + reduced-motion respect) */}
@@ -481,20 +545,29 @@ export default function NicheSiteTemplate() {
             ))}
           </div>
 
-          {/* HD niche hero banner — magazine-cover photography for this vertical */}
+          {/* HD niche hero SLIDESHOW — 3 rotating magazine-cover variants */}
           <div data-fade style={{ marginTop: 44, maxWidth: 1080, marginLeft: "auto", marginRight: "auto" }}>
             <div style={{ position: "relative", width: "100%", aspectRatio: "21/9", borderRadius: 22, overflow: "hidden", background: `linear-gradient(135deg, ${hexA(A, 0.22)}, ${hexA(A, 0.08)})`, boxShadow: `0 30px 70px -30px ${hexA(NAVY, 0.35)}` }}>
-              <img
-                src={nicheImageUrl(site.id, 1280, 540)}
-                alt={`${site.niche} — ${company}`}
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-              />
+              {heroImages.map((src, i) => (
+                <img
+                  key={src}
+                  src={src}
+                  alt={`${site.niche} — ${company}`}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  fetchPriority={i === 0 ? "high" : "auto"}
+                  decoding="async"
+                  style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: i === heroIdx ? 1 : 0, transition: "opacity 1.2s ease" }}
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                />
+              ))}
               <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, transparent 50%, rgba(4,44,83,0.55) 100%)` }} />
               <span style={{ position: "absolute", bottom: 16, left: 18, padding: "6px 12px", borderRadius: 999, background: "rgba(255,255,255,0.92)", color: NAVY, fontSize: 11, fontWeight: 700, ...MONO }}>{company.toUpperCase()} · {site.niche.toUpperCase()}</span>
+              {/* slide dots */}
+              <div style={{ position: "absolute", bottom: 14, right: 18, display: "flex", gap: 6 }}>
+                {heroImages.map((_, i) => (
+                  <button key={i} onClick={() => setHeroIdx(i)} aria-label={`Image ${i + 1}`} style={{ width: i === heroIdx ? 22 : 8, height: 8, borderRadius: 99, background: i === heroIdx ? "#fff" : "rgba(255,255,255,0.5)", border: "none", cursor: "pointer", transition: "width 250ms ease, background 250ms ease", padding: 0 }} />
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -553,6 +626,35 @@ export default function NicheSiteTemplate() {
         </div>
       </section>
 
+      {/* ── HOW IT WORKS ─────────────────────────────────────────── */}
+      <section style={{ padding: "72px 20px", background: `linear-gradient(180deg, #fff 0%, ${hexA(A, 0.04)} 100%)`, borderTop: `1px solid ${HAIRLINE}` }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+          <div data-fade style={{ textAlign: "center", marginBottom: 44 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 12, ...MONO }}>HOW IT WORKS</div>
+            <h2 style={{ fontSize: "clamp(26px, 4.5vw, 42px)", lineHeight: 1.1, letterSpacing: "-0.02em", fontWeight: 600, color: NAVY, margin: 0 }}>
+              From missed call to <span style={{ ...ITALIC, color: A }}>booked job</span> in under 2 minutes.
+            </h2>
+          </div>
+          <div style={{ position: "relative" }}>
+            {/* connector line behind the steps (desktop only) */}
+            <div style={{ position: "absolute", top: 30, left: "12.5%", right: "12.5%", height: 2, background: `linear-gradient(90deg, ${hexA(A, 0.12)}, ${hexA(A, 0.35)}, ${hexA(A, 0.12)})`, zIndex: 0 }} className="tya-hiw-line" />
+            <style>{`@media (max-width: 720px){ .tya-hiw-line { display:none; } }`}</style>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 24, position: "relative", zIndex: 1 }}>
+              {howItWorksForNiche(site).map((step, i) => (
+                <div key={step.title} data-fade style={{ textAlign: "center" }}>
+                  <div style={{ width: 60, height: 60, margin: "0 auto 18px", borderRadius: "50%", background: `linear-gradient(160deg, ${A}, ${shade(A)})`, color: "#fff", display: "grid", placeItems: "center", fontSize: 22, fontWeight: 700, boxShadow: `0 12px 28px -10px ${hexA(A, 0.55)}`, position: "relative" }}>
+                    {i + 1}
+                    <span style={{ position: "absolute", inset: -4, borderRadius: "50%", border: `2px solid ${hexA(A, 0.2)}`, animation: `tyaPulse ${2.4 + i * 0.3}s ease-in-out ${i * 0.4}s infinite` }} />
+                  </div>
+                  <div style={{ fontSize: 15.5, fontWeight: 700, color: NAVY, marginBottom: 7, letterSpacing: "-0.01em" }}>{step.title}</div>
+                  <p style={{ fontSize: 13.5, lineHeight: 1.55, color: MUTED, margin: 0 }}>{step.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── INSTANT QUOTE CALCULATOR ─────────────────────────────── */}
       <section style={{ padding: "20px 20px 80px" }}>
         <div data-fade style={{ maxWidth: 920, margin: "0 auto", background: `linear-gradient(180deg, #fff 0%, ${hexA(A, 0.04)} 100%)`, border: `1px solid ${HAIRLINE}`, borderRadius: 24, padding: "32px 28px", boxShadow: "0 16px 48px -26px rgba(4,44,83,0.18)" }}>
@@ -586,6 +688,48 @@ export default function NicheSiteTemplate() {
           <div style={{ marginTop: 22, display: "flex", flexWrap: "wrap", gap: 10 }}>
             <a href="#cta" onClick={(e) => { e.preventDefault(); document.getElementById("cta")?.scrollIntoView({ behavior: "smooth" }); void fireEvent("template_quote_book", { niche: site.id, value: calcTotal }); }} style={{ padding: "12px 22px", borderRadius: 12, background: NAVY, color: "#fff", fontSize: 14.5, fontWeight: 600, textDecoration: "none" }}>Lock this quote →</a>
             <button onClick={() => { void sendChatText(`I'd like a quote — your calculator gave me $${calcTotal}.`); document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" }); }} style={{ padding: "12px 22px", borderRadius: 12, background: "#fff", color: NAVY, fontSize: 14.5, fontWeight: 600, border: "2px solid rgba(4,44,83,0.14)", cursor: "pointer" }}>Ask the agent →</button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── BEFORE / AFTER SLIDER ────────────────────────────────── */}
+      <section style={{ padding: "20px 20px 80px" }}>
+        <div data-fade style={{ maxWidth: 1000, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 28 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 12, ...MONO }}>BEFORE · AFTER</div>
+            <h2 style={{ fontSize: "clamp(26px, 4.2vw, 38px)", lineHeight: 1.1, letterSpacing: "-0.02em", fontWeight: 600, color: NAVY, margin: 0 }}>
+              Drag the slider. <span style={{ ...ITALIC, color: A }}>See the difference.</span>
+            </h2>
+          </div>
+          <div
+            ref={baRef}
+            onMouseMove={(e) => { if (e.buttons === 1) handleBaMove(e.clientX); }}
+            onMouseDown={(e) => handleBaMove(e.clientX)}
+            onTouchStart={(e) => handleBaMove(e.touches[0].clientX)}
+            onTouchMove={(e) => handleBaMove(e.touches[0].clientX)}
+            style={{ position: "relative", width: "100%", aspectRatio: "3/2", maxHeight: 560, borderRadius: 22, overflow: "hidden", border: `1px solid ${HAIRLINE}`, boxShadow: `0 26px 60px -30px ${hexA(NAVY, 0.4)}`, cursor: "ew-resize", userSelect: "none", background: hexA(A, 0.08) }}
+            role="slider"
+            aria-label="Before and after comparison — drag to reveal"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={baPos}
+          >
+            {/* BEFORE (full) */}
+            <img src={ba.before} alt="Before" loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+            {/* AFTER (clipped from left to baPos%) */}
+            <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 ${100 - baPos}% 0 0)`, transition: "clip-path 60ms linear" }}>
+              <img src={ba.after} alt="After" loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+            </div>
+            {/* labels */}
+            <span style={{ position: "absolute", top: 14, left: 14, padding: "5px 11px", borderRadius: 999, background: "rgba(11,27,43,0.78)", color: "#fff", fontSize: 11, fontWeight: 700, ...MONO }}>BEFORE</span>
+            <span style={{ position: "absolute", top: 14, right: 14, padding: "5px 11px", borderRadius: 999, background: A, color: "#fff", fontSize: 11, fontWeight: 700, ...MONO }}>AFTER</span>
+            {/* drag handle */}
+            <div style={{ position: "absolute", top: 0, bottom: 0, left: `${baPos}%`, width: 2, background: "#fff", boxShadow: "0 0 0 1px rgba(0,0,0,0.18)", transform: "translateX(-1px)", pointerEvents: "none" }} />
+            <div style={{ position: "absolute", top: "50%", left: `${baPos}%`, width: 44, height: 44, borderRadius: "50%", background: "#fff", transform: "translate(-50%, -50%)", display: "grid", placeItems: "center", boxShadow: "0 8px 22px -6px rgba(0,0,0,0.4)", pointerEvents: "none" }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M9 6l-5 6 5 6M15 6l5 6-5 6" stroke={NAVY} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
           </div>
         </div>
       </section>
@@ -902,6 +1046,35 @@ export default function NicheSiteTemplate() {
         </a>
       </div>
 
+      {/* ── Scroll-aware sticky CTA card (desktop only) ─────────── */}
+      <style>{`@media (max-width: 980px) { .tya-scta { display:none !important; } }`}</style>
+      <div className="tya-scta" aria-hidden={!showStickyCta} style={{
+        position: "fixed", right: 24, bottom: 100, zIndex: 49, width: 280,
+        background: "#fff", border: `1px solid ${HAIRLINE}`, borderRadius: 16, padding: 16,
+        boxShadow: `0 26px 56px -22px ${hexA(NAVY, 0.45)}`,
+        transform: showStickyCta ? "translateY(0) scale(1)" : "translateY(20px) scale(0.95)",
+        opacity: showStickyCta ? 1 : 0,
+        pointerEvents: showStickyCta ? "auto" : "none",
+        transition: "all 280ms cubic-bezier(0.16,1,0.3,1)",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, fontWeight: 700, color: "#15724D", marginBottom: 8, ...MONO }}>
+          <span style={{ position: "relative", width: 8, height: 8 }}>
+            <span style={{ position: "absolute", inset: 0, borderRadius: 999, background: "#22A36C" }} />
+            <span style={{ position: "absolute", inset: -3, borderRadius: 999, background: "#22A36C", opacity: 0.5, animation: "tyaPulse 1.6s infinite" }} />
+          </span>
+          BOOKING NOW
+        </div>
+        <div style={{ fontSize: 14.5, fontWeight: 600, color: NAVY, lineHeight: 1.3, marginBottom: 12 }}>
+          Lock <span style={{ ...ITALIC, color: A }}>{firstName}</span> in 60 seconds.
+        </div>
+        <a href={calUrl} target="_blank" rel="noopener" onClick={() => void fireEvent("template_scta_book", { niche: site.id })} style={{ display: "block", textAlign: "center", padding: "11px 14px", borderRadius: 11, background: NAVY, color: "#fff", fontSize: 13.5, fontWeight: 600, textDecoration: "none", marginBottom: 8 }}>
+          Book your build call →
+        </a>
+        <button onClick={() => { document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" }); setTimeout(() => void playGreeting(), 400); }} style={{ display: "block", width: "100%", textAlign: "center", padding: "9px 14px", borderRadius: 11, background: hexA(A, 0.08), color: A, fontSize: 12.5, fontWeight: 600, border: "none", cursor: "pointer" }}>
+          ▶︎ Hear the AI line first
+        </button>
+      </div>
+
       {/* ── Floating action button (desktop) ────────────────────── */}
       <style>{`@media (max-width: 720px) { .tya-fab { display:none !important; } }`}</style>
       <button className="tya-fab" onClick={() => { document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" }); setTimeout(() => void playGreeting(), 400); void fireEvent("template_fab_click", { niche: site.id }); }} aria-label="Hear the AI receptionist now"
@@ -1118,6 +1291,41 @@ function defaultServiceArea(city: string): string[] {
     `South ${city}`,
     `${city} Beach`,
     `West ${city}`,
+  ];
+}
+
+function howItWorksForNiche(site: NicheSite | undefined): { title: string; body: string }[] {
+  const id = site?.id || "";
+  if (id === "hvac") return [
+    { title: "Customer calls",       body: "Your number rings — AI picks up on ring one, triages emergency vs routine." },
+    { title: "Agent triages + quotes", body: "Dispatch fee quoted on the call, applied to the repair. Customer agrees verbally." },
+    { title: "Tech dispatched",      body: "Job dropped onto your calendar, tech routed automatically, SMS sent to customer." },
+    { title: "You get paid",         body: "Card on file or invoice on completion. Recurring maintenance auto-upsold." },
+  ];
+  if (id === "dental") return [
+    { title: "Patient calls",        body: "AI receptionist answers in your voice, captures intake details." },
+    { title: "Insurance pre-screened", body: "Coverage checked on the call, copay quoted, paperwork link texted." },
+    { title: "First visit booked",   body: "Slot locked in your scheduler, confirmation + reminders auto-sent." },
+    { title: "Chair stays full",     body: "Cancellations filled from your waitlist within minutes — no lost revenue." },
+  ];
+  if (id === "cleaning") return [
+    { title: "Booking request comes in", body: "Web chat, phone, or text — agent captures bed/bath count + zip in seconds." },
+    { title: "Square-footage quoted",   body: "Price calculated on the spot. Deposit link texted to lock the slot." },
+    { title: "Crew dispatched",         body: "Job on your calendar, route optimized, customer notified of arrival window." },
+    { title: "Recurring locked",        body: "Standard / biweekly / monthly plan upsold + auto-charged on completion." },
+  ];
+  if (id === "roofing") return [
+    { title: "Storm or leak call",     body: "AI picks up 24/7, captures address, severity, insurance status." },
+    { title: "Inspection slot booked", body: "Site visit dropped into your calendar with the next-available window." },
+    { title: "Quote built + sent",     body: "Scope confirmed on-site, branded quote PDF auto-generated, e-sign sent." },
+    { title: "Job won + scheduled",    body: "Deposit collected, crew assigned, materials ordered, customer kept in the loop." },
+  ];
+  // sensible default for every other niche
+  return [
+    { title: "Customer reaches out",  body: "Phone, text, web — your AI receptionist answers within one ring, 24/7." },
+    { title: "Agent qualifies + quotes", body: "Service captured, price quoted, time slot confirmed verbally." },
+    { title: "Booking locked in",     body: "Job dropped into your calendar with the right window, customer texted confirmation." },
+    { title: "You show up + collect", body: "Reminders auto-sent. Card on file or invoice. Recurring offered every job." },
   ];
 }
 
