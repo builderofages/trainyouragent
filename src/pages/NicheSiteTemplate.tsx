@@ -598,6 +598,35 @@ export default function NicheSiteTemplate() {
               ▶︎ Hear the AI line
             </button>
           </div>
+
+          {/* v228: Hero single-field phone capture — fastest micro-conversion.
+              Phone-only is 2-3x stronger than the 3-field form for "text me back". */}
+          <div data-fade style={{ marginTop: 22, display: "flex", justifyContent: "center" }}>
+            {leadState === "ok" ? (
+              <div style={{ padding: "10px 18px", borderRadius: 999, background: "rgba(34,221,145,0.18)", border: "1px solid rgba(34,221,145,0.5)", color: "#86F4C5", fontSize: 13.5, fontWeight: 700 }}>
+                ✓ Got it. Alexander will text you within the hour.
+              </div>
+            ) : (
+              <form onSubmit={submitLead} style={{ display: "inline-flex", alignItems: "stretch", padding: 4, borderRadius: 999, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.28)", backdropFilter: "blur(10px)", gap: 4 }}>
+                <input
+                  value={leadPhone}
+                  onChange={(e) => setLeadPhone(e.target.value)}
+                  placeholder="Your mobile #"
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  style={{ padding: "10px 16px", borderRadius: 999, border: "none", fontSize: 14, color: "#fff", outline: "none", background: "transparent", minWidth: 170, fontWeight: 600 }}
+                />
+                <button
+                  type="submit"
+                  disabled={leadState === "sending" || !leadPhone.trim()}
+                  style={{ padding: "10px 18px", borderRadius: 999, background: leadPhone.trim() ? "#22DD91" : "rgba(255,255,255,0.2)", color: leadPhone.trim() ? "#0B1B2B" : "rgba(255,255,255,0.6)", fontSize: 13.5, fontWeight: 800, border: "none", cursor: leadPhone.trim() ? "pointer" : "not-allowed", whiteSpace: "nowrap" }}
+                >
+                  {leadState === "sending" ? "Sending…" : leadState === "err" ? "Retry" : "Text me a demo →"}
+                </button>
+              </form>
+            )}
+          </div>
           <div data-fade style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginTop: 30 }}>
             {site.chips.map((c) => (
               <span key={c} style={{ padding: "7px 14px", borderRadius: 999, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.22)", backdropFilter: "blur(6px)", fontSize: 12.5, fontWeight: 600, color: "#fff" }}>
