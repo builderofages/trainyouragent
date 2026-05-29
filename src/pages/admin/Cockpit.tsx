@@ -40,6 +40,8 @@ export default function Cockpit() {
   const [healthErr, setHealthErr] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [lastFetched, setLastFetched] = useState<number>(0);
+  const [autoRefresh, setAutoRefresh] = useState<boolean>(true);
+  const [activity, setActivity] = useState<{ kind: string; label: string; ts: number }[] | null>(null);
 
   useEffect(() => {
     if (!token) return;
@@ -60,8 +62,33 @@ export default function Cockpit() {
       })
       .catch((e) => !cancelled && setHealthErr(String(e?.message || e)))
       .finally(() => !cancelled && setLoading(false));
+
+    // v232: also fetch recent activity tail in parallel
+    fetch("/api/admin/template-activity?limit=12", { headers: { "x-admin-token": token, accept: "application/json" } })
+      .then(async (r) => r.ok ? r.json() : null)
+      .then((j) => {
+        if (cancelled || !j) return;
+        const items: { kind: string; label: string; ts: number }[] = [];
+        for (const s of (j.sends || []).slice(0, 12)) {
+          items.push({
+            kind: s.booked_at ? "booking" : s.opened_at ? "open" : "send",
+            label: `${s.booked_at ? "Booked" : s.opened_at ? "Opened" : "Sent"} — ${s.prospect_company || "?"} (${s.niche_label || s.niche || "?"})`,
+            ts: new Date(s.booked_at || s.opened_at || s.sent_at || Date.now()).getTime(),
+          });
+        }
+        items.sort((a, b) => b.ts - a.ts);
+        setActivity(items.slice(0, 10));
+      })
+      .catch(() => { /* silent — activity is optional */ });
     return () => { cancelled = true; };
   }, [token, lastFetched === 0 ? 1 : 0]);
+
+  // v232: auto-refresh every 60s when toggle is on
+  useEffect(() => {
+    if (!token || !autoRefresh) return;
+    const id = setInterval(() => setLastFetched(Date.now()), 60_000);
+    return () => clearInterval(id);
+  }, [token, autoRefresh]);
 
   function saveToken(e: React.FormEvent) {
     e.preventDefault();
@@ -124,7 +151,11 @@ export default function Cockpit() {
           <div style={{ fontSize: 15, fontWeight: 700, color: NAVY }}>Cockpit</div>
           <div style={{ fontSize: 10.5, color: MUTED, ...MONO }}>OPERATOR</div>
         </div>
-        <div style={{ display: "flex", gap: 8 }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <label style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: MUTED, fontWeight: 600, cursor: "pointer" }}>
+            <input type="checkbox" checked={autoRefresh} onChange={(e) => setAutoRefresh(e.target.checked)} style={{ accentColor: NAVY }} />
+            Auto 60s
+          </label>
           <button onClick={refresh} disabled={loading} style={{ padding: "8px 14px", fontSize: 12.5, fontWeight: 700, background: "#F1F4F8", color: NAVY, border: "none", borderRadius: 999, cursor: loading ? "wait" : "pointer" }}>{loading ? "Refreshing…" : "Refresh"}</button>
           <button onClick={clearToken} style={{ padding: "8px 14px", fontSize: 12.5, fontWeight: 700, background: "transparent", color: MUTED, border: `1px solid ${HAIRLINE}`, borderRadius: 999, cursor: "pointer" }}>Sign out</button>
         </div>
@@ -211,6 +242,34 @@ export default function Cockpit() {
           </section>
         )}
 
+        {/* ── RECENT ACTIVITY ─────────────────────────────────── */}
+        {token && (
+          <section style={{ marginBottom: 26 }}>
+            <SectionHeader title="Recent activity" subtitle="Last 10 sends, opens, and bookings from template_sends." />
+            <Card>
+              {activity === null ? <SkeletonBars n={4} /> : activity.length === 0 ? (
+                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                  <Dot color={MUTED} />
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: NAVY }}>No activity yet.</div>
+                    <div style={{ fontSize: 12.5, color: MUTED, marginTop: 2 }}>Either migrations haven't been run, or no prospects have hit a /template/[niche] link yet. <Link to="/admin/setup" style={{ color: ACCENT, textDecoration: "underline" }}>Setup wizard →</Link></div>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ display: "grid", gap: 0 }}>
+                  {activity.map((a, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "9px 0", borderBottom: i === activity.length - 1 ? "none" : `1px solid ${HAIRLINE}` }}>
+                      <Dot color={a.kind === "booking" ? GOOD : a.kind === "open" ? ACCENT : PEND} />
+                      <div style={{ fontSize: 13, color: NAVY, fontWeight: 600, flex: 1 }}>{a.label}</div>
+                      <div style={{ fontSize: 11.5, color: MUTED, ...MONO, letterSpacing: 0 }}>{relTime(a.ts)}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Card>
+          </section>
+        )}
+
         {/* ── QUICK NAV ──────────────────────────────────────── */}
         <section>
           <SectionHeader title="Deeper admin" subtitle="Drill into specific surfaces." />
@@ -272,6 +331,17 @@ function ErrorCard({ msg }: { msg: string }) {
     </Card>
   );
 }
+function relTime(ts: number): string {
+  const s = Math.max(0, Math.floor((Date.now() - ts) / 1000));
+  if (s < 45) return `${s}s ago`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  return `${d}d ago`;
+}
+
 function QuickLink({ to, title, sub }: { to: string; title: string; sub: string }) {
   return (
     <Link to={to} style={{ display: "block", padding: 16, borderRadius: 12, border: `1px solid ${HAIRLINE}`, background: "#fff", textDecoration: "none", transition: "border-color .15s ease, transform .15s ease" }} onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = ACCENT; }} onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = HAIRLINE; }}>
