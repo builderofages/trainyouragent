@@ -36,6 +36,7 @@ const Dashboard           = lazyWithReload(() => import("./pages/Dashboard"));
 const NicheSiteTemplate   = lazyWithReload(() => import("./pages/NicheSiteTemplate"));
 const TemplateGallery     = lazyWithReload(() => import("./pages/admin/TemplateGallery"));
 const Websites            = lazyWithReload(() => import("./pages/Websites"));
+const Share               = lazyWithReload(() => import("./pages/Share"));
 const Cnnct               = lazyWithReload(() => import("./pages/Cnnct"));
 const AdminSetup          = lazyWithReload(() => import("./pages/admin/Setup"));
 const HQ                  = lazyWithReload(() => import("./pages/HQ"));
@@ -382,6 +383,8 @@ const App = () => {
             <Route path="/admin/templates" element={<TemplateGallery />} />
             {/* v209: public, indexable directory of every niche template */}
             <Route path="/websites" element={<Websites />} />
+            {/* v213: operator one-click share tool */}
+            <Route path="/share" element={<Share />} />
             {/* v203: one-page setup wizard with copy buttons + live health check */}
             <Route path="/admin/setup" element={<AdminSetup />} />
             {/* v197: discrete sister-site nod — intentionally NOT in main nav */}
