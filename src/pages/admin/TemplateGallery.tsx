@@ -503,9 +503,29 @@ export default function TemplateGallery() {
             <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 L30 16 L16 30 L2 16 Z" fill="none" stroke="#042C53" strokeWidth="2.5" /><path d="M16 8 L24 16 L16 24 L8 16 Z" fill="#042C53" /></svg>
             <span style={{ fontSize: 15, fontWeight: 700 }}>TrainYourAgent</span>
           </Link>
-          <span style={{ fontSize: 11, fontWeight: 700, color: "#185FA5", ...MONO }}>ADMIN · NICHE TEMPLATES</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <Link to="/admin/setup" style={{ fontSize: 12, fontWeight: 600, color: "#185FA5", textDecoration: "none" }}>Setup wizard →</Link>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#185FA5", ...MONO }}>ADMIN · NICHE TEMPLATES</span>
+          </div>
         </div>
       </div>
+
+      {/* v203: setup nudge — auto-shows when autopilot isn't fully configured */}
+      {(!adminToken.trim() || (health && health.overall !== "ok")) && (
+        <div style={{ background: "linear-gradient(90deg, rgba(245,158,11,0.10), #FFF8EE)", borderBottom: "1px solid rgba(245,158,11,0.18)", padding: "12px 24px" }}>
+          <div style={{ maxWidth: 1180, margin: "0 auto", display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, justifyContent: "space-between" }}>
+            <div style={{ fontSize: 13.5, color: "#92400E" }}>
+              <strong>Autopilot not fully configured.</strong>{" "}
+              {!adminToken.trim()
+                ? "Paste your ADMIN_TOKEN in the Server Activity panel below, or run the setup wizard first."
+                : (health && health.fails > 0 ? `${health.fails} system check${health.fails === 1 ? "" : "s"} failing.` : `${health?.warns ?? 0} warning${health?.warns === 1 ? "" : "s"}.`)}
+            </div>
+            <Link to="/admin/setup" style={{ padding: "8px 16px", borderRadius: 10, background: "#042C53", color: "#fff", fontSize: 13, fontWeight: 600, textDecoration: "none" }}>
+              Open setup wizard →
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* header + customizer */}
       <header style={{ padding: "48px 24px 36px", background: "linear-gradient(180deg, #FFF8EE 0%, #FAF6EE 60%, #FFFFFF 100%)" }}>
