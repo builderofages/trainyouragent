@@ -18,6 +18,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { NICHE_SITES, ACTIVE_NICHE_SITES, type NicheSite } from "@/lib/nicheSiteTemplates";
+import { nicheImageUrl } from "@/lib/nicheImages";
 import { fireEvent } from "@/lib/event";
 import AutopilotPanel from "./AutopilotPanel";
 
@@ -701,12 +702,21 @@ export default function TemplateGallery() {
             const linkFlash = flash === `${n.id}|link`;
             return (
               <article key={n.id} style={{ background: "#fff", border: "1px solid rgba(4,44,83,0.1)", borderRadius: 20, overflow: "hidden", boxShadow: "0 6px 28px -16px rgba(4,44,83,0.16)", display: "flex", flexDirection: "column" }}>
-                {/* mini hero preview */}
-                <div style={{ padding: "22px 22px 20px", background: `linear-gradient(155deg, ${hexA(n.accent, 0.1)}, #FAF6EE)` }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-                    <span style={{ fontSize: 22 }} aria-hidden="true">{n.emoji}</span>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: n.accent, padding: "4px 9px", borderRadius: 999, background: hexA(n.accent, 0.12), ...MONO }}>{n.niche.toUpperCase()}</span>
-                  </div>
+                {/* HD image banner — niche-specific photography (replaces emoji) */}
+                <div style={{ position: "relative", width: "100%", aspectRatio: "16/9", background: `linear-gradient(135deg, ${hexA(n.accent, 0.22)}, ${hexA(n.accent, 0.08)})`, overflow: "hidden" }}>
+                  <img
+                    src={nicheImageUrl(n.id, 640, 360)}
+                    alt={`${n.niche} business`}
+                    loading="lazy"
+                    decoding="async"
+                    style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                  />
+                  <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, transparent 35%, rgba(4,44,83,0.6) 100%)` }} />
+                  <span style={{ position: "absolute", top: 12, right: 12, fontSize: 10, fontWeight: 700, color: n.accent, padding: "5px 10px", borderRadius: 999, background: "rgba(255,255,255,0.94)", ...MONO }}>{n.niche.toUpperCase()}</span>
+                </div>
+                {/* hero copy */}
+                <div style={{ padding: "18px 22px 14px" }}>
                   <div style={{ fontSize: 19, lineHeight: 1.15, fontWeight: 600, color: "#042C53", letterSpacing: "-0.01em" }}>
                     {n.heroLead} <span style={{ ...ITALIC, color: n.accent }}>{n.heroItalic}</span>
                   </div>

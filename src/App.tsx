@@ -35,6 +35,7 @@ import LegalRedirect from "@/components/legal/LegalRedirect";
 const Dashboard           = lazyWithReload(() => import("./pages/Dashboard"));
 const NicheSiteTemplate   = lazyWithReload(() => import("./pages/NicheSiteTemplate"));
 const TemplateGallery     = lazyWithReload(() => import("./pages/admin/TemplateGallery"));
+const Websites            = lazyWithReload(() => import("./pages/Websites"));
 const Cnnct               = lazyWithReload(() => import("./pages/Cnnct"));
 const AdminSetup          = lazyWithReload(() => import("./pages/admin/Setup"));
 const HQ                  = lazyWithReload(() => import("./pages/HQ"));
@@ -379,6 +380,8 @@ const App = () => {
             {/* v180: niche "free website" template engine + admin gallery */}
             <Route path="/template/:niche" element={<NicheSiteTemplate />} />
             <Route path="/admin/templates" element={<TemplateGallery />} />
+            {/* v209: public, indexable directory of every niche template */}
+            <Route path="/websites" element={<Websites />} />
             {/* v203: one-page setup wizard with copy buttons + live health check */}
             <Route path="/admin/setup" element={<AdminSetup />} />
             {/* v197: discrete sister-site nod — intentionally NOT in main nav */}

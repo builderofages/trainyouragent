@@ -15,6 +15,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { useParams, useSearchParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { getNicheSite, type NicheSite } from "@/lib/nicheSiteTemplates";
+import { nicheImageUrl } from "@/lib/nicheImages";
 import { fireEvent } from "@/lib/event";
 
 // ── style tokens ───────────────────────────────────────────────────────
@@ -478,6 +479,23 @@ export default function NicheSiteTemplate() {
                 <Stars n={5} small color={A} /> {b}
               </span>
             ))}
+          </div>
+
+          {/* HD niche hero banner — magazine-cover photography for this vertical */}
+          <div data-fade style={{ marginTop: 44, maxWidth: 1080, marginLeft: "auto", marginRight: "auto" }}>
+            <div style={{ position: "relative", width: "100%", aspectRatio: "21/9", borderRadius: 22, overflow: "hidden", background: `linear-gradient(135deg, ${hexA(A, 0.22)}, ${hexA(A, 0.08)})`, boxShadow: `0 30px 70px -30px ${hexA(NAVY, 0.35)}` }}>
+              <img
+                src={nicheImageUrl(site.id, 1280, 540)}
+                alt={`${site.niche} — ${company}`}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+              />
+              <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, transparent 50%, rgba(4,44,83,0.55) 100%)` }} />
+              <span style={{ position: "absolute", bottom: 16, left: 18, padding: "6px 12px", borderRadius: 999, background: "rgba(255,255,255,0.92)", color: NAVY, fontSize: 11, fontWeight: 700, ...MONO }}>{company.toUpperCase()} · {site.niche.toUpperCase()}</span>
+            </div>
           </div>
         </div>
       </header>
