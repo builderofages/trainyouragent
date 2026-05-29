@@ -8,7 +8,18 @@
 // Auth: pulls ADMIN_TOKEN from the same localStorage slot the gallery uses.
 
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { NICHE_SITES, ACTIVE_NICHE_SITES } from "@/lib/nicheSiteTemplates";
+
+// shared "2h ago" helper — used by both demo + live render paths
+const ago = (iso: string | null): string => {
+  if (!iso) return "—";
+  const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+  if (s < 60)    return "just now";
+  if (s < 3600)  return `${Math.round(s / 60)}m ago`;
+  if (s < 86400) return `${Math.round(s / 3600)}h ago`;
+  return `${Math.round(s / 86400)}d ago`;
+};
 
 const MONO: React.CSSProperties = { fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", letterSpacing: "0.2em" };
 
@@ -164,15 +175,6 @@ export default function AutopilotPanel({ adminToken }: { adminToken: string }) {
     } finally { setBusy(null); }
   }
 
-  const ago = (iso: string | null) => {
-    if (!iso) return "—";
-    const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
-    if (s < 60)    return "just now";
-    if (s < 3600)  return `${Math.round(s / 60)}m ago`;
-    if (s < 86400) return `${Math.round(s / 3600)}h ago`;
-    return `${Math.round(s / 86400)}d ago`;
-  };
-
   const totals = useMemo(() => {
     const enabled = rules.filter((r) => r.enabled).length;
     const totalAdded = rules.reduce((s, r) => s + (r.total_added || 0), 0);
@@ -181,11 +183,100 @@ export default function AutopilotPanel({ adminToken }: { adminToken: string }) {
     return { enabled, totalAdded, promoted, dups };
   }, [rules, recent]);
 
+  // v207 — DEMO MODE: when no ADMIN_TOKEN is set, render the full UI with
+  // realistic sample data so the operator can SEE what the autopilot looks
+  // like running before they commit to setup. Everything is read-only with
+  // a clear "DEMO" badge so it can't be mistaken for live state.
   if (!tokenOk) {
+    const demoRules: Rule[] = [
+      { id: "demo-1", niche: "roofing",     niche_label: "Roofing",     city: "Tampa, FL",         state: "FL", radius_meters: 25000, query_string: null, cadence_hours: 24, max_per_run: 10, enabled: true,  last_run_at: new Date(Date.now() - 3.5 * 3600_000).toISOString(), last_run_added: 7,  last_run_error: null, total_added: 142, created_at: new Date(Date.now() - 14 * 86400_000).toISOString(), notes: null },
+      { id: "demo-2", niche: "real-estate", niche_label: "Real Estate", city: "St. Petersburg, FL",state: "FL", radius_meters: 25000, query_string: null, cadence_hours: 24, max_per_run: 10, enabled: true,  last_run_at: new Date(Date.now() - 6   * 3600_000).toISOString(), last_run_added: 4,  last_run_error: null, total_added: 98,  created_at: new Date(Date.now() - 12 * 86400_000).toISOString(), notes: null },
+      { id: "demo-3", niche: "med-spa",     niche_label: "Med Spa",     city: "Sarasota, FL",      state: "FL", radius_meters: 25000, query_string: null, cadence_hours: 48, max_per_run: 10, enabled: true,  last_run_at: new Date(Date.now() - 18  * 3600_000).toISOString(), last_run_added: 3,  last_run_error: null, total_added: 67,  created_at: new Date(Date.now() - 9  * 86400_000).toISOString(), notes: null },
+      { id: "demo-4", niche: "law-firm",    niche_label: "Law Firm",    city: "Tampa, FL",         state: "FL", radius_meters: 25000, query_string: null, cadence_hours: 48, max_per_run: 8,  enabled: false, last_run_at: new Date(Date.now() - 3   * 86400_000).toISOString(), last_run_added: 0,  last_run_error: null, total_added: 22,  created_at: new Date(Date.now() - 5  * 86400_000).toISOString(), notes: null },
+    ];
+    const demoRecent: Sourced[] = [
+      { id: "d1", prospect_company: "Bay Area Roofers",       city: "Tampa",    niche: "roofing",     niche_label: "Roofing",     source: "osm",           phone: "+1 813 555 0142", email: "info@bayarearoofers.com",     website: "https://bayarearoofers.com",    promoted_at: new Date(Date.now() - 2 * 3600_000).toISOString(), skipped_reason: null,  created_at: new Date(Date.now() - 2 * 3600_000).toISOString() },
+      { id: "d2", prospect_company: "Sunshine Roof Pros",     city: "Tampa",    niche: "roofing",     niche_label: "Roofing",     source: "google-places", phone: null,              email: null,                          website: "https://sunshineroofs.com",     promoted_at: new Date(Date.now() - 2 * 3600_000).toISOString(), skipped_reason: null,  created_at: new Date(Date.now() - 2 * 3600_000).toISOString() },
+      { id: "d3", prospect_company: "Premium Roofing Tampa",  city: "Tampa",    niche: "roofing",     niche_label: "Roofing",     source: "osm",           phone: "+1 813 555 0188", email: null,                          website: "https://premiumroofingtampa.com",promoted_at: null,                                              skipped_reason: "dup", created_at: new Date(Date.now() - 3 * 3600_000).toISOString() },
+      { id: "d4", prospect_company: "Bayfront Realty Group",  city: "St. Pete", niche: "real-estate", niche_label: "Real Estate", source: "google-places", phone: "+1 727 555 0166", email: "hello@bayfrontrealty.com",    website: "https://bayfrontrealty.com",    promoted_at: new Date(Date.now() - 5 * 3600_000).toISOString(), skipped_reason: null,  created_at: new Date(Date.now() - 5 * 3600_000).toISOString() },
+      { id: "d5", prospect_company: "Glow Aesthetics MedSpa", city: "Sarasota", niche: "med-spa",     niche_label: "Med Spa",     source: "osm",           phone: null,              email: "info@glowaesthetics.com",     website: "https://glowaesthetics.com",    promoted_at: new Date(Date.now() - 17* 3600_000).toISOString(), skipped_reason: null,  created_at: new Date(Date.now() - 17* 3600_000).toISOString() },
+    ];
+    const demoTotals = { enabled: 3, totalAdded: 329, promoted: 4, dups: 1 };
+
     return (
-      <div style={{ marginTop: 22, padding: 16, borderRadius: 14, background: "#FAFBFC", border: "1px dashed rgba(4,44,83,0.18)" }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: "#185FA5", marginBottom: 6, ...MONO }}>AUTOPILOT</div>
-        <div style={{ fontSize: 13, color: "#5C6B7F" }}>Paste your ADMIN_TOKEN in the Server Activity panel above to enable lead-sourcing autopilot.</div>
+      <div style={{ marginTop: 22, padding: 16, borderRadius: 14, background: "#fff", border: "1px solid rgba(4,44,83,0.1)" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10, marginBottom: 14 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: "#185FA5", ...MONO }}>AUTOPILOT · LEAD SOURCING</span>
+          <span style={{ fontSize: 10, fontWeight: 700, color: "#fff", background: "#9B2C2C", padding: "3px 9px", borderRadius: 999, ...MONO }}>DEMO</span>
+          <span style={{ fontSize: 12.5, color: "#5C6B7F" }}>
+            Sample data — paste ADMIN_TOKEN above (or hit Setup wizard) to see your real rules.
+          </span>
+        </div>
+        <div style={{ marginBottom: 10, padding: "10px 14px", background: "linear-gradient(90deg, rgba(245,158,11,0.08), #FFF8EE)", border: "1px solid rgba(245,158,11,0.18)", borderRadius: 10, fontSize: 12.5, color: "#92400E" }}>
+          <strong>This is what your autopilot looks like running.</strong> {demoTotals.enabled} active rules · {demoTotals.totalAdded} prospects total sourced · last batch {demoTotals.promoted} new / {demoTotals.dups} dup. Real version comes alive when you finish the <Link to="/admin/setup" style={{ color: "#92400E", textDecoration: "underline" }}>setup wizard</Link>.
+        </div>
+
+        <div style={{ overflowX: "auto", marginBottom: 14, opacity: 0.92 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5 }}>
+            <thead>
+              <tr style={{ background: "#F1F5F9", color: "#6B7B92", textAlign: "left", fontWeight: 700 }}>
+                <th style={th()}>Niche · City</th>
+                <th style={th()}>Cadence</th>
+                <th style={th()}>Last run</th>
+                <th style={th()}>Total sourced</th>
+                <th style={th()}></th>
+              </tr>
+            </thead>
+            <tbody>
+              {demoRules.map((r) => (
+                <tr key={r.id} style={{ borderTop: "1px solid rgba(4,44,83,0.06)", opacity: r.enabled ? 1 : 0.55 }}>
+                  <td style={td()}>
+                    <div style={{ fontWeight: 600, color: "#042C53" }}>{r.niche_label}</div>
+                    <div style={{ fontSize: 11.5, color: "#94A3B8" }}>{r.city}</div>
+                  </td>
+                  <td style={td()}>{r.cadence_hours}h · max {r.max_per_run}</td>
+                  <td style={td()}>{ago(r.last_run_at)} · +{r.last_run_added}</td>
+                  <td style={td()}>{r.total_added}</td>
+                  <td style={td()}>
+                    <div style={{ display: "flex", gap: 6, justifyContent: "flex-end" }}>
+                      <span style={{ ...btn(false, true), padding: "5px 9px", fontSize: 11 }}>Demo</span>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <details open>
+          <summary style={{ cursor: "pointer", fontSize: 11, fontWeight: 700, color: "#6B7B92", ...MONO }}>RECENT DISCOVERY (sample) — raw landing zone before dedupe</summary>
+          <div style={{ marginTop: 8, maxHeight: 260, overflowY: "auto", border: "1px solid rgba(4,44,83,0.06)", borderRadius: 10, background: "#FAFBFC" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+              <tbody>
+                {demoRecent.map((r) => (
+                  <tr key={r.id} style={{ borderTop: "1px solid rgba(4,44,83,0.05)" }}>
+                    <td style={{ ...td(), color: "#042C53", fontWeight: 500 }}>{r.prospect_company}<span style={{ color: "#94A3B8", fontWeight: 400 }}> · {r.city}</span></td>
+                    <td style={td()}>{r.niche_label}</td>
+                    <td style={td()}>{r.source}</td>
+                    <td style={td()}>{r.email || (r.website ? `(${new URL(r.website).hostname})` : "—")}</td>
+                    <td style={td()}>
+                      {r.promoted_at
+                        ? <span style={{ color: "#15724D", fontWeight: 600 }}>PROMOTED · {ago(r.promoted_at)}</span>
+                        : r.skipped_reason
+                          ? <span style={{ color: "#94A3B8" }}>SKIPPED · {r.skipped_reason}</span>
+                          : <span style={{ color: "#94A3B8" }}>(pending)</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <div style={{ marginTop: 14, padding: "14px 16px", background: "#042C53", borderRadius: 12, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+          <span style={{ fontSize: 13.5, color: "#fff" }}>Like what you see? Flip the autopilot live in 5 steps, ~6 minutes.</span>
+          <Link to="/admin/setup" style={{ padding: "9px 18px", borderRadius: 9, background: "#fff", color: "#042C53", fontSize: 13, fontWeight: 600, textDecoration: "none" }}>Open setup wizard →</Link>
+        </div>
       </div>
     );
   }
