@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 const PRODUCT = [
   { label: "Solutions", to: "/solutions" },
   { label: "Playbooks (15 niches)", to: "/playbooks" },
+  // v223: 25 instant-personalize industry sites — the close tool
+  { label: "Industry sites (25 niches)", to: "/websites" },
   { label: "Pricing", to: "/pricing" },
   // v71: productized self-serve SaaS catalog
   { label: "SaaS catalog", to: "/saas" },

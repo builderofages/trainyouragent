@@ -368,6 +368,19 @@ export default async function handler(_req: Request): Promise<Response> {
     lines.push(urlNode(`/build/${niche}`, 0.85, "weekly", today));
   }
 
+  // v223: /websites SEO gallery + 25 niche-template URLs (the close-tool money pages)
+  lines.push(urlNode(`/websites`, 0.95, "weekly", today));
+  const TEMPLATE_NICHES = [
+    "cleaning","laundromat","hvac","dental","salon","auto","landscaping",
+    "plumbing","restaurant","fitness","real-estate","law-firm","roofing",
+    "med-spa","chiropractor","pest-control","electrician","moving",
+    "veterinary","insurance","mortgage","accounting","catering",
+    "barbershop","physical-therapy",
+  ];
+  for (const niche of TEMPLATE_NICHES) {
+    lines.push(urlNode(`/template/${niche}`, 0.9, "weekly", today));
+  }
+
   const xml =
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
