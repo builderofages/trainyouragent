@@ -307,13 +307,21 @@ export default function NicheSiteTemplate() {
   const quickReplies = useMemo(() => site?.quickReplies || defaultQuickReplies(site), [site]);
 
   // ── hero image slideshow (3 rotating variants per niche) ──────────
+  // v219: gated behind imagesEnabled — pollinations is too slow to block first paint
   const heroImages = useMemo(() => site ? [0, 1, 2].map((v) => nicheImageVariant(site.id, v, 1280, 540)) : [], [site]);
   const [heroIdx, setHeroIdx] = useState(0);
+  const [imagesEnabled, setImagesEnabled] = useState(false);
   useEffect(() => {
-    if (heroImages.length < 2) return;
+    // wait until after first paint + a beat so the hero gradient + text are
+    // visible instantly. all pollinations images load AFTER this flips.
+    const t = window.setTimeout(() => setImagesEnabled(true), 800);
+    return () => clearTimeout(t);
+  }, []);
+  useEffect(() => {
+    if (!imagesEnabled || heroImages.length < 2) return;
     const t = setInterval(() => setHeroIdx((i) => (i + 1) % heroImages.length), 5500);
     return () => clearInterval(t);
-  }, [heroImages.length]);
+  }, [imagesEnabled, heroImages.length]);
 
   // ── before/after slider (drag to reveal) ──────────────────────────
   const ba = useMemo(() => site ? nicheBeforeAfter(site.id, 900, 600) : { before: "", after: "" }, [site]);
@@ -519,10 +527,15 @@ export default function NicheSiteTemplate() {
         </div>
       )}
 
-      {/* ── HERO: full-bleed cinematic, image fills, glass card on top ── */}
-      <header style={{ position: "relative", minHeight: "min(720px, 86vh)", overflow: "hidden", background: NAVY }}>
-        {/* Background slideshow — fills the entire hero */}
-        {heroImages.map((src, i) => (
+      {/* ── HERO: cinematic gradient (pure CSS, instant paint) + slideshow when ready ── */}
+      <header style={{ position: "relative", minHeight: "min(720px, 86vh)", overflow: "hidden", background: `
+        radial-gradient(900px 600px at 12% 18%, ${hexA(A, 0.55)}, transparent 60%),
+        radial-gradient(700px 500px at 88% 30%, ${hexA(A, 0.32)}, transparent 60%),
+        radial-gradient(800px 500px at 50% 110%, ${hexA(A, 0.4)}, transparent 60%),
+        linear-gradient(180deg, ${shade(A)} 0%, ${NAVY} 50%, #021426 100%)
+      ` }}>
+        {/* Background slideshow — only mounts AFTER first paint to avoid blocking */}
+        {imagesEnabled && heroImages.map((src, i) => (
           <img
             key={src}
             src={src}
