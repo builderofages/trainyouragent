@@ -18,6 +18,8 @@ import Contact from "./pages/Contact";
 import AiChat from "@/components/AiChat";
 import ExitIntent from "@/components/ExitIntent";
 import LeadMagnetModal from "@/components/LeadMagnetModal";
+import CookieConsent from "@/components/CookieConsent";
+import { getConsent, onConsentChange } from "@/lib/consent";
 import LiveActivity from "@/components/LiveActivity";
 import LiveActivityTicker from "@/components/LiveActivityTicker";
 import PageTransition from "@/components/PageTransition";
@@ -360,6 +362,44 @@ class RouteErrorBoundary extends Component<{ children: ReactNode }, { hasError: 
 
 const App = () => {
   useEffect(() => { initAttribution(); }, []);
+
+  // v229: Hydrate consent mirror onto window so tracking.ts can gate sync.
+  // Also subscribe to changes so the next event after Accept-All fires.
+  useEffect(() => {
+    const apply = (c: ReturnType<typeof getConsent>) => {
+      try { (window as any).__TYA_CONSENT__ = c || { essential: true, analytics: false, marketing: false, personalize: false }; } catch {}
+    };
+    apply(getConsent());
+    const unsub = onConsentChange((c) => apply(c));
+    return unsub;
+  }, []);
+
+  // v229: Global error catcher → POST to /api/log-error so we stop flying blind.
+  // Captures uncaught exceptions + unhandled promise rejections. Rate-limited
+  // to 5 errors per page-load to avoid spamming the endpoint.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let n = 0;
+    const send = (kind: string, msg: string, stack?: string) => {
+      if (n++ > 5) return;
+      try {
+        fetch("/api/log-error", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          keepalive: true,
+          body: JSON.stringify({ kind, msg, stack: stack?.slice(0, 1800), url: location.href, ua: navigator.userAgent.slice(0, 220), ts: Date.now() }),
+        }).catch(() => {});
+      } catch {}
+    };
+    const onErr = (e: ErrorEvent) => send("error", e.message || "unknown", (e.error && e.error.stack) || "");
+    const onRej = (e: PromiseRejectionEvent) => send("unhandled-rejection", String((e.reason && (e.reason.message || e.reason)) || "unknown"), e.reason && e.reason.stack);
+    window.addEventListener("error", onErr);
+    window.addEventListener("unhandledrejection", onRej);
+    return () => {
+      window.removeEventListener("error", onErr);
+      window.removeEventListener("unhandledrejection", onRej);
+    };
+  }, []);
   return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -623,6 +663,8 @@ const App = () => {
         <LiveActivity />
         <LiveActivityTicker />
         <TalkToHumanButton />
+        {/* v229: GDPR/CCPA cookie consent banner — gates GA4 + Meta Pixel until consent */}
+        <CookieConsent />
         </FloatersProvider>
         </VisitorProvider>
       </BrowserRouter>

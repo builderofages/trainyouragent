@@ -48,26 +48,42 @@ export const trackConversion = (eventName: string, data?: Record<string, any>) =
     page_title: document.title
   };
 
-  // Google Tag Manager dataLayer (PRIORITY)
-  if (typeof window !== 'undefined' && (window as any).dataLayer) {
+  // v229: GDPR/CCPA consent gate. Imported lazily to avoid circular deps.
+  // If the visitor has not granted analytics / marketing consent, the
+  // matching tracker is a no-op (still pushes to dev console for debugging).
+  let allowAnalytics = false;
+  let allowMarketing = false;
+  if (typeof window !== 'undefined') {
+    try {
+      // Eager check via global mirror (set by CookieConsent on mount + change)
+      const c = (window as any).__TYA_CONSENT__;
+      if (c) {
+        allowAnalytics = !!c.analytics;
+        allowMarketing = !!c.marketing;
+      }
+    } catch { /* ignore */ }
+  }
+
+  // Google Tag Manager dataLayer (PRIORITY) — analytics
+  if (allowAnalytics && typeof window !== 'undefined' && (window as any).dataLayer) {
     (window as any).dataLayer.push({
       event: eventName,
       ...eventData
     });
   }
 
-  // Google Analytics 4 (direct gtag - FALLBACK)
-  if (typeof window !== 'undefined' && (window as any).gtag) {
+  // Google Analytics 4 (direct gtag - FALLBACK) — analytics
+  if (allowAnalytics && typeof window !== 'undefined' && (window as any).gtag) {
     (window as any).gtag('event', eventName, eventData);
   }
 
-  // Meta Pixel
-  if (typeof window !== 'undefined' && (window as any).fbq) {
+  // Meta Pixel — marketing
+  if (allowMarketing && typeof window !== 'undefined' && (window as any).fbq) {
     (window as any).fbq('track', eventName, eventData);
   }
 
-  // LinkedIn Insight Tag
-  if (typeof window !== 'undefined' && (window as any)._linkedin_data_partner_ids) {
+  // LinkedIn Insight Tag — marketing
+  if (allowMarketing && typeof window !== 'undefined' && (window as any)._linkedin_data_partner_ids) {
     (window as any).lintrk('track', { conversion_id: eventName });
   }
 
