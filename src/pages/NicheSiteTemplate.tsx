@@ -335,28 +335,32 @@ export default function NicheSiteTemplate() {
     setBaPos(Math.round((x / r.width) * 100));
   }
 
-  // ── LIVE CALL SIMULATION: auto-plays steps when scrolled into view ─
+  // ── LIVE CALL SIMULATION: bulletproof — auto-plays on scroll-into-view
+  // v220: dropped IntersectionObserver (was unreliable on tall sections).
+  // Now uses simple scroll listener + getBoundingClientRect. Fires once.
   const callScript = useMemo(() => callScriptForNiche(site, company, city), [site, company, city]);
   const [callStep, setCallStep] = useState(-1);
   const callRef = useRef<HTMLDivElement | null>(null);
+  const callFiredRef = useRef(false);
   useEffect(() => {
-    if (!callRef.current || typeof IntersectionObserver === "undefined") return;
+    if (typeof window === "undefined") return;
     let timers: number[] = [];
-    const io = new IntersectionObserver((entries) => {
-      for (const e of entries) {
-        if (e.isIntersecting && callStep < 0) {
-          // step through the script — first step appears at 0ms, then each ~1400ms later
-          callScript.forEach((_, i) => {
-            const t = window.setTimeout(() => setCallStep(i), i * 1400);
-            timers.push(t);
-          });
-          io.disconnect();
-          break;
-        }
-      }
-    }, { threshold: 0.35 });
-    io.observe(callRef.current);
-    return () => { io.disconnect(); timers.forEach((t) => clearTimeout(t)); };
+    const fire = () => {
+      if (callFiredRef.current) return;
+      callFiredRef.current = true;
+      callScript.forEach((_, i) => {
+        const t = window.setTimeout(() => setCallStep(i), i * 1400);
+        timers.push(t);
+      });
+    };
+    const check = () => {
+      if (callFiredRef.current || !callRef.current) return;
+      const r = callRef.current.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.8 && r.bottom > 0) fire();
+    };
+    check(); // immediate
+    window.addEventListener("scroll", check, { passive: true });
+    return () => { window.removeEventListener("scroll", check); timers.forEach((t) => clearTimeout(t)); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [callScript.length]);
   const restartCall = () => {
@@ -380,7 +384,9 @@ export default function NicheSiteTemplate() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const onScroll = () => {
-      const past = window.scrollY > window.innerHeight * 0.9;
+      // v220: only show after 3 viewport-heights of scroll (past first ~3 sections)
+      // so it doesn't block hero + early conversion sections
+      const past = window.scrollY > window.innerHeight * 3;
       const ctaEl = document.getElementById("cta");
       const notAtCta = !ctaEl || ctaEl.getBoundingClientRect().top > window.innerHeight * 0.8;
       setShowStickyCta(past && notAtCta);
@@ -391,14 +397,20 @@ export default function NicheSiteTemplate() {
   }, []);
 
   // ── scroll fade-in (CSS via IntersectionObserver) ──────────────────
+  // v220: lowered threshold to 0 + rootMargin so even tall/wide elements fire.
+  // Plus a fallback timer that force-reveals everything after 3s in case IO misses.
   useEffect(() => {
     if (typeof IntersectionObserver === "undefined") return;
     const els = document.querySelectorAll<HTMLElement>("[data-fade]");
     const io = new IntersectionObserver((entries) => {
       for (const e of entries) if (e.isIntersecting) { e.target.classList.add("tya-in"); io.unobserve(e.target); }
-    }, { threshold: 0.12 });
+    }, { threshold: 0, rootMargin: "0px 0px -10% 0px" });
     els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    // Safety net: anything not revealed after 3s gets revealed anyway
+    const safety = window.setTimeout(() => {
+      document.querySelectorAll<HTMLElement>("[data-fade]:not(.tya-in)").forEach((el) => el.classList.add("tya-in"));
+    }, 3000);
+    return () => { io.disconnect(); clearTimeout(safety); };
   }, [site?.id]);
 
   if (!site) {
