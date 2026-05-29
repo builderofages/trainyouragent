@@ -41,6 +41,7 @@ const Websites            = lazyWithReload(() => import("./pages/Websites"));
 const Share               = lazyWithReload(() => import("./pages/Share"));
 const Cnnct               = lazyWithReload(() => import("./pages/Cnnct"));
 const AdminSetup          = lazyWithReload(() => import("./pages/admin/Setup"));
+const AdminCockpit        = lazyWithReload(() => import("./pages/admin/Cockpit"));
 const HQ                  = lazyWithReload(() => import("./pages/HQ"));
 const NicheLanding        = lazyWithReload(() => import("./pages/NicheLanding"));
 const Vertical            = lazyWithReload(() => import("./pages/VerticalPage"));
@@ -427,6 +428,9 @@ const App = () => {
             <Route path="/share" element={<Share />} />
             {/* v203: one-page setup wizard with copy buttons + live health check */}
             <Route path="/admin/setup" element={<AdminSetup />} />
+            {/* v231: unified ops cockpit — single pane for everything operational */}
+            <Route path="/admin/cockpit" element={<AdminCockpit />} />
+            <Route path="/admin/ops" element={<AdminCockpit />} />
             {/* v197: discrete sister-site nod — intentionally NOT in main nav */}
             <Route path="/cnnct" element={<Cnnct />} />
             {/* v181: unified TYA-HQ ops dashboard (overview/leads/sites/outreach/ventures) */}
