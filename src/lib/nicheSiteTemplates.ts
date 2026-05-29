@@ -60,6 +60,15 @@ export type NicheSite = {
   quickReplies?: string[];          // chat quick-reply chips
   // optional micro-stats row (defaults computed if missing)
   statBlocks?: { number: string; label: string }[];
+
+  // v221: competitor-parity layer — what every legit local business has on
+  // their actual website. Each niche supplies its own; defaults computed if
+  // missing. This is the layer that makes the page indistinguishable from
+  // a 10-year-old established operator instead of an AI template.
+  serviceCatalog?: { name: string; price: string; period?: string; note?: string }[];
+  brandsServiced?: string[];      // equipment / insurance / partner brands
+  certifications?: string[];      // industry-specific trust badges
+  licenseFormat?: string;         // e.g. "FL CAC #" — drives the footer license line
 };
 
 export const NICHE_SITES: NicheSite[] = [

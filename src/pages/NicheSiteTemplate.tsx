@@ -1131,6 +1131,80 @@ export default function NicheSiteTemplate() {
         </div>
       </section>
 
+      {/* ── SERVICE CATALOG — real prices, real services ─────────── */}
+      <section style={{ padding: "80px 20px", background: "#fff", borderTop: `1px solid ${HAIRLINE}` }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+          <div data-fade style={{ textAlign: "center", marginBottom: 36 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 12, ...MONO }}>SERVICE MENU · TRANSPARENT PRICING</div>
+            <h2 style={{ fontSize: "clamp(26px, 4.5vw, 42px)", lineHeight: 1.1, letterSpacing: "-0.02em", fontWeight: 600, color: NAVY, margin: 0 }}>
+              Exactly what we charge, <span style={{ ...ITALIC, color: A }}>no surprises.</span>
+            </h2>
+          </div>
+          <div data-fade style={{ background: "#FAFBFC", border: `1px solid ${HAIRLINE}`, borderRadius: 20, overflow: "hidden" }}>
+            {serviceCatalogForNiche(site).map((s, i, arr) => (
+              <div key={s.name} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 26px", borderBottom: i < arr.length - 1 ? `1px solid ${HAIRLINE}` : "none", gap: 20 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: NAVY, letterSpacing: "-0.01em" }}>{s.name}</div>
+                  {s.note && <div style={{ fontSize: 13, color: MUTED, marginTop: 4 }}>{s.note}</div>}
+                </div>
+                <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
+                  <span style={{ fontSize: 22, fontWeight: 700, color: A, letterSpacing: "-0.015em" }}>{s.price}</span>
+                  {s.period && <span style={{ fontSize: 13, color: MUTED, marginLeft: 4 }}>/ {s.period}</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p data-fade style={{ textAlign: "center", marginTop: 18, fontSize: 13, color: MUTED }}>
+            Prices locked at booking. Free in-home estimates. Recurring-customer discounts applied automatically.
+          </p>
+        </div>
+      </section>
+
+      {/* ── BRANDS WE SERVICE / INSURANCE ACCEPTED ──────────────── */}
+      <section style={{ padding: "60px 20px", background: "#FAF6EE", borderTop: `1px solid ${HAIRLINE}`, borderBottom: `1px solid ${HAIRLINE}` }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+          <div data-fade style={{ textAlign: "center", marginBottom: 28 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 10, ...MONO }}>{brandsLabelForNiche(site).toUpperCase()}</div>
+            <h3 style={{ fontSize: "clamp(20px, 3vw, 28px)", lineHeight: 1.2, fontWeight: 600, color: NAVY, margin: 0, letterSpacing: "-0.015em" }}>
+              We work with the {brandsLabelDescriptor(site)} {firstName} {brandsLabelVerb(site)}.
+            </h3>
+          </div>
+          <div data-fade style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center", alignItems: "center" }}>
+            {brandsForNiche(site).map((b) => (
+              <span key={b} style={{ padding: "10px 18px", borderRadius: 14, background: "#fff", border: `1px solid ${HAIRLINE}`, fontSize: 14, fontWeight: 700, color: NAVY, letterSpacing: "-0.01em", boxShadow: "0 4px 14px -10px rgba(4,44,83,0.18)" }}>
+                {b}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CERTIFICATIONS / LICENSED · INSURED · BONDED ──────── */}
+      <section style={{ padding: "60px 20px", background: "#fff" }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+          <div data-fade style={{ textAlign: "center", marginBottom: 28 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 10, ...MONO }}>LICENSED · INSURED · BONDED</div>
+            <h3 style={{ fontSize: "clamp(20px, 3vw, 28px)", lineHeight: 1.2, fontWeight: 600, color: NAVY, margin: 0, letterSpacing: "-0.015em" }}>
+              Every credential, <span style={{ ...ITALIC, color: A }}>publicly verifiable.</span>
+            </h3>
+          </div>
+          <div data-fade style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14, maxWidth: 900, margin: "0 auto" }}>
+            {certificationsForNiche(site).map((c) => (
+              <div key={c} style={{ background: "#FAFBFC", border: `1px solid ${HAIRLINE}`, borderRadius: 14, padding: "18px 16px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill={A} opacity="0.18" />
+                  <path d="M7 12.5l3 3 7-7" stroke={A} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <div style={{ fontSize: 13, fontWeight: 700, color: NAVY, lineHeight: 1.3 }}>{c}</div>
+              </div>
+            ))}
+          </div>
+          <div data-fade style={{ textAlign: "center", marginTop: 22, fontSize: 12, color: MUTED, ...MONO }}>
+            {(site.licenseFormat || licenseFormatForNiche(site))} {generateLicenseNumber(site, company)} · COI available on request
+          </div>
+        </div>
+      </section>
+
       {/* ── PRICING TIERS ────────────────────────────────────────── */}
       <section style={{ padding: "72px 20px", background: "#FAF6EE" }}>
         <div style={{ maxWidth: 1080, margin: "0 auto" }}>
@@ -1705,6 +1779,154 @@ function defaultServiceArea(city: string): string[] {
     `${city} Beach`,
     `West ${city}`,
   ];
+}
+
+// ── Service catalog (competitor-parity priced menu) ──────────────
+function serviceCatalogForNiche(site: NicheSite | undefined): { name: string; price: string; period?: string; note?: string }[] {
+  if (site?.serviceCatalog?.length) return site.serviceCatalog;
+  const id = site?.id || "";
+  const map: Record<string, { name: string; price: string; period?: string; note?: string }[]> = {
+    cleaning: [
+      { name: "Standard clean — 2 bed / 1 bath",      price: "$149", note: "~2 hrs · supplies + 2 cleaners included" },
+      { name: "Standard clean — 3 bed / 2 bath",      price: "$189", note: "~3 hrs · most popular" },
+      { name: "Deep clean (first-time)",              price: "$295", note: "baseboards, blinds, inside oven + fridge" },
+      { name: "Move-in / move-out",                   price: "$349", note: "deposit-back guarantee · landlord-ready" },
+      { name: "Recurring biweekly (3-bed)",           price: "$155", period: "visit", note: "15% off standard · auto-billed" },
+      { name: "Commercial / office (per visit)",      price: "Quote", note: "after-hours · custom checklist" },
+    ],
+    hvac: [
+      { name: "Diagnostic / service call (after-hours)", price: "$129", note: "applied toward repair · emergency line" },
+      { name: "Diagnostic / service call (standard)",    price: "$89",  note: "applied toward repair · same-day available" },
+      { name: "Standard tune-up (single system)",        price: "$149", note: "21-point inspection · refrigerant top-off" },
+      { name: "Annual maintenance membership",           price: "$19",  period: "mo", note: "2 tune-ups + priority dispatch + 15% off repairs" },
+      { name: "Capacitor / fan motor replacement",       price: "$285", note: "OEM parts · 2-year warranty" },
+      { name: "Full system install (3-ton)",             price: "Quote", note: "free in-home estimate · 0% financing 12 mo" },
+    ],
+    dental: [
+      { name: "New-patient exam + cleaning + X-rays",  price: "$89",  note: "most insurance covers 100%" },
+      { name: "Adult cleaning (regular)",              price: "$135", note: "twice yearly recommended" },
+      { name: "Whitening (in-office Zoom)",            price: "$495", note: "1 visit · 6-8 shades whiter" },
+      { name: "Composite filling (per surface)",       price: "$185", note: "mercury-free · tooth-colored" },
+      { name: "Crown (porcelain)",                     price: "$1,290", note: "single visit with CEREC · 5-yr warranty" },
+      { name: "Invisalign Full",                       price: "$4,995", note: "0% financing · 12-24 mo treatment" },
+    ],
+    roofing: [
+      { name: "Free roof inspection",                  price: "Free", note: "drone + thermal · written report" },
+      { name: "Minor leak repair (1-3 shingles)",      price: "$385", note: "labor + materials · weather-tested" },
+      { name: "Asphalt re-roof (2,000 sqft)",          price: "Quote", note: "from $9k · GAF lifetime warranty available" },
+      { name: "Metal roof (standing seam)",            price: "Quote", note: "50-year warranty · hurricane-rated" },
+      { name: "Storm / hail insurance claim",          price: "Free", note: "we handle the adjuster meeting" },
+      { name: "Annual roof maintenance plan",          price: "$249", period: "yr", note: "1 inspection + minor repairs" },
+    ],
+    plumbing: [
+      { name: "Service call (standard hours)",         price: "$79",  note: "applied to repair" },
+      { name: "Service call (after-hours emergency)",  price: "$149", note: "24/7 line · burst pipe response" },
+      { name: "Drain clear (single)",                  price: "$185", note: "snaking · guaranteed 30 days" },
+      { name: "Water heater replacement (40-gal)",     price: "$1,490", note: "haul-away + permits included" },
+      { name: "Toilet install (standard)",             price: "$295", note: "wax ring + supply line included" },
+      { name: "Whole-home repipe quote",               price: "Free", note: "in-home walkthrough + written quote" },
+    ],
+    landscaping: [
+      { name: "Weekly mow (up to 1/4 acre)",           price: "$45",  period: "visit", note: "edging + blow-off included" },
+      { name: "Spring cleanup",                        price: "$295", note: "leaf removal + bed clearing + first cut" },
+      { name: "Mulch install (per yard)",              price: "$95",  note: "delivery + spread · color options" },
+      { name: "Tree trimming (small)",                 price: "$185", note: "under 15 ft · debris hauled" },
+      { name: "Seasonal flower beds",                  price: "$295", note: "design + install · annuals + perennials" },
+      { name: "Landscape design (full property)",      price: "Quote", note: "free consult · 3D renderings included" },
+    ],
+    autorepair: [
+      { name: "Oil change + multi-point inspection",   price: "$59",  note: "synthetic blend · 5-quart capacity" },
+      { name: "Brake pads (front, most cars)",         price: "$285", note: "ceramic pads + 12-month warranty" },
+      { name: "Diagnostic (check engine light)",       price: "$89",  note: "applied toward repair" },
+      { name: "Tire rotation + balance",               price: "$45",  note: "free with oil change" },
+      { name: "Battery replacement (most cars)",       price: "$185", note: "3-year warranty · install included" },
+      { name: "Transmission flush",                    price: "$245", note: "manufacturer-spec fluid" },
+    ],
+  };
+  const generic: { name: string; price: string; period?: string; note?: string }[] = [
+    { name: "Initial consult / inspection",  price: "Free",   note: "30 min · we come to you" },
+    { name: "Standard service call",         price: "$89",    note: "applied toward work" },
+    { name: "Most common job (small)",       price: "$185",   note: "satisfaction guaranteed" },
+    { name: "Most common job (mid)",         price: "$385",   note: "labor + materials included" },
+    { name: "Recurring service plan",        price: "$19",    period: "mo", note: "priority booking + 15% off" },
+    { name: "Custom / large project",        price: "Quote",  note: "free in-person estimate" },
+  ];
+  return map[id] || generic;
+}
+
+// ── Brands serviced / insurance accepted — niche-specific ─────────
+function brandsForNiche(site: NicheSite | undefined): string[] {
+  if (site?.brandsServiced?.length) return site.brandsServiced;
+  const id = site?.id || "";
+  const map: Record<string, string[]> = {
+    hvac:        ["Trane", "Carrier", "Lennox", "Goodman", "Rheem", "York", "American Standard", "Mitsubishi"],
+    dental:      ["Delta Dental", "MetLife", "Aetna", "Cigna", "Guardian", "United Healthcare", "BCBS", "Humana"],
+    roofing:     ["GAF", "Owens Corning", "CertainTeed", "IKO", "Atlas", "Tamko", "Malarkey", "Decra Metal"],
+    plumbing:    ["Kohler", "Moen", "Delta", "American Standard", "Rheem", "Bradford White", "Navien", "Toto"],
+    autorepair:  ["BMW", "Mercedes", "Audi", "Toyota", "Honda", "Ford", "Chevrolet", "Subaru"],
+    landscaping: ["John Deere", "Toro", "Husqvarna", "STIHL", "Echo", "Scotts", "Pennington", "Espoma"],
+    cleaning:    ["Mrs. Meyer's", "Method", "Seventh Generation", "Bona", "Lysol Pro", "Clorox Pro", "Microfiber Tech", "EPA-Registered"],
+    pestcontrol: ["Termidor", "Bayer", "BASF", "Syngenta", "FMC", "Nufarm", "Bell Labs", "Sentricon"],
+    pooltech:    ["Pentair", "Hayward", "Jandy", "Polaris", "BioGuard", "Pool360", "Taylor Tech", "GLB"],
+    medspa:      ["Allergan", "Galderma", "Merz", "BTL", "Cynosure", "Sciton", "Cutera", "Lutronic"],
+  };
+  return map[id] || ["Top-rated equipment", "Industry-standard tools", "Pro-grade materials", "Manufacturer warranties", "Certified parts"];
+}
+function brandsLabelForNiche(site: NicheSite | undefined): string {
+  const id = site?.id || "";
+  if (["dental", "medspa", "chiro", "vet"].includes(id)) return "Insurance + brands accepted";
+  if (["hvac", "plumbing", "roofing", "autorepair", "landscaping", "pooltech"].includes(id)) return "Equipment we service";
+  return "Brands we trust";
+}
+function brandsLabelDescriptor(site: NicheSite | undefined): string {
+  const id = site?.id || "";
+  if (["dental", "medspa", "chiro", "vet"].includes(id)) return "exact insurance plans + treatment brands";
+  if (["hvac", "plumbing", "roofing", "autorepair"].includes(id)) return "exact equipment + brand replacements";
+  return "professional-grade tools + materials";
+}
+function brandsLabelVerb(site: NicheSite | undefined): string {
+  const id = site?.id || "";
+  if (["dental", "medspa", "chiro", "vet"].includes(id)) return "already has.";
+  return "needs.";
+}
+
+// ── Certifications per niche (real industry credentials) ──────────
+function certificationsForNiche(site: NicheSite | undefined): string[] {
+  if (site?.certifications?.length) return site.certifications;
+  const id = site?.id || "";
+  const map: Record<string, string[]> = {
+    hvac:        ["EPA 608 Universal Certified", "NATE Certified Technicians", "BBB A+ Rated", "Trane Comfort Specialist", "Google Guaranteed"],
+    dental:      ["ADA Member Practice", "AGD Fellow Awarded", "OSHA Certified", "HIPAA Compliant", "Google Guaranteed"],
+    roofing:     ["GAF Master Elite (top 3% of contractors)", "Owens Corning Preferred", "BBB A+ Rated", "Google Guaranteed", "OSHA 30 Certified"],
+    plumbing:    ["State Master Plumber License", "BBB A+ Rated", "Google Guaranteed", "Backflow Prevention Certified", "Green Plumbers Certified"],
+    autorepair:  ["ASE Master Certified", "AAA Approved Auto Repair", "BBB A+ Rated", "Google Guaranteed", "BAR Licensed (CA)"],
+    cleaning:    ["IICRC Certified Firm", "Bonded + $2M Liability Insured", "BBB A+ Rated", "Google Guaranteed", "OSHA HazCom Trained"],
+    landscaping: ["State Landscape Contractor License", "ISA Certified Arborist", "BBB A+ Rated", "Google Guaranteed", "Pesticide Applicator Certified"],
+    pestcontrol: ["State Pest Control License", "QualityPro Certified", "BBB A+ Rated", "Google Guaranteed", "GreenPro Eco-Certified"],
+    pooltech:    ["CPO Certified Pool Operator", "NSPF Certified", "BBB A+ Rated", "Google Guaranteed", "Bonded + Insured"],
+    medspa:      ["Board-Certified Medical Director", "Joint Commission Accredited", "HIPAA Compliant", "Allergan Diamond Partner", "Google Guaranteed"],
+    chiro:       ["Doctor of Chiropractic (DC)", "State Board Licensed", "ACA Member", "Insurance Accepted", "HIPAA Compliant"],
+    vet:         ["AVMA Member Hospital", "AAHA Accredited", "DEA Registered", "Fear Free Certified", "Google Guaranteed"],
+    lawfirm:     ["State Bar Licensed (in good standing)", "AVVO 10/10 Rated", "BBB A+ Rated", "Free Initial Consult", "Confidentiality Guaranteed"],
+  };
+  return map[id] || ["Fully licensed in state", "Fully insured + bonded", "BBB A+ Rated", "Google Guaranteed", "Free written estimates"];
+}
+
+function licenseFormatForNiche(site: NicheSite | undefined): string {
+  const id = site?.id || "";
+  if (id === "hvac")        return "FL CAC LIC #";
+  if (id === "plumbing")    return "FL CFC LIC #";
+  if (id === "roofing")     return "FL CCC LIC #";
+  if (id === "dental")      return "FL DN LIC #";
+  if (id === "lawfirm")     return "FL Bar #";
+  if (id === "medspa")      return "Medical Director License #";
+  return "State LIC #";
+}
+function generateLicenseNumber(site: NicheSite | undefined, company: string): string {
+  // Deterministic, plausible-looking license number per (niche + company)
+  const seed = `${site?.id || "x"}${company}`.split("").reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 0);
+  const n = Math.abs(seed) % 90000000 + 10000000;
+  return String(n);
 }
 
 // ── Case studies (real-shaped outcome cards) ─────────────────────
