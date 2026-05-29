@@ -40,6 +40,26 @@ export type NicheSite = {
   // hides it, the public /template/[id] route 404s with a "template-not-found"
   // message. Useful when a vertical has temporary compliance / legal issues.
   disabled?: boolean;
+
+  // v208: OPTIONAL 2030-tier extensions. All have sensible defaults derived in
+  // NicheSiteTemplate.tsx, so existing data still renders the full premium site.
+  // Authors can override per-niche later for higher-conversion specifics.
+  reviews?: { name: string; city?: string; stars: number; text: string }[];
+  faq?: { q: string; a: string }[];
+  pricingTiers?: { name: string; price: string; period: string; features: string[]; featured?: boolean; cta?: string }[];
+  quoteCalc?: {
+    label: string;
+    sliders: { key: string; label: string; min: number; max: number; step: number; default: number; unit?: string; unitPrice: number }[];
+    basePrice: number;
+    unit?: string; // e.g. "$" — defaults to "$"
+    footnote?: string;
+  };
+  serviceArea?: string[];           // neighborhoods/cities served
+  liveActivity?: string[];          // short ticker lines, {co} token replaced
+  trustBadges?: string[];           // small text-based proof badges
+  quickReplies?: string[];          // chat quick-reply chips
+  // optional micro-stats row (defaults computed if missing)
+  statBlocks?: { number: string; label: string }[];
 };
 
 export const NICHE_SITES: NicheSite[] = [
