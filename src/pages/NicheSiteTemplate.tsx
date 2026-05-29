@@ -1108,6 +1108,138 @@ export default function NicheSiteTemplate() {
         </div>
       </section>
 
+      {/* ── ONBOARDING TIMELINE — Day 0 → Day 14 ─────────────────── */}
+      <section style={{ padding: "84px 20px", background: "#fff" }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+          <div data-fade style={{ textAlign: "center", marginBottom: 44 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 12, ...MONO }}>YOUR FIRST 14 DAYS</div>
+            <h2 style={{ fontSize: "clamp(28px, 4.6vw, 44px)", lineHeight: 1.1, letterSpacing: "-0.02em", fontWeight: 600, color: NAVY, margin: 0 }}>
+              From sign-up to <span style={{ ...ITALIC, color: A }}>booked jobs</span>, day-by-day.
+            </h2>
+          </div>
+          <div style={{ position: "relative" }}>
+            {/* Track line */}
+            <div style={{ position: "absolute", left: "5%", right: "5%", top: 36, height: 3, background: `linear-gradient(90deg, ${A} 0%, ${A} 100%)`, opacity: 0.18, borderRadius: 99 }} className="tya-tl-line" />
+            <style>{`@media (max-width: 720px){ .tya-tl-line { display:none; } }`}</style>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 22, position: "relative" }}>
+              {ONBOARDING_PHASES.map((p, i) => (
+                <div key={p.day} data-fade style={{ textAlign: "center", position: "relative" }}>
+                  <div style={{ width: 72, height: 72, margin: "0 auto 16px", borderRadius: "50%", background: i === 0 ? `linear-gradient(160deg, ${A}, ${shade(A)})` : "#fff", color: i === 0 ? "#fff" : A, display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800, ...MONO, border: i === 0 ? "none" : `3px solid ${hexA(A, 0.35)}`, boxShadow: i === 0 ? `0 16px 36px -10px ${hexA(A, 0.55)}` : "none", position: "relative", zIndex: 1 }}>
+                    {p.day}
+                  </div>
+                  <div style={{ fontSize: 15.5, fontWeight: 700, color: NAVY, marginBottom: 6, letterSpacing: "-0.01em" }}>{p.title}</div>
+                  <p style={{ fontSize: 13, lineHeight: 1.55, color: MUTED, margin: 0 }}>{p.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── GUARANTEE / RISK REVERSAL ──────────────────────────── */}
+      <section style={{ padding: "80px 20px", background: `linear-gradient(180deg, #FAF6EE 0%, ${hexA(A, 0.06)} 100%)` }}>
+        <div data-fade style={{ maxWidth: 880, margin: "0 auto" }}>
+          <div style={{ background: "#fff", border: `2px solid ${A}`, borderRadius: 28, padding: "44px 36px", position: "relative", boxShadow: `0 32px 80px -28px ${hexA(A, 0.42)}`, overflow: "hidden" }}>
+            {/* watermark seal */}
+            <div style={{ position: "absolute", right: -40, top: -40, width: 220, height: 220, borderRadius: "50%", border: `12px solid ${hexA(A, 0.06)}`, pointerEvents: "none" }} />
+            <div style={{ display: "grid", gridTemplateColumns: "auto minmax(0, 1fr)", gap: 28, alignItems: "center" }}>
+              {/* seal badge */}
+              <div style={{ width: 130, height: 130, borderRadius: "50%", background: `linear-gradient(160deg, ${A}, ${shade(A)})`, color: "#fff", display: "grid", placeItems: "center", textAlign: "center", boxShadow: `0 22px 50px -16px ${hexA(A, 0.55)}`, position: "relative" }}>
+                <div>
+                  <div style={{ fontSize: 28, fontWeight: 800, lineHeight: 1, letterSpacing: "-0.02em" }}>30</div>
+                  <div style={{ fontSize: 9.5, fontWeight: 700, ...MONO, marginTop: 4, opacity: 0.92 }}>DAY GUARANTEE</div>
+                </div>
+                <span style={{ position: "absolute", inset: -6, borderRadius: "50%", border: `2px dashed ${hexA(A, 0.55)}`, animation: "tyaPulse 3s ease-in-out infinite" }} />
+              </div>
+              <div className="tya-guar-body">
+                <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 10, ...MONO }}>RISK REVERSAL · NO QUESTIONS</div>
+                <h3 style={{ fontSize: "clamp(22px, 3.4vw, 32px)", lineHeight: 1.15, fontWeight: 600, color: NAVY, margin: "0 0 14px", letterSpacing: "-0.018em" }}>
+                  If we don't book {firstName} <span style={{ ...ITALIC, color: A }}>a real paying job</span> in 30 days,{" "}
+                  we refund every dollar — <em style={{ ...ITALIC, color: A }}>and you keep the agent</em>.
+                </h3>
+                <p style={{ fontSize: 15, lineHeight: 1.55, color: MUTED, margin: 0 }}>
+                  No fine print. No "training period." If your AI receptionist doesn't pay for itself the first month, we eat the cost. You walk away with the agent, the recordings, and your number untouched.
+                </p>
+              </div>
+            </div>
+            <style>{`@media (max-width: 580px) {
+              .tya-guar-body { grid-column: 1 / -1; text-align: center; }
+            }`}</style>
+          </div>
+        </div>
+      </section>
+
+      {/* ── INTEGRATIONS GRID ─────────────────────────────────── */}
+      <section style={{ padding: "76px 20px", background: "#fff" }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+          <div data-fade style={{ textAlign: "center", marginBottom: 36 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 12, ...MONO }}>PLUGS INTO WHAT YOU ALREADY USE</div>
+            <h2 style={{ fontSize: "clamp(26px, 4.2vw, 38px)", lineHeight: 1.1, letterSpacing: "-0.02em", fontWeight: 600, color: NAVY, margin: "0 0 8px" }}>
+              No rip-and-replace. <span style={{ ...ITALIC, color: A }}>Just connect.</span>
+            </h2>
+            <p style={{ fontSize: 15, color: MUTED, margin: "0 auto", maxWidth: 560 }}>
+              We sit on top of the calendar, CRM, and tools {firstName} already runs on. Two-way sync, real-time.
+            </p>
+          </div>
+          <div data-fade style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 14 }}>
+            {INTEGRATIONS.map((it) => (
+              <div key={it.name} style={{ background: "#fff", border: `1px solid ${HAIRLINE}`, borderRadius: 14, padding: "20px 14px", display: "flex", flexDirection: "column", alignItems: "center", gap: 10, transition: "transform .2s ease, box-shadow .2s ease", cursor: "default" }}
+                   onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 18px 36px -22px rgba(4,44,83,0.25)"; }}
+                   onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}>
+                <img
+                  src={`https://cdn.simpleicons.org/${it.slug}/${it.color || "042C53"}`}
+                  alt={`${it.name} logo`}
+                  width={32} height={32}
+                  loading="lazy" decoding="async"
+                  style={{ display: "block" }}
+                  onError={(e) => {
+                    // graceful fallback to first letter avatar
+                    const el = e.currentTarget as HTMLImageElement;
+                    el.style.display = "none";
+                    const sib = el.nextElementSibling as HTMLElement | null;
+                    if (sib) sib.style.display = "grid";
+                  }}
+                />
+                <div style={{ display: "none", width: 32, height: 32, borderRadius: 8, background: hexA(A, 0.12), color: A, placeItems: "center", fontSize: 14, fontWeight: 700 }}>{it.name[0]}</div>
+                <div style={{ fontSize: 12.5, fontWeight: 600, color: NAVY, textAlign: "center" }}>{it.name}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOUNDER STRIP — credibility through a face ────────── */}
+      <section style={{ padding: "76px 20px", background: NAVY, color: "#fff" }}>
+        <div data-fade style={{ maxWidth: 980, margin: "0 auto", display: "grid", gridTemplateColumns: "auto minmax(0, 1fr)", gap: 32, alignItems: "center" }}>
+          <div style={{ position: "relative", width: 140, height: 140, borderRadius: "50%", overflow: "hidden", flexShrink: 0, boxShadow: `0 22px 50px -16px ${hexA(A, 0.55)}`, border: `3px solid ${hexA(A, 0.6)}` }}>
+            <img
+              src="https://image.pollinations.ai/prompt/professional%20headshot%20portrait%20of%20a%2025%20year%20old%20founder%2C%20short%20dark%20hair%2C%20confident%20smile%2C%20studio%20lighting%2C%20editorial%20magazine%20cover%20style?width=280&height=280&nologo=true&model=flux&seed=42424"
+              alt="Alexander — founder"
+              loading="lazy" decoding="async"
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+            />
+          </div>
+          <div className="tya-founder-body">
+            <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.65)", marginBottom: 10, ...MONO }}>WHO BUILDS THIS</div>
+            <h3 style={{ fontSize: "clamp(20px, 3.2vw, 28px)", lineHeight: 1.25, fontWeight: 600, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.015em" }}>
+              I'm Alexander — and I'll personally build {firstName}'s agent on a Zoom with you.
+            </h3>
+            <p style={{ fontSize: 14.5, lineHeight: 1.6, color: "rgba(255,255,255,0.85)", margin: 0 }}>
+              Founder of TrainYourAgent. I built this because every small-business owner I know is bleeding revenue to missed calls. No sales team. No account managers. You'll talk to me on the first call, the build call, and any time after.
+            </p>
+            <div style={{ marginTop: 16, display: "flex", flexWrap: "wrap", gap: 16, fontSize: 12, color: "rgba(255,255,255,0.7)" }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><span style={{ width: 4, height: 4, borderRadius: 99, background: A, display: "inline-block" }} /> Ex-founder, multiple ventures</span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><span style={{ width: 4, height: 4, borderRadius: 99, background: A, display: "inline-block" }} /> Based in Los Angeles</span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><span style={{ width: 4, height: 4, borderRadius: 99, background: A, display: "inline-block" }} /> Replies same day</span>
+            </div>
+          </div>
+          <style>{`@media (max-width: 580px) {
+            .tya-founder-body { grid-column: 1 / -1; text-align: center; }
+          }`}</style>
+        </div>
+      </section>
+
       {/* ── FAQ ──────────────────────────────────────────────────── */}
       <section style={{ padding: "72px 20px" }}>
         <div style={{ maxWidth: 760, margin: "0 auto" }}>
@@ -1203,6 +1335,30 @@ export default function NicheSiteTemplate() {
               </form>
             )}
           </div>
+        </div>
+      </section>
+
+      {/* ── GET YOUR OWN URL — instant personalize ──────────────── */}
+      <section style={{ padding: "70px 20px", background: `linear-gradient(180deg, ${hexA(A, 0.06)} 0%, #FAF6EE 60%, #FFFFFF 100%)`, borderTop: `1px solid ${HAIRLINE}` }}>
+        <div data-fade style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 12, ...MONO }}>WANT THIS SITE FOR YOUR BUSINESS?</div>
+          <h3 style={{ fontSize: "clamp(24px, 4vw, 38px)", lineHeight: 1.1, fontWeight: 600, color: NAVY, margin: "0 0 14px", letterSpacing: "-0.02em" }}>
+            Drop your business name. <span style={{ ...ITALIC, color: A }}>See it live in 5 seconds.</span>
+          </h3>
+          <p style={{ fontSize: 15, color: MUTED, margin: "0 auto 24px", maxWidth: 520 }}>
+            Same site, same agent, swapped to your name + city. Yours to share, send to your team, or hand to clients.
+          </p>
+          <form
+            onSubmit={(e) => { e.preventDefault(); const co = personalizeInput.trim(); if (!co) return; const next = new URLSearchParams(sp); next.set("company", co); if (personalizeCity.trim()) next.set("city", personalizeCity.trim()); setSp(next, { replace: true }); void fireEvent("template_bottom_personalize", { niche: site.id, company: co }); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+            style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center", alignItems: "center", padding: 14, background: "#fff", border: `1px solid ${HAIRLINE}`, borderRadius: 16, boxShadow: `0 18px 50px -28px ${hexA(NAVY, 0.3)}`, maxWidth: 640, margin: "0 auto" }}
+          >
+            <input value={personalizeInput} onChange={(e) => setPersonalizeInput(e.target.value)} placeholder="Your business name" required style={{ flex: "1 1 200px", minWidth: 200, padding: "12px 14px", borderRadius: 10, border: "1px solid rgba(4,44,83,0.18)", fontSize: 14.5, color: NAVY, outline: "none", background: "#FAFBFC" }} />
+            <input value={personalizeCity} onChange={(e) => setPersonalizeCity(e.target.value)} placeholder="City (optional)" style={{ flex: "1 1 140px", minWidth: 140, padding: "12px 14px", borderRadius: 10, border: "1px solid rgba(4,44,83,0.18)", fontSize: 14.5, color: NAVY, outline: "none", background: "#FAFBFC" }} />
+            <button type="submit" disabled={!personalizeInput.trim()} style={{ padding: "12px 22px", borderRadius: 10, background: NAVY, color: "#fff", fontSize: 14.5, fontWeight: 700, border: "none", cursor: personalizeInput.trim() ? "pointer" : "not-allowed", opacity: personalizeInput.trim() ? 1 : 0.5, whiteSpace: "nowrap" }}>
+              Personalize →
+            </button>
+          </form>
+          <div style={{ marginTop: 14, fontSize: 12, color: "#94A3B8" }}>Free. No signup. No email. Just instant.</div>
         </div>
       </section>
 
@@ -1477,6 +1633,31 @@ function defaultServiceArea(city: string): string[] {
     `West ${city}`,
   ];
 }
+
+// ── Onboarding timeline phases ───────────────────────────────────
+const ONBOARDING_PHASES = [
+  { day: "DAY 0",     title: "Build call",         body: "30-min Zoom. We capture your services, hours, pricing, voice." },
+  { day: "DAY 1-2",   title: "Agent trained",      body: "Your custom AI receptionist scripted, voice locked, integrations wired." },
+  { day: "DAY 3",     title: "Test on your line",  body: "Forwarded number live. You call, hear it, tweak responses with us." },
+  { day: "DAY 7",     title: "Goes live",          body: "Cutover to your real business line. Every call answered, 24/7." },
+  { day: "DAY 14",    title: "First booked job",   body: "Bookings flowing into your calendar. Weekly performance digest starts." },
+];
+
+// ── Integrations (simpleicons-served logos) ──────────────────────
+const INTEGRATIONS = [
+  { name: "Cal.com",          slug: "calendly",       color: "042C53" }, // simpleicons sometimes lacks cal.com
+  { name: "Google Calendar",  slug: "googlecalendar", color: "4285F4" },
+  { name: "Stripe",           slug: "stripe",         color: "635BFF" },
+  { name: "Twilio",           slug: "twilio",         color: "F22F46" },
+  { name: "HubSpot",          slug: "hubspot",        color: "FF7A59" },
+  { name: "QuickBooks",       slug: "quickbooks",     color: "2CA01C" },
+  { name: "Zapier",           slug: "zapier",         color: "FF4F00" },
+  { name: "Slack",            slug: "slack",          color: "4A154B" },
+  { name: "Notion",           slug: "notion",         color: "000000" },
+  { name: "Mailchimp",        slug: "mailchimp",      color: "FFE01B" },
+  { name: "WhatsApp",         slug: "whatsapp",       color: "25D366" },
+  { name: "Salesforce",       slug: "salesforce",     color: "00A1E0" },
+];
 
 // ── Live call simulation ─────────────────────────────────────────
 type CallLine = { who: "system" | "caller" | "agent"; text: string };
