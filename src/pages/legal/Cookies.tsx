@@ -51,8 +51,8 @@ export default function Cookies() {
     <LegalLayout
       slug="cookies"
       pageTitle="Cookie Policy"
-      lastUpdated="May 20, 2026"
-      reviewedDate="May 20, 2026"
+      lastUpdated="May 29, 2026"
+      reviewedDate="May 29, 2026"
       metaDescription="What cookies and similar technologies TrainYourAgent uses, why, how long, and how to opt out."
       toc={TOC}
       related={[

@@ -83,8 +83,8 @@ export default function SubProcessors() {
     <LegalLayout
       slug="sub-processors"
       pageTitle="Sub-processor list"
-      lastUpdated="May 20, 2026"
-      reviewedDate="May 20, 2026"
+      lastUpdated="May 29, 2026"
+      reviewedDate="May 29, 2026"
       metaDescription="Live list of TrainYourAgent's sub-processors: name, purpose, data categories, location, and certifications."
       toc={TOC}
       related={[

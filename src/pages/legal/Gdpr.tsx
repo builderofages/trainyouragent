@@ -18,8 +18,8 @@ export default function Gdpr() {
     <LegalLayout
       slug="gdpr"
       pageTitle="GDPR Notice"
-      lastUpdated="May 20, 2026"
-      reviewedDate="May 20, 2026"
+      lastUpdated="May 29, 2026"
+      reviewedDate="May 29, 2026"
       metaDescription="Plain-English summary of EU and UK GDPR rights when interacting with TrainYourAgent."
       toc={TOC}
       related={[

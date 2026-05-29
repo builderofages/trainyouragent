@@ -27,8 +27,8 @@ export default function Dpa() {
     <LegalLayout
       slug="dpa"
       pageTitle="Data Processing Agreement"
-      lastUpdated="May 20, 2026"
-      reviewedDate="May 20, 2026"
+      lastUpdated="May 29, 2026"
+      reviewedDate="May 29, 2026"
       metaDescription="TrainYourAgent's Data Processing Agreement (DPA) compliant with GDPR Art. 28 and CCPA service-provider standard."
       toc={TOC}
       related={[

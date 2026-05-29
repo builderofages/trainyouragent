@@ -20,8 +20,8 @@ export default function AiUse() {
     <LegalLayout
       slug="ai-use"
       pageTitle="AI Use Policy"
-      lastUpdated="May 20, 2026"
-      reviewedDate="May 20, 2026"
+      lastUpdated="May 29, 2026"
+      reviewedDate="May 29, 2026"
       metaDescription="How TrainYourAgent uses AI in its products — which models, what we don't do, EU AI Act categorization, and your right to human review."
       toc={TOC}
       related={[

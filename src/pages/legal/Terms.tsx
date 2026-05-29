@@ -27,8 +27,8 @@ export default function Terms() {
     <LegalLayout
       slug="terms"
       pageTitle="Terms of Service"
-      lastUpdated="May 20, 2026"
-      reviewedDate="May 20, 2026"
+      lastUpdated="May 29, 2026"
+      reviewedDate="May 29, 2026"
       metaDescription="Terms of Service for TrainYourAgent — Self-Serve SaaS, custom AI agent builds, and hire-the-operator engagements."
       toc={TOC}
       related={[

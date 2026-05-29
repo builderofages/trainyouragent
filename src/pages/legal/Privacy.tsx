@@ -26,8 +26,8 @@ export default function Privacy() {
     <LegalLayout
       slug="privacy"
       pageTitle="Privacy Policy"
-      lastUpdated="May 20, 2026"
-      reviewedDate="May 20, 2026"
+      lastUpdated="May 29, 2026"
+      reviewedDate="May 29, 2026"
       metaDescription="How TrainYourAgent collects, uses, shares, and retains personal information across our website, dashboard, and AI agents."
       toc={TOC}
       related={[

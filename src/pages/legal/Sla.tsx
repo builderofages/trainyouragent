@@ -21,8 +21,8 @@ export default function Sla() {
     <LegalLayout
       slug="sla"
       pageTitle="Service Level Agreement"
-      lastUpdated="May 20, 2026"
-      reviewedDate="May 20, 2026"
+      lastUpdated="May 29, 2026"
+      reviewedDate="May 29, 2026"
       metaDescription="TrainYourAgent's Service Level Agreement for custom builds and hire-the-operator engagements — uptime, response, credits."
       toc={TOC}
       related={[

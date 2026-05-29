@@ -20,8 +20,8 @@ export default function Ccpa() {
     <LegalLayout
       slug="ccpa"
       pageTitle="CCPA / CPRA Notice"
-      lastUpdated="May 20, 2026"
-      reviewedDate="May 20, 2026"
+      lastUpdated="May 29, 2026"
+      reviewedDate="May 29, 2026"
       metaDescription="Your California Consumer Privacy Act and CPRA rights when interacting with TrainYourAgent — plus the Do Not Sell or Share link."
       toc={TOC}
       related={[

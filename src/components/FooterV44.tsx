@@ -210,6 +210,12 @@ export default function FooterV44() {
             <Link to="/security" className="hover:text-white min-h-[24px] inline-block">Security</Link>
             <Link to="/status" className="hover:text-white min-h-[24px] inline-block">Status</Link>
             <Link to="/legal/cookies" className="hover:text-white min-h-[24px] inline-block">Cookies</Link>
+            {/* v230: re-open the consent banner so visitors can change their mind anytime */}
+            <button
+              type="button"
+              onClick={() => { try { window.dispatchEvent(new CustomEvent("tya:open-cookie-settings")); } catch {} }}
+              className="hover:text-white min-h-[24px] inline-block bg-transparent border-0 p-0 text-left cursor-pointer"
+            >Cookie settings</button>
             <Link to="/metrics" className="hover:text-white min-h-[24px] inline-block">Metrics</Link>
           </div>
         </div>

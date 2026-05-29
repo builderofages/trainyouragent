@@ -18,8 +18,8 @@ export default function Aup() {
     <LegalLayout
       slug="aup"
       pageTitle="Acceptable Use Policy"
-      lastUpdated="May 20, 2026"
-      reviewedDate="May 20, 2026"
+      lastUpdated="May 29, 2026"
+      reviewedDate="May 29, 2026"
       metaDescription="What you can and can't do with TrainYourAgent-trained agents — voice, messaging, model weights, and benchmarks."
       toc={TOC}
       related={[

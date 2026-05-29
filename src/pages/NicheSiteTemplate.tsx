@@ -414,12 +414,22 @@ export default function NicheSiteTemplate() {
   }, [site?.id]);
 
   if (!site) {
+    // v230: invalid /template/:niche → marketable, noindex'd, sends visitor
+    // to the PUBLIC gallery (was sending to admin-only /admin/templates).
     return (
       <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", fontFamily: "'Inter Tight', system-ui, sans-serif", background: "#FFFFFF", color: NAVY, padding: 24 }}>
-        <div style={{ textAlign: "center", maxWidth: 520 }}>
-          <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>Template not found</div>
-          <p style={{ color: MUTED, marginBottom: 20 }}>Pick a niche template from the gallery.</p>
-          <Link to="/admin/templates" style={{ color: "#185FA5", textDecoration: "underline" }}>View all niche templates →</Link>
+        <Helmet>
+          <title>Industry not found · TrainYourAgent</title>
+          <meta name="robots" content="noindex, follow" />
+        </Helmet>
+        <div style={{ textAlign: "center", maxWidth: 540 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: "#185FA5", letterSpacing: "0.18em", marginBottom: 12 }}>NICHE NOT FOUND</div>
+          <h1 style={{ fontSize: 36, fontWeight: 700, marginBottom: 12, lineHeight: 1.1 }}>That industry isn't in our gallery <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>yet.</span></h1>
+          <p style={{ color: MUTED, marginBottom: 28, fontSize: 16, lineHeight: 1.55 }}>We have 25 industry-ready AI-receptionist sites. Pick one from the gallery, or book a call and we'll build yours.</p>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+            <Link to="/websites" style={{ padding: "13px 22px", borderRadius: 12, background: NAVY, color: "#fff", fontSize: 14.5, fontWeight: 700, textDecoration: "none" }}>See all 25 industries →</Link>
+            <Link to="/contact" style={{ padding: "13px 22px", borderRadius: 12, background: "#fff", color: NAVY, fontSize: 14.5, fontWeight: 700, textDecoration: "none", border: "2px solid rgba(4,44,83,0.14)" }}>Request your industry</Link>
+          </div>
         </div>
       </div>
     );

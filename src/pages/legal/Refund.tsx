@@ -18,8 +18,8 @@ export default function Refund() {
     <LegalLayout
       slug="refund"
       pageTitle="Refund Policy"
-      lastUpdated="May 20, 2026"
-      reviewedDate="May 20, 2026"
+      lastUpdated="May 29, 2026"
+      reviewedDate="May 29, 2026"
       metaDescription="Refund terms for TrainYourAgent — Self-Serve SaaS, custom builds, and hire-the-operator engagements."
       toc={TOC}
       related={[
