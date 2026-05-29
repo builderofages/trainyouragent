@@ -501,8 +501,8 @@ export default function NicheSiteTemplate() {
         }
       `}</style>
 
-      {/* ── Top rail (logo + sticky CTAs) ──────────────────────────── */}
-      <div style={{ borderBottom: `1px solid ${HAIRLINE}`, padding: "0 20px", background: "#fff", position: "sticky", top: 0, zIndex: 30, backdropFilter: "saturate(140%) blur(8px)" }}>
+      {/* ── Top rail (logo + sticky CTAs) — always solid white, never bleed ── */}
+      <div style={{ borderBottom: `1px solid ${HAIRLINE}`, padding: "0 20px", background: "#FFFFFF", position: "sticky", top: 0, zIndex: 30, boxShadow: "0 4px 14px -10px rgba(4,44,83,0.18)" }}>
         <div style={{ maxWidth: 1080, margin: "0 auto", padding: "14px 0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
           <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label={`${company} — back to top`} style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: 0 }}>
             <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true">
@@ -753,13 +753,13 @@ export default function NicheSiteTemplate() {
         <div style={{ textAlign: "center", marginBottom: 22, padding: "0 20px" }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: MUTED, ...MONO }}>TRUSTED BY NEIGHBORS LIKE</div>
         </div>
-        <div style={{ display: "flex", gap: 36, animation: "tyaMarquee 38s linear infinite", whiteSpace: "nowrap" }}>
+        <div style={{ display: "flex", gap: 44, animation: "tyaMarquee 38s linear infinite", whiteSpace: "nowrap", alignItems: "center" }}>
           {[...neighborsForNiche(site, city), ...neighborsForNiche(site, city)].map((n, i) => (
-            <div key={i} style={{ display: "inline-flex", alignItems: "center", gap: 10, flexShrink: 0, opacity: 0.78 }}>
-              <span style={{ width: 36, height: 36, borderRadius: 10, background: `linear-gradient(135deg, ${n.color}, ${shade(n.color)})`, display: "grid", placeItems: "center", color: "#fff", fontSize: 14, fontWeight: 800, letterSpacing: "-0.04em", boxShadow: `0 8px 22px -10px ${hexA(n.color, 0.55)}` }}>
+            <div key={i} style={{ display: "inline-flex", alignItems: "center", gap: 14, flexShrink: 0, opacity: 0.88 }}>
+              <span style={{ width: 56, height: 56, borderRadius: 14, background: `linear-gradient(135deg, ${n.color}, ${shade(n.color)})`, display: "grid", placeItems: "center", color: "#fff", fontSize: 19, fontWeight: 800, letterSpacing: "-0.04em", boxShadow: `0 12px 28px -12px ${hexA(n.color, 0.6)}`, fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
                 {n.initials}
               </span>
-              <span style={{ fontSize: 14, fontWeight: 600, color: NAVY, letterSpacing: "-0.01em" }}>{n.name}</span>
+              <span style={{ fontSize: 18, fontWeight: 700, color: NAVY, letterSpacing: "-0.015em" }}>{n.name}</span>
             </div>
           ))}
         </div>
@@ -923,11 +923,17 @@ export default function NicheSiteTemplate() {
             aria-valuemax={100}
             aria-valuenow={baPos}
           >
-            {/* BEFORE (full) */}
-            <img src={ba.before} alt="Before" loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
-            {/* AFTER (clipped from left to baPos%) */}
+            {/* BEFORE (full) — desaturated/dim until image loads, then full */}
+            <div style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${hexA(NAVY, 0.85)}, ${hexA(NAVY, 0.6)})` }} />
+            {imagesEnabled && (
+              <img src={ba.before} alt="Before" loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "saturate(0.7) brightness(0.85)" }} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+            )}
+            {/* AFTER (clipped from left to baPos%) — bright + saturated when it loads */}
             <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 ${100 - baPos}% 0 0)`, transition: "clip-path 60ms linear" }}>
-              <img src={ba.after} alt="After" loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+              <div style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${hexA(A, 0.4)}, ${hexA(A, 0.15)})` }} />
+              {imagesEnabled && (
+                <img src={ba.after} alt="After" loading="lazy" decoding="async" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "saturate(1.15) brightness(1.05)" }} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+              )}
             </div>
             {/* labels */}
             <span style={{ position: "absolute", top: 14, left: 14, padding: "5px 11px", borderRadius: 999, background: "rgba(11,27,43,0.78)", color: "#fff", fontSize: 11, fontWeight: 700, ...MONO }}>BEFORE</span>
@@ -1261,7 +1267,7 @@ export default function NicheSiteTemplate() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 22, position: "relative" }}>
               {ONBOARDING_PHASES.map((p, i) => (
                 <div key={p.day} data-fade style={{ textAlign: "center", position: "relative" }}>
-                  <div style={{ width: 72, height: 72, margin: "0 auto 16px", borderRadius: "50%", background: i === 0 ? `linear-gradient(160deg, ${A}, ${shade(A)})` : "#fff", color: i === 0 ? "#fff" : A, display: "grid", placeItems: "center", fontSize: 12, fontWeight: 800, ...MONO, border: i === 0 ? "none" : `3px solid ${hexA(A, 0.35)}`, boxShadow: i === 0 ? `0 16px 36px -10px ${hexA(A, 0.55)}` : "none", position: "relative", zIndex: 1 }}>
+                  <div style={{ width: 84, height: 84, margin: "0 auto 16px", borderRadius: "50%", background: i === 0 ? `linear-gradient(160deg, ${A}, ${shade(A)})` : "#fff", color: i === 0 ? "#fff" : A, display: "grid", placeItems: "center", fontSize: 11, fontWeight: 800, ...MONO, border: i === 0 ? "none" : `3px solid ${hexA(A, 0.35)}`, boxShadow: i === 0 ? `0 16px 36px -10px ${hexA(A, 0.55)}` : "none", position: "relative", zIndex: 1, whiteSpace: "nowrap", padding: "0 6px" }}>
                     {p.day}
                   </div>
                   <div style={{ fontSize: 15.5, fontWeight: 700, color: NAVY, marginBottom: 6, letterSpacing: "-0.01em" }}>{p.title}</div>
@@ -1320,25 +1326,14 @@ export default function NicheSiteTemplate() {
           </div>
           <div data-fade style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 14 }}>
             {INTEGRATIONS.map((it) => (
-              <div key={it.name} style={{ background: "#fff", border: `1px solid ${HAIRLINE}`, borderRadius: 14, padding: "20px 14px", display: "flex", flexDirection: "column", alignItems: "center", gap: 10, transition: "transform .2s ease, box-shadow .2s ease", cursor: "default" }}
+              <div key={it.name} style={{ background: "#fff", border: `1px solid ${HAIRLINE}`, borderRadius: 14, padding: "22px 14px 18px", display: "flex", flexDirection: "column", alignItems: "center", gap: 12, transition: "transform .2s ease, box-shadow .2s ease", cursor: "default" }}
                    onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 18px 36px -22px rgba(4,44,83,0.25)"; }}
                    onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}>
-                <img
-                  src={`https://cdn.simpleicons.org/${it.slug}/${it.color || "042C53"}`}
-                  alt={`${it.name} logo`}
-                  width={32} height={32}
-                  loading="lazy" decoding="async"
-                  style={{ display: "block" }}
-                  onError={(e) => {
-                    // graceful fallback to first letter avatar
-                    const el = e.currentTarget as HTMLImageElement;
-                    el.style.display = "none";
-                    const sib = el.nextElementSibling as HTMLElement | null;
-                    if (sib) sib.style.display = "grid";
-                  }}
-                />
-                <div style={{ display: "none", width: 32, height: 32, borderRadius: 8, background: hexA(A, 0.12), color: A, placeItems: "center", fontSize: 14, fontWeight: 700 }}>{it.name[0]}</div>
-                <div style={{ fontSize: 12.5, fontWeight: 600, color: NAVY, textAlign: "center" }}>{it.name}</div>
+                {/* Brand-colored designed badge — bulletproof, always renders, uses the brand's actual color */}
+                <div style={{ width: 44, height: 44, borderRadius: 10, background: `#${it.color || "042C53"}`, color: "#fff", display: "grid", placeItems: "center", fontSize: 18, fontWeight: 800, letterSpacing: "-0.02em", boxShadow: `0 8px 18px -8px #${it.color || "042C53"}88`, fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
+                  {it.name === "Google Calendar" ? "GC" : it.name === "QuickBooks" ? "QB" : it.name.split(/[\s.]/)[0][0]}
+                </div>
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: NAVY, textAlign: "center", letterSpacing: "-0.01em" }}>{it.name}</div>
               </div>
             ))}
           </div>
@@ -1348,14 +1343,18 @@ export default function NicheSiteTemplate() {
       {/* ── FOUNDER STRIP — credibility through a face ────────── */}
       <section style={{ padding: "76px 20px", background: NAVY, color: "#fff" }}>
         <div data-fade style={{ maxWidth: 980, margin: "0 auto", display: "grid", gridTemplateColumns: "auto minmax(0, 1fr)", gap: 32, alignItems: "center" }}>
-          <div style={{ position: "relative", width: 140, height: 140, borderRadius: "50%", overflow: "hidden", flexShrink: 0, boxShadow: `0 22px 50px -16px ${hexA(A, 0.55)}`, border: `3px solid ${hexA(A, 0.6)}` }}>
-            <img
-              src="https://image.pollinations.ai/prompt/professional%20headshot%20portrait%20of%20a%2025%20year%20old%20founder%2C%20short%20dark%20hair%2C%20confident%20smile%2C%20studio%20lighting%2C%20editorial%20magazine%20cover%20style?width=280&height=280&nologo=true&model=flux&seed=42424"
-              alt="Alexander — founder"
-              loading="lazy" decoding="async"
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-            />
+          <div style={{ position: "relative", width: 160, height: 160, borderRadius: "50%", flexShrink: 0, boxShadow: `0 22px 50px -16px ${hexA(A, 0.55)}`, border: `4px solid ${hexA(A, 0.7)}`, background: `linear-gradient(160deg, ${A}, ${shade(A)})`, display: "grid", placeItems: "center", color: "#fff", overflow: "hidden" }}>
+            {/* Bulletproof: designed letter-mark always renders. Image overlays if it loads. */}
+            <span style={{ fontSize: 60, fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1, fontFamily: "'Inter Tight', system-ui, sans-serif" }}>A</span>
+            {imagesEnabled && (
+              <img
+                src="https://image.pollinations.ai/prompt/professional%20headshot%20portrait%20of%20a%20confident%2026%20year%20old%20founder%20with%20short%20dark%20hair%2C%20studio%20lighting%2C%20warm%20smile%2C%20wearing%20a%20clean%20black%20shirt%2C%20editorial%20magazine%20cover%20quality?width=320&height=320&nologo=true&model=flux&seed=42424"
+                alt="Alexander — founder"
+                loading="lazy" decoding="async"
+                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+              />
+            )}
           </div>
           <div className="tya-founder-body">
             <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.65)", marginBottom: 10, ...MONO }}>WHO BUILDS THIS</div>
@@ -1990,11 +1989,11 @@ function Sparkline({ points, color, width = 220, height = 44 }: { points: number
 
 // ── Onboarding timeline phases ───────────────────────────────────
 const ONBOARDING_PHASES = [
-  { day: "DAY 0",     title: "Build call",         body: "30-min Zoom. We capture your services, hours, pricing, voice." },
-  { day: "DAY 1-2",   title: "Agent trained",      body: "Your custom AI receptionist scripted, voice locked, integrations wired." },
-  { day: "DAY 3",     title: "Test on your line",  body: "Forwarded number live. You call, hear it, tweak responses with us." },
-  { day: "DAY 7",     title: "Goes live",          body: "Cutover to your real business line. Every call answered, 24/7." },
-  { day: "DAY 14",    title: "First booked job",   body: "Bookings flowing into your calendar. Weekly performance digest starts." },
+  { day: "DAY 0",   title: "Build call",         body: "30-min Zoom. We capture your services, hours, pricing, voice." },
+  { day: "DAY 2",   title: "Agent trained",      body: "Your custom AI receptionist scripted, voice locked, integrations wired." },
+  { day: "DAY 3",   title: "Test on your line",  body: "Forwarded number live. You call, hear it, tweak responses with us." },
+  { day: "DAY 7",   title: "Goes live",          body: "Cutover to your real business line. Every call answered, 24/7." },
+  { day: "DAY 14",  title: "First booked job",   body: "Bookings flowing into your calendar. Weekly performance digest starts." },
 ];
 
 // ── Integrations (simpleicons-served logos) ──────────────────────
