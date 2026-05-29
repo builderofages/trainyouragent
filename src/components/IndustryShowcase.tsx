@@ -207,11 +207,17 @@ export default function IndustryShowcase() {
               to={ind.slug}
               className="group block rounded-2xl border border-slate-200 bg-white p-6 hover:border-[#042C53]/40 hover:shadow-md transition-all"
             >
-              <div className="flex items-start justify-between mb-3">
-                <span className="text-2xl leading-none" aria-hidden>
-                  {ind.emoji}
-                </span>
-                <span className="text-[10px] uppercase tracking-[0.16em] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-full font-mono font-semibold">
+              <div className="relative w-full mb-4 overflow-hidden rounded-xl" style={{ aspectRatio: "16/9", background: "linear-gradient(135deg, rgba(24,95,165,0.16), rgba(4,44,83,0.06))" }}>
+                <img
+                  src={`https://image.pollinations.ai/prompt/${encodeURIComponent("professional photograph, " + ind.name.toLowerCase() + " business interior, magazine cover editorial")}?width=480&height=270&nologo=true&model=flux&seed=${Math.abs(ind.slug.split("").reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 0)) % 999999}`}
+                  alt={ind.name}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 50%, rgba(4,44,83,0.55) 100%)" }} />
+                <span className="absolute top-3 right-3 text-[10px] uppercase tracking-[0.16em] text-emerald-700 bg-white/95 border border-emerald-200 px-2 py-1 rounded-full font-mono font-semibold">
                   {ind.monthlyRecovered}/mo
                 </span>
               </div>

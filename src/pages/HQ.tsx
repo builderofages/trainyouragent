@@ -221,12 +221,23 @@ function Sites() {
       <SectionHead eyebrow="FREE-WEBSITE CLOSE TOOL" title="Hand a prospect " italic="their site." />
       <p style={{ fontSize: 14.5, color: "#42526E", maxWidth: 640, marginBottom: 20 }}>{NICHE_SITES.length} premium niche templates with built-in voice + chat demos. Open the full customizer to personalize by company name and copy a send-ready link.</p>
       <Link to="/admin/templates" style={{ display: "inline-block", padding: "12px 22px", borderRadius: 12, background: "#042C53", color: "#fff", fontWeight: 600, fontSize: 14, textDecoration: "none", marginBottom: 24 }}>Open template customizer →</Link>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(220px,1fr))", gap: 14 }}>
         {NICHE_SITES.map((n) => (
-          <a key={n.id} href={`/template/${n.id}`} target="_blank" rel="noopener" style={{ ...card(), textDecoration: "none", display: "block" }}>
-            <div style={{ fontSize: 22 }}>{n.emoji}</div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: "#042C53", marginTop: 8 }}>{n.niche}</div>
-            <div style={{ fontSize: 12, color: "#185FA5", marginTop: 4 }}>/template/{n.id} →</div>
+          <a key={n.id} href={`/template/${n.id}`} target="_blank" rel="noopener" style={{ ...card(), textDecoration: "none", display: "block", padding: 0, overflow: "hidden" }}>
+            <div style={{ position: "relative", width: "100%", aspectRatio: "16/9", background: `linear-gradient(135deg, ${n.accent}33, ${n.accent}10)` }}>
+              <img
+                src={`https://image.pollinations.ai/prompt/${encodeURIComponent("professional photograph, " + n.niche.toLowerCase() + " business, magazine cover editorial")}?width=480&height=270&nologo=true&model=flux&seed=${Math.abs(n.id.split("").reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 0)) % 999999}`}
+                alt={n.niche}
+                loading="lazy" decoding="async"
+                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+              />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 50%, rgba(4,44,83,0.5) 100%)" }} />
+            </div>
+            <div style={{ padding: "12px 14px" }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: "#042C53" }}>{n.niche}</div>
+              <div style={{ fontSize: 12, color: "#185FA5", marginTop: 4 }}>/template/{n.id} →</div>
+            </div>
           </a>
         ))}
       </div>

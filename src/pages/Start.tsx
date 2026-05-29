@@ -415,8 +415,8 @@ export default function Start() {
                         onClick={() => pickBranch(n.label, n.slug)}
                         className="rounded-xl border border-slate-200 hover:border-[#185FA5] hover:bg-[#E6F1FB] transition-all py-4 px-3 text-left"
                       >
-                        <div className="text-[20px] mb-1" aria-hidden="true">
-                          {n.emoji}
+                        <div className="mb-2" aria-hidden="true">
+                          <span style={{ display: "inline-block", width: 24, height: 24, borderRadius: 6, background: "linear-gradient(135deg, #185FA5, #042C53)" }} />
                         </div>
                         <div className="text-[13px] font-semibold text-[#042C53] leading-tight">
                           {n.label}
