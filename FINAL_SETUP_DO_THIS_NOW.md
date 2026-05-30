@@ -8,17 +8,15 @@ Everything code-side is shipped + verified live. These 5 actions are the only th
 
 The current token was exposed during cockpit testing this session. Anyone with Vercel read access could grab it the same way I did.
 
-**Fresh token (generated just now, never used):**
-```
-284ae88237a7ced0708ae792ce90760332a66a51791d37fd5c142dfc66877b41
-```
+**Don't reuse a value that's been in git or chat.** Use Vercel's built-in rotate:
 
-Steps:
 1. Open `https://vercel.com/tya2023s-projects/trainyouragent/settings/environment-variables`
-2. Search "ADMIN_TOKEN" → click the row → Menu (⋯) → **Edit**
-3. Paste the value above. Save.
-4. Vercel will auto-redeploy (~90 sec).
-5. Open `https://www.trainyouragent.com/admin/cockpit` and paste the new token in the login form. Tick "remember me." Done.
+2. Search "ADMIN_TOKEN" → click the row → Menu (⋯) → **Rotate** (Vercel auto-generates a fresh secret value).
+3. Click **Reveal** on the new value → copy it to your password manager.
+4. Vercel auto-redeploys (~90 sec).
+5. Open `https://www.trainyouragent.com/admin/cockpit` → paste the new token in the login form → "remember me." Done.
+
+If your Vercel plan doesn't have a Rotate button, do it manually: terminal `openssl rand -hex 32` → Edit → paste → Save → don't keep the value anywhere outside your password manager.
 
 ---
 
