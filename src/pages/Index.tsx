@@ -572,11 +572,11 @@ const Index = () => {
  <section className="px-5 sm:px-8 py-6 sm:py-7 bg-white border-b border-slate-200/70">
  <div className="max-w-6xl mx-auto flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] text-slate-700">
  <span className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold">
- About the operator
+ About the platform
  </span>
  <span className="text-slate-300" aria-hidden="true">·</span>
  <span>
- Built by <strong className="font-semibold text-[#042C53]">Alexander Mills</strong> in Tampa Bay, FL
+ Built and shipped by <strong className="font-semibold text-[#042C53]">the TrainYourAgent team</strong>
  </span>
  <span className="text-slate-300" aria-hidden="true">·</span>
  <span>{STATS.yearsInAI} yrs deep in AI</span>
@@ -798,36 +798,37 @@ const Index = () => {
  </div>
  </section>
 
- {/* FOUNDER */}
- <section className="px-5 sm:px-8 py-14 sm:py-24 bg-[#F6FAFE] border-y border-slate-200/70">
- <div className="max-w-5xl mx-auto grid md:grid-cols-[1fr_2fr] gap-10 items-start">
- <div className="flex flex-col gap-4">
- <div className="aspect-square rounded-3xl bg-gradient-to-br from-[#E6F1FB] to-[#DCEBFA] border border-slate-200 flex items-center justify-center">
- <BrainLogo size={140} />
- </div>
- <div className="flex flex-col gap-1.5">
- <div className="text-[15px] font-semibold text-[#042C53]">Alexander Mills</div>
- <div className="text-[13px] text-slate-600">Founder · TrainYourAgent</div>
- <div className="text-[13px] text-slate-600">Tampa Bay, Florida</div>
- <div className="flex flex-wrap gap-2 mt-3">
- <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="text-[13px] text-[#042C53] underline decoration-[#185FA5]/40 hover:decoration-[#185FA5]">LinkedIn</a>
- <span className="text-slate-300">·</span>
- <a href={CAL_URL} target="_blank" rel="noopener" className="text-[13px] text-[#042C53] underline decoration-[#185FA5]/40 hover:decoration-[#185FA5]">Book a call</a>
- </div>
- </div>
- </div>
- <div>
- <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">Founder-led</div>
- <h2 className="text-[26px] sm:text-[36px] md:text-[44px] leading-[1.08] tracking-tight font-semibold text-[#042C53] mb-6">
- Built by someone who's <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>been shipping for a decade.</span>
+ {/* v269: was the FOUNDER section (Alexander bio, 5 paragraphs, portrait
+     card, LinkedIn/Cal links). User feedback: 'the founder shouldn't be
+     this embedded, it's about the team and AI capabilities, the highlight
+     should be the company and how it helps customers. We only need 1
+     mention of the founder.' Replaced with a HOW-WE-HELP section anchored
+     in customer outcomes and the platform capabilities the team ships.
+     The single founder bio now lives on /team only. */}
+ <section className="px-5 sm:px-8 py-14 sm:py-24 bg-white border-y border-slate-200/70">
+ <div className="max-w-5xl mx-auto">
+ <div className="text-[12px] uppercase tracking-[0.18em] text-[#185FA5] font-semibold mb-3">How we help</div>
+ <h2 className="text-[26px] sm:text-[36px] md:text-[44px] leading-[1.08] tracking-tight font-semibold text-[#042C53] mb-6 max-w-4xl">
+ The platform answers your calls, books the job, and plugs into the tools{" "}
+ <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>your shop already runs on.</span>
  </h2>
- <div className="text-[16px] text-slate-700 leading-[1.75] space-y-4">
- <p>Alexander Mills is the founder of TrainYourAgent — a Tampa-based AI company building the voice and chat agents that actually run service businesses.</p>
- <p>Before AI, Alexander built across categories most founders never touch: shipping social campaigns for global brands and household-name talent at one of the world's largest social media marketing agencies in Los Angeles,. The pattern: walk into industries the polished operators ignore, learn how the work actually gets done, and rebuild it.</p>
- <p>He's now four years deep in applied AI — through every model release, every tool shift, every capability jump — and ships the same way he always has: faster than anyone you've met, with a thesis you can argue with.</p>
- <p>That thesis: AI isn't a feature. It's the evolutionary step that takes humans out of cubicles. The next decade of business gets won by the operators who wire it into the work first. TrainYourAgent is the agency that wires it for them.</p>
- <p>Alexander runs TrainYourAgent and a portfolio of related ventures from Tampa Bay, Florida.</p>
- </div>
+ <p className="text-[17px] text-slate-700 leading-[1.7] max-w-3xl mb-10">
+ TrainYourAgent ships custom AI receptionists for service SMBs — HVAC, dental, salon, real estate, gym, hotels, plus 19 more verticals. Voice + chat agents that handle the inbound work your front desk shouldn't have to. Built by our engineering team. Wired into Cal.com, ServiceTitan, GoHighLevel, HubSpot, Twilio, and Stripe. Live in 7 to 14 days.
+ </p>
+ <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+ {[
+   { k: "Voice agent", v: "Answers in under 2 rings, 24/7. Handles emergencies, bookings, hours, insurance, transfers to humans when it should. Multi-LLM fallback so the line never goes silent." },
+   { k: "Chat agent", v: "On your site + WhatsApp. Qualifies leads, gives quotes, schedules appointments, hands warm leads to your team with full transcript context." },
+   { k: "Booking + CRM wiring", v: "Cal.com / ServiceTitan / GHL / HubSpot integrations are built-in, not 'roadmap.' Your appointments land in your existing calendar." },
+   { k: "Custom scripts", v: "We listen to 3-5 of your real calls during kickoff and write the agent prompts so it sounds like your team — not a generic bot." },
+   { k: "Refund-backed delivery", v: "Operators lane ships in 14 business days. If we slip without flagging an integration on kickoff, the build fee is refunded — no quibbling." },
+   { k: "You can leave", v: "Every prompt, every memory, every transcript is exportable. Fire us tomorrow and you keep the whole stack. No lock-in." },
+ ].map((c) => (
+   <div key={c.k} className="p-5 rounded-2xl bg-[#F6FAFE] border border-slate-200">
+     <div className="text-[12px] uppercase tracking-[0.16em] font-semibold text-[#185FA5] mb-2 font-mono">{c.k}</div>
+     <div className="text-[14.5px] text-slate-700 leading-[1.55]">{c.v}</div>
+   </div>
+ ))}
  </div>
  </div>
  </section>
@@ -850,12 +851,8 @@ const Index = () => {
  </p>
  </blockquote>
  </div>
- <div className="mt-10 pt-8 border-t border-slate-200 flex items-center gap-4">
- <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#185FA5] to-[#042C53] flex-shrink-0" aria-hidden="true" />
- <div>
- <div className="text-[15px] font-semibold text-[#042C53]">Alexander Mills</div>
- <div className="text-[12px] text-slate-600 tracking-wide">Founder · TrainYourAgent · Tampa Bay, FL</div>
- </div>
+ <div className="mt-10 pt-8 border-t border-slate-200">
+ <div className="text-[12px] text-slate-500 tracking-wide font-mono uppercase">— The TrainYourAgent team</div>
  </div>
  </div>
  </section>
@@ -902,7 +899,7 @@ const Index = () => {
  "Production AI voice OR chat agent (your pick), live in 21 days",
  "Wiring into your CRM, calendar, and phone stack — we do the integration work",
  "Weekly transcript review + script tuning for the first 90 days",
- "Direct Slack or email line to the founder (no SDR layer, no account manager)",
+ "Direct Slack or email line to the build team (no SDR layer, no account manager)",
  "Real-time dashboard — calls answered, booked, escalated, missed",
  "30-day money-back guarantee, no clawback fight",
  "Month-to-month after that — no multi-year contract trap",
@@ -988,7 +985,7 @@ const Index = () => {
  Ready to put AI <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>actually to work?</span>
  </h2>
  <p className="mt-6 text-[18px] text-white/85 max-w-2xl mx-auto leading-relaxed">
- Thirty minutes with the founder. You walk out with a written agent plan, a real number, and a 21-day delivery date. No card. No SDR. No obligation.
+ Thirty minutes with our build team. You walk out with a written agent plan, a real number, and a 21-day delivery date. No card. No SDR. No obligation.
  </p>
  <div className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
  <Link
@@ -998,10 +995,10 @@ const Index = () => {
  {playbook ? `Book your ${nicheName} build call → 30-min scoping, free` : "Book a 30-min build call → leave with a written plan"}
  </Link>
  <Link to="/voice-demo" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition">Talk to a live AI agent in your browser → 60 sec, no signup</Link>
- <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition">Or DM the founder on LinkedIn</a>
+ <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15 transition">Or DM us on LinkedIn</a>
  </div>
  <p className="mt-5 text-[13px] text-white/60">
- Limited to 12 new builds per quarter — the founder personally scopes every one.
+ Limited to 12 new builds per quarter — our team personally scopes every one.
  </p>
  </div>
  </section>
