@@ -7,6 +7,16 @@
       "source": "/sitemap.xml",
       "destination": "/api/sitemap.xml"
     },
+    { "source": "/pricing", "destination": "/pricing/index.html" },
+    { "source": "/architecture",    "destination": "/architecture/index.html" },
+    { "source": "/apply",           "destination": "/apply/index.html" },
+    { "source": "/customers",       "destination": "/customers/index.html" },
+    { "source": "/integrations",    "destination": "/integrations/index.html" },
+    { "source": "/reviews/submit",  "destination": "/reviews/submit/index.html" },
+    { "source": "/websites",        "destination": "/websites/index.html" },
+    { "source": "/about",           "destination": "/about/index.html" },
+    { "source": "/proof",           "destination": "/proof/index.html" },
+    { "source": "/template/:niche", "destination": "/template/:niche/index.html" },
     {
       "source": "/((?!api/|sitemap\\.xml).*)",
       "destination": "/index.html"
