@@ -139,11 +139,11 @@ export default function Cockpit() {
   // ── unauth state ───────────────────────────────────────────────
   if (!token) {
     return (
-      <div style={{ minHeight: "100vh", background: "#FFFFFF", fontFamily: "'Inter Tight', system-ui, sans-serif", padding: 24 }}>
+      <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #FAF6EE 0%, #F4EFE4 100%)", fontFamily: "'Inter Tight', system-ui, sans-serif", padding: 24 }}>
         <Helmet><title>Cockpit · TrainYourAgent</title><meta name="robots" content="noindex, nofollow" /></Helmet>
-        <div style={{ maxWidth: 460, margin: "10vh auto 0", padding: 32, borderRadius: 18, border: `1px solid ${HAIRLINE}`, boxShadow: "0 18px 48px -22px rgba(4,44,83,0.22)" }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, marginBottom: 10, ...MONO }}>OPERATOR LOGIN</div>
-          <h1 style={{ fontSize: 28, fontWeight: 600, color: NAVY, lineHeight: 1.1, margin: "0 0 12px" }}>
+        <div style={{ maxWidth: 460, margin: "10vh auto 0", padding: 36, borderRadius: 22, border: `1px solid ${HAIRLINE}`, background: "rgba(255,255,255,0.94)", boxShadow: "0 28px 64px -28px rgba(4,44,83,0.32), 0 2px 0 rgba(201,154,40,0.18)" }}>
+          <div style={{ fontSize: 10.5, fontWeight: 700, color: ACCENT, marginBottom: 12, ...MONO }}>· OPERATOR LOGIN</div>
+          <h1 style={{ fontSize: 30, fontWeight: 600, color: NAVY, lineHeight: 1.05, margin: "0 0 12px", letterSpacing: "-0.015em" }}>
             Cockpit access <span style={ITALIC}>required.</span>
           </h1>
           <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.6, marginBottom: 20 }}>
@@ -163,11 +163,11 @@ export default function Cockpit() {
 
   // ── authed view ────────────────────────────────────────────────
   return (
-    <div style={{ minHeight: "100vh", background: "#F8FAFC", fontFamily: "'Inter Tight', system-ui, sans-serif", color: "#0B1B2B", paddingBottom: 80 }}>
+    <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #FAF6EE 0%, #F4EFE4 100%)", fontFamily: "'Inter Tight', system-ui, sans-serif", color: "#0B1B2B", paddingBottom: 80 }}>
       <Helmet><title>Cockpit · TrainYourAgent</title><meta name="robots" content="noindex, nofollow" /></Helmet>
 
-      {/* Top rail */}
-      <div style={{ background: "#fff", borderBottom: `1px solid ${HAIRLINE}`, padding: "14px 22px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, position: "sticky", top: 0, zIndex: 20 }}>
+      {/* Top rail — cream + soft hairline + subtle gold underline accent */}
+      <div style={{ background: "rgba(255,255,255,0.82)", borderBottom: `1px solid ${HAIRLINE}`, padding: "14px 22px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, position: "sticky", top: 0, zIndex: 20, backdropFilter: "saturate(140%) blur(10px)", boxShadow: "0 1px 0 rgba(201,154,40,0.18)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <svg width="22" height="22" viewBox="0 0 32 32"><path d="M16 2 L30 16 L16 30 L2 16 Z" fill="none" stroke={NAVY} strokeWidth="2.5" /><path d="M16 8 L24 16 L16 24 L8 16 Z" fill={NAVY} /></svg>
           <div style={{ fontSize: 15, fontWeight: 700, color: NAVY }}>Cockpit</div>
@@ -471,15 +471,21 @@ export default function Cockpit() {
 
 // ── tiny atoms ──────────────────────────────────────────────────
 function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }) {
+  // v244: editorial header — mono eyebrow rule + larger Playfair-flavor title.
   return (
-    <div style={{ marginBottom: 12 }}>
-      <div style={{ fontSize: 16, fontWeight: 700, color: NAVY }}>{title}</div>
-      {subtitle && <div style={{ fontSize: 12.5, color: MUTED, marginTop: 2 }}>{subtitle}</div>}
+    <div style={{ marginBottom: 14 }}>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 2 }}>
+        <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, rgba(201,154,40,0.45), rgba(201,154,40,0))" }} />
+      </div>
+      <div style={{ fontSize: 18, fontWeight: 600, color: NAVY, letterSpacing: "-0.01em", lineHeight: 1.2 }}>
+        {title}
+      </div>
+      {subtitle && <div style={{ fontSize: 12.5, color: MUTED, marginTop: 4, fontStyle: "italic", fontFamily: "'Playfair Display', Georgia, serif", fontWeight: 500 }}>{subtitle}</div>}
     </div>
   );
 }
 function Card({ children }: { children: React.ReactNode }) {
-  return <div style={{ background: "#fff", borderRadius: 14, border: `1px solid ${HAIRLINE}`, padding: 18, boxShadow: "0 1px 0 rgba(4,44,83,0.02)" }}>{children}</div>;
+  return <div style={{ background: "rgba(255,255,255,0.92)", borderRadius: 16, border: `1px solid ${HAIRLINE}`, padding: 20, boxShadow: "0 2px 0 rgba(4,44,83,0.02), 0 18px 36px -28px rgba(4,44,83,0.16)" }}>{children}</div>;
 }
 function Dot({ color }: { color: string }) {
   return <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 999, background: color, flexShrink: 0 }} />;
