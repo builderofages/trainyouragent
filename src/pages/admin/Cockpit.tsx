@@ -501,7 +501,7 @@ export default function Cockpit() {
             <QuickLink to="/admin/metrics" title="Metrics (founder)" sub="Raw numbers, no narrative" />
             <QuickLink to="/admin" title="Admin home" sub="Original admin index" />
             <QuickLink to="/websites" title="Public gallery" sub="The /websites page visitors see" />
-            <QuickLink to="/portal/leads" title="Leads portal" sub="Customer-facing pipeline" />
+            <QuickLink to="/portal/conversations" title="Conversations" sub="Customer-facing pipeline" />
           </div>
         </section>
 

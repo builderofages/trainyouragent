@@ -9,8 +9,11 @@ import { initAttribution } from "@/lib/affiliate";
 // after a deploy force a hard reload instead of white-screening. THE fix.
 import { lazyWithReload } from "@/lib/lazyWithReload";
 
-// Critical / above-the-fold routes — eager.
-import Index from "./pages/Index";
+// Critical / above-the-fold routes — eager (entry-chunk friendly subset).
+// v274: Index moved to lazy. Prerender-routes.mjs writes per-route HTML so
+// crawlers/visitors see the hero shell immediately; the chunk hydrates over it.
+// Was forcing the entry chunk over 700kb. Lazy split brings it well under 500kb.
+const Index = lazyWithReload(() => import("./pages/Index"));
 import Pricing from "./pages/Pricing";
 import Start from "./pages/Start";
 import NotFound from "./pages/NotFound";

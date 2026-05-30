@@ -2,6 +2,11 @@
 // Loads MDX blog posts at build time using Vite's import.meta.glob.
 // Each .mdx file in src/content/blog/ exports its frontmatter and a default
 // React component (the rendered MDX body).
+//
+// v274: split eager glob into two passes. Frontmatter is loaded eagerly
+// (small — needed by index/category/tag pages for listings + adjacency).
+// MDX bodies are loaded lazily per-post so we don't ship all 73 articles
+// as one 800kb monolith. Each post becomes its own chunk loaded on demand.
 
 import type { ComponentType } from "react";
 
@@ -25,23 +30,37 @@ export type BlogFrontmatter = {
 };
 
 export type BlogPost = BlogFrontmatter & {
-  Component: ComponentType;
+  /** Lazy loader for the MDX body — call to fetch the post chunk on demand. */
+  load: () => Promise<ComponentType>;
 };
 
-// Vite glob: eager so we have synchronous access on first render.
-// `@mdx-js/rollup` exposes `frontmatter` as a named export when used with
-// `remark-frontmatter` + `remark-mdx-frontmatter`.
 type MDXModule = {
   default: ComponentType;
   frontmatter: BlogFrontmatter;
 };
+type FrontmatterOnly = { frontmatter: BlogFrontmatter };
 
-const modules = import.meta.glob<MDXModule>("../content/blog/*.mdx", {
+// v274: eager-load JUST the frontmatter (tree-shaken — no MDX body bytes).
+const frontmatterModules = import.meta.glob<FrontmatterOnly>("../content/blog/*.mdx", {
   eager: true,
+  import: "frontmatter",
 });
 
-const allPosts: BlogPost[] = Object.values(modules)
-  .map((m) => ({ ...m.frontmatter, Component: m.default }))
+// Lazy importers for the MDX bodies (one chunk per post).
+const lazyBodies = import.meta.glob<MDXModule>("../content/blog/*.mdx");
+
+const allPosts: BlogPost[] = Object.entries(frontmatterModules)
+  .map(([path, m]) => {
+    const fm = (m as unknown as BlogFrontmatter) || (m && (m as FrontmatterOnly).frontmatter);
+    const importer = lazyBodies[path];
+    return {
+      ...(fm as BlogFrontmatter),
+      load: async () => {
+        const mod = await importer();
+        return mod.default;
+      },
+    } as BlogPost;
+  })
   .filter((p) => !!p.slug && !!p.title)
   .sort((a, b) => (a.date < b.date ? 1 : -1));
 
