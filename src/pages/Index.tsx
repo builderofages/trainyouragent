@@ -319,10 +319,12 @@ const Index = () => {
  >
  {heroVariant.headlineHtml}
  </h1>
- {/* v71: 8-capability chip row — Everything-AI breadth in one glance,
- no scroll required. Fixes the only visible ding Grok Heavy flagged
- on the v69 reframe. */}
- <HeroCapabilityChips />
+ {/* v243: removed HeroCapabilityChips — user flagged as 'generic
+ bullshit'. The 8 Bootstrap-style pills (Voice/Chat/Receptionists/…)
+ read template-y next to the editorial Playfair headline. Removed
+ to restore the magazine-cover feel. Capability breadth is already
+ communicated by the subhead below and by the 25-niche industry
+ picker further down the page. */}
  <p className="mt-7 text-[18px] sm:text-[20px] text-slate-700 leading-relaxed max-w-2xl">
  {/* v69: WHAT + HOW in customer terms. Everything-AI breadth (8 categories).
  No "operator", no "4 years", no founder name. Operator-velocity proof
