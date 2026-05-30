@@ -32,8 +32,8 @@ import RealCallAudioStrip from "@/components/RealCallAudioStrip";
 import SectionDivider from "@/components/SectionDivider";
 import { useCountUp } from "@/hooks/useCountUp";
 import NetworkIllo from "@/components/illustrations/NetworkIllo";
-// v52B: LeadMagnetForm import removed in v273 — the homepage lead-magnet section
-// was retired (still lives on /resources).
+// v52B: free in-browser voice agent CTA + buyer's-guide email opt-in
+import LeadMagnetForm from "@/components/LeadMagnetForm";
 // v54: Hormozi-style risk reversal block (4 promises)
 import RiskReversalBlock from "@/components/RiskReversalBlock";
 // v69: generic Hell→Heaven block (above the fold, visible to all visitors)
@@ -569,21 +569,62 @@ const Index = () => {
 
  {/* v69: small "About the operator" strip — founder/operator chrome
  demoted from hero to a supporting signal here. */}
- {/* v273: "About the platform" thin strip removed. Same info appears in
-     /proof, footer, and architecture. Cuts another section toward the
-     <50% homepage length target Grok set. */}
+ <section className="px-5 sm:px-8 py-6 sm:py-7 bg-white border-b border-slate-200/70">
+ <div className="max-w-6xl mx-auto flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] text-slate-700">
+ <span className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold">
+ About the platform
+ </span>
+ <span className="text-slate-300" aria-hidden="true">·</span>
+ <span>
+ Built and shipped by <strong className="font-semibold text-[#042C53]">the TrainYourAgent team</strong>
+ </span>
+ <span className="text-slate-300" aria-hidden="true">·</span>
+ <span>{STATS.yearsInAI} yrs deep in AI</span>
+ <span className="text-slate-300" aria-hidden="true">·</span>
+ <Link to="/proof" className="text-[#185FA5] font-medium hover:underline">
+ {STATS.publicCommits}+ public commits — see the receipts →
+ </Link>
+ </div>
+ </section>
 
  {/* v63: LIVE KPI STRIP — real numbers pulled from /api/public-metrics,
  above the fold. Closes Grok Heavy's "move /metrics + /proof numbers
  to home page above fold" callout. */}
  <LiveKpiStrip />
 
- {/* v273: Removed redundant "More ways to see it work" link strip and the
-     animated proof stat-bar — both content was already covered by the
-     LiveKpiStrip above and the nav. Grok scored homepage as 18-section
-     wall-of-text; killing redundancy first to honor the "<50% length"
-     instruction. The four stats (yrs/commits/routes/playbooks) still live
-     on /proof for the visitor who wants the full breakdown. */}
+ {/* v61: "More ways to see it work" — secondary CTAs demoted from hero */}
+ <section className="px-5 sm:px-8 py-6 sm:py-8 bg-white border-y border-slate-200/70">
+ <div className="max-w-7xl mx-auto flex flex-wrap items-center gap-x-6 gap-y-3 text-[13.5px]">
+ <span className="text-[11px] uppercase tracking-[0.16em] text-[#185FA5] font-semibold">More ways to see it work</span>
+ <Link to="/tools/website-audit" className="text-[#185FA5] font-medium hover:underline">Audit your site in 30 sec →</Link>
+ <span className="text-slate-300" aria-hidden="true">·</span>
+ <Link to="/demos/sales-objection-handler" className="text-[#185FA5] font-medium hover:underline">Sales objection handler →</Link>
+ <span className="text-slate-300" aria-hidden="true">·</span>
+ <Link to="/demos/sop-writer" className="text-[#185FA5] font-medium hover:underline">SOP writer →</Link>
+ <span className="text-slate-300" aria-hidden="true">·</span>
+ <Link to="/demos/seo-cluster" className="text-[#185FA5] font-medium hover:underline">SEO cluster generator →</Link>
+ <span className="text-slate-300" aria-hidden="true">·</span>
+ {/* v170: hard <a href> to bypass lazy-chunk stale-hash white screens */}
+ <a href="/book" className="text-[#185FA5] font-medium hover:underline">Book a 30-min build call →</a>
+ </div>
+ </section>
+
+ {/* v44: animated section divider */}
+ <SectionDivider />
+
+ {/* PROOF STRIP — count-up animated; every number is publicly verifiable.
+ v69: numbers now reference STATS (single source of truth). */}
+ <section className="px-5 sm:px-8 py-14 border-y border-slate-200 bg-white">
+ <RevealUp>
+ <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
+ <AnimatedStat value={STATS.yearsInAI} suffix=" yrs" label="In applied AI · every major model shift" />
+ <AnimatedStat value={STATS.publicCommits} suffix="+" label="Public commits · on GitHub" href="https://github.com/builderofages/trainyouragent/commits/main" />
+ <AnimatedStat value={STATS.totalRoutes} label="Live URLs · in production" href="/sitemap.xml" />
+ <AnimatedStat value={STATS.playbooks} label="Niche playbooks · real cited data" href="/playbooks" />
+ </div>
+ </RevealUp>
+ </section>
+
  <SectionDivider />
 
  {/* v53: NICHE STATS — only renders when a niche is set in VisitorContext */}
@@ -792,11 +833,29 @@ const Index = () => {
  </div>
  </section>
 
- {/* v273: VISION pull-quote section removed from homepage. It was a
-     beautiful editorial moment but it added ~28px of vertical scroll
-     without moving a buyer toward a decision. The same copy now lives
-     on /about where it earns its space. Honored Grok's "<50% length"
-     instruction by demoting decorative copy and keeping pure utility. */}
+ {/* VISION — editorial pull quote */}
+ <section className="px-5 sm:px-8 py-16 sm:py-28 bg-[#FAFBFC] border-y border-slate-200/70">
+ <div className="max-w-3xl mx-auto">
+ <div className="text-[11px] uppercase tracking-[0.22em] text-[#185FA5] font-semibold mb-8">Why we're building this</div>
+ <div className="relative">
+ <span aria-hidden="true" className="absolute -left-2 sm:-left-8 -top-6 text-[60px] sm:text-[120px] leading-none text-[#185FA5]/15 font-serif select-none">"</span>
+ <blockquote className="relative text-[19px] sm:text-[22px] leading-[1.55] text-[#0B1B2B] font-normal" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+ <p className="mb-5">
+ AI isn't a feature. It's the evolutionary step humans have been waiting for — the one that takes us out of cubicles and away from paperwork, back into the work we were built for: <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500, color: "#042C53" }}>building, dreaming, evolving.</span>
+ </p>
+ <p className="mb-5">
+ The companies that get this right won't just be more efficient. They'll write the next chapter of what business looks like.
+ </p>
+ <p className="text-[#042C53] font-medium">
+ We're here to make sure every founder, every operator, every business is first in line.
+ </p>
+ </blockquote>
+ </div>
+ <div className="mt-10 pt-8 border-t border-slate-200">
+ <div className="text-[12px] text-slate-500 tracking-wide font-mono uppercase">— The TrainYourAgent team</div>
+ </div>
+ </div>
+ </section>
 
  {/* FAQ */}
  <section className="px-5 sm:px-8 py-14 sm:py-24 bg-[#F6FAFE]">
@@ -902,10 +961,22 @@ const Index = () => {
  </div>
  </section>
 
- {/* v273: LeadMagnetForm section removed from homepage. The opt-in is still
-     mounted on /resources where searchers actually land for it. On the
-     homepage it competed with the primary "Book your build call" CTA and
-     bloated section count. Grok: "ruthlessly edit homepage to <50% length". */}
+ {/* v52B: LEAD MAGNET — buyer's guide opt-in */}
+ <section className="px-5 sm:px-8 py-12 sm:py-20">
+ <div className="max-w-3xl mx-auto">
+ <LeadMagnetForm
+ source="lead-magnet-buyers-guide"
+ title="Get the AI Operations Playbook"
+ subtitle="30 pages on what's working in AI agents in 2026 — voice, chat, ROI benchmarks, the 7 reasons most pilots die. Free PDF, emailed in ~30 seconds."
+ bullets={[
+ "Adoption by vertical (8 categories with real numbers)",
+ "ROI benchmarks across 5 deployment types",
+ "The 15-point readiness scorecard for your business",
+ "Vendor landscape — three-category framework",
+ ]}
+ />
+ </div>
+ </section>
 
  {/* CLOSER */}
  <section className="px-5 sm:px-8 py-14 sm:py-24 bg-[#042C53] text-white">
