@@ -144,6 +144,92 @@ for (const n of NICHES) {
   });
 }
 
+// v263: vertical SEO landing pages — these existed before /template/* and
+// rank for the broader "AI receptionist for X" queries. Each gets its own
+// crawler-readable shell now too.
+const VERTICALS = [
+  { slug: "hvac",            label: "HVAC",                 niche: "HVAC contractors" },
+  { slug: "dental",          label: "Dental",               niche: "dental practices" },
+  { slug: "salon",           label: "Salon",                niche: "salons and barbershops" },
+  { slug: "real-estate",     label: "Real Estate",          niche: "real estate brokerages" },
+  { slug: "gym",             label: "Gym & Fitness",        niche: "gyms and fitness studios" },
+  { slug: "roofing",         label: "Roofing",              niche: "roofing contractors" },
+  { slug: "solar",           label: "Solar",                niche: "solar installers" },
+  { slug: "accounting",      label: "Accounting",           niche: "accounting and CPA firms" },
+  { slug: "automotive",      label: "Automotive",           niche: "auto repair shops" },
+  { slug: "spas",            label: "Spas",                 niche: "spas and wellness centers" },
+  { slug: "hotels",          label: "Hotels",               niche: "boutique hotels" },
+  { slug: "bars-nightclubs", label: "Bars & Nightclubs",    niche: "bars and nightclubs" },
+  { slug: "logistics",       label: "Logistics",            niche: "logistics and freight" },
+  { slug: "legal",           label: "Legal",                niche: "law firms and legal services" },
+  { slug: "healthcare",      label: "Healthcare",           niche: "healthcare practices" },
+];
+for (const v of VERTICALS) {
+  ROUTES.push({
+    path: `/${v.slug}`,
+    title: `AI Receptionist for ${v.label} — Answers Calls, Books Jobs · TrainYourAgent`,
+    desc: `Custom AI receptionist for ${v.niche}. Answers calls 24/7, qualifies leads, books appointments, integrates with the tools you already use. Live in 7 days. Refund if we slip.`,
+    h1: `An AI receptionist built for ${v.label.toLowerCase()}.`,
+    italic: "Live in 7 days.",
+    sub: `We build the voice + chat agent end-to-end for ${v.niche} — your scripts, your CRM, your booking flow. Multi-LLM fallback so the line is never silent. Refund if we don't ship.`,
+  });
+}
+
+// Strategic non-page routes
+ROUTES.push({
+  path: "/blog",
+  title: "Blog — AI receptionist playbooks for SMBs · TrainYourAgent",
+  desc: "Real playbooks from the field: how HVAC shops, dental offices, salons, and other service SMBs deploy AI receptionists, what works, what doesn't, and the numbers behind it.",
+  h1: "Field reports from operators running the agent.",
+  italic: "No hot takes.",
+  sub: "Long-form playbooks from real customers: HVAC dispatch, dental scheduling, salon balayage bookings, the ops mistakes that cost $22K/mo, and how to fix them.",
+});
+
+ROUTES.push({
+  path: "/changelog",
+  title: "Changelog — every ship since launch · TrainYourAgent",
+  desc: "Every meaningful ship in the TrainYourAgent platform since launch. Customer-facing changes, infrastructure upgrades, agent improvements, integration adds. Updated weekly.",
+  h1: "Every ship, in public.",
+  italic: "Weekly cadence.",
+  sub: "Customer-facing changes, infrastructure upgrades, agent improvements, integration adds. Updated weekly. The receipt that the platform is actually moving.",
+});
+
+ROUTES.push({
+  path: "/contact",
+  title: "Contact — talk to the founder · TrainYourAgent",
+  desc: "Talk to Alexander Mills directly. AI receptionist questions, build kickoffs, partnership inquiries, press. No SDR layer, no AE handoff, no scheduling-link-of-doom.",
+  h1: "Talk to the founder.",
+  italic: "Directly.",
+  sub: "AI receptionist questions, build kickoffs, partnership inquiries, press. Alexander reads every inbound message. No SDR layer, no AE handoff, no scheduling-link-of-doom.",
+});
+
+ROUTES.push({
+  path: "/security",
+  title: "Security posture — what we lock down · TrainYourAgent",
+  desc: "Honest security and compliance posture: what's locked down today, what isn't, where customer data lives, who has access, and how we'd respond to a breach. No SOC 2 theater.",
+  h1: "What we lock down.",
+  italic: "And what we don't.",
+  sub: "Honest security posture: locked-down items, current gaps, where data lives, who has access, breach response. No SOC 2 theater — the real picture an enterprise diligence call would surface.",
+});
+
+ROUTES.push({
+  path: "/legal/privacy",
+  title: "Privacy Policy — TrainYourAgent",
+  desc: "Privacy policy for TrainYourAgent. What we collect, why, where it lives, retention, your rights, GDPR/CCPA notices. Dated and version-controlled.",
+  h1: "Privacy policy.",
+  italic: "Plain language.",
+  sub: "What we collect, why, where it lives, how long we keep it, your rights, GDPR and CCPA notices. Last updated 2026-05-29 — every revision tracked in git.",
+});
+
+ROUTES.push({
+  path: "/legal/terms",
+  title: "Terms of Service — TrainYourAgent",
+  desc: "Terms of service for TrainYourAgent — the agreement governing your use of the platform, voice + chat agents, integrations, and the build engagement.",
+  h1: "Terms of service.",
+  italic: "Plain language.",
+  sub: "The agreement governing your use of TrainYourAgent. Plain language. Last updated 2026-05-29. Every revision tracked in git.",
+});
+
 // ── helpers ────────────────────────────────────────────────────────────────
 function htmlEscape(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");

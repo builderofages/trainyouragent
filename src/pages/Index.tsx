@@ -232,10 +232,11 @@ const Index = () => {
  document.head.appendChild(l);
  }
  // v258 (Grok #1 fix): SEO + OG/share title now specific to receptionist
- // outcome instead of vague "Everything-AI" — Grok Heavy flagged the latter
- // as "vague scope-creep bullshit that buries the actual product." Visible
- // hero stays exactly as the founder locked it.
- document.title = "AI Receptionist for HVAC, Dental, Salon — Answers Calls, Books Jobs · TrainYourAgent";
+ // outcome. v263: the static title is now set in index.html AND in each
+ // per-route prerendered dist/[route]/index.html (v259/v260). React Helmet
+ // takes over once mounted. We no longer override document.title here —
+ // that broke per-route titles after in-tab navigation because document.title
+ // persisted on unmount and beat Helmet's React-side updates.
 
  // v48: dynamic OG image override
  {

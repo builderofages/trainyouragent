@@ -59,6 +59,55 @@ export default function Architecture() {
           </p>
         </header>
 
+        {/* v261 (Grok #/architecture 5/10 → 'tech-stack porn that bores SMB
+            owners' fix): SMB-translation lead block. The page now opens with
+            'what each architecture decision means for the $50k/yr phone
+            answerer you're replacing,' THEN goes into the technical depth
+            engineers / CTOs / IT decision-makers expect. Two audiences, one
+            page, neither bored. */}
+        <section style={{ marginBottom: 56, padding: "28px 28px 30px", borderRadius: 20, background: "linear-gradient(135deg, rgba(244,200,76,0.07), rgba(24,95,165,0.05))", border: `1px solid ${HAIRLINE}` }}>
+          <div style={{ ...MONO, fontSize: 11, fontWeight: 700, color: GOLD, marginBottom: 10 }}>
+            FIRST · IF YOU'RE NOT AN ENGINEER
+          </div>
+          <h2 style={{ fontSize: 26, lineHeight: 1.15, letterSpacing: "-0.018em", fontWeight: 600, color: NAVY, margin: 0, marginBottom: 14 }}>
+            What this page means in {" "}
+            <span style={ITALIC}>plain English.</span>
+          </h2>
+          <p style={{ fontSize: 16, color: INK, lineHeight: 1.55, marginTop: 6, marginBottom: 18 }}>
+            You're hiring an agent that takes over the job your front-desk person, answering service, or VA does today.
+            That job is worth ~$50K/year and it leaks ~$22K/year when calls go unanswered. The four things below are how
+            we make sure the replacement doesn't break the same way the human did.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
+            {[
+              {
+                k: "01 · NEVER HANGS UP",
+                v: "The agent calls four different AI brains in sequence. If one is busy, the next one catches the call in under a fifth of a second. Your line never goes silent.",
+              },
+              {
+                k: "02 · ANSWERS FAST",
+                v: "Your caller hears a voice within 0.8 seconds — about as fast as a human picking up. Most competitors are 2-4 seconds.",
+              },
+              {
+                k: "03 · DOESN'T LIE",
+                v: "We test the agent against hundreds of trick questions before every release. It cannot invent your hours, prices, or services it doesn't know.",
+              },
+              {
+                k: "04 · YOU CAN LEAVE",
+                v: "Every script, every memory, every conversation is exportable. If you fire us tomorrow you keep everything. No lock-in, no held data.",
+              },
+            ].map((b) => (
+              <div key={b.k} style={{ padding: "14px 16px", borderRadius: 12, background: "rgba(255,255,255,0.92)", border: `1px solid ${HAIRLINE}` }}>
+                <div style={{ ...MONO, fontSize: 10, fontWeight: 700, color: ACCENT, marginBottom: 6 }}>{b.k}</div>
+                <div style={{ fontSize: 13.5, color: INK, lineHeight: 1.45 }}>{b.v}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: 18, fontSize: 13, color: MUTED, fontStyle: "italic" }}>
+            Engineering depth below if you want the receipts. SMB owners can stop here and book a call with confidence.
+          </div>
+        </section>
+
         {/* The fallback chain — Grok said engineers don't trust the brand voice; they trust diagrams. */}
         <Section eyebrow="01 · INFERENCE" title="Multi-provider fallback chain">
           <p>Every voice and chat agent calls a chain. If the primary fails or rate-limits, the next provider catches it in &lt;180ms. The agent never returns nothing.</p>

@@ -55,11 +55,14 @@ export default function Websites() {
   return (
     <div style={{ minHeight: "100vh", background: "#FFFFFF", color: TEXT, fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
       <Helmet>
-        <title>Free AI receptionist websites for {ACTIVE_NICHE_SITES.length} industries · TrainYourAgent</title>
-        <meta name="description" content={`Pre-built, fully-working AI receptionist + chatbot websites for ${ACTIVE_NICHE_SITES.length} industries. Swap your business name in and see a live voice + chat demo in 5 seconds. Free.`} />
+        {/* v262 (Grok #/websites 4/10 → 'side-hustle gimmick' fix): reposition
+            from 'free websites' (which read as side-hustle) to 'instant preview
+            of what we build for you.' Same product, different framing. */}
+        <title>See your AI receptionist live — industry-ready preview · TrainYourAgent</title>
+        <meta name="description" content={`Pick your industry. Drop your business name. Hear the AI receptionist answer + see your full booking site in 5 seconds. The preview tool that comes with every TrainYourAgent build. ${ACTIVE_NICHE_SITES.length} industries ready.`} />
         <link rel="canonical" href="https://www.trainyouragent.com/websites" />
-        <meta property="og:title" content="Free AI receptionist websites — pick your industry" />
-        <meta property="og:description" content={`${ACTIVE_NICHE_SITES.length} industries · live voice + chat demo · your brand in 5 seconds.`} />
+        <meta property="og:title" content="See your AI receptionist live — pick your industry" />
+        <meta property="og:description" content={`${ACTIVE_NICHE_SITES.length} industries · the preview that comes with every build · hear the agent + see your site in 5 seconds.`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.trainyouragent.com/websites" />
         <meta property="og:image" content="https://www.trainyouragent.com/api/og?title=Free%20AI%20receptionist%20websites&subtitle=Pick%20your%20industry%20%E2%80%94%20live%20voice%20%2B%20chat%20demo&badge=DIRECTORY&type=page" />
@@ -89,14 +92,21 @@ export default function Websites() {
         <div style={{ maxWidth: 920, margin: "0 auto", textAlign: "center" }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 999, background: "rgba(4,44,83,0.08)", color: NAVY, fontSize: 11, fontWeight: 700, marginBottom: 26, ...MONO }}>
             <span style={{ width: 6, height: 6, borderRadius: 999, background: NAVY }} />
-            {ACTIVE_NICHE_SITES.length} INDUSTRIES · LIVE DEMOS
+            PREVIEW TOOL · {ACTIVE_NICHE_SITES.length} INDUSTRIES READY
           </div>
+          {/* v262 (Grok 4/10 → 'side-hustle gimmick' fix): h1 reframes from
+              'free websites' to 'see what you're buying live.' Same product,
+              positions as a preview of the actual paid build, not a separate
+              free offer that distracts from the agency. */}
           <h1 style={{ fontSize: "clamp(40px, 7vw, 78px)", lineHeight: 1.04, letterSpacing: "-0.025em", fontWeight: 600, color: NAVY, margin: 0 }}>
-            Free AI-receptionist websites,{" "}
-            <span style={{ ...ITALIC, color: "#185FA5" }}>built for your industry.</span>
+            See your AI receptionist,{" "}
+            <span style={{ ...ITALIC, color: "#185FA5" }}>before you buy it.</span>
           </h1>
-          <p style={{ fontSize: "clamp(16px, 2vw, 19px)", lineHeight: 1.55, color: "#42526E", maxWidth: 660, margin: "26px auto 30px" }}>
-            Pick your business below. We hand you a fully-working site — live voice agent on the phone, live chatbot on the page, instant quote calculator, pricing tiers, booking — branded to you in 5 seconds. Yours to keep.
+          <p style={{ fontSize: "clamp(16px, 2vw, 19px)", lineHeight: 1.55, color: "#42526E", maxWidth: 660, margin: "26px auto 14px" }}>
+            Pick your industry. Drop your business name. Hear the voice agent answer a real call for your shop and see the full booking site appear with your brand — in 5 seconds. The preview that comes with every Operators build.
+          </p>
+          <p style={{ fontSize: 13.5, lineHeight: 1.55, color: MUTED, maxWidth: 540, margin: "0 auto 30px", fontStyle: "italic" }}>
+            Not a free SaaS. The interactive preview of the agent we'd ship to your shop in 7 days. Branded, integrated, live.
           </p>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", border: `1px solid ${HAIRLINE}`, borderRadius: 14, padding: "8px 14px", boxShadow: "0 8px 28px -16px rgba(4,44,83,0.18)", maxWidth: 460, width: "100%" }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
