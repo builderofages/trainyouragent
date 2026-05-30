@@ -43,6 +43,7 @@ const Cnnct               = lazyWithReload(() => import("./pages/Cnnct"));
 const AdminSetup          = lazyWithReload(() => import("./pages/admin/Setup"));
 const AdminCockpit        = lazyWithReload(() => import("./pages/admin/Cockpit"));
 const ReviewsSubmit       = lazyWithReload(() => import("./pages/ReviewsSubmit"));
+const Architecture        = lazyWithReload(() => import("./pages/Architecture"));
 const HQ                  = lazyWithReload(() => import("./pages/HQ"));
 const NicheLanding        = lazyWithReload(() => import("./pages/NicheLanding"));
 const Vertical            = lazyWithReload(() => import("./pages/VerticalPage"));
@@ -435,6 +436,10 @@ const App = () => {
             {/* v233: social proof flywheel — customers submit testimonials */}
             <Route path="/reviews/submit" element={<ReviewsSubmit />} />
             <Route path="/share-your-story" element={<ReviewsSubmit />} />
+            {/* v252: engineering-grade architecture page — moves Grok's
+            Senior Engineer POV from 5/10 to ~8 with real eval + latency
+            + observability + security facts. */}
+            <Route path="/architecture" element={<Architecture />} />
             {/* v197: discrete sister-site nod — intentionally NOT in main nav */}
             <Route path="/cnnct" element={<Cnnct />} />
             {/* v181: unified TYA-HQ ops dashboard (overview/leads/sites/outreach/ventures) */}

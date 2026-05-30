@@ -89,6 +89,8 @@ const RESOURCES: LinkItem[] = [
   { label: "Hear a live AI agent",  to: "/voice-demo",  badge: "DEMO",     sub: "Talk to the agent in your browser. Web Speech API + Groq Llama 3.3. Free, no signup." },
   // v223: 25 instant-personalize websites gallery (the close-tool money pages)
   { label: "Industry websites",     to: "/websites",    badge: "NEW",      sub: "25 production-grade industry sites you can personalize in 5 seconds — see your business name live." },
+  // v252: engineering-facts page — the Senior Engineer POV's #1 ask
+  { label: "Architecture",          to: "/architecture", badge: "TECH",    sub: "Multi-LLM fallback, p50/p95 latency, eval harness, observability, security posture. No marketing." },
   // v88: Proof + Live metrics removed from nav per founder direction —
   // the "build-in-public" framing was reading as dev journal rather than
   // established company. Routes still exist for SEO; no longer linked.

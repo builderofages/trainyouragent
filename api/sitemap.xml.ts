@@ -27,6 +27,7 @@ const STATIC_PAGES: { path: string; priority: number; changefreq: string }[] = [
   { path: "/team",                      priority: 0.7,  changefreq: "monthly" },
   { path: "/security",                  priority: 0.8,  changefreq: "monthly" },
   { path: "/technology",                priority: 0.8,  changefreq: "monthly" },
+  { path: "/architecture",              priority: 0.85, changefreq: "monthly" },
   { path: "/research",                  priority: 0.65, changefreq: "monthly" },
   { path: "/integrations",              priority: 0.75, changefreq: "monthly" },
   { path: "/case-studies",              priority: 0.75, changefreq: "monthly" },
