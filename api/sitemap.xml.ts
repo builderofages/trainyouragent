@@ -53,6 +53,10 @@ const STATIC_PAGES: { path: string; priority: number; changefreq: string }[] = [
   { path: "/agency-partner",            priority: 0.7,  changefreq: "monthly" },
   // v58: proof reframe — cornerstone trust pages
   { path: "/proof",                     priority: 0.95, changefreq: "daily"   },
+  // v265: routes I'd forgotten to list (crawlers were missing them)
+  { path: "/changelog",                 priority: 0.65, changefreq: "weekly"  },
+  { path: "/reviews/submit",            priority: 0.5,  changefreq: "monthly" },
+  { path: "/apply",                     priority: 0.95, changefreq: "weekly"  },
   { path: "/how-we-win-without-testimonials", priority: 0.85, changefreq: "monthly" },
   // v47A: trust + authority
   { path: "/speaking",                  priority: 0.65, changefreq: "monthly" },

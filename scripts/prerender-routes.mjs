@@ -243,6 +243,28 @@ function rewriteShell(template, route) {
   const italic = htmlEscape(route.italic);
   const sub = htmlEscape(route.sub);
 
+  // v265: per-route JSON-LD WebPage schema. Google parses this for
+  // rich-snippet eligibility per route (breadcrumbs, headline, description).
+  // Wired alongside the sitewide Organization + WebSite graph that lives in
+  // the base index.html.
+  const pageJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    "url": url,
+    "name": route.title,
+    "description": route.desc,
+    "isPartOf": { "@id": "https://trainyouragent.com/#website" },
+    "about": { "@id": "https://trainyouragent.com/#org" },
+    "primaryImageOfPage": "https://trainyouragent.com/og-default.png",
+    "inLanguage": "en-US",
+    "potentialAction": {
+      "@type": "ReadAction",
+      "target": [url],
+    },
+  };
+  const pageJsonLdScript = `<script type="application/ld+json">${JSON.stringify(pageJsonLd)}</script>`;
+
   let out = template;
 
   // <title>
@@ -279,6 +301,10 @@ function rewriteShell(template, route) {
     /Answers calls 24\/7\. Qualifies leads\. Books appointments\. Stops the \$22K\/month leak from missed calls\. Live in 7 days\. If we don't ship on time, we refund the build fee — no quibbling\./,
     sub,
   );
+
+  // v265: inject per-route JSON-LD just before </head>. The sitewide
+  // Organization + WebSite graph stays in the base template too.
+  out = out.replace("</head>", `    ${pageJsonLdScript}\n  </head>`);
 
   return out;
 }
