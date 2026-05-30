@@ -307,6 +307,24 @@ const Pricing = () => {
         ],
       },
     });
+
+    // v273 (Grok SEO POV 81 → 90+): FAQPage schema. Each FAQ Q&A becomes
+    // a Question/Answer node. Eligible for Google rich-snippet FAQ block.
+    const faqId = "tya-schema-pricing-faq";
+    document.getElementById(faqId)?.remove();
+    const fq = document.createElement("script");
+    fq.id = faqId;
+    fq.type = "application/ld+json";
+    fq.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: FAQ.map((item) => ({
+        "@type": "Question",
+        name: item.q,
+        acceptedAnswer: { "@type": "Answer", text: item.a },
+      })),
+    });
+    document.head.appendChild(fq);
     document.head.appendChild(s);
 
     // v161-verify: per-tier Product schema + FAQPage schema for Google Rich Results.
@@ -832,7 +850,7 @@ function DoneWithYouCallout() {
             shipped today.
           </h2>
           <p className="mt-3 text-[15px] sm:text-[16px] text-slate-700 leading-relaxed max-w-xl">
-            4 hours on Zoom with Alexander. You bring your business, your phone number, your docs. You walk away with a deployed AI voice agent answering your phone today. No multi-week build cycle. No "we'll send you a recording."
+            4 hours on Zoom with our build team. You bring your business, your phone number, your docs. You walk away with a deployed AI voice agent answering your phone today. No multi-week build cycle. No "we'll send you a recording."
           </p>
           <ul className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2 text-[13.5px] text-slate-700">
             {[
