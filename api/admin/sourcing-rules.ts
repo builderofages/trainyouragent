@@ -45,9 +45,16 @@ export default async function handler(req: Request): Promise<Response> {
       sb.from("sourcing_rules").select("*").order("created_at", { ascending: false }).limit(40),
       sb.from("sourced_prospects").select("id, prospect_company, city, niche, niche_label, source, phone, email, website, promoted_at, skipped_reason, created_at").order("created_at", { ascending: false }).limit(40),
     ]);
-    if (rulesR.error)  return j({ ok: false, error: "rules-select-failed",  detail: rulesR.error.message  }, 500, cors.headers);
-    if (recentR.error) return j({ ok: false, error: "recent-select-failed", detail: recentR.error.message }, 500, cors.headers);
-    return j({ ok: true, rules: rulesR.data || [], recent: recentR.data || [] }, 200, cors.headers);
+    // v275: graceful fallback when tables haven't been migrated yet.
+    // sourcing_rules + sourced_prospects live in v234 migration; if the
+    // operator hasn't run it, return empty arrays instead of 500-ing the
+    // cockpit panel. Real errors (network, RLS) still surface with detail.
+    const rules  = rulesR.error  && /find the table|does not exist|schema cache/i.test(rulesR.error.message)  ? [] : (rulesR.data || []);
+    const recent = recentR.error && /find the table|does not exist|schema cache/i.test(recentR.error.message) ? [] : (recentR.data || []);
+    if (rulesR.error  && rules.length === 0  && !/find the table|does not exist|schema cache/i.test(rulesR.error.message))  return j({ ok: false, error: "rules-select-failed",  detail: rulesR.error.message  }, 500, cors.headers);
+    if (recentR.error && recent.length === 0 && !/find the table|does not exist|schema cache/i.test(recentR.error.message)) return j({ ok: false, error: "recent-select-failed", detail: recentR.error.message }, 500, cors.headers);
+    const tableMissing = (rulesR.error && /find the table|does not exist|schema cache/i.test(rulesR.error.message)) || (recentR.error && /find the table|does not exist|schema cache/i.test(recentR.error.message));
+    return j({ ok: true, rules, recent, ...(tableMissing ? { skipped: "table-missing", hint: "Run supabase/migrations/v234_all_ops_tables.sql in your Supabase SQL editor." } : {}) }, 200, cors.headers);
   }
 
   const body = await req.json().catch(() => ({})) as Record<string, unknown>;

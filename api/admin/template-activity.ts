@@ -52,6 +52,14 @@ export default async function handler(req: Request): Promise<Response> {
     .limit(limit);
 
   if (error) {
+    // v275: graceful fallback when template_sends table hasn't been migrated.
+    // Was crashing cockpit's Template Activity panel with 500. Now returns
+    // empty with hint, matching reviews-public.ts pattern.
+    if (/find the table|does not exist|schema cache/i.test(error.message)) {
+      return new Response(JSON.stringify({ ok: true, rows: [], summary: empty(), skipped: "table-missing", hint: "Run supabase/migrations/v234_all_ops_tables.sql in your Supabase SQL editor." }), {
+        status: 200, headers: { "content-type": "application/json", ...cors.headers, "cache-control": "no-cache" },
+      });
+    }
     return new Response(JSON.stringify({ ok: false, error: "select-failed", detail: error.message }), {
       status: 500, headers: { "content-type": "application/json", ...cors.headers },
     });
