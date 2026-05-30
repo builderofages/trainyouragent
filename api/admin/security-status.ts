@@ -13,7 +13,7 @@
 // Read-only. No writes. Safe to call repeatedly.
 
 import { getSupabase, supabaseConfigured } from "../_lib/supabase.js";
-import { checkAdmin, unauthorized } from "../_lib/admin-auth.js";
+import { checkAdminAsync, unauthorized } from "../_lib/admin-auth.js";
 import { corsCheck, preflightResponse, forbiddenResponse } from "../_lib/cors.js";
 
 export const config = { runtime: "edge" };
@@ -37,7 +37,7 @@ export default async function handler(req: Request): Promise<Response> {
   const cors = corsCheck(req);
   if (!cors.allowed) return forbiddenResponse();
   if (cors.isPreflight) return preflightResponse(cors.headers);
-  if (!checkAdmin(req)) return unauthorized(cors.headers);
+  if (!(await checkAdminAsync(req))) return unauthorized(cors.headers);
 
   // Env-var posture is always returned (doesn't depend on Supabase).
   const env = {

@@ -112,50 +112,62 @@ function recordSuccess(ip: string): void {
 // ───── v277: Audit log (best-effort, never blocks) ────────────────────
 // Persists every admin auth check to public.admin_audit. Lets us see
 // who hit which endpoint when. Created if absent (idempotent).
+//
+// v278d: Edge functions terminate as soon as the handler returns the
+// Response, dropping any in-flight Promises that weren't awaited. The
+// old fire-and-forget pattern silently lost every audit insert. We now
+// AWAIT the insert directly — adds ~30-80ms per admin call but it's the
+// only way to guarantee the row lands on Vercel's Edge runtime without
+// access to a waitUntil() context. Acceptable cost for real visibility.
 async function logAudit(req: Request, ip: string, ok: boolean): Promise<void> {
   try {
     if (!supabaseConfigured()) return;
     const sb = getSupabase();
     if (!sb) return;
     const url = new URL(req.url);
-    // Fire-and-forget. If the table doesn't exist (migration not yet run),
-    // the insert silently fails — we don't care, this is observability.
-    sb.from("admin_audit").insert({
+    await sb.from("admin_audit").insert({
       ts: new Date().toISOString(),
       ip,
       path: url.pathname,
       method: req.method,
       ok,
       ua: (req.headers.get("user-agent") || "").slice(0, 240),
-    }).then(() => {}, () => {});
+    });
   } catch {
-    /* silent */
+    /* silent — never block the response on observability failure */
   }
 }
 
+// v278d: checkAdmin stays sync for backward compat with every existing
+// admin endpoint. checkAdminAsync is the new path that actually awaits
+// the audit-log insert so Supabase rows persist on Edge runtime. Use
+// checkAdminAsync going forward; checkAdmin is now a thin wrapper that
+// fires-and-forgets the audit (legacy behavior — will silently lose
+// some rows under load) but never blocks the response.
+export async function checkAdminAsync(req: Request): Promise<boolean> {
+  const result = checkAdminCore(req);
+  await result.auditPromise;
+  return result.ok;
+}
+
 export function checkAdmin(req: Request): boolean {
-  if (isVercelCron(req)) return true;
+  return checkAdminCore(req).ok;
+}
+
+function checkAdminCore(req: Request): { ok: boolean; auditPromise: Promise<void> } {
+  if (isVercelCron(req)) return { ok: true, auditPromise: Promise.resolve() };
 
   const ip = clientIp(req);
 
   // 1) Allowlist gate (fail fast, before any timing-sensitive code).
-  if (!ipIsAllowed(ip)) {
-    logAudit(req, ip, false);
-    return false;
-  }
+  if (!ipIsAllowed(ip)) return { ok: false, auditPromise: logAudit(req, ip, false) };
 
   // 2) Brute-force lockout gate.
-  if (isLockedOut(ip)) {
-    logAudit(req, ip, false);
-    return false;
-  }
+  if (isLockedOut(ip)) return { ok: false, auditPromise: logAudit(req, ip, false) };
 
   const expected = adminToken();
   // No env → no access. Fail closed.
-  if (!expected) {
-    logAudit(req, ip, false);
-    return false;
-  }
+  if (!expected) return { ok: false, auditPromise: logAudit(req, ip, false) };
 
   const url = new URL(req.url);
   const qp = url.searchParams.get("token") || "";
@@ -172,8 +184,7 @@ export function checkAdmin(req: Request): boolean {
   if (ok) recordSuccess(ip);
   else recordFailure(ip);
 
-  logAudit(req, ip, ok);
-  return ok;
+  return { ok, auditPromise: logAudit(req, ip, ok) };
 }
 
 export function unauthorized(extraHeaders: Record<string, string> = {}): Response {
