@@ -39,8 +39,8 @@ const COMMITMENTS = [
     b: "We scope on a 30-min call, ship a working voice or chat agent in two weeks, and only invoice once it's answering real traffic.",
   },
   {
-    h: "Founder is your point of contact.",
-    b: "No SDR, no account manager. Alexander runs discovery and stays on your account through go-live and beyond.",
+    h: "Direct line to the build team.",
+    b: "No SDR, no account manager. Our team runs discovery and stays on your account through go-live and beyond.",
   },
   {
     h: "We don't hide our numbers.",

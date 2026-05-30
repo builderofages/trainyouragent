@@ -554,13 +554,13 @@ const Pricing = () => {
               </thead>
               <tbody className="text-slate-700">
                 {[
-                  ["Setup model",      "Self-serve",          "4-hour Zoom w/ founder", "Done-for-you",        "Done-for-you",       "Done-for-you, multi-site"],
+                  ["Setup model",      "Self-serve",          "4-hour Zoom w/ our team", "Done-for-you",        "Done-for-you",       "Done-for-you, multi-site"],
                   ["Time to live",     "5 min · embed widget", "Same day",              "7 business days",     "10–14 business days", "21–30 business days"],
                   ["Channels",         "Chat only",           "Voice",                  "Voice or chat",       "Voice + SMS + email + chat", "All channels, multi-brand"],
                   ["Conversations / mo", "5,000",            "Your phone line",         "Pay-per-minute ($0.39)", "5,000 voice minutes", "25,000 voice minutes"],
                   ["Trained on your docs", "Yes",            "Yes (live)",              "Yes",                 "Yes",                "Yes + custom training data"],
                   ["CRM integration",  "Webhook only",        "Webhook only",           "1 CRM included",      "Native (HubSpot, GHL, ServiceTitan, Stripe, Cal, Twilio)", "Custom + multi-brand"],
-                  ["Engineer time",    "Self-serve docs",     "4 hrs w/ founder",       "Team Slack",       "Weekly review",      "Dedicated engineer"],
+                  ["Engineer time",    "Self-serve docs",     "4 hrs w/ our team",       "Team Slack",       "Weekly review",      "Dedicated engineer"],
                   ["SLA",              "Best-effort",         "Best-effort",            "Best-effort",         "Best-effort",        "99.9% uptime SLA"],
                   ["BAA / DPA",        "Available on request","Available on request",   "Available on request","Available on request","Included"],
                   ["Refund",           "30-day money-back",   "Full refund if we don't ship", "n/a (pay-per-use)","30-day on build fee","30-day on build fee"],
@@ -1116,7 +1116,7 @@ function StickyDoneWithYouBar() {
             <div className="flex-1 min-w-0">
               <div className="text-[10.5px] uppercase tracking-[0.18em] text-[#FFD60A] font-semibold font-mono mb-0.5">Fastest start · one-time</div>
               <div className="text-[13.5px] sm:text-[14.5px] text-white leading-snug">
-                Agent in a Day — 4 hours w/ founder, live on your number. <span className="text-white/70">$497, full refund if we don't ship.</span>
+                Agent in a Day — 4 hours w/ our team, live on your number. <span className="text-white/70">$497, full refund if we don't ship.</span>
               </div>
             </div>
             <div className="flex items-center gap-2">

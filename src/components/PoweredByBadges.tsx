@@ -171,7 +171,12 @@ export default function PoweredByBadges({
                   width={24}
                   height={24}
                   loading="lazy"
-                  src={`https://cdn.simpleicons.org/${t.slug}/${t.color.replace("#", "")}`}
+                  /* v272b: same-origin /icons/ served from public/ — fetched
+                     at build time by scripts/fetch-brand-icons.mjs from
+                     jsdelivr/unpkg/simpleicons mirrors. Rock-solid because
+                     it's same-origin static assets, not a third-party CDN
+                     at runtime. Falls back to letter-mark via onError. */
+                  src={`/icons/${t.slug}.svg`}
                   style={{
                     width: 24,
                     height: 24,
