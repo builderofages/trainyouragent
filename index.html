@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#042C53" />
 
-    <title>TrainYourAgent — Everything-AI for SMBs & Startups</title>
-    <meta name="description" content="AI voice and messaging agents that actually run your business — plus marketing, lead gen, creative, infrastructure. Four years deep in AI. Built for SMBs and startups." />
+    <!-- v259 (Grok killer #1): static SEO baseline now specific to the actual
+         product. Crawlers/share-preview bots get THIS before any JS executes.
+         Per-route Helmet overrides still take precedence after React mounts. -->
+    <title>AI Receptionist for HVAC, Dental, Salon — Answers Calls, Books Jobs · TrainYourAgent</title>
+    <meta name="description" content="An AI receptionist that answers calls 24/7, qualifies leads, books appointments, and stops the $22K/mo leak from missed calls. Built for HVAC, dental, salon, and service SMBs. Live in 7 days. Refund if not shipped." />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 
     <!-- v230: Search Console + Bing Webmaster + Yandex verification slots.
@@ -45,20 +48,20 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="TrainYourAgent" />
-    <meta property="og:title" content="TrainYourAgent — Everything-AI for SMBs & Startups" />
-    <meta property="og:description" content="AI voice agents + everything else: marketing, lead gen, creative, infra. Four years deep in AI. $20K+/mo recurring." />
+    <meta property="og:title" content="AI Receptionist for HVAC, Dental, Salon — Answers Calls, Books Jobs" />
+    <meta property="og:description" content="An AI receptionist that answers calls 24/7, qualifies leads, books appointments, and stops the $22K/mo leak from missed calls. Live in 7 days. Refund if not shipped." />
     <meta property="og:url" content="https://trainyouragent.com" />
     <meta property="og:image" content="https://trainyouragent.com/og-default.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="TrainYourAgent — voice and chat agents that actually run your business." />
+    <meta property="og:image:alt" content="AI Receptionist for HVAC, Dental, Salon — Answers calls, books jobs, stops the leak." />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="TrainYourAgent — Everything-AI for SMBs & Startups" />
-    <meta name="twitter:description" content="AI voice agents + everything else: marketing, lead gen, creative, infra. Four years deep in AI." />
+    <meta name="twitter:title" content="AI Receptionist for HVAC, Dental, Salon — Answers Calls, Books Jobs" />
+    <meta name="twitter:description" content="An AI receptionist that answers calls 24/7, qualifies leads, books jobs. Live in 7 days. Refund if not shipped." />
     <meta name="twitter:image" content="https://trainyouragent.com/og-default.png" />
-    <meta name="twitter:image:alt" content="TrainYourAgent — voice and chat agents that actually run your business." />
+    <meta name="twitter:image:alt" content="AI Receptionist for HVAC, Dental, Salon — Answers calls, books jobs, stops the leak." />
 
     <!-- Canonical -->
     <link rel="canonical" href="https://trainyouragent.com" />
@@ -117,7 +120,7 @@
             "name": "TrainYourAgent",
             "url": "https://trainyouragent.com",
             "logo": "https://trainyouragent.com/apple-touch-icon.png",
-            "description": "Everything-AI services for SMBs and startups: voice agents, marketing, lead gen, creative, infrastructure, build & scale.",
+            "description": "An AI receptionist agency for service SMBs (HVAC, dental, salon, real estate, gym, hotels). Voice + chat agents that answer calls 24/7, qualify leads, and book appointments. Custom built, integrated with Cal.com / ServiceTitan / GHL / HubSpot. Live in 7 days. Refund if not shipped.",
             "founder": { "@type": "Person", "name": "Alexander Mills", "sameAs": "https://www.linkedin.com/in/alexandermillsai" },
             "address": { "@type": "PostalAddress", "addressLocality": "Tampa Bay", "addressRegion": "FL", "addressCountry": "US" },
             "sameAs": ["https://www.linkedin.com/in/alexandermillsai", "https://www.linkedin.com/company/train-your-agent/"],
@@ -247,6 +250,56 @@
            src="https://www.facebook.com/tr?id=__META_PIXEL_ID__&ev=PageView&noscript=1"
            alt="" />
     </noscript>
+
+    <!-- v259 (Grok killer #1): noscript / pre-hydration content. Crawlers,
+         link previewers, and JS-disabled visitors see real positioning and a
+         working CTA before any JavaScript runs. React hydrates over this and
+         the static block becomes invisible. -->
+    <noscript>
+      <style>
+        .tya-static-shell { padding: 64px 24px; max-width: 880px; margin: 0 auto;
+          font-family: 'Inter Tight', system-ui, sans-serif; color: #0B1B2B;
+          background: linear-gradient(180deg, #FAF6EE 0%, #F4EFE4 100%); min-height: 100vh; }
+        .tya-static-shell .eyebrow { font-family: ui-monospace, Menlo, monospace;
+          letter-spacing: 0.18em; font-size: 11px; font-weight: 700; color: #C99A28;
+          text-transform: uppercase; margin-bottom: 14px; }
+        .tya-static-shell h1 { font-size: clamp(36px, 6vw, 64px); line-height: 1.05;
+          letter-spacing: -0.02em; font-weight: 600; color: #042C53; margin: 0 0 18px; }
+        .tya-static-shell h1 .italic { font-family: 'Playfair Display', Georgia, serif;
+          font-style: italic; font-weight: 500; }
+        .tya-static-shell p { font-size: 18px; line-height: 1.55; color: #5C6B7F;
+          margin: 0 0 28px; max-width: 640px; }
+        .tya-static-shell .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+        .tya-static-shell a.primary { padding: 14px 22px; border-radius: 999px;
+          background: #042C53; color: #fff; text-decoration: none; font-weight: 700; }
+        .tya-static-shell a.ghost { padding: 14px 22px; border-radius: 999px;
+          background: transparent; color: #042C53; text-decoration: none; font-weight: 700;
+          border: 1.5px solid #042C53; }
+        .tya-static-shell ul.list { margin: 32px 0 0; padding: 0; list-style: none;
+          display: grid; gap: 10px; font-size: 15px; }
+        .tya-static-shell ul.list li::before { content: "+ "; color: #C99A28; font-weight: 800; }
+      </style>
+      <main class="tya-static-shell">
+        <div class="eyebrow">AI RECEPTIONIST · BUILT FOR SERVICE SMBs</div>
+        <h1>An AI receptionist that books the job before <span class="italic">your competitor calls back.</span></h1>
+        <p>Answers calls 24/7. Qualifies leads. Books appointments. Stops the $22K/month leak from missed calls. Live in 7 days. If we don't ship on time, we refund the build fee — no quibbling.</p>
+        <div class="ctas">
+          <a class="primary" href="/apply">Book a discovery call →</a>
+          <a class="ghost" href="/pricing">See the three lanes →</a>
+        </div>
+        <ul class="list">
+          <li>Voice + chat agent, your brand voice, your scripts</li>
+          <li>Plugs into Cal.com / ServiceTitan / GHL / HubSpot</li>
+          <li>HVAC, dental, salon, real estate, gym, hotels, more</li>
+          <li>Multi-LLM fallback so the line never goes silent</li>
+          <li>Founder-led from Tampa Bay · no offshore SDR sweatshop</li>
+        </ul>
+        <p style="margin-top:36px;font-size:13px;font-style:italic;color:#5C6B7F;">
+          You're seeing the static fallback because JavaScript hasn't loaded yet (or is disabled). The full interactive site, live voice demo, ROI calculator, and 25-niche site previews load when JavaScript is enabled.
+        </p>
+      </main>
+    </noscript>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
