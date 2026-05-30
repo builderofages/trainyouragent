@@ -108,24 +108,33 @@ export default function HomepageIndustryPicker() {
               key={s.id}
               to={`/template/${s.id}`}
               onClick={() => void fireEvent("homepage_industry_card_click", { niche: s.id })}
-              className="group relative block rounded-xl overflow-hidden bg-white border border-slate-200 transition-all hover:-translate-y-0.5 hover:shadow-lg"
-              style={{ aspectRatio: "4/5" }}
+              className="group relative block rounded-xl overflow-hidden border border-slate-200 transition-all hover:-translate-y-0.5 hover:shadow-lg"
+              style={{ aspectRatio: "4/5", background: `linear-gradient(160deg, ${s.accent} 0%, ${s.accent}CC 60%, #042C53 100%)` }}
             >
+              {/* v248: editorial Playfair italic banner ALWAYS rendered behind the
+                  photo — when pollinations 404s, the card still shows a
+                  premium magazine-cover layout instead of an empty white box. */}
+              <div className="absolute inset-0 flex items-center justify-center px-3 text-center pointer-events-none">
+                <div style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 500, color: "#fff", fontSize: "clamp(22px, 3.2vw, 32px)", lineHeight: 0.98, letterSpacing: "-0.012em", textShadow: "0 2px 18px rgba(0,0,0,0.35)" }}>
+                  {s.niche}
+                </div>
+              </div>
               <img
                 src={nicheImageUrl(s.id, 360, 450)}
                 alt={`${s.niche} AI receptionist website preview`}
                 loading="lazy"
                 decoding="async"
                 className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-105"
+                style={{ zIndex: 1 }}
                 onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
               />
               {/* gradient overlay so text is always readable */}
               <div
                 className="absolute inset-0"
-                style={{ background: "linear-gradient(180deg, rgba(4,44,83,0.05) 0%, rgba(4,44,83,0.15) 45%, rgba(4,44,83,0.78) 100%)" }}
+                style={{ background: "linear-gradient(180deg, rgba(4,44,83,0.05) 0%, rgba(4,44,83,0.15) 45%, rgba(4,44,83,0.78) 100%)", zIndex: 2 }}
               />
-              {/* labels */}
-              <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 text-white">
+              {/* labels — always render above all layers */}
+              <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 text-white" style={{ zIndex: 3 }}>
                 <div className="text-[10px] font-bold tracking-[0.14em] uppercase opacity-90 mb-1 font-mono">
                   {s.id.toUpperCase()}
                 </div>
@@ -134,7 +143,7 @@ export default function HomepageIndustryPicker() {
                 </div>
               </div>
               {/* "Open" badge on hover */}
-              <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-sm text-[10px] font-bold uppercase tracking-[0.12em] opacity-0 group-hover:opacity-100 transition-opacity font-mono" style={{ color: NAVY }}>
+              <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-sm text-[10px] font-bold uppercase tracking-[0.12em] opacity-0 group-hover:opacity-100 transition-opacity font-mono" style={{ color: NAVY, zIndex: 3 }}>
                 Open →
               </div>
             </Link>
