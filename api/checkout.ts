@@ -125,6 +125,28 @@ const INLINE_PLAN_PRICING: Record<string, InlinePlanPricing> = {
     productDescription: "Multi-location, multi-brand voice + chat agents. $9,950 one-time build + $4,997/mo (25,000 minutes included, $15 per booked appt overage). Dedicated engineer, SLA 99.9%, BAA + DPA + SOC 2 evidence pack. Cancel any time.",
     interval: "month",
   },
+  // v273.4: Founders tier — pay-as-you-go entry for pre-revenue startups.
+  // /pricing FOR_MAP routes ecom/saas/startup verticals here. Previously
+  // returned "plan-not-configured" because no env var was set and no
+  // inline-pricing fallback existed. $1 deposit reserves the build slot,
+  // remainder billed per-minute as calls come in via separate invoice.
+  founders: {
+    amountCents: 100, // $1 reserve fee (real value is usage-based)
+    currency: "usd",
+    productName: "TrainYourAgent — Founders ($0 build + $0.39/min)",
+    productDescription: "Pre-revenue or early-revenue startup tier. $1 reserve slot. Build fee deferred until first 100 minutes. Pay $0.39/min only when calls come in. Cancel any time, no clawback.",
+    interval: undefined, // one-time reserve; usage billed via separate invoices
+  },
+  // v273.4: Operator (singular) tier alias — older /pricing FOR_MAP entries
+  // and the Apollo cold-DM CTAs still post plan="operator". Mirror the
+  // operators (plural) pricing so neither breaks checkout.
+  operator: {
+    amountCents: 199700,
+    currency: "usd",
+    productName: "TrainYourAgent — Operator ($1,997/mo + $4,950 build)",
+    productDescription: "Done-for-you AI voice + SMS + email + chat agent. $4,950 one-time build (CRM/dispatch/calendar wiring) + $1,997/mo (5,000 minutes included, $25 per booked appt overage). Live in 14 business days or build fee refunded. Cancel any time.",
+    interval: "month",
+  },
 };
 
 export default async function handler(req: Request) {
@@ -153,14 +175,14 @@ export default async function handler(req: Request) {
     return json({ error: "bad-email" }, 400, cors.headers);
   }
 
-  // v86: prefer existing price_id env var if set; otherwise fall back to
-  // inline price_data so checkout works WITHOUT any founder-only Vercel
-  // env-var setup. Inline pricing is Stripe's native way to spin up a
-  // recurring/one-off product on the fly. Lets the $99/mo SaaS subscribe
-  // button work the moment STRIPE_SECRET_KEY exists in the deploy, with
-  // zero additional env wiring required.
-  const priceId = resolvePriceId(body.plan || "");
+  // v273.4: Inline pricing is now PREFERRED over env-var price IDs. Reason:
+  // env vars in Vercel can drift (pointing at deleted/test-mode prices) and
+  // produce 502s with zero visibility. Inline pricing is versioned in this
+  // git repo and audit-checked in CI. Env-var path remains as fallback for
+  // plans NOT in INLINE_PLAN_PRICING — keeps backward compatibility with
+  // any STRIPE_PRICE_* set on Vercel for plans not yet inlined.
   const inlinePricing = INLINE_PLAN_PRICING[body.plan || ""];
+  const priceId = inlinePricing ? "" : resolvePriceId(body.plan || "");
 
   if (!priceId && !inlinePricing) {
     return json({
