@@ -3,6 +3,9 @@ import { Link, useSearchParams } from "react-router-dom";
 import RoiCalculator from "@/components/RoiCalculator";
 // v253: editorial ROI calc that anchors pricing to real recovered dollars
 import PricingROICalc from "@/components/PricingROICalc";
+// v258 (Grok #2 + #3): collapse 5-tier paralysis + inject real call proof
+import PricingThreeLanes from "@/components/PricingThreeLanes";
+import RealCallAudioStrip from "@/components/RealCallAudioStrip";
 // v63: inline plan-recommending ROI calc (Grok Heavy audit)
 import RoiInline from "@/components/RoiInline";
 import SmartPriceReveal from "@/components/SmartPriceReveal";
@@ -416,11 +419,25 @@ const Pricing = () => {
           <SelfServeCallout />
         </div>
       </section>
+      {/* v258 (Grok #2): Three-Lane summary FIRST. Grok Heavy: "collapse
+          to 3 clear recommended paths." Operators anchored as MOST POPULAR.
+          The existing 5-tier wall stays below for visitors who want detail. */}
+      <PricingThreeLanes />
+
       {/* v253: editorial ROI calculator — anchors all 4 tiers to dollars
           recovered, surfaced ABOVE the tier cards so visitors see "$X/mo
           recovered" before they see "$4,950" and the price doesn't feel
           abstract. Grok Heavy's #1 ROI-ranked 48-hour ship. */}
       <PricingROICalc />
+
+      {/* v258 (Grok #3): Real call audio proof under the calculator. Grok
+          Heavy: "Add 2-3 short audio clips or narrated case metrics." */}
+      <RealCallAudioStrip
+        eyebrow="WHAT THIS BUYS YOU · 3 REAL CALLS"
+        title="The thing you're paying for."
+        italicWord="On the line."
+        subhead="Before you scroll into tiers, hear what the agent actually does. Same stack we'd build for your shop."
+      />
 
       {/* v160: Done-WITH-You $497 tier — Hormozi case-study factory. Bridges
           the canyon between $99 SaaS and $4,950 Operators. 4-hour Zoom build

@@ -93,15 +93,58 @@ export default function ReviewsSubmit() {
 
       <section className="px-5 sm:px-8 pt-28 sm:pt-32 pb-14 sm:pb-20 max-w-3xl mx-auto">
         <div className="text-[11px] font-semibold tracking-[0.18em] uppercase font-mono mb-3" style={{ color: ACCENT }}>
-          SUBMIT A TESTIMONIAL
+          OPERATOR FAVOR · $200 STRIPE CREDIT
         </div>
         <h1 className="text-[34px] sm:text-[48px] font-semibold leading-[1.05] mb-4" style={{ color: NAVY }}>
-          Share what TrainYourAgent did for your{" "}
-          <span style={ITALIC}>business.</span>
+          Tell the next operator what the agent did for{" "}
+          <span style={ITALIC}>your shop.</span>
         </h1>
-        <p className="text-[15.5px] sm:text-[17px] text-slate-700 leading-relaxed mb-10">
-          A 30-second Loom of you on camera is gold. A written quote works too. We'll review it, lightly edit for length, and publish on the public customers page + your industry's template page. You'll get a link before it goes live.
+        <p className="text-[15.5px] sm:text-[17px] text-slate-700 leading-relaxed mb-6">
+          Your call volume, your numbers, your before/after. A 30-second Loom on camera is best — written quote works too. We'll review, lightly edit for length, and publish on <Link to="/customers" style={{ color: ACCENT, textDecoration: "underline" }}>/customers</Link> plus your industry's template page so the next HVAC/dental/salon owner lands on it.
         </p>
+
+        {/* v258 (Grok #3): Grok flagged this page 3/10 — "isolated high-friction
+            form with zero incentive, context, or preview." Add the incentive
+            (Stripe credit on publish), the context (one of 3 lanes), and a
+            visible preview link. */}
+        <div
+          style={{
+            padding: "16px 20px",
+            borderRadius: 14,
+            background: "linear-gradient(135deg, rgba(244,200,76,0.10), rgba(24,95,165,0.05))",
+            border: `1px solid ${HAIRLINE}`,
+            marginBottom: 28,
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 16,
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ flex: "1 1 280px", minWidth: 0 }}>
+            <div className="font-mono uppercase" style={{ fontSize: 10.5, letterSpacing: "0.16em", fontWeight: 700, color: "#C99A28", marginBottom: 4 }}>
+              WHAT YOU GET WHEN WE PUBLISH
+            </div>
+            <div style={{ fontSize: 14, color: TEXT, lineHeight: 1.5 }}>
+              $200 Stripe credit applied to your next invoice · backlink from <Link to="/customers" style={{ color: ACCENT }}>/customers</Link> to your business URL · we share the case study post on LinkedIn and tag you.
+            </div>
+          </div>
+          <Link
+            to="/customers"
+            style={{
+              padding: "10px 16px",
+              borderRadius: 999,
+              background: NAVY,
+              color: "#FFFFFF",
+              textDecoration: "none",
+              fontWeight: 700,
+              fontSize: 13,
+              whiteSpace: "nowrap",
+            }}
+          >
+            See examples →
+          </Link>
+        </div>
 
         {state === "ok" ? (
           <div style={{ padding: 28, borderRadius: 18, background: "rgba(21,114,77,0.08)", border: "1px solid rgba(21,114,77,0.32)", color: "#15724D" }}>

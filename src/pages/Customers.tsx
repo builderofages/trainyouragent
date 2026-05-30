@@ -21,6 +21,7 @@ import TrustpilotWidget from "@/components/TrustpilotWidget";
 // v238: real customer reviews carousel pulling approved testimonials from
 // public.reviews via /api/reviews-public. Graceful empty state.
 import CustomerReviewsCarousel from "@/components/CustomerReviewsCarousel";
+import RealCallAudioStrip from "@/components/RealCallAudioStrip";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai/";
@@ -121,6 +122,11 @@ export default function Customers() {
           </div>
         </div>
       </section>
+
+      {/* v258 (Grok #3): Real call audio strip — proof injection above the
+          carousel since the carousel may be empty until first 3 customer
+          submissions land. Cards stand on their own as product proof. */}
+      <RealCallAudioStrip />
 
       {/* v134: 14-vertical ROI showcase grid — replaces missing-logo wall.
           Honest social proof via specific industry math, no fake logos. */}

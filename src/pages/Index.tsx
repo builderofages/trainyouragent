@@ -28,6 +28,7 @@ import PoweredByBadges from "@/components/PoweredByBadges";
 import WhyWeAreDifferent from "@/components/WhyWeAreDifferent";
 import HomepageIndustryPicker from "@/components/HomepageIndustryPicker";
 import HomepageLoomEmbed from "@/components/HomepageLoomEmbed";
+import RealCallAudioStrip from "@/components/RealCallAudioStrip";
 import SectionDivider from "@/components/SectionDivider";
 import { useCountUp } from "@/hooks/useCountUp";
 import NetworkIllo from "@/components/illustrations/NetworkIllo";
@@ -230,11 +231,15 @@ const Index = () => {
  l.href = "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap";
  document.head.appendChild(l);
  }
- document.title = "TrainYourAgent — Everything-AI for SMBs & Startups";
+ // v258 (Grok #1 fix): SEO + OG/share title now specific to receptionist
+ // outcome instead of vague "Everything-AI" — Grok Heavy flagged the latter
+ // as "vague scope-creep bullshit that buries the actual product." Visible
+ // hero stays exactly as the founder locked it.
+ document.title = "AI Receptionist for HVAC, Dental, Salon — Answers Calls, Books Jobs · TrainYourAgent";
 
  // v48: dynamic OG image override
  {
- const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent("TrainYourAgent · Everything-AI for SMBs & Startups")}&subtitle=${encodeURIComponent("Voice + chat agents that actually run your business")}&type=page`;
+ const ogImage = `https://trainyouragent.com/api/og?title=${encodeURIComponent("AI Receptionist for HVAC, Dental, Salon")}&subtitle=${encodeURIComponent("Answers calls. Books jobs. Stops $22k/mo in missed-call leaks.")}&type=page`;
  const setMP = (n: string, c: string) => {
  let el = document.querySelector(`meta[property='${n}']`) as HTMLMetaElement | null;
  if (!el) { el = document.createElement("meta"); el.setAttribute("property", n); document.head.appendChild(el); }
@@ -449,6 +454,12 @@ const Index = () => {
  from the homepage. Biggest single leverage gap: organic traffic landed
  and never knew /template/* existed. */}
  <HomepageIndustryPicker />
+
+ {/* v258 (Grok #3): Real Call Audio strip — 3 actual call moments with
+ outcome and play button. Closes Grok's #1 conversion killer (sparse
+ social proof) by injecting product proof BELOW the hero (hero remains
+ untouched per founder lock). HVAC/dental/salon to match the audience. */}
+ <RealCallAudioStrip />
 
  {/* v108: Why we win — Hormozi/Cuban/Cardone-grade competitor callout
  + founder credentials. The conversion section the homepage was
