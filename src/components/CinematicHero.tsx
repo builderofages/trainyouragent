@@ -1,22 +1,20 @@
-// src/components/CinematicHero.tsx — v241
+// src/components/CinematicHero.tsx — v242
 //
-// Single-screen 2040-grade homepage hero. Replaces the existing
-// hero+chips+badges block.
+// On-brand cinematic hero. Cream canvas, navy ink, Playfair italic drop,
+// soft gold accent. Editorial magazine-cover feel — not tech-bro dark mode.
+// Replaces v241 which was correctly cinematic but wrong-key.
 //
-// Design system:
-//   - 100vh first-paint canvas — visitor lands inside the brand world
-//   - Animated 3-color radial gradient mesh + slow drift (CSS-only,
-//     prefers-reduced-motion respected)
-//   - Three floating glass-morphism stat cards with parallax tilt on
-//     cursor (no JS lib — passive listener, CSS transform)
-//   - Massive editorial headline: Playfair italic drop with a
-//     simultaneous Inter Tight ALL-CAPS sub-lockup
-//   - Single primary CTA with ambient glow ring
-//   - Live $-leak ticker beneath the CTA (real arithmetic, not fake)
-//   - Trust strip at bottom — micro, never competes
+// Brand DNA being expressed here:
+//   • Cream/bone surface (#FAF6EE) with subtle pearl gradient
+//   • Navy (#042C53) for ink and quiet authority
+//   • Royal blue (#185FA5) for eyebrows + energy
+//   • Soft gold #F4C84C as a single accent — appears once, on the underline
+//   • Playfair Display 500 italic for the drop — the "elegant sexyness"
+//   • Inter Tight 600 for hard force
+//   • Micro mono for trust strips
 //
-// No external image assets. No animation libs. No scripts. Pure CSS + 1
-// passive mousemove handler. Lighthouse-safe.
+// All motion is restrained: no neon, no glow rings, no animated mesh that
+// looks like a Stripe ad. The luxury feel comes from typography + space.
 
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -24,8 +22,13 @@ import { fireEvent } from "@/lib/event";
 
 const NAVY = "#042C53";
 const ACCENT = "#185FA5";
-const SAND = "#FAF6EE";
-const TEXT_DIM = "rgba(255,255,255,0.78)";
+const INK = "#0B1B2B";
+const MUTED = "#5C6B7F";
+const CREAM = "#FAF6EE";
+const PEARL = "#F4EFE4";
+const GOLD = "#C99A28";
+const HAIRLINE = "rgba(4,44,83,0.10)";
+
 const ITALIC: React.CSSProperties = {
   fontFamily: "'Playfair Display', Georgia, serif",
   fontStyle: "italic",
@@ -41,7 +44,7 @@ export default function CinematicHero() {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [secs, setSecs] = useState(0);
 
-  // Soft parallax — cursor position 0..1 → tilt -1..1
+  // Soft cursor parallax on the three floating tiles
   useEffect(() => {
     if (typeof window === "undefined") return;
     const el = rootRef.current;
@@ -60,7 +63,7 @@ export default function CinematicHero() {
     return () => { el.removeEventListener("mousemove", onMove); cancelAnimationFrame(raf); };
   }, []);
 
-  // Live $-leak counter — anchored to first visit per-browser.
+  // Live $-leak counter, anchored per-browser
   useEffect(() => {
     if (typeof window === "undefined") return;
     const key = "tya.hero.firstSeen";
@@ -80,230 +83,227 @@ export default function CinematicHero() {
   return (
     <section
       ref={rootRef}
+      data-tya-hero
       style={{
         position: "relative",
-        minHeight: "min(820px, 100vh)",
         overflow: "hidden",
-        color: "#fff",
-        // CSS-only animated mesh — 3 radial gradients drift on a 14s loop.
+        color: INK,
         background: `
-          radial-gradient(800px 600px at 18% 22%, rgba(24,95,165,0.55), transparent 60%),
-          radial-gradient(700px 500px at 82% 28%, rgba(255,210,90,0.18), transparent 60%),
-          radial-gradient(900px 600px at 50% 110%, rgba(24,95,165,0.42), transparent 60%),
-          linear-gradient(180deg, #062f5a 0%, ${NAVY} 50%, #02152a 100%)
+          radial-gradient(900px 600px at 12% 18%, rgba(24,95,165,0.10), transparent 60%),
+          radial-gradient(720px 500px at 88% 22%, rgba(244,200,76,0.10), transparent 60%),
+          radial-gradient(800px 540px at 52% 110%, rgba(4,44,83,0.08), transparent 60%),
+          linear-gradient(180deg, ${CREAM} 0%, ${PEARL} 100%)
         `,
-        backgroundSize: "200% 200%, 200% 200%, 200% 200%, 100% 100%",
-        animation: "tyaHeroDrift 18s ease-in-out infinite alternate",
+        minHeight: "min(820px, 94vh)",
       }}
       aria-labelledby="cinematic-hero-heading"
     >
-      {/* Grain layer — tasteful film noise */}
+      {/* Editorial column rule — quiet luxury */}
+      <div aria-hidden style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 1, background: "linear-gradient(180deg, transparent, rgba(4,44,83,0.08), transparent)", transform: "translateX(-50%)", opacity: 0.7 }} />
+
+      {/* Subtle warm grain — premium tactile depth */}
       <div aria-hidden style={{
         position: "absolute", inset: 0, pointerEvents: "none",
-        backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.32'/></svg>\")",
-        mixBlendMode: "overlay",
-        opacity: 0.18,
+        backgroundImage:
+          "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>\")",
+        mixBlendMode: "multiply",
+        opacity: 0.06,
       }} />
 
-      {/* Floating glass orbs — subtle depth */}
+      {/* Floating ornaments — soft, never compete */}
       {[
-        { left: "8%",  top: "18%", size: 460, hue: 1 },
-        { left: "78%", top: "12%", size: 360, hue: 0 },
-        { left: "62%", top: "72%", size: 520, hue: 1 },
+        { left: "6%",  top: "16%", size: 380, color: "rgba(24,95,165,0.08)" },
+        { left: "78%", top: "10%", size: 320, color: "rgba(201,154,40,0.07)" },
+        { left: "66%", top: "66%", size: 440, color: "rgba(4,44,83,0.07)" },
       ].map((o, i) => (
         <div key={i} aria-hidden style={{
           position: "absolute", left: o.left, top: o.top,
           width: o.size, height: o.size, borderRadius: "50%",
-          background: o.hue
-            ? "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.10), transparent 60%)"
-            : "radial-gradient(circle at 40% 40%, rgba(255,200,80,0.10), transparent 60%)",
-          filter: "blur(2px)",
-          transform: `translate(${tilt.x * (i === 1 ? -12 : 14)}px, ${tilt.y * 10}px)`,
+          background: `radial-gradient(circle at 40% 40%, ${o.color}, transparent 60%)`,
+          filter: "blur(0.5px)",
+          transform: `translate(${tilt.x * (i === 1 ? -10 : 12)}px, ${tilt.y * 8}px)`,
           transition: "transform .4s ease-out",
           pointerEvents: "none",
         }} />
       ))}
 
       <style>{`
-        @keyframes tyaHeroDrift {
-          0%   { background-position: 0% 0%,   100% 100%, 50% 100%, 0 0; }
-          50%  { background-position: 100% 50%, 0% 50%,   60% 30%,  0 0; }
-          100% { background-position: 0% 100%, 100% 0%,  40% 60%,  0 0; }
-        }
-        @keyframes tyaCtaGlow {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(255,210,90,0.35), 0 20px 60px -20px rgba(0,0,0,0.6); }
-          50%      { box-shadow: 0 0 0 18px rgba(255,210,90,0),    0 20px 60px -20px rgba(0,0,0,0.6); }
-        }
-        @keyframes tyaPulseDot {
-          0%,100% { transform: scale(1);   opacity: 1; }
-          50%     { transform: scale(1.5); opacity: 0.4; }
-        }
+        @keyframes tyaUnderline { from { transform: scaleX(0); transform-origin: left center; } to { transform: scaleX(1); transform-origin: left center; } }
+        @keyframes tyaPulseDot { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: .4; } }
+        @keyframes tyaFadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
         @media (prefers-reduced-motion: reduce) {
-          section[data-tya-hero] { animation: none !important; }
-          section[data-tya-hero] * { animation: none !important; transition: none !important; }
+          [data-tya-hero] * { animation: none !important; transition: none !important; }
         }
       `}</style>
 
-      {/* Content shell */}
+      {/* Content shell — editorial magazine cover lockup */}
       <div style={{
         position: "relative", zIndex: 2,
-        maxWidth: 1200, margin: "0 auto",
-        padding: "120px 28px 60px",
-        display: "grid", gridTemplateColumns: "minmax(0, 1fr)", justifyItems: "center",
+        maxWidth: 1180, margin: "0 auto",
+        padding: "92px 28px 76px",
         textAlign: "center",
       }}>
 
-        {/* Pre-headline eyebrow */}
-        <div style={{ ...MONO, fontSize: 11.5, fontWeight: 700, color: "#FFD24A", marginBottom: 18 }}>
-          <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: 999, background: "#22DD91", marginRight: 8, animation: "tyaPulseDot 1.8s ease-in-out infinite" }} />
-          AGENT ONLINE · ANSWERING NOW
+        {/* Pre-headline label — masthead style */}
+        <div style={{ ...MONO, fontSize: 11, fontWeight: 700, color: ACCENT, marginBottom: 28, opacity: 0, animation: "tyaFadeUp .9s .05s ease-out forwards" }}>
+          <span style={{ display: "inline-block", width: 7, height: 7, borderRadius: 999, background: "#1FA567", marginRight: 8, animation: "tyaPulseDot 1.8s ease-in-out infinite", verticalAlign: "middle" }} />
+          TRAINYOURAGENT · ISSUE Nº 1 · LIVE
         </div>
 
-        {/* The drop. Massive editorial type. */}
+        {/* The drop — magazine cover headline */}
         <h1
           id="cinematic-hero-heading"
           style={{
-            fontSize: "clamp(46px, 7.2vw, 110px)",
-            lineHeight: 0.96,
-            letterSpacing: "-0.025em",
+            fontSize: "clamp(46px, 7.4vw, 112px)",
+            lineHeight: 0.94,
+            letterSpacing: "-0.024em",
             fontWeight: 600,
+            color: NAVY,
             margin: 0,
-            maxWidth: 1080,
-            textShadow: "0 4px 36px rgba(0,0,0,0.45)",
+            maxWidth: 1100,
+            opacity: 0,
+            animation: "tyaFadeUp 1s .15s ease-out forwards",
           }}
         >
-          Your phone will be answered.{" "}
-          <span style={{
-            ...ITALIC,
-            display: "block",
-            background: "linear-gradient(180deg, #FFFFFF 0%, #FFE7AB 90%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            marginTop: 6,
-          }}>
-            By an agent you trained.
+          Your phone will be answered.
+          <span style={{ display: "block", marginTop: 8 }}>
+            <span style={{ ...ITALIC, color: NAVY }}>By an </span>
+            <span style={{ ...ITALIC, position: "relative", display: "inline-block", color: NAVY }}>
+              agent
+              <span
+                aria-hidden
+                style={{
+                  position: "absolute", left: 0, right: 0, bottom: "0.08em", height: "0.18em",
+                  background: GOLD,
+                  display: "block",
+                  borderRadius: 99,
+                  animation: "tyaUnderline 1s .9s cubic-bezier(.7,0,.3,1) forwards",
+                  transform: "scaleX(0)",
+                  zIndex: -1,
+                }}
+              />
+            </span>
+            <span style={{ ...ITALIC, color: NAVY }}> you trained.</span>
           </span>
         </h1>
 
-        {/* Subhead */}
+        {/* Subhead — quiet, certain */}
         <p style={{
-          marginTop: 28, maxWidth: 720,
-          fontSize: "clamp(17px, 1.6vw, 21px)", lineHeight: 1.5,
-          color: TEXT_DIM, fontWeight: 400,
+          marginTop: 28, maxWidth: 700, marginLeft: "auto", marginRight: "auto",
+          fontSize: "clamp(17px, 1.4vw, 20px)", lineHeight: 1.55,
+          color: MUTED, fontWeight: 400,
+          opacity: 0, animation: "tyaFadeUp 1s .35s ease-out forwards",
         }}>
           A voice + chat receptionist that sounds like your best front-of-house, books on your calendar, and never sleeps. Train it once. It runs forever.
         </p>
 
-        {/* Primary CTA + secondary text link */}
-        <div style={{ marginTop: 38, display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center", alignItems: "center" }}>
+        {/* CTA pair — editorial primary + hairline secondary */}
+        <div style={{ marginTop: 38, display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center", alignItems: "center", opacity: 0, animation: "tyaFadeUp 1s .5s ease-out forwards" }}>
           <Link
             to="/apply"
             onClick={() => void fireEvent("hero_cta_apply_click", {})}
             style={{
               display: "inline-flex", alignItems: "center", gap: 10,
-              padding: "18px 32px",
+              padding: "16px 30px",
               borderRadius: 999,
-              background: "linear-gradient(180deg, #FFD24A, #F0B100)",
-              color: "#0B1B2B", fontWeight: 800, fontSize: 16,
+              background: NAVY,
+              color: "#fff", fontWeight: 700, fontSize: 15.5,
               textDecoration: "none",
-              animation: "tyaCtaGlow 2.6s ease-in-out infinite",
-              border: "1px solid rgba(255,255,255,0.4)",
+              boxShadow: "0 22px 44px -18px rgba(4,44,83,0.45)",
+              transition: "transform .2s ease, box-shadow .2s ease",
+              border: `1px solid ${NAVY}`,
             }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
           >
             Build your agent in 21 days →
           </Link>
           <a
-            href="#demo"
-            onClick={(e) => {
-              e.preventDefault();
-              document.getElementById("demo")?.scrollIntoView({ behavior: "smooth" });
-              void fireEvent("hero_cta_demo_click", {});
-            }}
+            href="/voice-demo"
+            onClick={(e) => { e.preventDefault(); window.location.href = "/voice-demo"; void fireEvent("hero_cta_demo_click", {}); }}
             style={{
-              padding: "16px 26px",
+              padding: "15px 24px",
               borderRadius: 999,
-              background: "rgba(255,255,255,0.08)",
-              color: "#fff", fontWeight: 600, fontSize: 15,
+              background: "transparent",
+              color: NAVY, fontWeight: 700, fontSize: 14.5,
               textDecoration: "none",
-              border: "1px solid rgba(255,255,255,0.18)",
-              backdropFilter: "blur(10px)",
+              border: `1px solid ${HAIRLINE}`,
             }}
           >
             ▶ Hear the AI line
           </a>
         </div>
 
-        {/* Live $-leak ticker — directly under the CTA */}
+        {/* Live $-leak — quiet pill, brand-tonal */}
         <div style={{
-          marginTop: 26,
+          marginTop: 22,
           display: "inline-flex", alignItems: "center", gap: 12,
-          padding: "10px 18px",
+          padding: "8px 16px",
           borderRadius: 999,
-          background: "rgba(155,44,44,0.16)",
-          border: "1px solid rgba(220,38,38,0.32)",
-          backdropFilter: "blur(8px)",
+          background: "rgba(155,44,44,0.06)",
+          border: "1px solid rgba(220,38,38,0.18)",
+          opacity: 0, animation: "tyaFadeUp 1s .65s ease-out forwards",
         }}>
-          <span style={{ position: "relative", width: 8, height: 8 }}>
-            <span style={{ position: "absolute", inset: 0, borderRadius: 999, background: "#FF5C6A" }} />
-            <span style={{ position: "absolute", inset: -3, borderRadius: 999, background: "#FF5C6A", opacity: 0.5, animation: "tyaPulseDot 1.4s infinite" }} />
+          <span style={{ position: "relative", width: 7, height: 7 }}>
+            <span style={{ position: "absolute", inset: 0, borderRadius: 999, background: "#C73642" }} />
+            <span style={{ position: "absolute", inset: -3, borderRadius: 999, background: "#C73642", opacity: 0.45, animation: "tyaPulseDot 1.4s infinite" }} />
           </span>
-          <span style={{ ...MONO, fontSize: 12, fontWeight: 700, color: "#FFD4D8" }}>
+          <span style={{ ...MONO, fontSize: 11.5, fontWeight: 700, color: "#7A1E25" }}>
             $ LEAKING THIS SESSION · ${dollarsLost}
           </span>
         </div>
 
-        {/* Three glass stat tiles — the spatial layer */}
+        {/* Editorial cream-tile spec sheet — like a magazine pull-out */}
         <div style={{
           marginTop: 64,
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: 16,
+          gap: 14,
           width: "100%",
-          maxWidth: 900,
-          perspective: 1000,
+          maxWidth: 940, marginLeft: "auto", marginRight: "auto",
+          perspective: 1200,
+          opacity: 0, animation: "tyaFadeUp 1s .8s ease-out forwards",
         }}>
           {[
-            { kpi: "21 days", label: "Trained voice + chat in production" },
-            { kpi: "24/7", label: "Pick-up rate across after-hours" },
-            { kpi: "$4.62 / min", label: "Salesforce-reported missed-call cost" },
+            { kpi: "21",        unit: "DAYS",     label: "Voice + chat in production." },
+            { kpi: "24 / 7",    unit: "PICKUP",   label: "Every call, every hour." },
+            { kpi: "$4.62",     unit: "PER MIN",  label: "Salesforce missed-call cost." },
           ].map((t, i) => (
             <article
               key={i}
               style={{
-                padding: "22px 22px 20px",
+                padding: "24px 22px",
                 borderRadius: 18,
-                background: "linear-gradient(160deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04))",
-                border: "1px solid rgba(255,255,255,0.16)",
-                backdropFilter: "blur(14px)",
-                color: "#fff",
+                background: "rgba(255,255,255,0.78)",
+                border: `1px solid ${HAIRLINE}`,
+                backdropFilter: "blur(8px)",
                 textAlign: "left",
-                transform: `translateY(${tilt.y * (i === 1 ? 6 : 4)}px) rotateX(${-tilt.y * 2}deg) rotateY(${tilt.x * 2}deg)`,
+                transform: `translateY(${tilt.y * (i === 1 ? 5 : 3)}px) rotateX(${-tilt.y * 1.4}deg) rotateY(${tilt.x * 1.4}deg)`,
                 transition: "transform .35s ease-out",
-                boxShadow: "0 20px 50px -28px rgba(0,0,0,0.55)",
+                boxShadow: "0 18px 36px -22px rgba(4,44,83,0.18)",
               }}
             >
-              <div style={{
-                fontSize: 30, fontWeight: 800, letterSpacing: "-0.02em",
-                background: "linear-gradient(180deg, #FFFFFF, #FFE7AB)",
-                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                lineHeight: 1.05,
-              }}>{t.kpi}</div>
-              <div style={{ marginTop: 8, fontSize: 12.5, color: "rgba(255,255,255,0.72)", lineHeight: 1.45 }}>{t.label}</div>
+              <div style={{ ...MONO, fontSize: 9.5, fontWeight: 700, color: ACCENT, marginBottom: 6 }}>
+                {t.unit}
+              </div>
+              <div style={{ fontSize: 38, fontWeight: 700, color: NAVY, lineHeight: 1, letterSpacing: "-0.02em" }}>{t.kpi}</div>
+              <div style={{ marginTop: 10, fontSize: 13, color: MUTED, lineHeight: 1.5, ...ITALIC }}>{t.label}</div>
             </article>
           ))}
         </div>
 
-        {/* Micro trust strip — never competes */}
+        {/* Footer masthead strip */}
         <div style={{
-          marginTop: 56, display: "flex", flexWrap: "wrap", gap: 22, justifyContent: "center",
-          color: "rgba(255,255,255,0.5)", fontSize: 11, ...MONO, fontWeight: 700,
+          marginTop: 56, display: "flex", flexWrap: "wrap", gap: 26, justifyContent: "center",
+          color: "rgba(11,27,43,0.52)", fontSize: 10.5, ...MONO, fontWeight: 700,
+          opacity: 0, animation: "tyaFadeUp 1s .95s ease-out forwards",
         }}>
           <span>SOC2 PATH</span>
-          <span>·</span>
+          <span style={{ color: "rgba(11,27,43,0.22)" }}>·</span>
           <span>HIPAA-READY PER CUSTOMER</span>
-          <span>·</span>
+          <span style={{ color: "rgba(11,27,43,0.22)" }}>·</span>
           <span>STRIPE LIVE</span>
-          <span>·</span>
+          <span style={{ color: "rgba(11,27,43,0.22)" }}>·</span>
           <span>90-DAY GUARANTEE</span>
         </div>
 
