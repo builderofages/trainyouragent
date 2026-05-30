@@ -98,8 +98,8 @@ export default function PoweredByBadges({
           className="tya-rail"
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(125px, 1fr))",
-            gap: 8,
+            gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+            gap: 12,
             opacity: 0,
             transform: "translateY(10px)",
             transition: "opacity 600ms ease, transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -113,54 +113,47 @@ export default function PoweredByBadges({
               rel="noopener noreferrer"
               className="tya-tool"
               style={{
+                position: "relative",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 8,
-                padding: "20px 12px",
-                borderRadius: 12,
-                background: "#FFFFFF",
-                border: "1px solid rgba(4,44,83,0.08)",
+                gap: 12,
+                padding: "26px 16px 22px",
+                borderRadius: 16,
+                /* v276b: subtle brand-tinted gradient backplate instead of flat white. */
+                background: `linear-gradient(180deg, ${t.color}06 0%, #FFFFFF 60%)`,
+                border: `1px solid ${t.color}1F`,
                 textDecoration: "none",
                 color: "#042C53",
-                transition: "border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease",
-                transitionDelay: `${i * 18}ms`,
+                transition: "border-color 220ms ease, transform 220ms cubic-bezier(0.22,1,0.36,1), box-shadow 220ms ease, background 220ms ease",
+                transitionDelay: `${i * 22}ms`,
                 cursor: "pointer",
-                minHeight: 96,
+                minHeight: 132,
+                overflow: "hidden",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "rgba(71,85,105,0.25)";
-                e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.boxShadow = "0 14px 30px -16px rgba(15,23,42,0.12)";
-                const brand = e.currentTarget.querySelector(".tya-tool__icon-brand") as HTMLImageElement | null;
-                const rest  = e.currentTarget.querySelector(".tya-tool__icon-rest")  as HTMLImageElement | null;
-                if (brand) brand.style.opacity = "1";
-                if (rest)  rest.style.opacity  = "0";
+                e.currentTarget.style.borderColor = `${t.color}66`;
+                e.currentTarget.style.transform = "translateY(-3px)";
+                e.currentTarget.style.boxShadow = `0 22px 44px -22px ${t.color}55, 0 4px 12px -6px ${t.color}1A`;
+                e.currentTarget.style.background = `linear-gradient(180deg, ${t.color}10 0%, #FFFFFF 70%)`;
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "rgba(15,23,42,0.06)";
+                e.currentTarget.style.borderColor = `${t.color}1F`;
                 e.currentTarget.style.transform = "translateY(0)";
                 e.currentTarget.style.boxShadow = "none";
-                const brand = e.currentTarget.querySelector(".tya-tool__icon-brand") as HTMLImageElement | null;
-                const rest  = e.currentTarget.querySelector(".tya-tool__icon-rest")  as HTMLImageElement | null;
-                if (brand) brand.style.opacity = "0";
-                if (rest)  rest.style.opacity  = "1";
+                e.currentTarget.style.background = `linear-gradient(180deg, ${t.color}06 0%, #FFFFFF 60%)`;
               }}
             >
-              {/* v272: REAL brand SVG icons via simpleicons.org color CDN.
-                  Format: https://cdn.simpleicons.org/{slug}/{hex-no-hash}.
-                  Each icon renders the official brand mark in the brand
-                  color. Sits inside a white rounded card with subtle brand-
-                  tinted shadow. onError falls back to the letter-mark badge
-                  so we never render broken-image alt text. */}
+              {/* v276b: premium icon backplate — bigger (60px), more depth,
+                  brand-tinted inner glow, subtle ring. Real brand SVG inside. */}
               <div
                 style={{
-                  width: 44, height: 44, borderRadius: 12,
+                  width: 60, height: 60, borderRadius: 16,
                   background: "#FFFFFF",
-                  border: `1px solid ${t.color}22`,
+                  border: `1px solid ${t.color}24`,
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  boxShadow: `0 6px 18px -8px ${t.color}55, inset 0 0 0 1px rgba(255,255,255,0.6)`,
+                  boxShadow: `0 10px 26px -10px ${t.color}66, inset 0 1px 0 rgba(255,255,255,0.9), inset 0 0 0 1px rgba(255,255,255,0.4)`,
                   flexShrink: 0,
                   position: "relative",
                   overflow: "hidden",
@@ -168,8 +161,8 @@ export default function PoweredByBadges({
               >
                 <img
                   alt=""
-                  width={24}
-                  height={24}
+                  width={32}
+                  height={32}
                   loading="lazy"
                   /* v272b: same-origin /icons/ served from public/ — fetched
                      at build time by scripts/fetch-brand-icons.mjs from
@@ -178,8 +171,8 @@ export default function PoweredByBadges({
                      at runtime. Falls back to letter-mark via onError. */
                   src={`/icons/${t.slug}.svg`}
                   style={{
-                    width: 24,
-                    height: 24,
+                    width: 32,
+                    height: 32,
                     objectFit: "contain",
                     display: "block",
                   }}
@@ -199,7 +192,7 @@ export default function PoweredByBadges({
                     color: "#fff",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontSize: t.mark.length > 1 ? 13 : 16,
+                    fontSize: t.mark.length > 1 ? 16 : 20,
                     fontWeight: 800,
                     letterSpacing: "-0.01em",
                   }}
@@ -207,16 +200,17 @@ export default function PoweredByBadges({
                   {t.mark}
                 </span>
               </div>
-              <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.005em" }}>
+              <div style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.01em", color: "#042C53" }}>
                 {t.name}
               </div>
               <div
                 style={{
-                  fontSize: 10.5,
-                  letterSpacing: "0.12em",
+                  fontSize: 10,
+                  letterSpacing: "0.16em",
                   textTransform: "uppercase",
-                  color: "#94A3B8",
+                  color: "#7B8AA0",
                   fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                  fontWeight: 600,
                 }}
               >
                 {t.use}
