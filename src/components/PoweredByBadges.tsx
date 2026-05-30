@@ -65,7 +65,7 @@ export default function PoweredByBadges({
     <section
       className={`relative py-20 sm:py-24 px-5 sm:px-8 ${className}`}
       aria-label="Production runtime stack"
-      style={{ background: "#FAFBFC", borderTop: "1px solid rgba(4,44,83,0.06)", borderBottom: "1px solid rgba(4,44,83,0.06)" }}
+      style={{ background: "#FFFFFF", borderTop: "1px solid rgba(4,44,83,0.06)", borderBottom: "1px solid rgba(4,44,83,0.06)" }}
     >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12 sm:mb-14">
@@ -148,27 +148,59 @@ export default function PoweredByBadges({
                 if (rest)  rest.style.opacity  = "1";
               }}
             >
-              {/* v247: brand-color letter-mark badge replaces the simpleicons
-                  CDN images that were 404-ing intermittently for several
-                  slugs (twilio / groq / openai / elevenlabs) and leaking the
-                  alt text 'Twilio log' onto the page. The badge ALWAYS
-                  renders identically, has the real brand color, and reads
-                  premium next to the editorial type. */}
+              {/* v272: REAL brand SVG icons via simpleicons.org color CDN.
+                  Format: https://cdn.simpleicons.org/{slug}/{hex-no-hash}.
+                  Each icon renders the official brand mark in the brand
+                  color. Sits inside a white rounded card with subtle brand-
+                  tinted shadow. onError falls back to the letter-mark badge
+                  so we never render broken-image alt text. */}
               <div
-                aria-hidden
                 style={{
-                  width: 30, height: 30, borderRadius: 9,
-                  background: t.color,
-                  color: "#fff",
+                  width: 44, height: 44, borderRadius: 12,
+                  background: "#FFFFFF",
+                  border: `1px solid ${t.color}22`,
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  fontSize: t.mark.length > 1 ? 11 : 14,
-                  fontWeight: 800,
-                  letterSpacing: "-0.01em",
-                  boxShadow: "0 2px 8px -2px rgba(0,0,0,0.18)",
+                  boxShadow: `0 6px 18px -8px ${t.color}55, inset 0 0 0 1px rgba(255,255,255,0.6)`,
                   flexShrink: 0,
+                  position: "relative",
+                  overflow: "hidden",
                 }}
               >
-                {t.mark}
+                <img
+                  alt=""
+                  width={24}
+                  height={24}
+                  loading="lazy"
+                  src={`https://cdn.simpleicons.org/${t.slug}/${t.color.replace("#", "")}`}
+                  style={{
+                    width: 24,
+                    height: 24,
+                    objectFit: "contain",
+                    display: "block",
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                    const sib = e.currentTarget.nextElementSibling as HTMLElement | null;
+                    if (sib) sib.style.display = "inline-flex";
+                  }}
+                />
+                <span
+                  aria-hidden
+                  style={{
+                    display: "none",
+                    position: "absolute",
+                    inset: 0,
+                    background: t.color,
+                    color: "#fff",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: t.mark.length > 1 ? 13 : 16,
+                    fontWeight: 800,
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  {t.mark}
+                </span>
               </div>
               <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.005em" }}>
                 {t.name}

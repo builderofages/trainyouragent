@@ -109,30 +109,16 @@ export default function WhyWeAreDifferent({
       aria-labelledby="tya-why-h"
     >
       <style>{`
+        /* v272: dark-navy aurora bg flipped to clean white per user feedback.
+           Navy text on white, brand colors on the highlight cards. */
         .tya-why {
-          background:
-            radial-gradient(1100px 700px at 50% 0%,
-              rgba(4, 44, 83, 0.92) 0%,
-              rgba(2, 12, 24, 1) 70%);
-          color: #E6F1FB;
+          background: #FFFFFF;
+          color: #0B1B2B;
           padding: 96px 0 120px;
           isolation: isolate;
         }
         @media (min-width: 640px) { .tya-why { padding: 128px 0 160px; } }
-        .tya-why__aurora {
-          position: absolute; inset: -10%;
-          background: conic-gradient(from 45deg at 50% 50%,
-            rgba(217, 119, 87, 0.12),
-            rgba(99, 91, 255, 0.14),
-            rgba(62, 207, 142, 0.10),
-            rgba(217, 119, 87, 0.12));
-          filter: blur(90px) saturate(1.3);
-          opacity: 0.5;
-          mix-blend-mode: screen;
-          animation: tya-why-aurora 28s linear infinite;
-          pointer-events: none;
-          z-index: 0;
-        }
+        .tya-why__aurora { display: none; }
         @keyframes tya-why-aurora {
           0%   { transform: rotate(0deg)   scale(1.0); }
           100% { transform: rotate(360deg) scale(1.1); }
@@ -148,7 +134,7 @@ export default function WhyWeAreDifferent({
           font: 600 11px/1 ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
           letter-spacing: 0.24em;
           text-transform: uppercase;
-          color: #9CC4EC;
+          color: #185FA5;
         }
         .tya-why__h {
           margin: 16px 0 0;
@@ -156,21 +142,21 @@ export default function WhyWeAreDifferent({
           font-weight: 600;
           line-height: 1.05;
           letter-spacing: -0.02em;
-          color: #FFFFFF;
+          color: #042C53;
           max-width: 880px;
         }
         .tya-why__h em {
           font-family: 'Playfair Display', Georgia, serif;
           font-style: italic;
           font-weight: 500;
-          color: #85B7EB;
+          color: #185FA5;
         }
         .tya-why__lede {
           margin: 22px 0 0;
           max-width: 760px;
           font-size: 18px;
           line-height: 1.6;
-          color: rgba(230, 241, 251, 0.78);
+          color: #5C6B7F;
         }
         .tya-why__split {
           display: grid;
@@ -182,19 +168,19 @@ export default function WhyWeAreDifferent({
           .tya-why__split { grid-template-columns: 1fr 1fr; gap: 32px; }
         }
         .tya-why__col {
-          border: 1px solid rgba(255,255,255,0.08);
+          border: 1px solid rgba(4,44,83,0.10);
           border-radius: 24px;
           padding: 32px;
-          background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-          backdrop-filter: blur(12px);
+          background: #FFFFFF;
+          box-shadow: 0 12px 32px -22px rgba(4,44,83,0.14);
         }
         .tya-why__col--bad {
-          border-color: rgba(255, 100, 100, 0.18);
-          background: linear-gradient(160deg, rgba(255, 70, 70, 0.05), rgba(255, 70, 70, 0.01));
+          border-color: rgba(155, 44, 44, 0.18);
+          background: linear-gradient(160deg, rgba(155, 44, 44, 0.04), rgba(155, 44, 44, 0.01));
         }
         .tya-why__col--good {
-          border-color: rgba(133, 235, 200, 0.20);
-          background: linear-gradient(160deg, rgba(62, 207, 142, 0.07), rgba(62, 207, 142, 0.02));
+          border-color: rgba(34, 163, 108, 0.22);
+          background: linear-gradient(160deg, rgba(34, 163, 108, 0.06), rgba(34, 163, 108, 0.02));
         }
         .tya-why__col-h {
           font-size: 13px;
@@ -206,26 +192,27 @@ export default function WhyWeAreDifferent({
           align-items: center;
           gap: 10px;
         }
-        .tya-why__col--bad  .tya-why__col-h { color: #FFB4B4; }
-        .tya-why__col--good .tya-why__col-h { color: #85EBC8; }
+        .tya-why__col--bad  .tya-why__col-h { color: #9B2C2C; }
+        .tya-why__col--good .tya-why__col-h { color: #15724D; }
         .tya-why__chip {
           font-size: 11px;
           padding: 4px 9px;
           border-radius: 999px;
-          background: rgba(255,255,255,0.08);
+          background: rgba(4,44,83,0.08);
+          color: #042C53;
           letter-spacing: 0.06em;
         }
         .tya-why__list { list-style: none; padding: 0; margin: 0; }
         .tya-why__list li {
           padding: 18px 0;
-          border-top: 1px solid rgba(255,255,255,0.06);
+          border-top: 1px solid rgba(4,44,83,0.08);
         }
         .tya-why__list li:first-child { border-top: 0; padding-top: 0; }
         .tya-why__list h4 {
           margin: 0 0 8px;
           font-size: 17px;
           font-weight: 600;
-          color: #FFFFFF;
+          color: #042C53;
           letter-spacing: -0.01em;
           line-height: 1.3;
         }
@@ -233,7 +220,7 @@ export default function WhyWeAreDifferent({
           margin: 0;
           font-size: 14.5px;
           line-height: 1.6;
-          color: rgba(230, 241, 251, 0.72);
+          color: #5C6B7F;
         }
 
         /* Team block */
@@ -243,7 +230,7 @@ export default function WhyWeAreDifferent({
         .tya-why__team-h {
           font-size: clamp(24px, 3vw, 36px);
           font-weight: 600;
-          color: #FFFFFF;
+          color: #042C53;
           line-height: 1.15;
           letter-spacing: -0.01em;
           max-width: 760px;
@@ -252,13 +239,13 @@ export default function WhyWeAreDifferent({
           font-family: 'Playfair Display', Georgia, serif;
           font-style: italic;
           font-weight: 500;
-          color: #85B7EB;
+          color: #185FA5;
         }
         .tya-why__team-sub {
           margin-top: 14px;
           font-size: 16px;
           line-height: 1.6;
-          color: rgba(230, 241, 251, 0.7);
+          color: #5C6B7F;
           max-width: 720px;
         }
         .tya-why__cards {
@@ -274,24 +261,25 @@ export default function WhyWeAreDifferent({
           position: relative;
           padding: 28px;
           border-radius: 22px;
-          background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
-          border: 1px solid rgba(255,255,255,0.09);
-          backdrop-filter: blur(14px);
+          background: #FFFFFF;
+          border: 1px solid rgba(4,44,83,0.10);
+          box-shadow: 0 12px 32px -22px rgba(4,44,83,0.16);
           overflow: hidden;
-          transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), border-color 280ms ease;
+          transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), border-color 280ms ease, box-shadow 280ms ease;
         }
         .tya-card::before {
           content: "";
           position: absolute;
           inset: 0;
           border-radius: inherit;
-          background: radial-gradient(circle at 0% 0%, var(--ac, #85B7EB) 0%, transparent 50%);
-          opacity: 0.10;
+          background: radial-gradient(circle at 0% 0%, var(--ac, #185FA5) 0%, transparent 50%);
+          opacity: 0.05;
           pointer-events: none;
         }
         .tya-card:hover {
           transform: translateY(-4px);
-          border-color: rgba(255,255,255,0.18);
+          border-color: rgba(4,44,83,0.18);
+          box-shadow: 0 22px 50px -22px rgba(4,44,83,0.22);
         }
         .tya-card__badge {
           display: inline-block;
@@ -299,8 +287,8 @@ export default function WhyWeAreDifferent({
           letter-spacing: 0.18em;
           padding: 5px 10px;
           border-radius: 6px;
-          background: rgba(255,255,255,0.08);
-          color: var(--ac, #85B7EB);
+          background: rgba(4,44,83,0.06);
+          color: var(--ac, #185FA5);
           margin-bottom: 14px;
         }
         .tya-card__role {
@@ -308,14 +296,14 @@ export default function WhyWeAreDifferent({
           font-weight: 500;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: rgba(230, 241, 251, 0.55);
+          color: #94A3B8;
         }
         .tya-card__name {
           margin: 6px 0 18px;
           font-size: 20px;
           font-weight: 600;
           line-height: 1.25;
-          color: #FFFFFF;
+          color: #042C53;
         }
         .tya-card__list {
           list-style: none;
@@ -327,14 +315,14 @@ export default function WhyWeAreDifferent({
           padding: 10px 0 10px 22px;
           font-size: 14px;
           line-height: 1.55;
-          color: rgba(230, 241, 251, 0.78);
+          color: #5C6B7F;
         }
         .tya-card__list li::before {
           content: "";
           position: absolute;
           left: 0; top: 18px;
           width: 10px; height: 1px;
-          background: var(--ac, #85B7EB);
+          background: var(--ac, #185FA5);
           opacity: 0.7;
         }
 
@@ -342,7 +330,7 @@ export default function WhyWeAreDifferent({
           margin-top: 72px;
           text-align: center;
           font-size: 15px;
-          color: rgba(230, 241, 251, 0.7);
+          color: #5C6B7F;
           line-height: 1.6;
         }
         .tya-why__cta {
@@ -352,29 +340,29 @@ export default function WhyWeAreDifferent({
           margin-top: 24px;
           padding: 16px 28px;
           border-radius: 16px;
-          background: linear-gradient(135deg, #FFFFFF 0%, #E6F1FB 100%);
-          color: #042C53;
+          background: #042C53;
+          color: #FFFFFF;
           font-size: 15px;
           font-weight: 600;
           text-decoration: none;
           letter-spacing: -0.005em;
-          box-shadow: 0 30px 60px -25px rgba(133, 183, 235, 0.7);
+          box-shadow: 0 20px 40px -16px rgba(4,44,83,0.32);
           transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease;
         }
         .tya-why__cta:hover {
           transform: translateY(-2px);
-          box-shadow: 0 36px 70px -22px rgba(133, 183, 235, 0.85);
+          box-shadow: 0 28px 50px -16px rgba(4,44,83,0.45);
         }
         .tya-why__footer-link {
           display: inline-block;
           margin-top: 18px;
           font-size: 13.5px;
-          color: #85B7EB;
+          color: #185FA5;
           text-decoration: none;
-          border-bottom: 1px solid rgba(133,183,235,0.35);
+          border-bottom: 1px solid rgba(24,95,165,0.35);
           padding-bottom: 1px;
         }
-        .tya-why__footer-link:hover { color: #FFFFFF; border-bottom-color: rgba(255,255,255,0.8); }
+        .tya-why__footer-link:hover { color: #042C53; border-bottom-color: rgba(4,44,83,0.5); }
 
         @media (prefers-reduced-motion: reduce) {
           .tya-why__aurora,
