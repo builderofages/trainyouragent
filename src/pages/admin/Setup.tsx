@@ -254,7 +254,7 @@ export default function Setup() {
   const pct = Math.round((Object.values(done).filter(Boolean).length / 5) * 100);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#FFFFFF", color: "#0B1B2B", fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #FAF6EE 0%, #F4EFE4 100%)", color: "#0B1B2B", fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
       <Helmet>
         <title>TYA · Autopilot setup</title>
         <meta name="robots" content="noindex, nofollow" />

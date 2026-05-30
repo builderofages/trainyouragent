@@ -46,6 +46,7 @@ export default function Cockpit() {
   const [pingResult, setPingResult] = useState<string>("");
   const [pendingReviews, setPendingReviews] = useState<{ id: string; name: string; company: string; niche: string; quote: string | null; video_url: string | null; ts: string }[] | null>(null);
   const [reviewActioning, setReviewActioning] = useState<string>("");
+  const [deploys, setDeploys] = useState<{ sha: string; msg: string; ts: number; url: string }[] | null>(null);
 
   useEffect(() => {
     if (!token) return;
@@ -66,6 +67,22 @@ export default function Cockpit() {
       })
       .catch((e) => !cancelled && setHealthErr(String(e?.message || e)))
       .finally(() => !cancelled && setLoading(false));
+
+    // v245: recent deploys (last 8 GitHub commits) — public endpoint, no auth
+    fetch("/api/github-velocity")
+      .then(async (r) => r.ok ? r.json() : null)
+      .then((j) => {
+        if (cancelled || !j || !Array.isArray(j.commits)) return;
+        type Commit = { sha?: string; message?: string; date?: string; url?: string };
+        const rows = j.commits.slice(0, 8).map((c: Commit) => ({
+          sha: String(c.sha || "").slice(0, 7),
+          msg: String(c.message || "").split("\n")[0],
+          ts: c.date ? new Date(c.date).getTime() : Date.now(),
+          url: c.url || `https://github.com/builderofages/trainyouragent/commit/${c.sha}`,
+        }));
+        setDeploys(rows);
+      })
+      .catch(() => { /* silent */ });
 
     // v239: pending review submissions in parallel
     fetch("/api/admin/reviews?status=pending&limit=10", { headers: { "x-admin-token": token, accept: "application/json" } })
@@ -443,6 +460,34 @@ export default function Cockpit() {
                   style={{ padding: "10px 18px", borderRadius: 999, background: "#F1F4F8", color: NAVY, fontSize: 13, fontWeight: 700, textDecoration: "none" }}
                 >Google Search Console →</a>
               </div>
+            </Card>
+          </section>
+        )}
+
+        {/* ── RECENT DEPLOYS (v245) ─────────────────────────── */}
+        {token && (
+          <section style={{ marginBottom: 26 }}>
+            <SectionHeader title="Recent deploys" subtitle="Last 8 shipped commits straight from GitHub." />
+            <Card>
+              {deploys === null ? <SkeletonBars n={4} /> : deploys.length === 0 ? (
+                <div style={{ fontSize: 13, color: MUTED }}>No commits returned. Check /api/github-velocity.</div>
+              ) : (
+                <div style={{ display: "grid", gap: 0 }}>
+                  {deploys.map((d, i) => (
+                    <a
+                      key={i}
+                      href={d.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderBottom: i === deploys.length - 1 ? "none" : `1px solid ${HAIRLINE}`, textDecoration: "none", color: NAVY }}
+                    >
+                      <code style={{ ...MONO, letterSpacing: 0, fontSize: 11.5, color: ACCENT, fontWeight: 700, minWidth: 64 }}>{d.sha}</code>
+                      <div style={{ fontSize: 13, color: NAVY, fontWeight: 600, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.msg}</div>
+                      <div style={{ fontSize: 11, color: MUTED, ...MONO, letterSpacing: 0, whiteSpace: "nowrap" }}>{relTime(d.ts)}</div>
+                    </a>
+                  ))}
+                </div>
+              )}
             </Card>
           </section>
         )}
