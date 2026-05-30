@@ -69,6 +69,14 @@ export type NicheSite = {
   brandsServiced?: string[];      // equipment / insurance / partner brands
   certifications?: string[];      // industry-specific trust badges
   licenseFormat?: string;         // e.g. "FL CAC #" — drives the footer license line
+
+  // v237: Loom slot — one founder recording shown on /template/[niche]. When
+  // founder records ONE walkthrough video (any niche) and pastes the share
+  // URL into BRAND_LOOM_URL env or here, every template page renders a
+  // testimonial-style embed without per-niche recording. Optional per-niche
+  // override here lets us swap in a customer's own Loom later.
+  loomEmbedUrl?: string;          // Loom share URL — auto-converted to embed
+  loomEmbedTitle?: string;        // optional caption above the video
 };
 
 export const NICHE_SITES: NicheSite[] = [

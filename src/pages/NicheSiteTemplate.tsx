@@ -1493,6 +1493,36 @@ export default function NicheSiteTemplate() {
             </a>
           </div>
 
+          {/* v237: Loom video proof — falls back to brand-wide BRAND_LOOM_URL.
+              When founder records ONE walkthrough and pastes the share URL
+              into VITE_BRAND_LOOM_URL, every /template page renders it. */}
+          {(() => {
+            // Dynamic import-style read so empty env doesn't crash
+            const niche = site.loomEmbedUrl || "";
+            const brand = (typeof window !== "undefined" && (import.meta as { env?: { VITE_BRAND_LOOM_URL?: string } }).env?.VITE_BRAND_LOOM_URL) || "";
+            const raw = niche || brand;
+            if (!raw) return null;
+            const m = raw.match(/loom\.com\/share\/([a-z0-9]+)/i);
+            const src = m ? `https://www.loom.com/embed/${m[1]}?hideEmbedTopBar=true&hide_owner=true&hide_share=true` : raw;
+            return (
+              <div data-fade style={{ marginTop: 36, borderRadius: 20, overflow: "hidden", background: "#fff", border: `1px solid ${HAIRLINE}`, boxShadow: "0 18px 48px -22px rgba(4,44,83,0.22)" }}>
+                <div style={{ padding: "14px 20px", borderBottom: `1px solid ${HAIRLINE}`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: A, ...MONO }}>WATCH IT WORK — 90 SECONDS</div>
+                  <div style={{ fontSize: 11, color: "#6B7B92", fontWeight: 600 }}>{site.loomEmbedTitle || `${firstName} on autopilot`}</div>
+                </div>
+                <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, background: "#000" }}>
+                  <iframe
+                    src={src}
+                    title={`${company} — ${site.niche} walkthrough`}
+                    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: 0 }}
+                    allow="fullscreen; clipboard-write"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            );
+          })()}
+
           {/* v226: INLINE Cal.com — book without leaving */}
           <div data-fade style={{ marginTop: 36, padding: 0, borderRadius: 20, overflow: "hidden", background: "#fff", border: `1px solid ${HAIRLINE}`, boxShadow: "0 18px 48px -22px rgba(4,44,83,0.22)", textAlign: "left" }}>
             <div style={{ padding: "14px 20px", borderBottom: `1px solid ${HAIRLINE}`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>

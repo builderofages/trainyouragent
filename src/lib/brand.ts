@@ -3,6 +3,21 @@
 // Future pages should import from here instead of inlining hex.
 // Existing pages can be refactored incrementally — no breaking change.
 
+// v237: brand-wide Loom URL — when the founder records one walkthrough and
+// pastes the Loom share URL into VITE_BRAND_LOOM_URL env, every
+// /template/[niche] page that doesn't have its own loomEmbedUrl falls back
+// to this. Five minutes of founder time = video proof on 25 pages.
+export const BRAND_LOOM_URL: string =
+  (typeof import.meta !== "undefined" && (import.meta as { env?: { VITE_BRAND_LOOM_URL?: string } }).env?.VITE_BRAND_LOOM_URL) || "";
+
+/** Convert any Loom share URL (https://www.loom.com/share/<id>) → embed URL */
+export function loomEmbedFor(url: string): string {
+  if (!url) return "";
+  const m = url.match(/loom\.com\/share\/([a-z0-9]+)/i);
+  if (!m) return url; // already an embed URL
+  return `https://www.loom.com/embed/${m[1]}?hideEmbedTopBar=true&hide_owner=true&hide_share=true`;
+}
+
 export const COLOR = {
   ink:        "#0B1B2B",  // body text
   navy:       "#042C53",  // primary brand, headlines, dark surfaces
