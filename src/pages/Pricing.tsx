@@ -1,6 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import RoiCalculator from "@/components/RoiCalculator";
+// v253: editorial ROI calc that anchors pricing to real recovered dollars
+import PricingROICalc from "@/components/PricingROICalc";
 // v63: inline plan-recommending ROI calc (Grok Heavy audit)
 import RoiInline from "@/components/RoiInline";
 import SmartPriceReveal from "@/components/SmartPriceReveal";
@@ -414,6 +416,12 @@ const Pricing = () => {
           <SelfServeCallout />
         </div>
       </section>
+      {/* v253: editorial ROI calculator — anchors all 4 tiers to dollars
+          recovered, surfaced ABOVE the tier cards so visitors see "$X/mo
+          recovered" before they see "$4,950" and the price doesn't feel
+          abstract. Grok Heavy's #1 ROI-ranked 48-hour ship. */}
+      <PricingROICalc />
+
       {/* v160: Done-WITH-You $497 tier — Hormozi case-study factory. Bridges
           the canyon between $99 SaaS and $4,950 Operators. 4-hour Zoom build
           session, walk away with a deployed agent on your number. */}
@@ -423,7 +431,7 @@ const Pricing = () => {
         </div>
       </section>
 
-      <section className="px-5 sm:px-8 pb-20">
+      <section id="tiers" className="px-5 sm:px-8 pb-20" style={{ scrollMarginTop: 80 }}>
         <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-5">
           {PLANS.map((p) => {
             const isRecommended = recommendation && recommendation.plan === p.id;
