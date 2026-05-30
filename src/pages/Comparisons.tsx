@@ -133,7 +133,7 @@ const Comparisons = () => {
 
       <footer className="bg-white border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
-          <div className="flex items-center gap-2.5"><BrainLogo size={28} /><span className="font-semibold text-[#042C53]">TrainYourAgent</span><span className="text-slate-400">— Tampa Bay, FL</span></div>
+          <div className="flex items-center gap-2.5"><BrainLogo size={28} /><span className="font-semibold text-[#042C53]">TrainYourAgent</span><span className="text-slate-400">— United States</span></div>
           <div className="flex items-center gap-6">
             <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>
             <Link to="/terms" className="hover:text-[#042C53]">Terms</Link>

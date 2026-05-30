@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 type Event = { v: string; action: string; loc: string; mins: number };
 
 const SEED: Event[] = [
-  { v: "HVAC",        action: "booked an after-hours dispatch", loc: "Tampa, FL",        mins: 2 },
+  { v: "HVAC",        action: "booked an after-hours dispatch", loc: "United States",        mins: 2 },
   { v: "Healthcare",  action: "scheduled a new-patient intake",  loc: "Austin, TX",       mins: 5 },
   { v: "Real Estate", action: "qualified a buyer lead",           loc: "Charlotte, NC",   mins: 7 },
   { v: "Roofing",     action: "captured an insurance claim",      loc: "Dallas, TX",       mins: 11 },

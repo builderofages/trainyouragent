@@ -514,7 +514,7 @@ const Pricing = () => {
                   varies. Reinforces "this isn't a SaaS, it's a niche fix." */}
               <div className={`mb-4 rounded-xl px-3 py-2.5 text-[12px] leading-snug ${p.accent ? "bg-white/10 text-white/85" : "bg-[#F6FAFE] text-[#042C53] border border-[#185FA5]/20"}`}>
                 <span aria-hidden="true" className={`inline-block w-1.5 h-1.5 rounded-full mr-1.5 align-middle ${p.accent ? "bg-[#9CC4EC]" : "bg-[#22A36C]"}`} />
-                We've audited 12 Tampa HVAC operators with this exact pattern — average leak is <strong>$22,889/mo</strong>.
+                We've audited 12 HVAC operators with this exact pattern — average leak is <strong>$22,889/mo</strong>.
               </div>
 
               <LaneCheckoutButton plan={p.id} accent={p.accent} fallbackHref={CAL_URL} fallbackText={p.cta} />
@@ -784,7 +784,7 @@ const Pricing = () => {
           <div className="flex items-center gap-2.5">
             <BrainLogo size={28} />
             <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
-            <span className="text-slate-400">— Tampa Bay, FL</span>
+            <span className="text-slate-400">— United States</span>
           </div>
           <div className="flex items-center gap-6">
             <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>

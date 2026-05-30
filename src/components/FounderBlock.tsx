@@ -64,7 +64,7 @@ export default function FounderBlock({
                 Founder · the only operator who touches your account
               </div>
               <h2 id="founder-hero-h" className="text-[22px] sm:text-[28px] font-semibold text-[#042C53] leading-[1.1] tracking-tight mb-2">
-                Alexander Mills. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>Tampa.</span> 4 years deep in applied AI.
+                Alexander Mills. <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>4 years deep</span> in applied AI.
               </h2>
               <p className="text-[14.5px] sm:text-[15.5px] text-slate-700 leading-relaxed max-w-2xl">
                 Built and ran a 7-figure social media agency in LA. Closed it to build TrainYourAgent because the future of small business is one person + their AI agents — and the gap between that future and what exists today is a labor problem, not a model problem.
@@ -121,7 +121,7 @@ export default function FounderBlock({
           <div className="text-[13px] text-slate-700 leading-relaxed">
             <div><strong className="font-semibold text-[#042C53]">Alexander Mills</strong></div>
             <div>Founder, TrainYourAgent</div>
-            <div>Tampa Bay, Florida</div>
+            <div>United States</div>
             <div className="mt-2 space-y-1">
               <div>
                 <a href="mailto:alexander@trainyouragent.com" className="text-[#185FA5] underline decoration-[#185FA5]/40 hover:decoration-[#185FA5]">
@@ -144,7 +144,7 @@ export default function FounderBlock({
           </h2>
           <div className="text-[#0B1B2B] text-[16.5px] leading-[1.7] space-y-4 mb-7">
             <p>
-              Alexander Mills, founder, Tampa. Four years building AI — every model release, every tool shift, every capability jump.
+              Alexander Mills, founder. Four years building AI — every model release, every tool shift, every capability jump.
             </p>
             <p>
               Before TrainYourAgent, ran a 7-figure social media agency in Los Angeles. Closed it on purpose. The reason: <em>"the future of small business is one person + their AI agents,"</em> and the work of building that future doesn't get done by another agency churning out content. It gets done by engineers wiring real agents onto real phone lines.

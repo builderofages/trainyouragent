@@ -223,7 +223,7 @@ export default function VerifiableProofBlock() {
           <div className="mt-6 rounded-2xl bg-white border border-[#FFD60A] p-5">
             <div className="text-[12.5px] uppercase tracking-[0.16em] text-[#9A6D00] font-mono font-semibold mb-1.5">What we're building right now</div>
             <p className="text-[14.5px] text-[#0B1B2B] leading-relaxed">
-              The case-study factory: <strong>free builds for the first 5 Tampa HVAC operators.</strong> You get a fully deployed AI voice agent on your real line, $0 build fee, $0 runtime for 60 days. In exchange: you let us publish the transcripts (anonymized if you want) and the missed-call recovery numbers. If you're a Tampa HVAC operator,{" "}
+              The case-study factory: <strong>free builds for the first 5 HVAC operators.</strong> You get a fully deployed AI voice agent on your real line, $0 build fee, $0 runtime for 60 days. In exchange: you let us publish the transcripts (anonymized if you want) and the missed-call recovery numbers. If you're an HVAC operator,{" "}
               <a href="/apply" className="underline font-semibold text-[#185FA5]">apply here &rarr;</a>
             </p>
           </div>

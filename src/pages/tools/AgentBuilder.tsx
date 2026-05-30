@@ -172,7 +172,7 @@ export default function AgentBuilder() {
               maxLength={600}
               value={context}
               onChange={(e) => setContext(e.target.value)}
-              placeholder="e.g. Located in Tampa, FL. Open 7 days. We don't service mobile homes. Emergency rate is 1.5x after 7pm."
+              placeholder="e.g. Located in the United States. Open 7 days. We don't service mobile homes. Emergency rate is 1.5x after 7pm."
               className="w-full px-4 py-3 rounded-lg border border-slate-300 text-[15px] focus:outline-none focus:ring-2 focus:ring-[#185FA5]"
               aria-label="Extra context"
             />

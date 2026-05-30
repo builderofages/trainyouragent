@@ -84,7 +84,7 @@ const Team = () => {
  };
  setMeta(
  "description",
- "Founded by Alexander Mills — operator, founder, 4 years deep in applied AI. TrainYourAgent is a Tampa-based AI company building voice and chat agents for service businesses.",
+ "Founded by Alexander Mills — operator, founder, 4 years deep in applied AI. TrainYourAgent is a US-based AI company building voice and chat agents for service businesses.",
  );
  }, []);
 
@@ -144,11 +144,11 @@ const Team = () => {
  Alexander Mills
  </div>
  <div className="text-[14px] text-slate-600 mb-5">
- Tampa Bay, FL · 4 years deep in applied AI · 336 public commits · 564 live URLs · open-source repo
+ United States · 4 years deep in applied AI · 336 public commits · 564 live URLs · open-source repo
  </div>
  <div className="text-[15px] text-slate-700 leading-[1.75] space-y-3">
  <p>
- Founder of TrainYourAgent — a Tampa-based AI company building
+ Founder of TrainYourAgent — a US-based AI company building
  the voice and chat agents that actually run service businesses.
  </p>
  <p>
@@ -165,7 +165,7 @@ const Team = () => {
  release, every tool shift, every capability jump — and runs
  TrainYourAgent — building the product in public, with the
  full commit history readable on GitHub — alongside a portfolio
- of related ventures from Tampa Bay. He ships the same way he
+ of related ventures from United States. He ships the same way he
  always has: faster than anyone you've met, with a thesis you
  can argue with.
  </p>
@@ -262,7 +262,7 @@ const Team = () => {
  <div className="flex items-center gap-2.5">
  <BrainLogo size={28} />
  <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
- <span className="text-slate-400">— Tampa Bay, FL</span>
+ <span className="text-slate-400">— United States</span>
  </div>
  <div className="flex items-center gap-6">
  <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>

@@ -43,7 +43,7 @@ export default function Cnnct() {
           </p>
 
           <p style={{ fontSize: 17, lineHeight: 1.6, color: "#42526E", marginTop: 16 }}>
-            <strong style={{ color: "#0B1B2B", fontWeight: 600 }}>CNNCT.ai</strong> is a sister community — a separate brand, separate product, separate audience. The two share a founder and a Tampa Bay zip code; that's about it. If you found your way here from CNNCT, welcome; if you found your way here from TYA and the name is new, you can ignore this page entirely without missing anything about the agents work.
+            <strong style={{ color: "#0B1B2B", fontWeight: 600 }}>CNNCT.ai</strong> is a sister community — a separate brand, separate product, separate audience. The two share a founder and a zip code; that's about it. If you found your way here from CNNCT, welcome; if you found your way here from TYA and the name is new, you can ignore this page entirely without missing anything about the agents work.
           </p>
 
           <div style={{ marginTop: 36, padding: "24px 26px", background: "#FAFBFC", border: "1px solid rgba(4,44,83,0.08)", borderRadius: 16 }}>

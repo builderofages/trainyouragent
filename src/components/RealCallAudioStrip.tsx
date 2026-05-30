@@ -37,7 +37,7 @@ type Call = {
 const CALLS: Call[] = [
   {
     niche: "HVAC",
-    city: "Tampa",
+    city: "United States",
     caller: "Furnace died, can someone come tomorrow at 2pm?",
     outcome: "Dispatch booked. Quote sent via SMS. Tech notified.",
     duration: "47s",

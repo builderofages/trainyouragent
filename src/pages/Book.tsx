@@ -62,11 +62,11 @@ export default function Book() {
     injectOgMeta({
       title: "Book a 30-min build call — TrainYourAgent",
       description:
-        "Pick a 30-min slot — Tampa Bay or Zoom. No card, no obligation. You walk through your call patterns with a real builder, not an SDR.",
+        "Pick a 30-min slot — Zoom. No card, no obligation. You walk through your call patterns with a real builder, not an SDR.",
       url,
       ogImage: ogUrl({
         title: "Book a 30-min build call",
-        subtitle: "Real builder, no SDR layer. Tampa Bay or Zoom.",
+        subtitle: "Real builder, no SDR layer. Zoom.",
         type: "page",
         badge: "BOOK",
       }),

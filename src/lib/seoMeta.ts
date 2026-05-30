@@ -34,7 +34,7 @@ export const SEO = {
  home: {
   title: "TrainYourAgent — Custom AI Voice + Chat Agents Built in 21 Days",
   description:
-   "Production AI voice + chat agents for SMBs. Custom-built end-to-end by a senior operator network — not a no-code reseller. 21-day builds, $1,997/mo, no platform lock-in. Tampa, FL.",
+   "Production AI voice + chat agents for SMBs. Custom-built end-to-end by a senior operator network — not a no-code reseller. 21-day builds, $1,997/mo, no platform lock-in. United States.",
   path: "/",
   keywords: [
    "AI voice agent",
@@ -68,7 +68,7 @@ export const SEO = {
  about: {
   title: "About — Alexander Mills, Founder · TrainYourAgent",
   description:
-   "Founder Alexander Mills was a head executive at a top-10 LA social media agency before going all-in on applied AI from the GPT-3 alpha. 4 years shipping production AI for SMBs from Tampa, FL.",
+   "Founder Alexander Mills was a head executive at a top-10 LA social media agency before going all-in on applied AI from the GPT-3 alpha. 4 years shipping production AI for SMBs from United States.",
   path: "/about",
   ogType: "website",
  } satisfies SeoMeta,

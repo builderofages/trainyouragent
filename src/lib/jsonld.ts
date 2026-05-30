@@ -85,7 +85,7 @@ export function organizationLd(): Json {
  ],
  address: {
  "@type": "PostalAddress",
- addressLocality: "Tampa",
+ addressLocality: "United States",
  addressRegion: "FL",
  addressCountry: "US",
  },
@@ -134,7 +134,7 @@ export function personLd(): Json {
  },
  address: {
  "@type": "PostalAddress",
- addressLocality: "Tampa",
+ addressLocality: "United States",
  addressRegion: "FL",
  addressCountry: "US",
  },
@@ -342,13 +342,13 @@ export function localBusinessLd(input: LocalBusinessLdInput = {}): Json {
   logo: `${SITE_URL}/og.png`,
   image: `${SITE_URL}/og-default.png`,
   description:
-   "Custom AI voice + chat agent builds for SMBs and startups. 21-day production builds. Tampa, FL. Serving the United States remotely.",
+   "Custom AI voice + chat agent builds for SMBs and startups. 21-day production builds. United States. Serving customers remotely.",
   priceRange: "$99 – $9,950",
   telephone: input.telephone || "+1-813-461-AGENT",
   email: "hello@trainyouragent.com",
   address: {
    "@type": "PostalAddress",
-   addressLocality: "Tampa",
+   addressLocality: "United States",
    addressRegion: "FL",
    postalCode: "33602",
    addressCountry: "US",
@@ -360,7 +360,7 @@ export function localBusinessLd(input: LocalBusinessLdInput = {}): Json {
   },
   areaServed: [
    { "@type": "Place", name: input.areaServed || "United States" },
-   { "@type": "City", name: "Tampa" },
+   { "@type": "Country", name: "United States" },
    { "@type": "City", name: "St. Petersburg" },
    { "@type": "City", name: "Clearwater" },
    { "@type": "City", name: "Sarasota" },

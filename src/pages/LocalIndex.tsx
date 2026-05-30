@@ -44,7 +44,7 @@ export default function LocalIndex() {
       }
       el.setAttribute("content", val);
     };
-    const desc = "AI voice agents, chat agents, receptionist, and sales agents built for SMBs in 30 US cities. Tampa-built, deployed nationwide. Start a 15-min call.";
+    const desc = "AI voice agents, chat agents, receptionist, and sales agents built for SMBs in 30 US cities. Built for SMBs, deployed nationwide. Start a 15-min call.";
     setMeta(`meta[name='description']`, "name", "description", desc);
     setMeta(`meta[property='og:title']`, "property", "og:title", "AI agents in 30 US cities — TrainYourAgent");
     setMeta(`meta[property='og:description']`, "property", "og:description", desc);
@@ -103,7 +103,7 @@ export default function LocalIndex() {
             </h1>
             <p className="mt-5 text-[18px] leading-[1.55] text-[#1B3A5C] max-w-3xl">
               Voice agents, chat agents, AI receptionist, and AI sales agents — built around how the local market actually runs.
-              Tampa-built, deployed nationwide. Pick your city to see how it ships there.
+              Built for SMBs, deployed nationwide. Pick your city to see how it ships there.
             </p>
 
             <div className="mt-10 rounded-2xl bg-[#F7FAFD] border border-[#0B1B2B]/10 p-4 sm:p-6 overflow-hidden">

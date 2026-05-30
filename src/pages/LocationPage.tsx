@@ -425,7 +425,7 @@ const LocationPage = () => {
           <div className="flex items-center gap-2.5">
             <BrainLogo size={28} />
             <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
-            <span className="text-slate-400">— Tampa Bay, FL</span>
+            <span className="text-slate-400">— United States</span>
           </div>
           <div className="flex items-center gap-6">
             <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>

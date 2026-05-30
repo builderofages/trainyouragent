@@ -242,7 +242,7 @@ export const VERTICAL_CONTENT: Record<string, RichContent> = {
       { name: "ServiceTitan / Housecall Pro / Jobber dispatch sync", outcome: "Live tech availability lookup against the actual schedule — no double-booking, no calling back to confirm, no manual ticket creation. The job is in the system before you hang up." },
       { name: "Storm-surge auto-scaling", outcome: "When call volume spikes 10x during a heat event or freeze, the agent absorbs it without a single missed call. Your CSRs handle the white-glove customers; the agent absorbs the surge." },
     ],
-    caseStudy: "Take a Tampa-area HVAC company running 14 trucks. They miss ~22 after-hours emergency calls a week. At an $850 average ticket and a 45% close rate, that's ~$8,400/wk in jobs going to voicemail. A trained voice agent catches 70-85% of those — net recovery $5,000-7,000/wk on a $1,997/mo plan. The build pays for itself in week one.",
+    caseStudy: "Take an HVAC company running 14 trucks. They miss ~22 after-hours emergency calls a week. At an $850 average ticket and a 45% close rate, that's ~$8,400/wk in jobs going to voicemail. A trained voice agent catches 70-85% of those — net recovery $5,000-7,000/wk on a $1,997/mo plan. The build pays for itself in week one.",
     cta: {
       primary: "Stop missing after-hours emergency calls. Book a 30-minute build call.",
       secondary: "Or call us live and see how we'd answer your phones.",
@@ -850,7 +850,7 @@ const VerticalPage = () => {
           <div className="flex items-center gap-2.5">
             <BrainLogo size={28} />
             <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
-            <span className="text-slate-400">— Tampa Bay, FL</span>
+            <span className="text-slate-400">— United States</span>
           </div>
           <div className="flex items-center gap-x-6 gap-y-2 flex-wrap justify-center">
             <Link to="/learn" className="hover:text-[#042C53]">Learn</Link>

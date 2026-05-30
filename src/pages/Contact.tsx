@@ -159,7 +159,7 @@ const Contact = () => {
                 We read every one. If we can build it well, you'll get a Loom back showing the build before you book a call. If we can't, we'll tell you and point you somewhere honest.
               </p>
               <div className="text-[13px] text-slate-600 space-y-2">
-                <div><span className="font-semibold text-[#042C53]">Headquarters.</span> Tampa Bay, Florida.</div>
+                <div><span className="font-semibold text-[#042C53]">Headquarters.</span> United States.</div>
                 <div><span className="font-semibold text-[#042C53]">Hours.</span> Mon–Fri, 8am–7pm ET. After hours via email; we triage every morning.</div>
                 <div><span className="font-semibold text-[#042C53]">Response.</span> Same business day for new builds. Within 1 hour for active customers in business hours.</div>
               </div>
@@ -186,7 +186,7 @@ const Contact = () => {
           <div className="flex items-center gap-2.5">
             <BrainLogo size={28} />
             <span className="font-semibold text-[#042C53]">TrainYourAgent</span>
-            <span className="text-slate-400">— Tampa Bay, FL</span>
+            <span className="text-slate-400">— United States</span>
           </div>
           <div className="flex items-center gap-6">
             <Link to="/privacy" className="hover:text-[#042C53]">Privacy</Link>

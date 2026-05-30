@@ -267,7 +267,7 @@ function body(inner: string): string {
     <div style="font-size:12px;color:#185FA5;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;margin-bottom:18px;">TrainYourAgent</div>
     ${inner}
     <hr style="border:none;border-top:1px solid #E6F1FB;margin:28px 0 14px 0;"/>
-    <p style="font-size:12px;color:#8A98A9;margin:0;">TrainYourAgent · Tampa Bay, FL · <a href="https://www.trainyouragent.com" style="color:#185FA5;text-decoration:none;">trainyouragent.com</a> · Reply to this email to reach Alexander directly.</p>
+    <p style="font-size:12px;color:#8A98A9;margin:0;">TrainYourAgent · United States · <a href="https://www.trainyouragent.com" style="color:#185FA5;text-decoration:none;">trainyouragent.com</a> · Reply to this email to reach Alexander directly.</p>
   </div>
 </body></html>`;
 }
