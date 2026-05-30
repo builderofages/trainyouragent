@@ -127,19 +127,33 @@ export default function Websites() {
                   onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = `0 22px 50px -22px ${hexA(n.accent, 0.35)}`; }}
                   onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 22px -16px rgba(4,44,83,0.15)"; }}
                 >
-                  {/* HD niche image banner — replaces the old emoji */}
-                  <div style={{ position: "relative", width: "100%", aspectRatio: "16/9", background: `linear-gradient(135deg, ${hexA(n.accent, 0.18)}, ${hexA(n.accent, 0.06)})`, overflow: "hidden" }}>
+                  {/* v247: niche image banner with BRANDED Playfair italic
+                      fallback baked behind the image. When pollinations fails
+                      (which it does intermittently for half the niches), the
+                      card no longer shows an empty blue gradient — it shows
+                      a magazine-cover style typographic banner with the
+                      niche name set huge in Playfair italic. Looks intentional. */}
+                  <div style={{ position: "relative", width: "100%", aspectRatio: "16/9", background: `linear-gradient(135deg, ${n.accent} 0%, ${hexA(n.accent, 0.55)} 70%, #042C53 100%)`, overflow: "hidden" }}>
+                    {/* Typographic fallback layer — always renders, image overlays if it loads */}
+                    <div aria-hidden style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", padding: 14 }}>
+                      <div style={{ textAlign: "center" }}>
+                        <div style={{ ...MONO, fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.65)", marginBottom: 8 }}>NICHE Nº {(filtered.indexOf(n) + 1).toString().padStart(2, "0")}</div>
+                        <div style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic", fontWeight: 500, fontSize: "clamp(20px, 3.6vw, 30px)", color: "#fff", lineHeight: 1, letterSpacing: "-0.01em", textShadow: "0 2px 16px rgba(0,0,0,0.32)" }}>{n.niche}</div>
+                      </div>
+                    </div>
+                    {/* Photo overlay — loads on top if pollinations succeeds */}
                     <img
                       src={nicheImageUrl(n.id, 640, 360)}
                       alt={`${n.niche} business`}
                       loading="lazy"
                       decoding="async"
-                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block", zIndex: 1 }}
                       onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                     />
-                    <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, transparent 40%, rgba(4,44,83,0.55) 100%)` }} />
-                    <span style={{ position: "absolute", top: 12, left: 12, padding: "5px 10px", borderRadius: 999, background: "rgba(255,255,255,0.92)", color: n.accent, fontSize: 10.5, fontWeight: 700, ...MONO }}>{n.niche.toUpperCase()}</span>
-                    <span style={{ position: "absolute", bottom: 12, right: 12, fontSize: 10.5, fontWeight: 700, color: "#fff", ...MONO }}>LIVE DEMO →</span>
+                    {/* Dim wash on top of photo so the badges always read */}
+                    <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, transparent 40%, rgba(4,44,83,0.55) 100%)`, zIndex: 2 }} />
+                    <span style={{ position: "absolute", top: 12, left: 12, padding: "5px 10px", borderRadius: 999, background: "rgba(255,255,255,0.92)", color: n.accent, fontSize: 10.5, fontWeight: 700, zIndex: 3, ...MONO }}>{n.niche.toUpperCase()}</span>
+                    <span style={{ position: "absolute", bottom: 12, right: 12, fontSize: 10.5, fontWeight: 700, color: "#fff", zIndex: 3, ...MONO }}>LIVE DEMO →</span>
                   </div>
                   <div style={{ padding: "20px 22px" }}>
                     <div style={{ fontSize: 18, fontWeight: 700, color: NAVY, letterSpacing: "-0.01em", marginBottom: 6, lineHeight: 1.2 }}>

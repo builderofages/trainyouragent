@@ -16,19 +16,23 @@ type Tool = {
   href: string;
 };
 
-const TOOLS: Tool[] = [
-  { name: "Anthropic",  slug: "anthropic",  use: "Reasoning",       href: "https://www.anthropic.com" },
-  { name: "Vercel",     slug: "vercel",     use: "Edge runtime",    href: "https://vercel.com" },
-  { name: "ElevenLabs", slug: "elevenlabs", use: "Voice synthesis", href: "https://elevenlabs.io" },
-  { name: "Twilio",     slug: "twilio",     use: "Telephony",       href: "https://www.twilio.com" },
-  { name: "Stripe",     slug: "stripe",     use: "Payments",        href: "https://stripe.com" },
-  { name: "OpenAI",     slug: "openai",     use: "TTS fallback",    href: "https://openai.com" },
-  { name: "Supabase",   slug: "supabase",   use: "Database",        href: "https://supabase.com" },
-  { name: "Cloudflare", slug: "cloudflare", use: "CDN + DNS",       href: "https://cloudflare.com" },
-  { name: "GitHub",     slug: "github",     use: "Version control", href: "https://github.com" },
-  { name: "Groq",       slug: "groq",       use: "LLM fallback",    href: "https://groq.com" },
-  { name: "Resend",     slug: "resend",     use: "Email",           href: "https://resend.com" },
-  { name: "Linear",     slug: "linear",     use: "Tracker",         href: "https://linear.app" },
+// v247: each tool carries its own brand color so we can render a clean
+// letter-mark badge. cdn.simpleicons.org/{slug} was 404-ing intermittently
+// for twilio/groq/openai which leaked the alt text 'Twilio log' onto the
+// rendered page. Letter marks never miss.
+const TOOLS: (Tool & { color: string; mark: string })[] = [
+  { name: "Anthropic",  slug: "anthropic",  use: "Reasoning",       href: "https://www.anthropic.com", color: "#D4754C", mark: "A" },
+  { name: "Vercel",     slug: "vercel",     use: "Edge runtime",    href: "https://vercel.com",        color: "#000000", mark: "▲" },
+  { name: "ElevenLabs", slug: "elevenlabs", use: "Voice synthesis", href: "https://elevenlabs.io",     color: "#111111", mark: "EL" },
+  { name: "Twilio",     slug: "twilio",     use: "Telephony",       href: "https://www.twilio.com",    color: "#F22F46", mark: "T" },
+  { name: "Stripe",     slug: "stripe",     use: "Payments",        href: "https://stripe.com",        color: "#635BFF", mark: "S" },
+  { name: "OpenAI",     slug: "openai",     use: "TTS fallback",    href: "https://openai.com",        color: "#10A37F", mark: "AI" },
+  { name: "Supabase",   slug: "supabase",   use: "Database",        href: "https://supabase.com",      color: "#3FCF8E", mark: "S" },
+  { name: "Cloudflare", slug: "cloudflare", use: "CDN + DNS",       href: "https://cloudflare.com",    color: "#F38020", mark: "CF" },
+  { name: "GitHub",     slug: "github",     use: "Version control", href: "https://github.com",        color: "#1B1F23", mark: "GH" },
+  { name: "Groq",       slug: "groq",       use: "LLM fallback",    href: "https://groq.com",          color: "#F55036", mark: "G" },
+  { name: "Resend",     slug: "resend",     use: "Email",           href: "https://resend.com",        color: "#000000", mark: "R" },
+  { name: "Linear",     slug: "linear",     use: "Tracker",         href: "https://linear.app",        color: "#5E6AD2", mark: "L" },
 ];
 
 export type PoweredByBadgesProps = {
@@ -144,29 +148,27 @@ export default function PoweredByBadges({
                 if (rest)  rest.style.opacity  = "1";
               }}
             >
-              {/* v168b: graphite (#475569) at rest — NOT navy. User audit said
-                  the all-navy treatment made the whole section "too blue."
-                  Hover swap to real brand color via second <img> + CSS opacity. */}
-              <div style={{ width: 22, height: 22, position: "relative" }}>
-                <img
-                  src={`https://cdn.simpleicons.org/${t.slug}/475569`}
-                  alt={`${t.name} logo`}
-                  width={22}
-                  height={22}
-                  loading="lazy"
-                  className="tya-tool__icon-rest"
-                  style={{ display: "block", position: "absolute", inset: 0, transition: "opacity 240ms ease" }}
-                />
-                <img
-                  src={`https://cdn.simpleicons.org/${t.slug}`}
-                  alt=""
-                  aria-hidden="true"
-                  width={22}
-                  height={22}
-                  loading="lazy"
-                  className="tya-tool__icon-brand"
-                  style={{ display: "block", position: "absolute", inset: 0, opacity: 0, transition: "opacity 240ms ease" }}
-                />
+              {/* v247: brand-color letter-mark badge replaces the simpleicons
+                  CDN images that were 404-ing intermittently for several
+                  slugs (twilio / groq / openai / elevenlabs) and leaking the
+                  alt text 'Twilio log' onto the page. The badge ALWAYS
+                  renders identically, has the real brand color, and reads
+                  premium next to the editorial type. */}
+              <div
+                aria-hidden
+                style={{
+                  width: 30, height: 30, borderRadius: 9,
+                  background: t.color,
+                  color: "#fff",
+                  display: "inline-flex", alignItems: "center", justifyContent: "center",
+                  fontSize: t.mark.length > 1 ? 11 : 14,
+                  fontWeight: 800,
+                  letterSpacing: "-0.01em",
+                  boxShadow: "0 2px 8px -2px rgba(0,0,0,0.18)",
+                  flexShrink: 0,
+                }}
+              >
+                {t.mark}
               </div>
               <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.005em" }}>
                 {t.name}
