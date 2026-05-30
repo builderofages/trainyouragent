@@ -491,7 +491,7 @@ export default function TemplateGallery() {
 
   // ─── main UI ──────────────────────────────────────────────────────────
   return (
-    <div style={{ minHeight: "100vh", background: "#FFFFFF", color: "#0B1B2B", fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #FAF6EE 0%, #F4EFE4 100%)", color: "#0B1B2B", fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
       <Helmet>
         <title>Niche Site Templates — TYA Admin</title>
         <meta name="robots" content="noindex, nofollow" />
