@@ -44,6 +44,8 @@ export default function Cockpit() {
   const [activity, setActivity] = useState<{ kind: string; label: string; ts: number }[] | null>(null);
   const [errors, setErrors] = useState<{ ts: string; kind: string; msg: string; url: string }[] | null>(null);
   const [pingResult, setPingResult] = useState<string>("");
+  const [pendingReviews, setPendingReviews] = useState<{ id: string; name: string; company: string; niche: string; quote: string | null; video_url: string | null; ts: string }[] | null>(null);
+  const [reviewActioning, setReviewActioning] = useState<string>("");
 
   useEffect(() => {
     if (!token) return;
@@ -64,6 +66,15 @@ export default function Cockpit() {
       })
       .catch((e) => !cancelled && setHealthErr(String(e?.message || e)))
       .finally(() => !cancelled && setLoading(false));
+
+    // v239: pending review submissions in parallel
+    fetch("/api/admin/reviews?status=pending&limit=10", { headers: { "x-admin-token": token, accept: "application/json" } })
+      .then(async (r) => r.ok ? r.json() : null)
+      .then((j) => {
+        if (cancelled || !j) return;
+        setPendingReviews(j.reviews || []);
+      })
+      .catch(() => { /* silent */ });
 
     // v234: recent client errors in parallel — gracefully empty if table missing
     fetch("/api/admin/recent-errors?limit=10", { headers: { "x-admin-token": token, accept: "application/json" } })
@@ -278,6 +289,69 @@ export default function Cockpit() {
                 </div>
               )}
             </Card>
+          </section>
+        )}
+
+        {/* ── PENDING REVIEWS (v239) ───────────────────────── */}
+        {token && pendingReviews !== null && pendingReviews.length > 0 && (
+          <section style={{ marginBottom: 26 }}>
+            <SectionHeader title="Pending review submissions" subtitle={`${pendingReviews.length} waiting for your approval.`} />
+            <div style={{ display: "grid", gap: 10 }}>
+              {pendingReviews.map((r) => (
+                <Card key={r.id}>
+                  <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start", gap: 14 }}>
+                    <div style={{ flex: "1 1 280px", minWidth: 0 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                        <div style={{ fontSize: 13.5, fontWeight: 700, color: NAVY }}>{r.name}</div>
+                        <span style={{ fontSize: 11, color: MUTED }}>· {r.company}</span>
+                        <span style={{ ...MONO, fontSize: 9.5, fontWeight: 700, color: ACCENT, marginLeft: "auto" }}>{r.niche.toUpperCase()}</span>
+                      </div>
+                      {r.video_url && (
+                        <a href={r.video_url} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", marginBottom: 6, fontSize: 11.5, color: ACCENT, fontWeight: 700, textDecoration: "underline" }}>▶ Watch video</a>
+                      )}
+                      {r.quote && (
+                        <blockquote style={{ margin: "4px 0 0", padding: 0, fontSize: 13, lineHeight: 1.55, color: TEXT, fontStyle: "italic" }}>
+                          "{r.quote.length > 240 ? r.quote.slice(0, 240) + "…" : r.quote}"
+                        </blockquote>
+                      )}
+                      <div style={{ marginTop: 6, fontSize: 11, color: MUTED, ...MONO, letterSpacing: 0 }}>{relTime(new Date(r.ts).getTime())}</div>
+                    </div>
+                    <div style={{ display: "flex", gap: 8, alignSelf: "center" }}>
+                      <button
+                        disabled={reviewActioning === r.id}
+                        onClick={async () => {
+                          setReviewActioning(r.id);
+                          try {
+                            const resp = await fetch("/api/admin/reviews", {
+                              method: "PATCH",
+                              headers: { "content-type": "application/json", "x-admin-token": token },
+                              body: JSON.stringify({ id: r.id, status: "approved" }),
+                            });
+                            if (resp.ok) setPendingReviews((prev) => (prev || []).filter((x) => x.id !== r.id));
+                          } finally { setReviewActioning(""); }
+                        }}
+                        style={{ padding: "8px 14px", fontSize: 12.5, fontWeight: 700, background: GOOD, color: "#fff", border: "none", borderRadius: 999, cursor: reviewActioning === r.id ? "wait" : "pointer" }}
+                      >{reviewActioning === r.id ? "…" : "Approve"}</button>
+                      <button
+                        disabled={reviewActioning === r.id}
+                        onClick={async () => {
+                          setReviewActioning(r.id);
+                          try {
+                            const resp = await fetch("/api/admin/reviews", {
+                              method: "PATCH",
+                              headers: { "content-type": "application/json", "x-admin-token": token },
+                              body: JSON.stringify({ id: r.id, status: "rejected" }),
+                            });
+                            if (resp.ok) setPendingReviews((prev) => (prev || []).filter((x) => x.id !== r.id));
+                          } finally { setReviewActioning(""); }
+                        }}
+                        style={{ padding: "8px 14px", fontSize: 12.5, fontWeight: 700, background: "transparent", color: MUTED, border: `1px solid ${HAIRLINE}`, borderRadius: 999, cursor: reviewActioning === r.id ? "wait" : "pointer" }}
+                      >Reject</button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
           </section>
         )}
 
