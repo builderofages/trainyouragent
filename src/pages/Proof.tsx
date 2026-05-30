@@ -252,7 +252,7 @@ export default function Proof() {
               Book a 30-min build call <span aria-hidden>→</span>
             </a>
             <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl border border-white/30 text-white hover:bg-white/10">
-              Or DM the founder on LinkedIn
+              Or Talk to the team on LinkedIn
             </a>
           </div>
         </div>

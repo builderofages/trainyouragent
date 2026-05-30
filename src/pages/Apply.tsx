@@ -216,7 +216,7 @@ export default function Apply() {
             </a>
           </div>
           <p className="text-[12.5px]" style={{ color: "#6B7B92" }}>
-            Direct line to the founder. No SDR. No pitch. If you&rsquo;re not a fit, I tell you on the call.
+            Direct line to the team. No SDR. No pitch. If you&rsquo;re not a fit, I tell you on the call.
           </p>
         </div>
       </header>
@@ -674,7 +674,7 @@ export default function Apply() {
             className="mb-9"
             style={{ fontSize: "16px", lineHeight: 1.6, color: "#42526E" }}
           >
-            15 minutes. Direct line to the founder. No pitch.
+            15 minutes. Direct line to the team. No pitch.
             <br />
             If you&rsquo;re not a fit, I&rsquo;ll tell you on the call.
           </p>

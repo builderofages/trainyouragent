@@ -38,7 +38,7 @@ const AFTER_BOOK = [
   {
     n: "03",
     h: "The call",
-    b: "30 minutes with the founder — no SDR layer. We listen to three of your existing calls and write the scope back to you the same day.",
+    b: "30 minutes with our team — no SDR layer. We listen to three of your existing calls and write the scope back to you the same day.",
   },
 ];
 
@@ -139,7 +139,7 @@ export default function Book() {
             {/* v54: real scarcity — quarterly build cap, honest about why */}
             <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-[12.5px] text-amber-900">
               <span aria-hidden="true">•</span>
-              Limited to 12 new builds per quarter — the founder personally scopes every one.
+              Limited to 12 new builds per quarter — our team personally scopes every one.
             </div>
           </section>
 

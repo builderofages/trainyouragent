@@ -88,7 +88,7 @@ export default function Websites() {
       </div>
 
       {/* Hero */}
-      <header style={{ padding: "76px 20px 48px", background: `radial-gradient(900px 480px at 50% 0%, rgba(4,44,83,0.06), transparent 60%), #FAF6EE` }}>
+      <header style={{ padding: "76px 20px 48px", background: `radial-gradient(900px 480px at 50% 0%, rgba(4,44,83,0.06), transparent 60%), #FFFFFF` }}>
         <div style={{ maxWidth: 920, margin: "0 auto", textAlign: "center" }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 999, background: "rgba(4,44,83,0.08)", color: NAVY, fontSize: 11, fontWeight: 700, marginBottom: 26, ...MONO }}>
             <span style={{ width: 6, height: 6, borderRadius: 999, background: NAVY }} />

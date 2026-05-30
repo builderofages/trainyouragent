@@ -3,7 +3,7 @@
 // logo grid and 4 case-study cards — brand-damaging signal that the
 // company has no customers. New version flips the narrative: rather than
 // fake a logo wall, pitch the Founding Customer Program. Scarcity-backed
-// offer with permanent founding pricing for the first 10, founder Slack
+// offer with permanent founding pricing for the first 10, team Slack
 // access, co-authored case study at launch, and 90-day money back.
 //
 // Honest, on-brand, converts. The page becomes a sales asset instead of
@@ -34,8 +34,8 @@ const FOUNDING_PERKS = [
   },
   {
     n: "02",
-    title: "Direct founder Slack — no SDR layer",
-    body: "Private Slack channel with Alexander. Every script change, every voice tune, every escalation review — direct response, usually within the hour during business hours.",
+    title: "Direct team Slack — no SDR layer",
+    body: "Private Slack channel with our build team. Every script change, every voice tune, every escalation review — direct response, usually within the hour during business hours.",
   },
   {
     n: "03",
@@ -84,10 +84,10 @@ export default function Customers() {
     <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
       <Helmet>
         <title>Founding Customer Program — TrainYourAgent</title>
-        <meta name="description" content="First 10 founding customers get 50% off Operators tier ($997/mo) for life, direct founder Slack, co-authored case study, and 90-day money-back guarantee. Service businesses only. Apply now." />
+        <meta name="description" content="First 10 founding customers get 50% off Operators tier ($997/mo) for life, direct team Slack, co-authored case study, and 90-day money-back guarantee. Service businesses only. Apply now." />
         <link rel="canonical" href="https://www.trainyouragent.com/customers" />
         <meta property="og:title" content="Founding Customer Program — TrainYourAgent" />
-        <meta property="og:description" content="10 spots. 50% off forever. Direct founder Slack. 90-day money-back. Be one of the first." />
+        <meta property="og:description" content="10 spots. 50% off forever. Direct team Slack. 90-day money-back. Be one of the first." />
         <meta property="og:url" content="https://www.trainyouragent.com/customers" />
       </Helmet>
 
@@ -107,7 +107,7 @@ export default function Customers() {
             <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>and pay half-price forever.</span>
           </h1>
           <p className="mt-6 text-[17px] sm:text-[20px] text-slate-700 max-w-3xl leading-relaxed">
-            We're picking 10 service-business operators to be the founding cohort. You get the same agent we'd ship to anyone, plus permanent founding pricing, direct founder Slack, weekly co-build sessions, and a 90-day money-back guarantee against a measurable baseline. We get a real-world reference. Both sides win.
+            We're picking 10 service-business operators to be the founding cohort. You get the same agent we'd ship to anyone, plus permanent founding pricing, direct team Slack, weekly co-build sessions, and a 90-day money-back guarantee against a measurable baseline. We get a real-world reference. Both sides win.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <a href={CAL_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-[#042C53] text-white font-semibold text-[15px] hover:bg-[#0A3D6E] shadow-lg shadow-[#042C53]/15">
@@ -117,7 +117,7 @@ export default function Customers() {
               </span>
             </a>
             <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-7 py-4 rounded-2xl border-2 border-[#042C53]/15 text-[#042C53] font-semibold text-[15px] hover:border-[#042C53]">
-              Or DM the founder on LinkedIn
+              Or Talk to the team on LinkedIn
             </a>
           </div>
         </div>

@@ -537,7 +537,7 @@ export default function NicheSiteTemplate() {
 
       {/* ── Self-service personalize (only when no ?company=) ───────── */}
       {!hasCompanyParam && (
-        <div style={{ background: `linear-gradient(90deg, ${hexA(A, 0.08)}, #FFF8EE)`, borderBottom: `1px solid ${hexA(A, 0.18)}`, padding: "12px 20px" }}>
+        <div style={{ background: `linear-gradient(90deg, ${hexA(A, 0.08)}, #FFFFFF)`, borderBottom: `1px solid ${hexA(A, 0.18)}`, padding: "12px 20px" }}>
           <form onSubmit={applyPersonalize} style={{ maxWidth: 1080, margin: "0 auto", display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10, justifyContent: "center" }}>
             <span style={{ fontSize: 13.5, fontWeight: 600, color: NAVY }}>
               This is a demo for <em style={{ ...ITALIC }}>{site.defaultCompany}</em>. See it with your business name →
@@ -806,7 +806,7 @@ export default function NicheSiteTemplate() {
       </section>
 
       {/* ── WITH vs WITHOUT — comparison table ──────────────────── */}
-      <section style={{ padding: "80px 20px", background: "#FAF6EE" }}>
+      <section style={{ padding: "80px 20px", background: "#FFFFFF" }}>
         <div style={{ maxWidth: 980, margin: "0 auto" }}>
           <div data-fade style={{ textAlign: "center", marginBottom: 36 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 12, ...MONO }}>BEFORE / AFTER {company.toUpperCase()}</div>
@@ -1206,7 +1206,7 @@ export default function NicheSiteTemplate() {
       </section>
 
       {/* ── BRANDS WE SERVICE / INSURANCE ACCEPTED ──────────────── */}
-      <section style={{ padding: "60px 20px", background: "#FAF6EE", borderTop: `1px solid ${HAIRLINE}`, borderBottom: `1px solid ${HAIRLINE}` }}>
+      <section style={{ padding: "60px 20px", background: "#FFFFFF", borderTop: `1px solid ${HAIRLINE}`, borderBottom: `1px solid ${HAIRLINE}` }}>
         <div style={{ maxWidth: 1080, margin: "0 auto" }}>
           <div data-fade style={{ textAlign: "center", marginBottom: 28 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 10, ...MONO }}>{brandsLabelForNiche(site).toUpperCase()}</div>
@@ -1251,7 +1251,7 @@ export default function NicheSiteTemplate() {
       </section>
 
       {/* ── PRICING TIERS ────────────────────────────────────────── */}
-      <section style={{ padding: "72px 20px", background: "#FAF6EE" }}>
+      <section style={{ padding: "72px 20px", background: "#FFFFFF" }}>
         <div style={{ maxWidth: 1080, margin: "0 auto" }}>
           <div data-fade style={{ textAlign: "center", marginBottom: 36 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 12, ...MONO }}>SIMPLE PRICING</div>
@@ -1319,7 +1319,7 @@ export default function NicheSiteTemplate() {
       </section>
 
       {/* ── GUARANTEE / RISK REVERSAL ──────────────────────────── */}
-      <section style={{ padding: "80px 20px", background: `linear-gradient(180deg, #FAF6EE 0%, ${hexA(A, 0.06)} 100%)` }}>
+      <section style={{ padding: "80px 20px", background: `linear-gradient(180deg, #FFFFFF 0%, ${hexA(A, 0.06)} 100%)` }}>
         <div data-fade style={{ maxWidth: 880, margin: "0 auto" }}>
           <div style={{ background: "#fff", border: `2px solid ${A}`, borderRadius: 28, padding: "44px 36px", position: "relative", boxShadow: `0 32px 80px -28px ${hexA(A, 0.42)}`, overflow: "hidden" }}>
             {/* watermark seal */}
@@ -1472,7 +1472,7 @@ export default function NicheSiteTemplate() {
       </section>
 
       {/* ── CTA ──────────────────────────────────────────────────── */}
-      <section id="cta" style={{ padding: "80px 20px", textAlign: "center", background: `linear-gradient(180deg, #FFFFFF 0%, #FAF6EE 60%, ${hexA(A, 0.06)} 100%)`, scrollMarginTop: 80 }}>
+      <section id="cta" style={{ padding: "80px 20px", textAlign: "center", background: `linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 60%, ${hexA(A, 0.06)} 100%)`, scrollMarginTop: 80 }}>
         <div style={{ maxWidth: 620, margin: "0 auto" }}>
           <h2 data-fade style={{ fontSize: "clamp(30px, 5.5vw, 52px)", lineHeight: 1.05, letterSpacing: "-0.02em", fontWeight: 600, color: NAVY, margin: "0 0 18px" }}>
             Stop losing calls. <span style={{ ...ITALIC, color: A, display: "block", marginTop: 6 }}>Put {firstName} on autopilot.</span>
@@ -1570,7 +1570,7 @@ export default function NicheSiteTemplate() {
       </section>
 
       {/* ── GET YOUR OWN URL — instant personalize ──────────────── */}
-      <section style={{ padding: "70px 20px", background: `linear-gradient(180deg, ${hexA(A, 0.06)} 0%, #FAF6EE 60%, #FFFFFF 100%)`, borderTop: `1px solid ${HAIRLINE}` }}>
+      <section style={{ padding: "70px 20px", background: `linear-gradient(180deg, ${hexA(A, 0.06)} 0%, #FFFFFF 60%, #FFFFFF 100%)`, borderTop: `1px solid ${HAIRLINE}` }}>
         <div data-fade style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: A, marginBottom: 12, ...MONO }}>WANT THIS SITE FOR YOUR BUSINESS?</div>
           <h3 style={{ fontSize: "clamp(24px, 4vw, 38px)", lineHeight: 1.1, fontWeight: 600, color: NAVY, margin: "0 0 14px", letterSpacing: "-0.02em" }}>

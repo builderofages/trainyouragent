@@ -136,7 +136,7 @@ function EmptyState() {
       style={{
         padding: "44px 28px",
         borderRadius: 18,
-        background: "linear-gradient(135deg, #FAF6EE 0%, #FFFFFF 100%)",
+        background: "linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 100%)",
         border: `1px solid ${HAIRLINE}`,
         textAlign: "center",
       }}

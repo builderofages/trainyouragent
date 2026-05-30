@@ -223,7 +223,7 @@ export default function Vs() {
 
  <WhyWeAreDifferent hideFooterLink className="" />
 
- <section className="py-24 px-5 sm:px-8" style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FAF6EE 60%, #FFFFFF 100%)" }}>
+ <section className="py-24 px-5 sm:px-8" style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 60%, #FFFFFF 100%)" }}>
  <div className="max-w-[1100px] mx-auto">
  <div className="text-[11px] font-mono uppercase tracking-[0.24em] text-[#185FA5]">
  SIDE-BY-SIDE · ON EVERY AXIS THAT MATTERS
@@ -303,7 +303,7 @@ export default function Vs() {
  </div>
  </section>
 
- <section className="py-24 px-5 sm:px-8" style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FAF6EE 60%, #FFFFFF 100%)" }}>
+ <section className="py-24 px-5 sm:px-8" style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 60%, #FFFFFF 100%)" }}>
  <div className="max-w-[820px] mx-auto">
  <div className="text-[11px] font-mono uppercase tracking-[0.24em] text-[#185FA5]">
  FAQ · THE QUESTIONS BUYERS ACTUALLY ASK

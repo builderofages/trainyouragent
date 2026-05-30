@@ -79,7 +79,7 @@ const FOR_MAP: Record<string, { plan: "founders" | "operators" | "scale"; label:
   ecom:          { plan: "founders",  label: "Early-stage ecom",        reason: "pay-as-you-go fits low ticket + high inquiry volume" },
   ecommerce:     { plan: "founders",  label: "Early-stage ecom",        reason: "pay-as-you-go fits low ticket + high inquiry volume" },
   saas:          { plan: "founders",  label: "Pre-revenue SaaS",        reason: "build now, pay when calls come in" },
-  startup:       { plan: "founders",  label: "Startup teams",           reason: "deferred build fee + founder Slack channel" },
+  startup:       { plan: "founders",  label: "Startup teams",           reason: "deferred build fee + team Slack channel" },
   accounting:    { plan: "operators", label: "Accounting firms",        reason: "tax-season overflow + client onboarding" },
   agency:        { plan: "scale",     label: "Agencies",                reason: "multi-brand or multi-location call volume" },
   enterprise:    { plan: "scale",     label: "Enterprise ops",          reason: "SLA, dedicated engineer, custom integrations" },
@@ -133,7 +133,7 @@ const PLANS = [
       // v161: trimmed 5 -> 3, most-friction-killing only
       "Live in 7 business days",
       "$0 upfront — pay only when calls come in",
-      "Founder Slack channel — direct line, no SDR",
+      "Team Slack channel — direct line, no SDR",
     ],
   },
   {
@@ -195,7 +195,7 @@ const STACK_ITEMS = [
   { h: "Production voice OR chat agent, trained on YOUR docs",                            v: 8500 },
   { h: "Native CRM + calendar + phone wiring (HubSpot, GHL, ServiceTitan, Twilio, Cal)",  v: 3500 },
   { h: "Weekly transcript review + script tuning, first 90 days",                         v: 4500 },
-  { h: "Direct Slack or email line to the founder (no SDR layer)",                        v: 2000 },
+  { h: "Direct Slack or email line to the build team (no SDR layer)",                        v: 2000 },
   { h: "Dashboard with calls answered, booked, escalated, missed",                        v: 1500 },
   { h: "30-day money-back guarantee, no clawback fight",                                  v: 0    },
   { h: "Cancel any time after that — no contract trap, your number ports out",            v: 0    },
@@ -204,7 +204,7 @@ const STACK_TOTAL = STACK_ITEMS.reduce((s, i) => s + i.v, 0); // 21,500
 
 // v46a: what's actually in the box on day one — kills "what do I get?" friction.
 const DELIVERABLES = [
-  { n: "01", h: "Kickoff call with the founder", b: "30-min Zoom with the founder. We listen to 3 of your existing calls and write the scope back to you in writing the same day. No SDR layer." },
+  { n: "01", h: "Kickoff call with our team", b: "30-min Zoom with our team. We listen to 3 of your existing calls and write the scope back to you in writing the same day. No SDR layer." },
   { n: "02", h: "Scoped SOW (one page, plain English)", b: "Exactly what we'll build, what integrations get wired, what success looks like at day 14 and day 30. Signed before any code is written." },
   { n: "03", h: "Working agent in 14 days or less", b: "Voice + chat agent answering on a test number, trained on your docs, integrated with your CRM and calendar. You stress-test it before any real traffic." },
   { n: "04", h: "Voice + handoff training (your team)", b: "60-min screen-share to teach your front-desk / dispatch / sales team when the agent escalates, how transcripts land, and where to tune scripts themselves." },
@@ -390,7 +390,7 @@ const Pricing = () => {
                   <div className="text-[10.5px] uppercase tracking-[0.16em] font-semibold text-[#185FA5] mb-1 font-mono">Self-Serve</div>
                   <div className="text-[18px] font-semibold text-[#042C53] mb-1">Founders</div>
                   <div className="text-[13px] text-slate-600 leading-snug mb-3">$0 upfront. Pay $0.39/min only when calls land ($250/mo min).</div>
-                  <div className="text-[12px] text-slate-500">Live in 7 days · weekly tune-up · founder Slack</div>
+                  <div className="text-[12px] text-slate-500">Live in 7 days · weekly tune-up · team Slack</div>
                 </div>
                 <div className="p-5 bg-[#F6FAFE]">
                   <div className="text-[10.5px] uppercase tracking-[0.16em] font-semibold text-[#22A36C] mb-1 font-mono">Custom Build</div>
@@ -560,7 +560,7 @@ const Pricing = () => {
                   ["Conversations / mo", "5,000",            "Your phone line",         "Pay-per-minute ($0.39)", "5,000 voice minutes", "25,000 voice minutes"],
                   ["Trained on your docs", "Yes",            "Yes (live)",              "Yes",                 "Yes",                "Yes + custom training data"],
                   ["CRM integration",  "Webhook only",        "Webhook only",           "1 CRM included",      "Native (HubSpot, GHL, ServiceTitan, Stripe, Cal, Twilio)", "Custom + multi-brand"],
-                  ["Engineer time",    "Self-serve docs",     "4 hrs w/ founder",       "Founder Slack",       "Weekly review",      "Dedicated engineer"],
+                  ["Engineer time",    "Self-serve docs",     "4 hrs w/ founder",       "Team Slack",       "Weekly review",      "Dedicated engineer"],
                   ["SLA",              "Best-effort",         "Best-effort",            "Best-effort",         "Best-effort",        "99.9% uptime SLA"],
                   ["BAA / DPA",        "Available on request","Available on request",   "Available on request","Available on request","Included"],
                   ["Refund",           "30-day money-back",   "Full refund if we don't ship", "n/a (pay-per-use)","30-day on build fee","30-day on build fee"],
@@ -709,7 +709,7 @@ const Pricing = () => {
             </h2>
             <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-[12.5px] text-amber-900">
               <span aria-hidden>•</span>
-              Limited to 12 new builds per quarter — the founder personally scopes every one.
+              Limited to 12 new builds per quarter — our team personally scopes every one.
             </div>
           </div>
           <CalEmbed height={680} />
@@ -751,9 +751,9 @@ const Pricing = () => {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <a href={CAL_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white text-[#042C53] font-semibold text-[15px] hover:bg-slate-100 shadow-lg">Book a 30-min build call → leave with a written plan</a>
-            <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15">Or DM the founder on LinkedIn</a>
+            <a href={LINKEDIN_URL} target="_blank" rel="noopener" className="px-7 py-4 rounded-2xl bg-white/10 border border-white/20 text-white font-medium text-[15px] hover:bg-white/15">Or Talk to the team on LinkedIn</a>
           </div>
-          <p className="mt-4 text-[13px] text-white/65">No card, no obligation — 30 min with the founder, written scope same day.</p>
+          <p className="mt-4 text-[13px] text-white/65">No card, no obligation — 30 min with our team, written scope same day.</p>
         </div>
       </section>
 
@@ -827,7 +827,7 @@ function DoneWithYouCallout() {
           <h2 className="text-[26px] sm:text-[34px] leading-[1.1] tracking-tight font-semibold text-[#042C53]">
             Agent in a Day.{" "}
             <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic", fontWeight: 500 }}>
-              Built with the founder,
+              Built with our team,
             </span>{" "}
             shipped today.
           </h2>

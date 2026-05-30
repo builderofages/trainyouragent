@@ -528,7 +528,7 @@ function SuccessPanel({ email, businessName }: { email: string; businessName: st
       <div className="mt-6 pt-5 border-t border-[#185FA5]/20">
         <div className="text-[11px] uppercase tracking-[0.14em] text-[#185FA5] font-semibold mb-2">If you don't hear back in 24h</div>
         <div className="text-[13px] text-slate-700 leading-relaxed">
-          DM the founder on{" "}
+          Talk to the team on{" "}
           <a href="https://www.linkedin.com/in/alexandermillsai/" target="_blank" rel="noopener noreferrer" className="text-[#185FA5] hover:text-[#042C53] underline decoration-[#185FA5]/40 underline-offset-2 font-semibold">
             LinkedIn
           </a>

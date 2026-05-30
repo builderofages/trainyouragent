@@ -109,7 +109,7 @@ function InterviewForm() {
         </button>
         {state === "sent" && <span className="text-[13px] text-emerald-600 font-medium">Got it — Alexander will reply within 24h.</span>}
         {state === "error" && <span className="text-[13px] text-rose-600">Couldn't send ({err}). Email {PRESS_EMAIL} directly.</span>}
-        <span className="text-[12px] text-slate-500">Usually under 24 hours. No PR firm — you'll hear from the founder.</span>
+        <span className="text-[12px] text-slate-500">Usually under 24 hours. No PR firm — you'll hear from the team.</span>
       </div>
     </form>
   );

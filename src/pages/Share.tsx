@@ -80,7 +80,7 @@ export default function Share() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#FAF6EE", color: TEXT, fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif", padding: "0 0 60px" }}>
+    <div style={{ minHeight: "100vh", background: "#FFFFFF", color: TEXT, fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif", padding: "0 0 60px" }}>
       <Helmet>
         <title>Share a personalized demo · TrainYourAgent</title>
         <meta name="robots" content="noindex, nofollow" />

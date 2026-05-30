@@ -522,7 +522,7 @@ const AccountingLanding = () => {
             <GlassCard className="p-12">
               <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold mb-4">Book your accounting AI build call — live in 21 days</h2>
-                <p className="text-muted-foreground">30 min with the founder. Written scope same day. Implementation in 3-7 days for the agent itself.</p>
+                <p className="text-muted-foreground">30 min with our team. Written scope same day. Implementation in 3-7 days for the agent itself.</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">

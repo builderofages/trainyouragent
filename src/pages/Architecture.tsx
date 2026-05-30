@@ -35,7 +35,7 @@ export default function Architecture() {
   }, []);
 
   return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #FAF6EE 0%, #F4EFE4 100%)", color: INK, fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#FFFFFF", color: INK, fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
       <Helmet>
         <title>Architecture — TrainYourAgent</title>
         <meta name="description" content="The actual production stack: multi-LLM fallback chain, latency targets, eval harness, observability tools, SLAs, security posture. No marketing." />
