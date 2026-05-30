@@ -25,9 +25,24 @@ declare global {
 
 const SERVER_ENDPOINT = "/api/meta-event";
 
+// v236: Hard deny-list of Pixel IDs that MUST NEVER fire on trainyouragent.com
+// because they belong to other businesses. If a misconfigured env var ever
+// pushes one of these into __TYA_PIXEL_ID__, isPixelEnabled() refuses.
+//   1324902062303919 — Shopify/saintrizz.com pixel (cross-business assignment)
+const DENY_PIXELS = new Set<string>([
+  "1324902062303919",
+]);
+
 function isPixelEnabled(): boolean {
   if (typeof window === "undefined") return false;
-  return Boolean(window.__TYA_PIXEL_ID__) && !window.fbq?.disabled;
+  const id = window.__TYA_PIXEL_ID__;
+  if (!id) return false;
+  if (DENY_PIXELS.has(id)) {
+    // eslint-disable-next-line no-console
+    console.warn("[tya] Pixel ID is deny-listed (belongs to another business). Skipping fire.", id);
+    return false;
+  }
+  return !window.fbq?.disabled;
 }
 
 function newEventId(): string {
