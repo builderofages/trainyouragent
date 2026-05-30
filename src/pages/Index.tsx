@@ -27,6 +27,7 @@ import FooterV44 from "@/components/FooterV44";
 import PoweredByBadges from "@/components/PoweredByBadges";
 import WhyWeAreDifferent from "@/components/WhyWeAreDifferent";
 import HomepageIndustryPicker from "@/components/HomepageIndustryPicker";
+import HomepageLoomEmbed from "@/components/HomepageLoomEmbed";
 import SectionDivider from "@/components/SectionDivider";
 import { useCountUp } from "@/hooks/useCountUp";
 import NetworkIllo from "@/components/illustrations/NetworkIllo";
@@ -437,6 +438,10 @@ const Index = () => {
  Establishes credibility — these are real infra primitives, same
  stack as Cursor / Linear / Anthropic prod. */}
  <PoweredByBadges variant="grid" />
+
+ {/* v240: brand-wide Loom hero video — auto-hides if VITE_BRAND_LOOM_URL
+ unset. One founder recording = video proof everywhere. */}
+ <HomepageLoomEmbed />
 
  {/* v227: 25-niche industry picker — surfaces the close-tool money pages
  from the homepage. Biggest single leverage gap: organic traffic landed
