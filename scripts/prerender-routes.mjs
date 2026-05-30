@@ -306,6 +306,19 @@ function rewriteShell(template, route) {
   // Organization + WebSite graph stays in the base template too.
   out = out.replace("</head>", `    ${pageJsonLdScript}\n  </head>`);
 
+  // v266 (Grok re-audit killer #1 fix): Grok's web tool treats <noscript>
+  // as "static fallback" and reports the page as near-empty. The fix is
+  // putting real positioning content INSIDE the React mount div so crawlers
+  // see it as primary DOM, not fallback. React hydrates over this on mount
+  // because react-dom 18 honors the existing children of #root.
+  //
+  // We render a styled-inline shell with the same h1/subhead/CTAs/bullets
+  // as the noscript hero. Inline styles avoid the FOUC during hydration.
+  // The shell uses aria-hidden="true" only AFTER hydration — at parse time
+  // it's the real content the crawler indexes.
+  const rootShell = `<div id="prerender-shell" style="padding:64px 24px;max-width:880px;margin:0 auto;font-family:'Inter Tight',system-ui,sans-serif;color:#0B1B2B;background:linear-gradient(180deg,#FAF6EE 0%,#F4EFE4 100%);min-height:100vh"><div style="font-family:ui-monospace,Menlo,monospace;letter-spacing:0.18em;font-size:11px;font-weight:700;color:#C99A28;text-transform:uppercase;margin-bottom:14px">AI RECEPTIONIST · BUILT FOR SERVICE SMBs</div><h1 style="font-size:clamp(36px,6vw,64px);line-height:1.05;letter-spacing:-0.02em;font-weight:600;color:#042C53;margin:0 0 18px">${h1} <span style="font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:500">${italic}</span></h1><p style="font-size:18px;line-height:1.55;color:#5C6B7F;margin:0 0 28px;max-width:640px">${sub}</p><div style="display:flex;flex-wrap:wrap;gap:12px"><a href="/apply" style="padding:14px 22px;border-radius:999px;background:#042C53;color:#fff;text-decoration:none;font-weight:700">Book a discovery call →</a><a href="/pricing" style="padding:14px 22px;border-radius:999px;background:transparent;color:#042C53;text-decoration:none;font-weight:700;border:1.5px solid #042C53">See the three lanes →</a></div><ul style="margin:32px 0 0;padding:0;list-style:none;display:grid;gap:10px;font-size:15px"><li><span style="color:#C99A28;font-weight:800">+ </span>Voice + chat agent, your brand voice, your scripts</li><li><span style="color:#C99A28;font-weight:800">+ </span>Plugs into Cal.com / ServiceTitan / GHL / HubSpot</li><li><span style="color:#C99A28;font-weight:800">+ </span>HVAC, dental, salon, real estate, gym, hotels, more</li><li><span style="color:#C99A28;font-weight:800">+ </span>Multi-LLM fallback so the line never goes silent</li><li><span style="color:#C99A28;font-weight:800">+ </span>Founder-led from Tampa Bay · no offshore SDR sweatshop</li></ul></div>`;
+  out = out.replace('<div id="root"></div>', `<div id="root">${rootShell}</div>`);
+
   return out;
 }
 
@@ -327,7 +340,22 @@ async function main() {
     count++;
   }
 
-  console.log(`[prerender] wrote ${count} per-route index.html files under dist/`);
+  // v266: also rewrite the HOMEPAGE shell (dist/index.html) so the / route
+  // gets the receptionist-specific h1/subhead/CTAs inside #root, not just
+  // in noscript. Without this, crawlers hitting / still see an empty React
+  // mount and report 'near-empty HTML' (which is exactly what Grok flagged).
+  const homepageRoute = {
+    path: "/",
+    title: "AI Receptionist for HVAC, Dental, Salon — Answers Calls, Books Jobs · TrainYourAgent",
+    desc: "An AI receptionist that answers calls 24/7, qualifies leads, books appointments, and stops the $22K/mo leak from missed calls. Built for HVAC, dental, salon, and service SMBs. Live in 7 days. Refund if not shipped.",
+    h1: "An AI receptionist that books the job before",
+    italic: "your competitor calls back.",
+    sub: "Answers calls 24/7. Qualifies leads. Books appointments. Stops the $22K/month leak from missed calls. Live in 7 days. If we don't ship on time, we refund the build fee — no quibbling.",
+  };
+  await writeFile(TEMPLATE_PATH, rewriteShell(template, homepageRoute), "utf8");
+  count++;
+
+  console.log(`[prerender] wrote ${count} per-route index.html files under dist/ (incl. homepage)`);
 }
 
 main().catch((e) => {
