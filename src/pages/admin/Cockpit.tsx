@@ -42,6 +42,8 @@ export default function Cockpit() {
   const [lastFetched, setLastFetched] = useState<number>(0);
   const [autoRefresh, setAutoRefresh] = useState<boolean>(true);
   const [activity, setActivity] = useState<{ kind: string; label: string; ts: number }[] | null>(null);
+  const [errors, setErrors] = useState<{ ts: string; kind: string; msg: string; url: string }[] | null>(null);
+  const [pingResult, setPingResult] = useState<string>("");
 
   useEffect(() => {
     if (!token) return;
@@ -62,6 +64,15 @@ export default function Cockpit() {
       })
       .catch((e) => !cancelled && setHealthErr(String(e?.message || e)))
       .finally(() => !cancelled && setLoading(false));
+
+    // v234: recent client errors in parallel — gracefully empty if table missing
+    fetch("/api/admin/recent-errors?limit=10", { headers: { "x-admin-token": token, accept: "application/json" } })
+      .then(async (r) => r.ok ? r.json() : null)
+      .then((j) => {
+        if (cancelled || !j) return;
+        setErrors((j.errors || []).map((e: { ts: string; kind: string; msg: string; url: string }) => ({ ts: e.ts, kind: e.kind, msg: e.msg, url: e.url })));
+      })
+      .catch(() => { /* silent */ });
 
     // v232: also fetch recent activity tail in parallel
     fetch("/api/admin/template-activity?limit=12", { headers: { "x-admin-token": token, accept: "application/json" } })
@@ -266,6 +277,70 @@ export default function Cockpit() {
                   ))}
                 </div>
               )}
+            </Card>
+          </section>
+        )}
+
+        {/* ── RECENT CLIENT ERRORS ─────────────────────────── */}
+        {token && (
+          <section style={{ marginBottom: 26 }}>
+            <SectionHeader title="Recent client errors" subtitle="Last 10 uncaught exceptions + unhandled promise rejections from prod." />
+            <Card>
+              {errors === null ? <SkeletonBars n={3} /> : errors.length === 0 ? (
+                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                  <Dot color={GOOD} />
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: NAVY }}>No errors in the last window.</div>
+                    <div style={{ fontSize: 12.5, color: MUTED, marginTop: 2 }}>Either the site is clean, or the client_errors table isn't migrated yet (paste v234 SQL).</div>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ display: "grid", gap: 0 }}>
+                  {errors.map((e, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "9px 0", borderBottom: i === errors.length - 1 ? "none" : `1px solid ${HAIRLINE}` }}>
+                      <Dot color={WARN} />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 13, color: NAVY, fontWeight: 700, marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{e.kind}: {e.msg}</div>
+                        <div style={{ fontSize: 11.5, color: MUTED, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{e.url}</div>
+                      </div>
+                      <div style={{ fontSize: 11, color: MUTED, ...MONO, letterSpacing: 0, whiteSpace: "nowrap" }}>{relTime(new Date(e.ts).getTime())}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Card>
+          </section>
+        )}
+
+        {/* ── ACTIONS ─────────────────────────────────────── */}
+        {token && (
+          <section style={{ marginBottom: 26 }}>
+            <SectionHeader title="Quick actions" subtitle="One-click ops triggers." />
+            <Card>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center" }}>
+                <button
+                  onClick={async () => {
+                    setPingResult("Pinging…");
+                    try {
+                      const r = await fetch("/api/sitemap-ping", { headers: { "x-admin-token": token } });
+                      const j = await r.json();
+                      if (!r.ok || !j.ok) { setPingResult(`Failed: ${j.error || r.status}`); return; }
+                      const bing = (j.results || []).find((x: { engine: string; status: number | string }) => x.engine === "bing");
+                      setPingResult(`Bing ${bing?.status || "?"}, IndexNow ${(j.results || []).find((x: { engine: string }) => x.engine === "indexnow")?.status || "?"}`);
+                    } catch (e) {
+                      setPingResult(`Error: ${(e as Error).message || "unknown"}`);
+                    }
+                  }}
+                  style={{ padding: "10px 18px", borderRadius: 999, background: NAVY, color: "#fff", fontSize: 13, fontWeight: 700, border: "none", cursor: "pointer" }}
+                >Ping Bing + IndexNow</button>
+                {pingResult && <span style={{ fontSize: 12.5, color: MUTED, ...MONO, letterSpacing: 0 }}>{pingResult}</span>}
+                <a
+                  href="https://search.google.com/search-console"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ padding: "10px 18px", borderRadius: 999, background: "#F1F4F8", color: NAVY, fontSize: 13, fontWeight: 700, textDecoration: "none" }}
+                >Google Search Console →</a>
+              </div>
             </Card>
           </section>
         )}
