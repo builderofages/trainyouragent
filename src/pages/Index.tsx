@@ -1009,7 +1009,10 @@ const Index = () => {
  <FooterV44 />
 
  {/* v131: floating live $-leak counter — Hormozi pain visible in real time */}
- <LiveLeakTicker />
+ {/* v271: LiveLeakTicker hidden on homepage — was overlapping the
+     voice-receptionist card and tiny $0.04 number wasn't compelling.
+     Lives on other pages still where it doesn't collide with hero. */}
+ {/* <LiveLeakTicker /> */}
  </div>
  );
 };

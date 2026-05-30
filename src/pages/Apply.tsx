@@ -26,7 +26,7 @@
 //   navy        #042C53   primary brand
 //   blue accent #185FA5   links / italic accent
 //   ink         #0B1B2B   body text
-//   cream       #FAF6EE   warm surface (matches /pricing right column)
+//   cream       #FFFFFF   warm surface (matches /pricing right column)
 //   bgSoft      #FAFBFC   subtle section bg
 //   green       #22A36C   guarantee accent
 //   red ink     #C53030   pain accent (used sparingly)
@@ -153,7 +153,7 @@ export default function Apply() {
         className="px-5 sm:px-8 pt-16 sm:pt-24 pb-20 sm:pb-28"
         style={{
           background:
-            "linear-gradient(180deg, #FFF8EE 0%, #FAF6EE 55%, #FFFFFF 100%)",
+            "linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 55%, #FFFFFF 100%)",
         }}
       >
         <div className="max-w-[920px] mx-auto text-center">
@@ -651,7 +651,7 @@ export default function Apply() {
         className="px-5 sm:px-8 py-24 sm:py-32 text-center"
         style={{
           background:
-            "linear-gradient(180deg, #FFFFFF 0%, #FAF6EE 60%, #FFF8EE 100%)",
+            "linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 60%, #FFFFFF 100%)",
         }}
       >
         <div className="max-w-[640px] mx-auto">
