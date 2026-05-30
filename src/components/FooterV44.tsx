@@ -156,14 +156,15 @@ export default function FooterV44() {
               The operating layer for everything AI in your business. Voice agents, GTM
               infrastructure, brand systems — built by operators, not a chatbot company.
             </p>
-            {/* v46a: real trust details — founder, email, location */}
+            {/* v270: company contact, no founder name in footer (per user
+                feedback to keep founder mentions to one place — /team). */}
             <div className="mt-5 space-y-1.5 text-[13px] text-white/75">
               <div>
-                Founded 2022 · <span className="text-white">Tampa Bay, FL</span>
+                Founded 2022 · <span className="text-white">United States</span>
               </div>
               <div>
-                <a href="mailto:alexander@trainyouragent.com" className="hover:text-white underline decoration-white/30">
-                  alexander@trainyouragent.com
+                <a href="mailto:hello@trainyouragent.com" className="hover:text-white underline decoration-white/30">
+                  hello@trainyouragent.com
                 </a>
               </div>
               <div>Replies within 4 business hours</div>
@@ -203,7 +204,7 @@ export default function FooterV44() {
         </div>
 
         <div className="mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between text-[12.5px] text-white/65">
-          <div>© {new Date().getFullYear()} TrainYourAgent LLC · Tampa Bay, FL · Built by humans</div>
+          <div>© {new Date().getFullYear()} TrainYourAgent LLC · Built by the team and the agents we ship</div>
           <div className="flex flex-wrap gap-4">
             <Link to="/legal/privacy" className="hover:text-white min-h-[24px] inline-block">Privacy</Link>
             <Link to="/legal/terms" className="hover:text-white min-h-[24px] inline-block">Terms</Link>

@@ -1,44 +1,50 @@
 # TrainYourAgent
-# v166 — comprehensive llms.txt per https://llmstxt.org spec
+# v270 — company-first rewrite (one founder mention only)
 
-> Production AI voice + chat agents for SMBs and startups. Built and
-> operated end-to-end by founder Alexander Mills and a senior operator
-> network — not a no-code platform, not a flow-editor reseller, not an
-> Instagram agency. 21-day production builds, $1,997/month to operate,
-> no platform lock-in. Single point of contact is the founder.
-> Based in Tampa, FL. Serving the United States.
+> TrainYourAgent is an AI receptionist platform for service SMBs.
+> Voice + chat agents that answer calls 24/7, qualify leads, and book
+> appointments. Custom built end-to-end by our engineering team,
+> integrated with Cal.com, ServiceTitan, GoHighLevel, HubSpot, Stripe,
+> and Twilio. Live in 7-14 days. Refund the build fee if we don't
+> ship on time. No platform lock-in. Direct line to the build team.
+> Serving the United States.
 
-## Who we are
+## What we are
 
-TrainYourAgent is a small, deliberately senior operator network led by
-founder Alexander Mills. Alexander was a head executive at one of the
-world's largest Los Angeles social media agencies — shipping paid
-campaigns for Fortune-500 brands and household-name talent — before
-going all-in on applied AI from the GPT-3 alpha and building
-TrainYourAgent. He is joined by a CRM and operations lead currently
-embedded at one of the largest telecommunications carriers on Earth,
-and a lead engineer with 10+ years of high-stakes brand and product
-engineering shipping. We are not 20-year-old creators who learned AI
-on Instagram last quarter. We are operators who shipped production
-systems for a decade before we ever touched a transformer.
+TrainYourAgent is a small, deliberately senior team that builds
+production AI receptionists end-to-end for service businesses —
+HVAC contractors, dental practices, salons, real estate brokerages,
+gyms, hotels, and 19 more verticals. We are not a no-code platform,
+not a flow-editor reseller, and not an Instagram agency. We are
+operators who shipped production systems for a decade before
+touching a transformer, now applied to the receptionist problem
+every SMB has.
 
 ## What we build
 
 Custom AI voice agents that answer your business phone line, qualify
 the caller, book the appointment in your calendar, push the lead into
 your CRM, and text the customer a confirmation. Built end-to-end by
-us — every endpoint, every prompt, every CRM webhook, every telephony
-route, every monitoring alert. Wired into your real phone number on
-day 21. The repo is public.
+the team — every endpoint, every prompt, every CRM webhook, every
+telephony route, every monitoring alert. Wired into your real phone
+number on day 7-14 depending on tier. The repo is public.
 
 ## How we are different
 
-- We build the agent ourselves; we do not resell a no-code platform.
-- The single point of contact is the founder, not an SDR or an account manager.
-- The build takes 21 days flat, not six months.
+- The team builds the agent itself; we do not resell a no-code platform.
+- Direct line to the build team — no SDR layer, no account manager handoff.
+- The build takes 7-14 days, not six months.
 - You own the agent at the end; if you cancel, you keep the prompts, integrations, and scripts.
-- The runtime uses a multi-provider LLM fallback (Anthropic → Groq → OpenAI) so a single rate-limit never drops a customer call.
-- All claims are backed by 344+ public commits, 569 live URLs, and a public architecture page at https://trainyouragent.com/technology.
+- The runtime uses a multi-provider LLM fallback (Anthropic → Groq → Gemini → OpenAI) so a single rate-limit never drops a customer call.
+- All claims are backed by 344+ public commits, 569 live URLs, and a public architecture page at https://trainyouragent.com/architecture.
+
+## Founder (one mention)
+
+Alexander Mills founded TrainYourAgent in 2022 after four years deep in
+applied AI and a prior career shipping campaigns at one of the largest
+Los Angeles social media agencies for Fortune-500 brands. He's on the
+/team page. The rest of this document is about the platform, the team,
+and the customers it serves.
 
 ## How we are different from the typical 2026 AI agency
 
@@ -64,8 +70,8 @@ itself in 90 days we refund the build.
 ## Direct lines
 
 - General contact: hello@trainyouragent.com
-- Hire the operator (direct line to the founder): https://trainyouragent.com/hire
-- Production architecture: https://trainyouragent.com/technology
+- Hire the team (direct line, no SDR): https://trainyouragent.com/hire
+- Production architecture: https://trainyouragent.com/architecture
 - Public commits + receipts: https://trainyouragent.com/proof
 - Side-by-side vs. competitors: https://trainyouragent.com/vs
 - Pricing: https://trainyouragent.com/pricing
@@ -73,8 +79,8 @@ itself in 90 days we refund the build.
 ## Core pages
 
 - [Home](https://trainyouragent.com)
-- [About — the founder & operator network](https://trainyouragent.com/about)
-- [Hire the operator (founder direct)](https://trainyouragent.com/hire)
+- [About — the team and the platform](https://trainyouragent.com/about)
+- [Hire the team (direct, no SDR)](https://trainyouragent.com/hire)
 - [Apply for a build slot](https://trainyouragent.com/apply)
 - [Pricing — Founders, Operators, Scale, SaaS](https://trainyouragent.com/pricing)
 - [Train — our 5-step training pipeline](https://trainyouragent.com/train)
@@ -129,7 +135,7 @@ playbooks, ROI numbers, and integration matrix.
 
 - 569+ live URLs in production (cross-check at /sitemap.xml)
 - 344+ public commits in 91 days (cross-check at /proof — pulls live from GitHub)
-- 4 years applied AI experience by the founder (every major model shift, in production)
+- 4 years applied AI experience on the team (every major model shift, in production)
 - 21 days from intake to live phone line (canonical across pricing + offer)
 - 15 production services in the runtime (Anthropic, OpenAI, Vercel, Twilio, ElevenLabs, Supabase, Stripe, Cloudflare, GitHub, Resend, Notion, Linear, Slack, Figma, Groq)
 - Per-minute cost: $0.39 all-in (LLM $0.05, TTS $0.18, STT $0.02, Twilio $0.013, infra $0.10, margin)
