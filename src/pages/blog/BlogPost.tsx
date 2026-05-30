@@ -1,7 +1,6 @@
 // src/pages/blog/BlogPost.tsx
 // /blog/:slug — single MDX post.
 
-import { useEffect, useState, type ComponentType } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import SiteNav from "@/components/SiteNav";
@@ -30,15 +29,7 @@ export default function BlogPost() {
   if (!post) return <Navigate to="/blog" replace />;
 
   const { prev, next } = getAdjacentPosts(slug);
-  // v274: MDX body is lazy-loaded per-post so we don't ship a 800kb blog
-  // monolith on every page. Show a lightweight skeleton until it resolves.
-  const [Body, setBody] = useState<ComponentType | null>(null);
-  useEffect(() => {
-    let cancelled = false;
-    setBody(null);
-    post.load().then((Comp) => { if (!cancelled) setBody(() => Comp); }).catch(() => { /* leave skeleton */ });
-    return () => { cancelled = true; };
-  }, [post]);
+  const Body = post.Component;
 
   return (
     <div className="min-h-screen bg-white" style={{ fontFamily: FONT }}>
@@ -175,15 +166,7 @@ export default function BlogPost() {
                         prose-img:rounded-lg
                         [&_table]:block [&_table]:overflow-x-auto sm:[&_table]:table
                         [&_pre]:-mx-5 sm:[&_pre]:mx-0 [&_pre]:rounded-none sm:[&_pre]:rounded-lg">
-          {Body ? <Body /> : (
-           <div aria-live="polite" style={{ minHeight: 240 }}>
-            <div style={{ height: 12, width: "60%", background: "#E6F1FB", borderRadius: 6, marginBottom: 14 }} />
-            <div style={{ height: 12, width: "90%", background: "#E6F1FB", borderRadius: 6, marginBottom: 14 }} />
-            <div style={{ height: 12, width: "75%", background: "#E6F1FB", borderRadius: 6, marginBottom: 14 }} />
-            <div style={{ height: 12, width: "85%", background: "#E6F1FB", borderRadius: 6, marginBottom: 14 }} />
-            <div style={{ height: 12, width: "50%", background: "#E6F1FB", borderRadius: 6 }} />
-           </div>
-          )}
+          <Body />
         </div>
 
         {/* Tags */}

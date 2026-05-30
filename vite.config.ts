@@ -80,61 +80,23 @@ export default defineConfig(({ mode }) => ({
     // v97: same for GA4 — lets SPA route changes call window.gtag('event',...)
     "import.meta.env.VITE_GA4_MEASUREMENT_ID": JSON.stringify(process.env.GA4_MEASUREMENT_ID || ""),
   },
-  // v41: manual chunks — keep the main entry small.
-  // v274: split heavy vendor libs into dedicated chunks so no chunk exceeds
-  // the 500kb warning threshold. Each lazy route only loads what it needs.
+  // v41: manual chunks — keep the main entry small. React + router into
+  // `vendor-react`, lucide-react / framer-motion into `vendor-ui`.
   build: {
-    chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
         manualChunks(id: string) {
-          // v274: blog posts — one chunk per MDX file so /blog/:slug only
-          // ships the body the visitor is actually reading (was 800kb monolith).
-          if (id.includes("/src/content/blog/") && id.endsWith(".mdx")) {
-            const m = id.match(/\/src\/content\/blog\/([^/]+)\.mdx$/);
-            if (m) return `blog-post-${m[1]}`;
-          }
           if (!id.includes("node_modules")) return;
-          // React core — eager on every page
           if (
             id.includes("/react/") ||
             id.includes("/react-dom/") ||
             id.includes("/react-router") ||
             id.includes("/scheduler/")
           ) return "vendor-react";
-          // Charting — only loaded by /metrics, /admin/*, dashboards
-          if (id.includes("recharts") || id.includes("/d3-")) return "vendor-recharts";
-          // Animation — Framer is used widely; GSAP only on a handful of pages
-          if (id.includes("framer-motion")) return "vendor-framer";
-          if (id.includes("/gsap/") || id.includes("@gsap/")) return "vendor-gsap";
-          // 3D — only on /architecture and a couple of demo pages
-          if (id.includes("/three/") || id.includes("@react-three")) return "vendor-three";
-          // Voice agent demo
-          if (id.includes("@vapi-ai")) return "vendor-vapi";
-          // Icons + small UI primitives
-          if (id.includes("lucide-react")) return "vendor-icons";
-          // Radix UI primitives — used by shadcn components
-          if (id.includes("@radix-ui")) return "vendor-radix";
-          // PDF generation — only triggered by lead-magnet downloads
-          if (id.includes("jspdf")) return "vendor-pdf";
-          // Supabase client — used by portal + admin
-          if (id.includes("@supabase")) return "vendor-supabase";
-          // Tanstack query — shared infra
-          if (id.includes("@tanstack")) return "vendor-tanstack";
-          // Toaster stack
-          if (id.includes("/sonner/") || id.includes("react-hot-toast")) return "vendor-toast";
-          // Date / time helpers
-          if (id.includes("date-fns")) return "vendor-date";
-          // Locomotive scroll + react-spring + canvas-confetti + embla — heavier UX libs
-          if (id.includes("locomotive-scroll")) return "vendor-locomotive";
-          if (id.includes("react-spring") || id.includes("@react-spring")) return "vendor-spring";
-          if (id.includes("canvas-confetti")) return "vendor-confetti";
-          if (id.includes("embla-carousel")) return "vendor-embla";
-          // Form + helpers
-          if (id.includes("react-hook-form") || id.includes("@hookform")) return "vendor-form";
-          if (id.includes("react-helmet")) return "vendor-helmet";
-          // Catch-all node_modules bucket so misc small libs don't end up in main entry
-          return "vendor-misc";
+          if (
+            id.includes("lucide-react") ||
+            id.includes("framer-motion")
+          ) return "vendor-ui";
         },
       },
     },

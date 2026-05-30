@@ -9,7 +9,7 @@
 // Honest, on-brand, converts. The page becomes a sales asset instead of
 // a credibility-killer.
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import SiteNav from "@/components/SiteNav";
@@ -76,36 +76,9 @@ const NOT_A_FIT = [
 ];
 
 export default function Customers() {
-  // v274: AggregateRating JSON-LD scaffold. Only injected when /api/reviews-public
-  // returns at least one approved review. Zero reviews → no schema injected
-  // (Google penalises fake 5-star with no underlying reviews).
-  const [reviewCount, setReviewCount] = useState<number>(0);
   useEffect(() => {
     if (typeof window !== "undefined") window.scrollTo(0, 0);
-    let cancelled = false;
-    fetch("/api/reviews-public?limit=50")
-      .then((r) => r.ok ? r.json() : null)
-      .then((j) => {
-        if (cancelled || !j || !Array.isArray(j.reviews)) return;
-        setReviewCount(j.reviews.length);
-      })
-      .catch(() => { /* silent — no schema injected */ });
-    return () => { cancelled = true; };
   }, []);
-
-  const aggregateRatingJsonLd = reviewCount > 0 ? {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "TrainYourAgent",
-    "url": "https://www.trainyouragent.com",
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "5",
-      "bestRating": "5",
-      "worstRating": "5",
-      "reviewCount": String(reviewCount),
-    },
-  } : null;
 
   return (
     <div className="min-h-screen bg-white text-[#0B1B2B]" style={{ fontFamily: "'Inter Tight', system-ui, -apple-system, sans-serif" }}>
@@ -116,9 +89,6 @@ export default function Customers() {
         <meta property="og:title" content="Founding Customer Program — TrainYourAgent" />
         <meta property="og:description" content="10 spots. 50% off forever. Direct team Slack. 90-day money-back. Be one of the first." />
         <meta property="og:url" content="https://www.trainyouragent.com/customers" />
-        {aggregateRatingJsonLd && (
-         <script type="application/ld+json">{JSON.stringify(aggregateRatingJsonLd)}</script>
-        )}
       </Helmet>
 
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[#042C53] focus:text-white focus:font-semibold focus:shadow-lg">Skip to main content</a>
