@@ -16,12 +16,19 @@ export type ChatMessage = { role: "user" | "assistant"; content: string };
 export type ChatResult  = { text: string; provider: "anthropic" | "groq" | "gemini" | "none" };
 
 const TIMEOUT_MS = 15_000;
-const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5";
+// v275: model bumped from short alias to the dated build string. Anthropic API
+// was returning 404 on the short "claude-haiku-4-5" alias on some accounts,
+// silently dropping us to the Groq fallback. The dated suffix is the canonical
+// stable ID per Anthropic docs and works on every account tier.
+const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5-20251001";
 const GROQ_MODEL      = process.env.GROQ_MODEL      || "llama-3.3-70b-versatile";
 const GEMINI_MODEL    = process.env.GEMINI_MODEL    || "gemini-2.5-flash";
 
+// v275: stripped the last founder name from the offline fallback message.
+// Was the only remaining "Alexander" mention in user-facing copy after the
+// v267 / v270 founder-overdose sweeps.
 const OFFLINE_MSG =
-  "AI demos are temporarily offline — Alexander has been pinged. Try again in 5 minutes.";
+  "AI demos are temporarily offline — the TrainYourAgent team has been pinged. Try again in 5 minutes.";
 
 export async function chat(
   system: string,
