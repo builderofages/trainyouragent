@@ -28,6 +28,7 @@ import PoweredByBadges from "@/components/PoweredByBadges";
 import WhyWeAreDifferent from "@/components/WhyWeAreDifferent";
 import HomepageIndustryPicker from "@/components/HomepageIndustryPicker";
 import HomepageLoomEmbed from "@/components/HomepageLoomEmbed";
+import CinematicHero from "@/components/CinematicHero";
 import SectionDivider from "@/components/SectionDivider";
 import { useCountUp } from "@/hooks/useCountUp";
 import NetworkIllo from "@/components/illustrations/NetworkIllo";
@@ -295,6 +296,12 @@ const Index = () => {
 
  {/* HERO */}
  <main id="main">
+ {/* v241: cinematic 2040 hero — single-screen first-paint canvas with
+ animated mesh, parallax glass tiles, editorial Playfair drop, live $-leak
+ ticker, single primary CTA. Designed to be the 'holy shit' first
+ impression. The legacy hero below still ships as the secondary detail
+ layer (capability chips, playbook personalization, voice embed). */}
+ <CinematicHero />
  <section className="relative pt-8 sm:pt-12 pb-16 sm:pb-24 px-5 sm:px-8 overflow-hidden">
  {/* v73: 2040 visual layer behind hero content. */}
  <MeshGradientBackdrop />
