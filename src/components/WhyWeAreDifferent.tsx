@@ -64,13 +64,13 @@ const WE_DO = [
 
 const TEAM = [
   {
-    role: "Founder & Operator",
-    name: "Alexander Mills",
-    badge: "FOUNDER",
+    role: "Founder & lead engineer",
+    name: "The TrainYourAgent team",
+    badge: "TEAM LEAD",
     pedigree: [
       "Head executive at one of the world's largest LA social media agencies — shipped paid campaigns for Fortune-500 brands and household-name talent.",
       "In applied AI since the GPT-3 alpha. Four years deep, every major model shift, every production deployment, since day one of the wave.",
-      "Founded TrainYourAgent to bring production-grade voice AI to the SMBs that keep getting burned by no-code resellers and six-week Skool grads.",
+      "Founded the platform to bring production-grade voice AI to the SMBs that keep getting burned by no-code resellers and six-week Skool grads.",
       "Builds the agent. Operates it. Picks up the phone when it breaks.",
     ],
     color: "#D97757",
@@ -438,15 +438,14 @@ export default function WhyWeAreDifferent({
             Three decades of stacked operator experience. <em>Not three TikTok tutorials.</em>
           </h3>
           <p className="tya-why__team-sub">
-            We're a small, deliberately senior network. The founder ran paid
-            campaigns for Fortune-500 brands at one of the largest social
-            media agencies in LA, then went all-in on applied AI from the
-            GPT-3 alpha and built TrainYourAgent to bring production voice
-            AI to SMBs. The CRM and operations lead is embedded at one of
-            the world's largest telecom carriers. The lead engineer has a
-            decade-plus of high-stakes brand and product engineering. We're
-            not 20-year-olds who discovered AI on Reels last quarter. We're
-            operators who've shipped real production systems for years.
+            TrainYourAgent is a small, deliberately senior team. Operator
+            credentials at the top of the stack: Fortune-500 campaign work
+            for global brands, four years deep in applied AI since the
+            GPT-3 alpha, CRM and voice-pipeline ownership at one of the
+            world's largest telecom carriers, and a decade-plus of
+            high-stakes brand and product engineering. Not 20-year-olds
+            who discovered AI on Reels last quarter. Operators who've
+            shipped real production systems for years.
           </p>
 
           <div className="tya-why__cards">
