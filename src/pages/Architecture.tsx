@@ -43,7 +43,7 @@ export default function Architecture() {
       </Helmet>
       <SiteNav />
 
-      <main style={{ maxWidth: 980, margin: "0 auto", padding: "56px 28px 80px" }}>
+      <main style={{ maxWidth: 980, margin: "0 auto", padding: "128px 28px 80px" }}>
 
         {/* Masthead */}
         <header style={{ borderBottom: `1px solid ${HAIRLINE}`, paddingBottom: 28, marginBottom: 44 }}>

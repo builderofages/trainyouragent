@@ -91,7 +91,7 @@ export default function ReviewsSubmit() {
       </Helmet>
       <SiteNav />
 
-      <section className="px-5 sm:px-8 py-14 sm:py-20 max-w-3xl mx-auto">
+      <section className="px-5 sm:px-8 pt-28 sm:pt-32 pb-14 sm:pb-20 max-w-3xl mx-auto">
         <div className="text-[11px] font-semibold tracking-[0.18em] uppercase font-mono mb-3" style={{ color: ACCENT }}>
           SUBMIT A TESTIMONIAL
         </div>
