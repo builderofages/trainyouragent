@@ -19,7 +19,12 @@ import {
 } from "@/lib/visitorContext";
 import { PLAYBOOKS } from "@/lib/playbooks";
 
-const HIDDEN_PATHS = ["/start", "/admin", "/portal"];
+// v256: /template/* are standalone demo sites that mimic a customer's
+// actual website — they have their own sticky top rail. The global
+// personalization pill leaks visually over the niche site header, so we
+// hide it. Same logic for /reviews/submit (customer-facing form, not a
+// TYA marketing page) and /architecture (editorial doc, its own masthead).
+const HIDDEN_PATHS = ["/start", "/admin", "/portal", "/template", "/reviews/submit", "/architecture"];
 const PILL_HEIGHT_PX = 36;
 
 const LANES: { id: VisitorLane; label: string }[] = [
