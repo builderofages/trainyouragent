@@ -128,6 +128,93 @@ drop policy if exists sourced_prospects_svc on public.sourced_prospects;
 create policy sourcing_rules_svc    on public.sourcing_rules    for all using (auth.role() = 'service_role') with check (auth.role() = 'service_role');
 create policy sourced_prospects_svc on public.sourced_prospects for all using (auth.role() = 'service_role') with check (auth.role() = 'service_role');`;
 
+// v238: one-paste mega-migration. Combines all ops tables (template_sends,
+// sourcing_rules, sourced_prospects, reviews, client_errors). Idempotent.
+const MIG_V234 = `-- v234_all_ops_tables.sql — ONE PASTE, EVERY OPS TABLE
+-- Idempotent (every CREATE IF NOT EXISTS). Safe to re-run.
+create extension if not exists "pgcrypto";
+
+-- template_sends (v192)
+create table if not exists public.template_sends (
+  id uuid primary key default gen_random_uuid(),
+  prospect_company text not null,
+  prospect_company_norm text generated always as (lower(prospect_company)) stored,
+  prospect_city text, prospect_email text, prospect_phone text, prospect_name text,
+  niche text not null, niche_label text, channel text not null, operator_id text,
+  sent_at timestamptz not null default now(),
+  opened_at timestamptz, booked_at timestamptz,
+  last_nurture_template text, last_nurture_at timestamptz, nurture_stopped_reason text,
+  cal_booking_uid text, cal_attendee_email text,
+  first_touch_sent_at timestamptz, meta jsonb default '{}'::jsonb
+);
+create index if not exists template_sends_company_norm_idx on public.template_sends (prospect_company_norm, sent_at desc);
+create index if not exists template_sends_niche_idx on public.template_sends (niche, sent_at desc);
+create index if not exists template_sends_nurture_idx on public.template_sends (sent_at) where booked_at is null and nurture_stopped_reason is null;
+create index if not exists template_sends_email_idx on public.template_sends (prospect_email) where prospect_email is not null;
+alter table public.template_sends enable row level security;
+drop policy if exists template_sends_svc on public.template_sends;
+create policy template_sends_svc on public.template_sends for all using (auth.role() = 'service_role') with check (auth.role() = 'service_role');
+
+-- sourcing_rules (v198)
+create table if not exists public.sourcing_rules (
+  id uuid primary key default gen_random_uuid(),
+  niche text not null, niche_label text,
+  city text not null, state text, country text default 'US',
+  radius_meters int default 25000, query_string text,
+  cadence_hours int not null default 24, max_per_run int not null default 10,
+  enabled boolean not null default true,
+  last_run_at timestamptz, last_run_added int default 0, last_run_error text,
+  total_added int default 0, created_at timestamptz not null default now(), notes text
+);
+create index if not exists sourcing_rules_due_idx on public.sourcing_rules (enabled, last_run_at);
+alter table public.sourcing_rules enable row level security;
+drop policy if exists sourcing_rules_svc on public.sourcing_rules;
+create policy sourcing_rules_svc on public.sourcing_rules for all using (auth.role() = 'service_role') with check (auth.role() = 'service_role');
+
+-- sourced_prospects (v198)
+create table if not exists public.sourced_prospects (
+  id uuid primary key default gen_random_uuid(),
+  rule_id uuid references public.sourcing_rules(id) on delete set null,
+  source text not null, source_id text not null,
+  prospect_company text not null,
+  prospect_company_norm text generated always as (lower(prospect_company)) stored,
+  city text, state text, address text, phone text, email text, website text,
+  niche text, niche_label text, raw jsonb,
+  promoted_at timestamptz, promoted_send_id uuid, skipped_reason text,
+  created_at timestamptz not null default now()
+);
+create unique index if not exists sourced_prospects_unique_source on public.sourced_prospects (source, source_id);
+create index if not exists sourced_prospects_company_norm on public.sourced_prospects (prospect_company_norm);
+create index if not exists sourced_prospects_promoted_idx on public.sourced_prospects (promoted_at desc nulls last);
+alter table public.sourced_prospects enable row level security;
+drop policy if exists sourced_prospects_svc on public.sourced_prospects;
+create policy sourced_prospects_svc on public.sourced_prospects for all using (auth.role() = 'service_role') with check (auth.role() = 'service_role');
+
+-- reviews (v233)
+create table if not exists public.reviews (
+  id uuid primary key default gen_random_uuid(),
+  name text not null, company text not null, email text not null, niche text not null,
+  video_url text, quote text, permission_granted boolean not null default false,
+  source text, status text not null default 'pending',
+  ts timestamptz not null default now()
+);
+create index if not exists reviews_status_ts_idx on public.reviews (status, ts desc);
+create index if not exists reviews_niche_idx on public.reviews (niche, status);
+alter table public.reviews enable row level security;
+drop policy if exists reviews_svc on public.reviews;
+create policy reviews_svc on public.reviews for all using (auth.role() = 'service_role') with check (auth.role() = 'service_role');
+
+-- client_errors (v229)
+create table if not exists public.client_errors (
+  id uuid primary key default gen_random_uuid(),
+  ts timestamptz not null default now(),
+  kind text, msg text, stack text, url text, ua text, ip text
+);
+create index if not exists client_errors_ts_idx on public.client_errors (ts desc);
+alter table public.client_errors enable row level security;
+drop policy if exists client_errors_svc on public.client_errors;
+create policy client_errors_svc on public.client_errors for all using (auth.role() = 'service_role') with check (auth.role() = 'service_role');`;
+
 type StepKey = "mig1" | "mig2" | "envs" | "token" | "rule";
 type Health = { ok: boolean; overall: "ok" | "warn" | "fail"; fails: number; warns: number; checks: { name: string; status: string; note?: string }[] } | null;
 
@@ -206,15 +293,28 @@ export default function Setup() {
       <main style={{ padding: "20px 24px 80px" }}>
         <div style={{ maxWidth: 880, margin: "0 auto", display: "flex", flexDirection: "column", gap: 18 }}>
 
+          {/* v238: SHORTCUT — one paste does the work of Steps 1+2 plus all
+              the other tables embedded in the codebase (reviews, errors).
+              Founder almost always wants this; we keep the per-step
+              variants below for transparency / re-running individually. */}
+          <div style={{ padding: 20, borderRadius: 14, background: "linear-gradient(135deg, #FAF6EE 0%, #FFFFFF 100%)", border: "1px solid rgba(4,44,83,0.08)" }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#185FA5", letterSpacing: "0.18em", marginBottom: 6 }}>RECOMMENDED · ONE PASTE</div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "#042C53", marginBottom: 6 }}>v234 mega-migration — covers Steps 1+2 plus reviews + errors</div>
+            <p style={{ fontSize: 13.5, color: "#42526E", lineHeight: 1.55, margin: "4px 0 12px" }}>
+              Combines template_sends + sourcing_rules + sourced_prospects + reviews + client_errors into a single idempotent SQL block. Safe to re-run. Open the <a href="https://supabase.com/dashboard/project/_/sql/new" target="_blank" rel="noopener" style={a()}>Supabase SQL editor</a> and paste this once — the whole ops stack lights up.
+            </p>
+            <CodeBlock label="v234_all_ops_tables.sql (one paste)" code={MIG_V234} />
+          </div>
+
           {/* Step 1 — Migration 1 */}
           <Step n={1} title="Run the close-tool migration in Supabase" done={done.mig1} onToggle={(v) => mark("mig1", v)}>
-            <p style={p()}>Open the <a href="https://supabase.com/dashboard/project/_/sql/new" target="_blank" rel="noopener" style={a()}>Supabase SQL Editor</a>, paste, run.</p>
+            <p style={p()}>Already covered by the v234 mega-paste above — but here it is on its own in case you want to run only this. Open the <a href="https://supabase.com/dashboard/project/_/sql/new" target="_blank" rel="noopener" style={a()}>Supabase SQL Editor</a>, paste, run.</p>
             <CodeBlock label="v192_template_sends.sql" code={MIG_V192} />
           </Step>
 
           {/* Step 2 — Migration 2 */}
           <Step n={2} title="Run the autopilot-sourcing migration" done={done.mig2} onToggle={(v) => mark("mig2", v)}>
-            <p style={p()}>Same Supabase SQL editor — paste, run. Adds the sourcing_rules + sourced_prospects tables that drive lead discovery.</p>
+            <p style={p()}>Also covered by v234. Same Supabase SQL editor — paste, run. Adds the sourcing_rules + sourced_prospects tables that drive lead discovery.</p>
             <CodeBlock label="v198_autopilot_sourcing.sql" code={MIG_V198} />
           </Step>
 

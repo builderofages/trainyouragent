@@ -281,6 +281,34 @@ export default function Cockpit() {
           </section>
         )}
 
+        {/* ── PIXEL DENY-LIST WARNING (v238) ───────────────── */}
+        {token && (() => {
+          const pixelId = (typeof window !== "undefined" && (import.meta as { env?: { VITE_META_PIXEL_ID?: string } }).env?.VITE_META_PIXEL_ID) || "";
+          const denied = pixelId === "1324902062303919";
+          if (!denied) return null;
+          return (
+            <section style={{ marginBottom: 26 }}>
+              <Card>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+                  <Dot color={WARN} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: WARN, marginBottom: 4 }}>
+                      META PIXEL DENY-LISTED
+                    </div>
+                    <div style={{ fontSize: 13.5, color: NAVY, lineHeight: 1.5, marginBottom: 8 }}>
+                      Bundled Pixel ID <code style={{ background: "#F1F4F8", padding: "1px 6px", borderRadius: 6, fontSize: 12 }}>{pixelId}</code> belongs to the Shopify/saintrizz business and is blocked by client-side deny-list. Pixel events are NOT firing — by design, until you replace with a TYA-dedicated pixel.
+                    </div>
+                    <div style={{ fontSize: 12, color: MUTED, lineHeight: 1.45 }}>
+                      Fix: create a dedicated pixel in Events Manager (TYA business 4275946662728840), then update <code>VITE_META_PIXEL_ID</code> + <code>META_PIXEL_ID</code> in Vercel envs.{" "}
+                      <a href="https://business.facebook.com/events_manager2/list?business_id=4275946662728840" target="_blank" rel="noopener noreferrer" style={{ color: ACCENT, textDecoration: "underline" }}>Open Events Manager →</a>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </section>
+          );
+        })()}
+
         {/* ── RECENT CLIENT ERRORS ─────────────────────────── */}
         {token && (
           <section style={{ marginBottom: 26 }}>

@@ -18,6 +18,9 @@ import FooterV44 from "@/components/FooterV44";
 // old empty-state placeholders without faking customers.
 import IndustryShowcase from "@/components/IndustryShowcase";
 import TrustpilotWidget from "@/components/TrustpilotWidget";
+// v238: real customer reviews carousel pulling approved testimonials from
+// public.reviews via /api/reviews-public. Graceful empty state.
+import CustomerReviewsCarousel from "@/components/CustomerReviewsCarousel";
 
 const CAL_URL = "https://cal.com/trainyouragent/30min";
 const LINKEDIN_URL = "https://www.linkedin.com/in/alexandermillsai/";
@@ -121,6 +124,9 @@ export default function Customers() {
 
       {/* v134: 14-vertical ROI showcase grid — replaces missing-logo wall.
           Honest social proof via specific industry math, no fake logos. */}
+      {/* v238: real reviews from /api/reviews-public — empty-state CTA when unmigrated */}
+      <CustomerReviewsCarousel />
+
       <IndustryShowcase />
 
       {/* THE OFFER */}

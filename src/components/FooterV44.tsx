@@ -27,6 +27,8 @@ const RESOURCES = [
   { label: "Docs", to: "/docs" },
   { label: "API docs", to: "/api-docs" },
   { label: "Customers", to: "/customers" },
+  // v238: founder-facing CTA — customer publishes a Loom/quote testimonial
+  { label: "Share your story", to: "/reviews/submit" },
   { label: "Case studies", to: "/case-studies" },
   { label: "Blog", to: "/blog" },
   { label: "Learn AI", to: "/learn" },
